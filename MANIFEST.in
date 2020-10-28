@@ -1,0 +1,11 @@
+# Include the README
+include *.md
+
+# Include the license file
+include LICENSE
+
+# Include information about third party licensors
+include THIRD-PARTY-NOTICES
+
+include versioneer.py
+include openhab_creator/_version.py
