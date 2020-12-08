@@ -1,5 +1,6 @@
 from . import __version__
 from .model import Floor, Room, Device
+from .output.things import ThingsCreator
 
 import json
 
@@ -18,13 +19,12 @@ class Creator(object):
         
         self.parse()
 
+        thingsCreator = ThingsCreator(self.outputdir)
+        thingsCreator.build(self.devices)
+
     def parse(self):
         for location in self.configjson.values():
             self._parseFloors(location)
-
-        print(self.floors)
-        print(self.rooms)
-        print(self.devices)
 
     def _parseFloors(self, location):
         if 'floors' in location:

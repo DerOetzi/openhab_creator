@@ -1,7 +1,12 @@
 class Formatter(object):
     @staticmethod
     def ucfirst(raw):
-        return raw[0].upper() + raw[1:].lower()
+        if len(raw) > 1:
+            return raw[0].upper() + raw[1:].lower()
+        elif len(raw) == 1:
+            return raw.upper()
+        else:
+            return ''
 
     @staticmethod
     def formatId(rawId):
@@ -14,14 +19,14 @@ class Formatter(object):
         id = id.replace('_', '')
         return Formatter.ucfirst(id)
 
-
 class BaseObject(object):
-    def __init__(self, name, json, validtypes):
-        id = json.get('id', None)
+    def __init__(self, name, json, validtypes, id = None):
         if id is None:
-            self._id = Formatter.formatId(name)
-        else:
-            self._id = id
+            id = json.get('id', None)
+            if id is None:
+                id = Formatter.formatId(name)
+        
+        self._id = id
 
         self._name = name
 
@@ -41,6 +46,9 @@ class BaseObject(object):
     def name(self):
         return self._name
 
+    def typed(self):
+        return self._typed
+
     def __repr__(self):
         return self.__str__()
 
@@ -49,12 +57,18 @@ class BaseObject(object):
 
 
 class Floor(BaseObject):
-    VALID = ['floor', 'attic', 'basement', 'groundfloor', 'firstfloor']
+    VALIDTYPES = [
+        'floor', 
+        'attic', 
+        'basement', 
+        'groundfloor', 
+        'firstfloor'
+        ]
 
     def __init__(self, json):
         name = json.get('name')
 
-        super().__init__(name, json, Floor.VALID)
+        super().__init__(name, json, Floor.VALIDTYPES)
 
         self._icon = json.get('icon', None)
 
@@ -66,13 +80,19 @@ class Floor(BaseObject):
 
 
 class Room(BaseObject):
-    VALID = ["room", "bedroom", "livingroom",
-             "bathroom", "kitchen", "corridor"]
+    VALIDTYPES = [
+        "room", 
+        "bedroom", 
+        "livingroom",
+        "bathroom", 
+        "kitchen", 
+        "corridor"
+    ]
 
     def __init__(self, json, floor):
         name = json.get('name')
 
-        super().__init__(name, json, Room.VALID)
+        super().__init__(name, json, Room.VALIDTYPES)
         self.icon = json.get('icon', None)
 
         self.floor = floor
@@ -90,15 +110,54 @@ class Device(BaseObject):
         'heating',
         'airsensor',
         'soilmoisture',
-        'plug'
+        'plug',
+        'onofflight',
+        'colortemperaturelight',
+        'dimmablelight'
     ]
 
-    def __init__(self, json, floorObj, roomObj=None):
-        name = json.get('name', None)
-        if name is None:
-            if roomObj is None:
-                name = floorObj.name()
-            else:
-                name = roomObj.name()
+    def __init__(self, json, floor, room=None):
+        name = json.get('name', '')
+        if room is None:
+            id = floor.id() + Formatter.formatId(name)
+            name = floor.name() + ' ' + name
+        else:
+            id = room.id() + Formatter.formatId(name)
+            name = room.name() + ' ' + name
 
-        super().__init__(name, json, Device.VALIDTYPES)
+        super().__init__(name.strip(), json, Device.VALIDTYPES, id)
+
+        self._floor = floor
+        self._room = room
+
+        self._bridge = json.get('bridge')
+        self._json = json
+
+        self._subdevices = []
+
+        if self._typed == 'light' or self._typed == 'rgb':
+            bulbs = json.get('bulbs', None)
+            count = json.get('count', 0)
+            if bulbs is not None:
+                for bulb in bulbs:
+                    self._subdevices.append(Device(bulb, floor, room))
+            else:
+                for i in range(1, count + 1):
+                    bulb = {
+                        "name": "%s %d" % (json.get('name', ''), i),
+                        "bridge": self._bridge,
+                        "type": json.get('subtype')
+                    }
+                    self._subdevices.append(Device(bulb, floor, room))
+
+    def bridge(self):
+        return self._bridge
+
+    def hasSubdevices(self):
+        return len(self._subdevices) > 0
+
+    def subdevices(self):
+        return self._subdevices
+
+    def attr(self, attr, default = None):
+        return self._json.get(attr, default)
