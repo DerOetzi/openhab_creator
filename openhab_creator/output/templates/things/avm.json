@@ -1,0 +1,9 @@
+{
+    "heating": {
+        "301": "FRITZ_DECT_301",
+        "comet": "Comet_DECT"
+    },
+    "plug": {
+        "210": "FRITZ_DECT_210"
+    }
+}

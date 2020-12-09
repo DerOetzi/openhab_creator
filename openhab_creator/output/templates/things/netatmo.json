@@ -1,0 +1,9 @@
+{
+    "airsensor": {
+        "main": {
+            "thing": "NAMain",
+            "nameprefix": "Main Airsensor",
+            "category": "sensors"
+        }
+    }
+}

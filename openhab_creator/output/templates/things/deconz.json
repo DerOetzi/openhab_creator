@@ -1,0 +1,68 @@
+{
+    "buttons": {
+        "thing": "switch",
+        "uidsuffix": "011000",
+        "nameprefix": "Buttons",
+        "category": "controls"
+    },
+    "colortemperaturelight": {
+        "thing": "colortemperaturelight",
+        "uidsuffix": "01",
+        "nameprefix": "Spectrum",
+        "category": "controls"
+    },
+    "dimmablelight": {
+        "thing": "dimmablelight",
+        "uidsuffix": "01",
+        "nameprefix": "Dimmable",
+        "category": "controls"
+    },
+    "heating": {
+        "thing": "thermostat",
+        "uidsuffix": "010201",
+        "nameprefix": "Heating",
+        "category": "heating"
+    },
+    "humidity": {
+        "thing": "humiditysensor",
+        "uidsuffix": "010405",
+        "nameprefix": "Humidity",
+        "category": "sensors"
+    },
+    "onofflight": {
+        "thing": "onofflight",
+        "uidsuffix": "",
+        "nameprefix": "On/Off",
+        "category": "controls"
+    },
+    "plug": {
+        "thing": "onofflight",
+        "uidsuffix": "",
+        "nameprefix": "Plug",
+        "category": "controls"
+    },
+    "presence": {
+        "thing": "presencesensor",
+        "uidsuffix": "010006",
+        "nameprefix": "Presence",
+        "category": "sensors"
+    },
+    "pressure": {
+        "thing": "pressuresensor",
+        "uidsuffix": "010403",
+        "nameprefix": "Pressure",
+        "category": "sensors"
+    },
+    "rgb": {
+        "thing": "extendedcolorlight",
+        "uidsuffix": "0b",
+        "nameprefix": "RGB",
+        "category": "controls"
+    },
+    "temperature": {
+        "thing": "temperaturesensor",
+        "uidsuffix": "010402",
+        "nameprefix": "Temperature",
+        "category": "sensors"
+    }
+}

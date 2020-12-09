@@ -46,13 +46,9 @@ class ThingsCreator:
     def _bridgestring(self, props):
         properties = self._propertiesstring(props)
         
-        return u'Bridge %s "%s" [%s]' % (props['thingtype'], props['name'], properties)
+        return u'Bridge %s "%s" %s' % (props['thingtype'], props['name'], properties)
 
     def _thingstring(self, props):
-        #TODO remove
-        if props is None:
-            return ''
-
         properties = self._propertiesstring(props)
         channels = self._channelsstring(props)
 

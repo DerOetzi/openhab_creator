@@ -145,9 +145,11 @@ class Device(BaseObject):
                 for bulb in bulbs:
                     self._subdevices.append(Device(bulb, floor, room))
             else:
+                pattern = '{} %d'.format(json.get('name', '')).strip()
+
                 for i in range(1, count + 1):
                     bulb = { 
-                        "name": "%s %d" % (json.get('name', ''), i),
+                        "name": pattern % i,
                         "bridge": self._bridge,
                         "type": json.get('subtype')
                     }
