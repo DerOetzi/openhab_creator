@@ -113,7 +113,10 @@ class Device(BaseObject):
         'plug',
         'onofflight',
         'colortemperaturelight',
-        'dimmablelight'
+        'dimmablelight',
+        'temperature',
+        'humidity',
+        'pressure'
     ]
 
     def __init__(self, json, floor, room=None):
@@ -143,12 +146,37 @@ class Device(BaseObject):
                     self._subdevices.append(Device(bulb, floor, room))
             else:
                 for i in range(1, count + 1):
-                    bulb = {
+                    bulb = { 
                         "name": "%s %d" % (json.get('name', ''), i),
                         "bridge": self._bridge,
                         "type": json.get('subtype')
                     }
                     self._subdevices.append(Device(bulb, floor, room))
+        elif self._typed == 'airsensor' and self.attr('subtype') == 'aqara':
+            #TODO Find another solution for deconz specific aqara sensor handling
+            self._subdevices.append(Device(
+                {
+                    "name": "Temperature %s" % (json.get('name', '')),
+                    "bridge": self._bridge,
+                    "type": "temperature"
+                }, floor, room
+            ))
+
+            self._subdevices.append(Device(
+                {
+                    "name": "Humidity %s" % (json.get('name', '')),
+                    "bridge": self._bridge,
+                    "type": "humidity"
+                }, floor, room
+            ))
+
+            self._subdevices.append(Device(
+                {
+                    "name": "Pressure %s" % (json.get('name', '')),
+                    "bridge": self._bridge,
+                    "type": "pressure"
+                }, floor, room
+            ))
 
     def bridge(self):
         return self._bridge

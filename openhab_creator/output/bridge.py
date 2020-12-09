@@ -1,4 +1,6 @@
-from .secrets import SecretRegistry
+from copy import deepcopy
+
+from .secrets import SecretsRegistry
 
 class Bridge(object):
     @staticmethod
@@ -6,19 +8,21 @@ class Bridge(object):
         raise Exception('Not implemented interface method')
 
     @staticmethod
-    def thingstring(thing):
-        return ''
+    def thingprops(thing):
+        return None
         #TODO raise Exception('Not implemented interface method')
 
 class AVMBridge(Bridge):
+    BRIDGE_NAME = "Fritz.Box"
+
     @staticmethod
     def bridgeprops():
         return {
-            "thingtype": "avmfritz:fritzbox:%s" % SecretRegistry.secret('fritzbox', 'id'),
-            "name": "Fritz.Box",
+            "thingtype": "avmfritz:fritzbox:%s" % SecretsRegistry.secret('fritzbox', 'id'),
+            "name": AVMBridge.BRIDGE_NAME,
             "properties": {
-                "ipAddress": SecretRegistry.secret('fritzbox', 'ip'),
-                "password": SecretRegistry.secret('fritzbox', 'password')
+                "ipAddress": SecretsRegistry.secret('fritzbox', 'ip'),
+                "password": SecretsRegistry.secret('fritzbox', 'password')
             }
         }
 
@@ -33,15 +37,19 @@ class AVMBridge(Bridge):
     }
 
     @staticmethod
-    def thingstring(thing):
+    def thingprops(thing):
         typed = thing.typed()
         subtype = thing.attr('subtype')
-
-        return u'{thingtype} {ain} "Fritz.Box {typed} {name}" @ "{typed}" [ ain="{ain}" ]'.format(
-            thingtype = AVMBridge.THING_TYPES[typed][subtype],
-            typed = typed, name = thing.name(),
-            ain = SecretRegistry.secret('fritzbox', typed, thing.id(), 'ain')
-        )
+        ain = SecretsRegistry.secret('fritzbox', typed, thing.id(), 'ain')
+        return {
+            "type": AVMBridge.THING_TYPES[typed][subtype],
+            "uid": ain,
+            "name": u"%s %s %s" % (AVMBridge.BRIDGE_NAME, typed, thing.name()),
+            "category": typed,
+            "properties": {
+                "ain": ain
+            }
+        }
 
 class DeconzBridge(Bridge):
     @staticmethod
@@ -50,8 +58,8 @@ class DeconzBridge(Bridge):
             "thingtype": 'deconz:deconz:homeserver',
             "name": 'Deconz',
             "properties": {
-                "host": SecretRegistry.secret('deconz', 'host'),
-                "apikey": SecretRegistry.secret('deconz', 'apikey')
+                "host": SecretsRegistry.secret('deconz', 'host'),
+                "apikey": SecretsRegistry.secret('deconz', 'apikey')
             }
         }
         
@@ -80,6 +88,12 @@ class DeconzBridge(Bridge):
             'nameprefix': 'Heating',
             'category': 'heating'
         },
+        'humidity': {
+            'thing': 'humiditysensor',
+            'uidsuffix': '010405',
+            'nameprefix': 'Humidity',
+            'category': 'sensors'
+        },
         'onofflight': {
             'thing': 'onofflight',
             'uidsuffix': '',
@@ -98,39 +112,41 @@ class DeconzBridge(Bridge):
             'nameprefix': 'Presence',
             'category': 'sensors'
         },
+        'pressure': {
+            'thing': 'pressuresensor',
+            'uidsuffix': '010403',
+            'nameprefix': 'Pressure',
+            'category': 'sensors'
+        },
         'rgb': {
             'thing': 'extendedcolorlight',
             'uidsuffix': '0b',
             'nameprefix': 'RGB',
             'category': 'controls'
+        },
+        'temperature': {
+            'thing': 'temperaturesensor',
+            'uidsuffix': '010402',
+            'nameprefix': 'Temperature',
+            'category': 'sensors'
         }
     }
 
     @staticmethod
-    def thingstring(thing):
+    def thingprops(thing):
         typed = thing.typed()
-        subtype = thing.attr('subtype', '')
-        if typed == 'airsensor' and subtype == 'aqara':
-            return u"""temperaturesensor {uid}010402 \"Deconz Airsensor temperature {name}\" @ \"sensors\" [id=\"{temperature_id}\"]
-Thing humiditysensor {uid}010405 \"Deconz Airsensor humidity {name}\" @ \"sensors\" [id=\"{humidity_id}\"]
-Thing pressuresensor {uid}010403 \"Deconz Airsensor pressure {name}\" @ \"sensors\" [id=\"{pressure_id}\"]""".format(
-                    uid=SecretRegistry.secret('deconz', 'aqara', thing.id(), 'uid'),
-                    name=thing.name(),
-                    temperature_id=SecretRegistry.secret('deconz', 'aqara', thing.id(), 'temperature', 'id'),
-                    humidity_id=SecretRegistry.secret('deconz', 'aqara', thing.id(), 'humidity', 'id'),
-                    pressure_id=SecretRegistry.secret('deconz', 'aqara', thing.id(), 'pressure', 'id'),
-                )
-        else:
-            thingDef = DeconzBridge.THING_TYPES[typed]
-            return u'{thingType} {uid}{suffix} "Deconz {prefix} {name}" @ "{category}" [id="{id}"]'.format(
-                thingType=thingDef['thing'],
-                uid = SecretRegistry.secret('deconz', typed, thing.id(), 'uid'),
-                suffix = thingDef['uidsuffix'],
-                prefix = thingDef['nameprefix'],
-                name = thing.name(),
-                category = thingDef['category'],
-                id = SecretRegistry.secret('deconz', typed, thing.id(), 'id')
-            )
+        typeDef = DeconzBridge.THING_TYPES[typed]
+        uid = SecretsRegistry.secret('deconz', typed, thing.id(), 'uid').replace(':', '').replace('-', '')
+        id = SecretsRegistry.secret('deconz', typed, thing.id(), 'id')
+        return {
+            "type": typeDef['thing'],
+            'uid': "%s%s" % (uid, typeDef['uidsuffix']),
+            'name': u"Deconz %s ",
+            'category': typeDef['category'],
+            'properties': {
+                'id': id
+            }
+        }
 
 class MQTTBridge(Bridge):
     @staticmethod
@@ -139,25 +155,71 @@ class MQTTBridge(Bridge):
             "thingtype": 'mqtt:broker:local',
             "name": 'MQTT Broker local',
             "properties": {
-                "host": SecretRegistry.secret('mqtt', 'host'),
+                "host": SecretsRegistry.secret('mqtt', 'host'),
                 "secure": False,
                 "clientID": "openHAB",
                 "username": "openhab",
-                "password": SecretRegistry.secret('mqtt', 'password')
+                "password": SecretsRegistry.secret('mqtt', 'password')
             }
         }
-    
+
+    THING_TYPES = {
+        "rgb": {
+            'nameprefix': "WS2812b",
+            'category': 'controls',
+            'channels': [
+                {
+                    "type": "string",
+                    "uid": "color",
+                    "name": "Color",
+                    "properties": {
+                        "stateTopic": "ws2812b/{}/rgb/state",
+                        "commandTopic": "ws2812b/{}/rgb/command"
+                    }
+                }
+            ]
+        }
+    }
+
+    @staticmethod
+    def thingprops(thing):
+        typed = thing.typed()
+
+        if typed in MQTTBridge.THING_TYPES:
+            typeDef = MQTTBridge.THING_TYPES[typed]
+            uid = SecretsRegistry.secret('mqtt', typed, thing.id(), 'uid')
+            channels = []
+            for channel in deepcopy(typeDef['channels']):
+                if 'stateTopic' in channel['properties']:
+                    channel['properties']['stateTopic'] = channel['properties']['stateTopic'].format(uid)
+
+                if 'commandTopic' in channel['properties']:
+                    channel['properties']['commandTopic'] = channel['properties']['commandTopic'].format(uid)
+                
+                print(channel)
+                channels.append(channel)
+
+            return {
+                'type': 'topic',
+                'uid': uid,
+                'name': 'MQTT %s %s' % (typeDef['nameprefix'], thing.name()),
+                'category': typeDef['category'],
+                'channels': channels
+            }  
+        
+        return None
+
 class NetatmoBridge(Bridge):
     @staticmethod
     def bridgeprops():
         return {
-            "thingtype": "netatmo:netatmoapi",
+            "thingtype": "netatmo:netatmoapi:home",
             "name": "Netatmo Bridge",
             "properties": {
-                "clientId": SecretRegistry.secret('netatmo', 'clientId'),
-                "clientSecret": SecretRegistry.secret('netatmo', 'clientSecret'),
-                "username": SecretRegistry.secret('netatmo', 'username'),
-                "password": SecretRegistry.secret('netatmo', 'password'),
+                "clientId": SecretsRegistry.secret('netatmo', 'clientId'),
+                "clientSecret": SecretsRegistry.secret('netatmo', 'clientSecret'),
+                "username": SecretsRegistry.secret('netatmo', 'username'),
+                "password": SecretsRegistry.secret('netatmo', 'password'),
                 "readStation": True,
                 "readHealthyHomeCoach": False,
                 "readThermostat": False,

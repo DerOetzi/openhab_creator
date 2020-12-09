@@ -1,4 +1,5 @@
 config/*.json
+config/*secrets*
 output/*
 
 # Byte-compiled / optimized / DLL files
