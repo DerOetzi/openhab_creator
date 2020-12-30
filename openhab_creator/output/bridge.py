@@ -22,6 +22,7 @@ class AVMBridge(Bridge):
             "name": "Fritz.Box",
             "properties": {
                 "ipAddress": SecretsRegistry.secret('fritzbox', 'ip'),
+                "user": SecretsRegistry.secret('fritzbox', 'user'),
                 "password": SecretsRegistry.secret('fritzbox', 'password')
             }
         }
@@ -53,6 +54,8 @@ class DeconzBridge(Bridge):
         
     def thingprops(self, thing):
         typed = thing.typed()
+        if typed == "light":
+            typed = thing.attr('subtype')
         typeDef = self.THING_TYPES[typed]
         uid = SecretsRegistry.secret('deconz', typed, thing.id(), 'uid').replace(':', '').replace('-', '')
         id = SecretsRegistry.secret('deconz', typed, thing.id(), 'id')
@@ -74,7 +77,7 @@ class MQTTBridge(Bridge):
             "properties": {
                 "host": SecretsRegistry.secret('mqtt', 'host'),
                 "secure": False,
-                "clientID": "openHAB",
+                "clientID": "openHABClient",
                 "username": "openhab",
                 "password": SecretsRegistry.secret('mqtt', 'password')
             }

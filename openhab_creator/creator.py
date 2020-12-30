@@ -1,6 +1,7 @@
 from . import __version__
 from .model import Floor, Room, Device
 from .output.things import ThingsCreator
+from .output.items import ItemsCreator
 from .output.secrets import SecretsRegistry
 
 import json
@@ -27,6 +28,9 @@ class Creator(object):
 
         thingsCreator = ThingsCreator(self._outputdir)
         thingsCreator.build(self._devices, self._checkOnly)
+
+        itemsCreator = ItemsCreator(self._outputdir)
+        itemsCreator.buildLocations(self._floors, self._checkOnly)
 
         if self._secrets is not None:
             SecretsRegistry.handleMissing()

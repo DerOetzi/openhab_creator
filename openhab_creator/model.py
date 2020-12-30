@@ -71,12 +71,20 @@ class Floor(BaseObject):
         super().__init__(name, json, Floor.VALIDTYPES)
 
         self._icon = json.get('icon', None)
+        if self._icon is None:
+            self._icon = self._typed
 
         self._rooms = []
         self._devices = []
 
     def addRoom(self, room):
         self._rooms.append(room)
+
+    def rooms(self):
+        return self._rooms
+
+    def floorstring(self):
+        return 'Group %s "%s" <%s> ["Floor"]' % (self._id, self._name, self._icon)
 
 
 class Room(BaseObject):
@@ -86,6 +94,7 @@ class Room(BaseObject):
         "livingroom",
         "bathroom", 
         "kitchen", 
+        "office",
         "corridor"
     ]
 
@@ -93,13 +102,17 @@ class Room(BaseObject):
         name = json.get('name')
 
         super().__init__(name, json, Room.VALIDTYPES)
-        self.icon = json.get('icon', None)
+        self._icon = json.get('icon', None)
+        if self._icon is None:
+            self._icon = self._typed
 
-        self.floor = floor
+        self._floor = floor
         floor.addRoom(self)
 
         self.devices = []
 
+    def roomstring(self):
+        return 'Group %s "%s" <%s> (%s) ["Room","%s"]' % (self._id, self._name, self._icon, self._floor.id(), self._typed)
 
 class Device(BaseObject):
     VALIDTYPES = [
