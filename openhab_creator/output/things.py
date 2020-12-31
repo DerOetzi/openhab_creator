@@ -7,13 +7,13 @@ class ThingsCreator:
         self._outputdir = '%s/things' % outputdir
         self._bridges = {}
 
-    def build(self, devices, checkOnly = False):
-        for device in devices:
-            if device.hasSubdevices():
-                for subdevice in device.subdevices():
-                    self._addThingToBridge(subdevice)
+    def build(self, equipmentList, checkOnly = False):
+        for equipment in equipmentList:
+            if equipment.hasSubequipment():
+                for subequipment in equipment.subequipment():
+                    self._addThingToBridge(subequipment)
             else:
-                self._addThingToBridge(device)
+                self._addThingToBridge(equipment)
 
         for bridgeKey, bridgeObj in self._bridges.items():
             bridge = bridgeObj['bridge']

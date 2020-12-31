@@ -77,7 +77,6 @@ class Floor(Location):
             self._icon = self._typed
 
         self._rooms = []
-        self._devices = []
 
     def addRoom(self, room):
         self._rooms.append(room)
@@ -111,12 +110,10 @@ class Room(Location):
         self._floor = floor
         floor.addRoom(self)
 
-        self.devices = []
-
     def roomstring(self):
         return 'Group %s "%s" <%s> (%s) ["Room","%s"]' % (self._id, self._name, self._icon, self._floor.id(), self._typed)
 
-class Device(BaseObject):
+class Equipment(BaseObject):
     VALIDTYPES = [
         'light',
         'buttons',
@@ -140,21 +137,21 @@ class Device(BaseObject):
         id = location.id() + Formatter.formatId(name)
         name = location.name() + ' ' + name
         
-        super().__init__(name.strip(), json, Device.VALIDTYPES, id)
+        super().__init__(name.strip(), json, Equipment.VALIDTYPES, id)
 
         self._location = location
 
         self._bridge = json.get('bridge')
         self._json = json
 
-        self._subdevices = []
+        self._subequipment = []
 
         if self._typed == 'light' or self._typed == 'rgb':
             bulbs = json.get('bulbs', None)
             count = json.get('count', 0)
             if bulbs is not None:
                 for bulb in bulbs:
-                    self._subdevices.append(Device(bulb, location))
+                    self._subequipment.append(Equipment(bulb, location))
             else:
                 pattern = '{} %d'.format(json.get('name', '')).strip()
 
@@ -164,10 +161,10 @@ class Device(BaseObject):
                         "bridge": self._bridge,
                         "type": json.get('subtype')
                     }
-                    self._subdevices.append(Device(bulb, location))
+                    self._subequipment.append(Equipment(bulb, location))
         elif self._typed == 'airsensor' and self.attr('subtype') == 'aqara':
             #TODO Find another solution for deconz specific aqara sensor handling
-            self._subdevices.append(Device(
+            self._subequipment.append(Equipment(
                 {
                     "name": "Temperature %s" % (json.get('name', '')),
                     "bridge": self._bridge,
@@ -175,7 +172,7 @@ class Device(BaseObject):
                 }, location
             ))
 
-            self._subdevices.append(Device(
+            self._subequipment.append(Equipment(
                 {
                     "name": "Humidity %s" % (json.get('name', '')),
                     "bridge": self._bridge,
@@ -183,7 +180,7 @@ class Device(BaseObject):
                 }, location
             ))
 
-            self._subdevices.append(Device(
+            self._subequipment.append(Equipment(
                 {
                     "name": "Pressure %s" % (json.get('name', '')),
                     "bridge": self._bridge,
@@ -194,11 +191,11 @@ class Device(BaseObject):
     def bridge(self):
         return self._bridge
 
-    def hasSubdevices(self):
-        return len(self._subdevices) > 0
+    def hasSubequipment(self):
+        return len(self._subequipment) > 0
 
-    def subdevices(self):
-        return self._subdevices
+    def subequipment(self):
+        return self._subequipment
 
     def attr(self, attr, default = None):
         return self._json.get(attr, default)

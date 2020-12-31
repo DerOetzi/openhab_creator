@@ -1,5 +1,5 @@
 from . import __version__
-from .model import Floor, Room, Device
+from .model import Floor, Room, Equipment
 from .output.things import ThingsCreator
 from .output.items import ItemsCreator
 from .output.secrets import SecretsRegistry
@@ -15,7 +15,7 @@ class Creator(object):
         
         self._floors = []
         self._rooms = []
-        self._devices = []
+        self._equipment = []
 
     def run(self):
         print("openHAB Configuration Creator (%s)" % __version__)
@@ -27,7 +27,7 @@ class Creator(object):
             SecretsRegistry.init(self._secrets)
 
         thingsCreator = ThingsCreator(self._outputdir)
-        thingsCreator.build(self._devices, self._checkOnly)
+        thingsCreator.build(self._equipment, self._checkOnly)
 
         itemsCreator = ItemsCreator(self._outputdir)
         itemsCreator.buildLocations(self._floors, self._checkOnly)
@@ -44,7 +44,7 @@ class Creator(object):
             for floor in location['floors']:
                 floorObj = Floor(floor)
                 self._floors.append(floorObj)
-                self._parseDevices(floor, floorObj)
+                self._parseEquipment(floor, floorObj)
                 self._parseRooms(floor, floorObj)
 
     def _parseRooms(self, floor, floorObj):
@@ -52,10 +52,10 @@ class Creator(object):
             for room in floor['rooms']:
                 roomObj = Room(room, floorObj)
                 self._rooms.append(roomObj)
-                self._parseDevices(room, roomObj)
+                self._parseEquipment(room, roomObj)
 
-    def _parseDevices(self, parentObj, location):
-        if 'devices' in parentObj:
-            for device in parentObj['devices']:
-                deviceObj = Device(device, location)
-                self._devices.append(deviceObj)
+    def _parseEquipment(self, parentObj, location):
+        if 'equipment' in parentObj:
+            for equipment in parentObj['equipment']:
+                equipmentObj = Equipment(equipment, location)
+                self._equipment.append(equipmentObj)
