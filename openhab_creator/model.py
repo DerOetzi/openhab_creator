@@ -55,8 +55,10 @@ class BaseObject(object):
     def __str__(self):
         return u'{} ({}, {})'.format(self._name, self._id, self._typed)
 
+class Location(BaseObject):
+    pass
 
-class Floor(BaseObject):
+class Floor(Location):
     VALIDTYPES = [
         'floor', 
         'attic', 
@@ -87,7 +89,7 @@ class Floor(BaseObject):
         return 'Group %s "%s" <%s> ["Floor"]' % (self._id, self._name, self._icon)
 
 
-class Room(BaseObject):
+class Room(Location):
     VALIDTYPES = [
         "room", 
         "bedroom", 
@@ -132,19 +134,15 @@ class Device(BaseObject):
         'pressure'
     ]
 
-    def __init__(self, json, floor, room=None):
+    def __init__(self, json, location):
         name = json.get('name', '')
-        if room is None:
-            id = floor.id() + Formatter.formatId(name)
-            name = floor.name() + ' ' + name
-        else:
-            id = room.id() + Formatter.formatId(name)
-            name = room.name() + ' ' + name
-
+        
+        id = location.id() + Formatter.formatId(name)
+        name = location.name() + ' ' + name
+        
         super().__init__(name.strip(), json, Device.VALIDTYPES, id)
 
-        self._floor = floor
-        self._room = room
+        self._location = location
 
         self._bridge = json.get('bridge')
         self._json = json
@@ -156,7 +154,7 @@ class Device(BaseObject):
             count = json.get('count', 0)
             if bulbs is not None:
                 for bulb in bulbs:
-                    self._subdevices.append(Device(bulb, floor, room))
+                    self._subdevices.append(Device(bulb, location))
             else:
                 pattern = '{} %d'.format(json.get('name', '')).strip()
 
@@ -166,7 +164,7 @@ class Device(BaseObject):
                         "bridge": self._bridge,
                         "type": json.get('subtype')
                     }
-                    self._subdevices.append(Device(bulb, floor, room))
+                    self._subdevices.append(Device(bulb, location))
         elif self._typed == 'airsensor' and self.attr('subtype') == 'aqara':
             #TODO Find another solution for deconz specific aqara sensor handling
             self._subdevices.append(Device(
@@ -174,7 +172,7 @@ class Device(BaseObject):
                     "name": "Temperature %s" % (json.get('name', '')),
                     "bridge": self._bridge,
                     "type": "temperature"
-                }, floor, room
+                }, location
             ))
 
             self._subdevices.append(Device(
@@ -182,7 +180,7 @@ class Device(BaseObject):
                     "name": "Humidity %s" % (json.get('name', '')),
                     "bridge": self._bridge,
                     "type": "humidity"
-                }, floor, room
+                }, location
             ))
 
             self._subdevices.append(Device(
@@ -190,7 +188,7 @@ class Device(BaseObject):
                     "name": "Pressure %s" % (json.get('name', '')),
                     "bridge": self._bridge,
                     "type": "pressure"
-                }, floor, room
+                }, location
             ))
 
     def bridge(self):

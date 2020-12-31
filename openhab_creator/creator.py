@@ -52,10 +52,10 @@ class Creator(object):
             for room in floor['rooms']:
                 roomObj = Room(room, floorObj)
                 self._rooms.append(roomObj)
-                self._parseDevices(room, floorObj, roomObj)
+                self._parseDevices(room, roomObj)
 
-    def _parseDevices(self, parentObj, floorObj, roomObj = None):
+    def _parseDevices(self, parentObj, location):
         if 'devices' in parentObj:
             for device in parentObj['devices']:
-                deviceObj = Device(device, floorObj, roomObj)
+                deviceObj = Device(device, location)
                 self._devices.append(deviceObj)
