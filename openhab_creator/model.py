@@ -1,3 +1,7 @@
+from copy import deepcopy
+
+from .secrets import SecretsRegistry
+
 class Formatter(object):
     @staticmethod
     def ucfirst(raw):
@@ -85,7 +89,7 @@ class Floor(Location):
         return self._rooms
 
     def floorstring(self):
-        return 'Group %s "%s" <%s> ["Floor"]' % (self._id, self._name, self._icon)
+        return 'Group %s "%s" <%s> ["Floor", "%s"]' % (self._id, self._name, self._icon, self._typed)
 
 
 class Room(Location):
@@ -93,6 +97,7 @@ class Room(Location):
         "room", 
         "bedroom", 
         "livingroom",
+        "dinningroom",
         "bathroom", 
         "kitchen", 
         "office",
@@ -115,20 +120,7 @@ class Room(Location):
 
 class Equipment(BaseObject):
     VALIDTYPES = [
-        'light',
-        'buttons',
-        'presence',
-        'rgb',
-        'heating',
-        'airsensor',
-        'soilmoisture',
-        'plug',
-        'onofflight',
-        'colortemperaturelight',
-        'dimmablelight',
-        'temperature',
-        'humidity',
-        'pressure'
+        'lightbulb'
     ]
 
     def __init__(self, json, location):
@@ -139,63 +131,29 @@ class Equipment(BaseObject):
         
         super().__init__(name.strip(), json, Equipment.VALIDTYPES, id)
 
+        self._configuration = deepcopy(json)
+        self._bridge = self._configuration.get('bridge')
+        self._secrets = {}
         self._location = location
-
-        self._bridge = json.get('bridge')
-        self._json = json
-
         self._subequipment = []
 
-        if self._typed == 'light' or self._typed == 'rgb':
-            bulbs = json.get('bulbs', None)
-            count = json.get('count', 0)
-            if bulbs is not None:
-                for bulb in bulbs:
-                    self._subequipment.append(Equipment(bulb, location))
-            else:
-                pattern = '{} %d'.format(json.get('name', '')).strip()
+        count = self._configuration.pop('count', 0)
+        if count > 0:
+            pattern = '{} %d'.format(json.get('name', '')).strip()
 
-                for i in range(1, count + 1):
-                    bulb = { 
-                        "name": pattern % i,
-                        "bridge": self._bridge,
-                        "type": json.get('subtype')
-                    }
-                    self._subequipment.append(Equipment(bulb, location))
-        elif self._typed == 'airsensor' and self.attr('subtype') == 'aqara':
-            #TODO Find another solution for deconz specific aqara sensor handling
-            self._subequipment.append(Equipment(
-                {
-                    "name": "Temperature %s" % (json.get('name', '')),
-                    "bridge": self._bridge,
-                    "type": "temperature"
-                }, location
-            ))
+            for i in range(1, count + 1):
+                subequipment = deepcopy(self._configuration)
+                subequipment['name'] = pattern % i
+                self._subequipment.append(Equipment(subequipment, location))
+        
+        subequipmentList = self._configuration.pop('equipment', [])
+        for subequipment in subequipmentList:
+            self._subequipment.append(Equipment(subequipment, location))
 
-            self._subequipment.append(Equipment(
-                {
-                    "name": "Humidity %s" % (json.get('name', '')),
-                    "bridge": self._bridge,
-                    "type": "humidity"
-                }, location
-            ))
-
-            self._subequipment.append(Equipment(
-                {
-                    "name": "Pressure %s" % (json.get('name', '')),
-                    "bridge": self._bridge,
-                    "type": "pressure"
-                }, location
-            ))
-
-    def bridge(self):
-        return self._bridge
+        if not self.hasSubequipment():
+            if 'secrets' in self._configuration:
+                for secretKey in self._configuration['secrets']:
+                    self._secrets[secretKey] = SecretsRegistry.secret(self._bridge, self._typed, self._id, secretKey)
 
     def hasSubequipment(self):
         return len(self._subequipment) > 0
-
-    def subequipment(self):
-        return self._subequipment
-
-    def attr(self, attr, default = None):
-        return self._json.get(attr, default)

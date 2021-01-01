@@ -1,7 +1,5 @@
 import os
 
-from .bridge import BridgeFactory
-
 class ItemsCreator(object):
     def __init__(self, outputdir):
         self._outputdir = '%s/items' % outputdir
