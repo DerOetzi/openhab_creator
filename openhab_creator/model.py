@@ -118,6 +118,50 @@ class Room(Location):
     def roomstring(self):
         return 'Group %s "%s" <%s> (%s) ["Room","%s"]' % (self._id, self._name, self._icon, self._floor.id(), self._typed)
 
+class Bridge(BaseObject):
+    VALIDTYPES = [
+        'deconz'
+    ]
+
+    def __init__(self, json):
+        name = json.get('name')
+        super().__init__(name, json, Bridge.VALIDTYPES)
+
+        self._configuration = deepcopy(json)
+        self._secrets = {}
+        self._replacements = {}
+        
+        self._initializeSecrets()
+        self._initializeReplacements()
+
+        self._configuration['bridgedef'] = self._configuration['bridgedef'].format_map(self._replacements)
+
+        self._things = []
+
+    def _initializeSecrets(self):
+        if 'secrets' in self._configuration:
+            for secretKey in self._configuration['secrets']:
+                self._secrets[secretKey] = SecretsRegistry.secret(self._id, secretKey)
+
+    def _initializeReplacements(self):
+        self._replacements = {
+            "name": self._name,
+            "type": self._typed,
+            "id": self._id
+        }
+
+        for key, value in self._secrets.items():
+            self._replacements[key] = value
+
+    def appendThing(self, thing):
+        self._things.append(thing)
+
+    def things(self):
+        return self._things
+
+    def bridgedef(self):
+        return self._configuration['bridgedef']
+
 class Equipment(BaseObject):
     VALIDTYPES = [
         'lightbulb'
@@ -136,24 +180,59 @@ class Equipment(BaseObject):
         self._secrets = {}
         self._location = location
         self._subequipment = []
+        self._replacements = {}
 
+        self._initializeSubequiment()
+        self._initializeThing()
+            
+    def _initializeSubequiment(self):
         count = self._configuration.pop('count', 0)
         if count > 0:
-            pattern = '{} %d'.format(json.get('name', '')).strip()
+            pattern = '{} %d'.format(self._configuration.get('name', '')).strip()
 
             for i in range(1, count + 1):
                 subequipment = deepcopy(self._configuration)
                 subequipment['name'] = pattern % i
-                self._subequipment.append(Equipment(subequipment, location))
+                self._subequipment.append(Equipment(subequipment, self._location))
         
         subequipmentList = self._configuration.pop('equipment', [])
         for subequipment in subequipmentList:
-            self._subequipment.append(Equipment(subequipment, location))
+            self._subequipment.append(Equipment(subequipment, self._location))
 
-        if not self.hasSubequipment():
-            if 'secrets' in self._configuration:
-                for secretKey in self._configuration['secrets']:
-                    self._secrets[secretKey] = SecretsRegistry.secret(self._bridge, self._typed, self._id, secretKey)
+    def _initializeThing(self):
+        if self.isThing():
+            self._initializeSecrets()
+            self._initializeReplacements()
+
+            self._configuration['thingdef'] = self._configuration['thingdef'].format_map(self._replacements)
+            self._configuration['channelprefix'] = self._configuration['channelprefix'].format_map(self._replacements)
+
+    def isThing(self):
+        return not self.hasSubequipment()
+
+    def _initializeSecrets(self):
+        if 'secrets' in self._configuration:
+            for secretKey in self._configuration['secrets']:
+                self._secrets[secretKey] = SecretsRegistry.secret(self._bridge, self._typed, self._id, secretKey)
+
+    def _initializeReplacements(self):
+        self._replacements = {
+            "name": self._name,
+            "type": self._typed,
+            "id": self._id
+        }
+
+        for key, value in self._secrets.items():
+            self._replacements[key] = value
 
     def hasSubequipment(self):
         return len(self._subequipment) > 0
+
+    def subequipment(self):
+        return self._subequipment
+
+    def bridge(self):
+        return self._bridge
+
+    def thingdef(self):
+        return self._configuration['thingdef']

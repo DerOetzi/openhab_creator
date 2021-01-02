@@ -1,6 +1,6 @@
 from . import __version__
-from .model import Floor, Room, Equipment
-#from .output.things import ThingsCreator
+from .model import Floor, Room, Bridge, Equipment
+from .output.things import ThingsCreator
 from .output.items import ItemsCreator
 from .secrets import SecretsRegistry
 
@@ -18,6 +18,7 @@ class Creator(object):
         self._templates = self._configjson['templates']
         
         self._floors = []
+        self._bridges = {}
         self._equipment = []
 
     def run(self):
@@ -29,10 +30,8 @@ class Creator(object):
 
         self.parse()
 
-        print(self._equipment)
-
-        #thingsCreator = ThingsCreator(self._outputdir)
-        #thingsCreator.build(self._equipment, self._checkOnly)
+        thingsCreator = ThingsCreator(self._outputdir)
+        thingsCreator.build(self._bridges, self._checkOnly)
 
         itemsCreator = ItemsCreator(self._outputdir)
         itemsCreator.buildLocations(self._floors, self._checkOnly)
@@ -41,8 +40,14 @@ class Creator(object):
             SecretsRegistry.handleMissing()
 
     def parse(self):
+        self._parseBridges()
+
         for location in self._configjson['locations'].values():
             self._parseFloors(location)
+
+    def _parseBridges(self):
+        for bridgeKey, bridge in self._configjson['bridges'].items():
+            self._bridges[bridgeKey] = Bridge(bridge)
 
     def _parseFloors(self, location):
         if 'floors' in location:
@@ -64,6 +69,7 @@ class Creator(object):
                 equipment = self._mergeTemplate(equipment)
                 equipmentObj = Equipment(equipment, location)
                 self._equipment.append(equipmentObj)
+                self._addThingsToBridge(equipmentObj)
 
     def _mergeTemplate(self, equipment):
         if 'template' in equipment:
@@ -87,3 +93,17 @@ class Creator(object):
             raise Exception('Template %s not found' % templateName)
 
         return deepcopy(self._templates[templateName])
+
+    def _addThingsToBridge(self, equipment):
+        if equipment.hasSubequipment():
+            for subequipment in equipment.subequipment():
+                self._addThingsToBridge(subequipment)
+        else:
+            self._addThingToBridge(equipment)
+
+    def _addThingToBridge(self, thing):
+        bridgeKey = thing.bridge()
+        if bridgeKey not in self._bridges:
+            raise Exception("Bridge %s not known" % bridgeKey)
+
+        self._bridges[bridgeKey].appendThing(thing)
