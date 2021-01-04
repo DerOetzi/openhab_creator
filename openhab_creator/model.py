@@ -120,7 +120,8 @@ class Room(Location):
 
 class Bridge(BaseObject):
     VALIDTYPES = [
-        'deconz'
+        'deconz',
+        'mqtt'
     ]
 
     def __init__(self, json):
@@ -133,9 +134,7 @@ class Bridge(BaseObject):
         
         self._initializeSecrets()
         self._initializeReplacements()
-
-        self._configuration['bridgedef'] = self._configuration['bridgedef'].format_map(self._replacements)
-
+    
         self._things = []
 
     def _initializeSecrets(self):
@@ -159,8 +158,15 @@ class Bridge(BaseObject):
     def things(self):
         return self._things
 
-    def bridgedef(self):
-        return self._configuration['bridgedef']
+    def replacements(self):
+        return self._replacements
+
+    def definition(self):
+        return {
+            "type": self._configuration['bridgedef'],
+            "name": self._name,
+            "properties": deepcopy(self._configuration['properties'])
+        }
 
 class Equipment(BaseObject):
     VALIDTYPES = [
@@ -169,8 +175,9 @@ class Equipment(BaseObject):
 
     def __init__(self, json, location):
         name = json.get('name', '')
-        
-        id = location.id() + Formatter.formatId(name)
+        id = json.get('id', None)
+        if id is None:
+            id = location.id() + Formatter.formatId(name)
         name = location.name() + ' ' + name
         
         super().__init__(name.strip(), json, Equipment.VALIDTYPES, id)
@@ -181,6 +188,7 @@ class Equipment(BaseObject):
         self._location = location
         self._subequipment = []
         self._replacements = {}
+        self._channels = []
 
         self._initializeSubequiment()
         self._initializeThing()
@@ -203,6 +211,7 @@ class Equipment(BaseObject):
         if self.isThing():
             self._initializeSecrets()
             self._initializeReplacements()
+            self._initializeChannels()
 
             self._configuration['thingdef'] = self._configuration['thingdef'].format_map(self._replacements)
             self._configuration['channelprefix'] = self._configuration['channelprefix'].format_map(self._replacements)
@@ -225,6 +234,18 @@ class Equipment(BaseObject):
         for key, value in self._secrets.items():
             self._replacements[key] = value
 
+    def _initializeChannels(self):
+        if 'channels' in self._configuration:
+            for channelKey, channelDefinition in self._configuration['channels'].items():
+                channel = {
+                    "type": channelDefinition['type'],
+                    "id": channelKey,
+                    "name": channelDefinition['name'],
+                    "properties": deepcopy(channelDefinition['properties'])
+                }
+
+                self._channels.append(channel)
+
     def hasSubequipment(self):
         return len(self._subequipment) > 0
 
@@ -236,3 +257,12 @@ class Equipment(BaseObject):
 
     def thingdef(self):
         return self._configuration['thingdef']
+
+    def replacements(self):
+        return self._replacements
+
+    def hasChannels(self):
+        return len(self._channels) > 0
+
+    def channels(self):
+        return deepcopy(self._channels)
