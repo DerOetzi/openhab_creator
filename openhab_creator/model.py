@@ -118,29 +118,23 @@ class Room(Location):
     def roomstring(self):
         return 'Group %s "%s" <%s> (%s) ["Room","%s"]' % (self._id, self._name, self._icon, self._floor.id(), self._typed)
 
-class Bridge(BaseObject):
-    VALIDTYPES = [
-        'deconz',
-        'mqtt'
-    ]
-
-    def __init__(self, json):
-        name = json.get('name')
-        super().__init__(name, json, Bridge.VALIDTYPES)
-
-        self._configuration = deepcopy(json)
+class Thing(BaseObject):
+    def __init__(self, name, configuration, validtypes, id = None):
+        super().__init__(name, configuration, validtypes, id)
         self._secrets = {}
         self._replacements = {}
-        
-        self._initializeSecrets()
-        self._initializeReplacements()
-    
-        self._things = []
+        self._properties = configuration['properties'] if 'properties' in configuration else {}
 
-    def _initializeSecrets(self):
-        if 'secrets' in self._configuration:
-            for secretKey in self._configuration['secrets']:
-                self._secrets[secretKey] = SecretsRegistry.secret(self._id, secretKey)
+        self._initializeSecrets(configuration)
+        self._initializeReplacements()
+
+    def _initializeSecrets(self, configuration):
+        if 'secrets' in configuration:
+            for secretKey in configuration['secrets']:
+                self._secrets[secretKey] = self._getSecret(secretKey)
+
+    def _getSecret(self, secretKey):
+        raise NotImplementedError("Must override _getSecret")        
 
     def _initializeReplacements(self):
         self._replacements = {
@@ -152,69 +146,76 @@ class Bridge(BaseObject):
         for key, value in self._secrets.items():
             self._replacements[key] = value
 
+    def replacements(self):
+        return self._replacements
+
+    def properties(self):
+        return self._properties
+
+class Bridge(Thing):
+    VALIDTYPES = [
+        'deconz',
+        'mqtt'
+    ]
+
+    def __init__(self, configuration):
+        name = configuration.get('name')
+        super().__init__(name, configuration, Bridge.VALIDTYPES)
+
+        self._things = []
+
+        self._replacements['nameprefix'] = configuration.get('nameprefix', '')
+        self._replacements['bridgetype'] = configuration.get('bridgetype')
+
+    def _getSecret(self, secretKey):
+        return SecretsRegistry.secret(self._typed, self._id, secretKey)
+
     def appendThing(self, thing):
         self._things.append(thing)
 
     def things(self):
         return self._things
 
-    def replacements(self):
-        return self._replacements
-
-    def definition(self):
-        return {
-            "type": self._configuration['bridgedef'],
-            "name": self._name,
-            "properties": deepcopy(self._configuration['properties'])
-        }
-
-class Equipment(BaseObject):
+class Equipment(Thing):
     VALIDTYPES = [
         'lightbulb'
     ]
 
-    def __init__(self, json, location):
-        name = json.get('name', '')
-        id = json.get('id', None)
+    def __init__(self, configuration, location):
+        name = configuration.get('name', '')
+        id = configuration.get('id', None)
         if id is None:
             id = location.id() + Formatter.formatId(name)
         name = location.name() + ' ' + name
         
-        super().__init__(name.strip(), json, Equipment.VALIDTYPES, id)
+        super().__init__(name.strip(), configuration, Equipment.VALIDTYPES, id)
 
-        self._configuration = deepcopy(json)
-        self._bridge = self._configuration.get('bridge')
-        self._secrets = {}
         self._location = location
         self._subequipment = []
-        self._replacements = {}
         self._channels = []
 
-        self._initializeSubequiment()
-        self._initializeThing()
+        self._bridge = None
+
+        self._initializeSubequiment(configuration)
+        self._initializeThing(configuration)
             
-    def _initializeSubequiment(self):
-        count = self._configuration.pop('count', 0)
+    def _initializeSubequiment(self, configuration):
+        count = configuration.pop('count', 0)
         if count > 0:
-            pattern = '{} %d'.format(self._configuration.get('name', '')).strip()
+            pattern = '{} %d'.format(configuration.get('name', '')).strip()
 
             for i in range(1, count + 1):
-                subequipment = deepcopy(self._configuration)
+                subequipment = deepcopy(configuration)
                 subequipment['name'] = pattern % i
                 self._subequipment.append(Equipment(subequipment, self._location))
         
-        subequipmentList = self._configuration.pop('equipment', [])
+        subequipmentList = configuration.pop('equipment', [])
         for subequipment in subequipmentList:
             self._subequipment.append(Equipment(subequipment, self._location))
 
-    def _initializeThing(self):
+    def _initializeThing(self, configuration):
         if self.isThing():
-            self._initializeSecrets()
-            self._initializeReplacements()
-            self._initializeChannels()
-
-            self._configuration['thingdef'] = self._configuration['thingdef'].format_map(self._replacements)
-            self._configuration['channelprefix'] = self._configuration['channelprefix'].format_map(self._replacements)
+            self._initializeChannels(configuration)
 
     def isThing(self):
         return not self.hasSubequipment()
@@ -224,19 +225,9 @@ class Equipment(BaseObject):
             for secretKey in self._configuration['secrets']:
                 self._secrets[secretKey] = SecretsRegistry.secret(self._bridge, self._typed, self._id, secretKey)
 
-    def _initializeReplacements(self):
-        self._replacements = {
-            "name": self._name,
-            "type": self._typed,
-            "id": self._id
-        }
-
-        for key, value in self._secrets.items():
-            self._replacements[key] = value
-
-    def _initializeChannels(self):
-        if 'channels' in self._configuration:
-            for channelKey, channelDefinition in self._configuration['channels'].items():
+    def _initializeChannels(self, configuration):
+        if 'channels' in configuration:
+            for channelKey, channelDefinition in configuration['channels'].items():
                 channel = {
                     "type": channelDefinition['type'],
                     "id": channelKey,
@@ -254,12 +245,6 @@ class Equipment(BaseObject):
 
     def bridge(self):
         return self._bridge
-
-    def thingdef(self):
-        return self._configuration['thingdef']
-
-    def replacements(self):
-        return self._replacements
 
     def hasChannels(self):
         return len(self._channels) > 0

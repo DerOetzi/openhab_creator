@@ -1,4 +1,5 @@
 import os
+from openhab_creator.model import Thing, Bridge
 
 class ThingsCreator:
     def __init__(self, outputdir):
@@ -6,46 +7,47 @@ class ThingsCreator:
 
     def build(self, bridges, checkOnly = False):
         for bridgeKey, bridgeObj in bridges.items():
-            bridge = bridgeObj.definition()
             lines = []
-            lines.append(u'Bridge %s "%s"%s {' % (
-                bridge['type'], bridge['name'],
-                self._propertiesstring(bridge, bridgeObj.replacements())
-            ))
-            for thing in bridgeObj.things():
-                thingReplacements = thing.replacements()
-                channels = []
-                if thing.hasChannels():
-                    channels.append('{')
-                    for channel in thing.channels():
-                        channels.append('    Type %s : %s "%s" %s' % (
-                            channel['type'], channel['id'], channel['name'],
-                            self._propertiesstring(channel, thingReplacements)
-                        )) 
-                    channels.append('  }')
+            lines.append(self._bridgestring(bridgeObj))
+            # for thing in bridgeObj.things():
+            #     thingReplacements = thing.replacements()
+            #     channels = []
+            #     if thing.hasChannels():
+            #         channels.append('{')
+            #         for channel in thing.channels():
+            #             channels.append('    Type %s : %s "%s" %s' % (
+            #                 channel['type'], channel['id'], channel['name'],
+            #                 self._propertiesstring(channel, thingReplacements)
+            #             )) 
+            #         channels.append('  }')
 
-                lines.append(u'  Thing %s %s' % (thing.thingdef(), "\n".join(channels)))
+            #     lines.append(u'  Thing %s %s' % (thing.thingdef(), "\n".join(channels)))
 
             lines.append('}')
 
             if not checkOnly:
                 self._writeFile(bridgeKey, lines)
 
-    def _propertiesstring(self, props, replacements = {}):
-        if 'properties' not in props:
+    def _bridgestring(self, bridge: Bridge):
+        bridgestring = 'Bridge {type}:{bridgetype}:{id} "{nameprefix} {name} ({id})"%s {{'
+        bridgestring = bridgestring % self._propertiesstring(bridge.properties())
+        return bridgestring.format_map(bridge.replacements())
+
+    def _propertiesstring(self, properties):
+        if len(properties) == 0:
             return ''
 
-        properties = []
+        propertiesPairs = []
 
-        for (key, value) in props['properties'].items():
+        for (key, value) in properties.items():
             if type(value) is int:
-                properties.append('%s=%d' % (key, value))
+                propertiesPairs.append('%s=%d' % (key, value))
             elif type(value) is bool:
-                properties.append('%s=%s' % (key, 'true' if value else 'false'))
+                propertiesPairs.append('%s=%s' % (key, 'true' if value else 'false'))
             else:
-                properties.append('%s="%s"' % (key, value.format_map(replacements)))
+                propertiesPairs.append('%s="%s"' % (key, value))
 
-        return ' [%s]' % (', '.join(properties))
+        return ' [%s]' % (', '.join(propertiesPairs))
 
     def _writeFile(self, bridgeKey, lines: list):
         if not os.path.exists(self._outputdir):

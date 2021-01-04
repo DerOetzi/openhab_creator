@@ -68,8 +68,8 @@ class Creator(object):
             for equipment in parentObj['equipment']:
                 equipment = self._mergeTemplate(equipment)
                 equipmentObj = Equipment(equipment, location)
-                self._equipment.append(equipmentObj)
-                self._addThingsToBridge(equipmentObj)
+#                self._equipment.append(equipmentObj)
+#                self._addThingsToBridge(equipmentObj)
 
     def _mergeTemplate(self, equipment):
         if 'template' in equipment:
