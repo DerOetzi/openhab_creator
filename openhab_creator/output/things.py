@@ -1,5 +1,5 @@
 import os
-from openhab_creator.model import Thing, Bridge
+from openhab_creator.model import Thing, Bridge, Equipment
 
 class ThingsCreator:
     def __init__(self, outputdir):
@@ -9,20 +9,8 @@ class ThingsCreator:
         for bridgeKey, bridgeObj in bridges.items():
             lines = []
             lines.append(self._bridgestring(bridgeObj))
-            # for thing in bridgeObj.things():
-            #     thingReplacements = thing.replacements()
-            #     channels = []
-            #     if thing.hasChannels():
-            #         channels.append('{')
-            #         for channel in thing.channels():
-            #             channels.append('    Type %s : %s "%s" %s' % (
-            #                 channel['type'], channel['id'], channel['name'],
-            #                 self._propertiesstring(channel, thingReplacements)
-            #             )) 
-            #         channels.append('  }')
-
-            #     lines.append(u'  Thing %s %s' % (thing.thingdef(), "\n".join(channels)))
-
+            for thing in bridgeObj.things():
+                lines.append(self._thingstring(thing))
             lines.append('}')
 
             if not checkOnly:
@@ -32,6 +20,14 @@ class ThingsCreator:
         bridgestring = 'Bridge {type}:{bridgetype}:{id} "{nameprefix} {name} ({id})"%s {{'
         bridgestring = bridgestring % self._propertiesstring(bridge.properties())
         return bridgestring.format_map(bridge.replacements())
+
+    def _thingstring(self, thing: Equipment):
+        thingstring = '  Thing {thingtype} {thinguid} "{bridgenameprefix} {nameprefix} {name} ({id})" @ "{type}"%s%s'
+        thingstring = thingstring % (
+            self._propertiesstring(thing.properties()),
+            self._channelsstring(thing)
+        )
+        return thingstring.format_map(thing.replacements())
 
     def _propertiesstring(self, properties):
         if len(properties) == 0:
@@ -48,6 +44,23 @@ class ThingsCreator:
                 propertiesPairs.append('%s="%s"' % (key, value))
 
         return ' [%s]' % (', '.join(propertiesPairs))
+
+    def _channelsstring(self, thing: Equipment):
+        if not thing.hasChannels():
+            return ''
+        
+        lines = []
+        lines.append('{{')
+        lines.append('    Channels:')
+
+        for channel in thing.channels():
+            lines.append('      Type %s : %s "%s"%s' % (
+                channel['type'], channel['id'], channel['name'],
+                self._propertiesstring(channel['properties'])
+            ))
+        lines.append('  }}')
+
+        return "\n".join(lines)
 
     def _writeFile(self, bridgeKey, lines: list):
         if not os.path.exists(self._outputdir):
