@@ -8,18 +8,18 @@ from openhab_creator.models.thing import Thing
 from openhab_creator.output.basecreator import BaseCreator
 
 class ThingsCreator(BaseCreator):
-    def __init__(self, outputdir, checkOnly):
-        super().__init__('things', outputdir, checkOnly)
+    def __init__(self, outputdir, check_only):
+        super().__init__('things', outputdir, check_only)
 
     def build(self, bridges: BridgeManager):
-        for bridgeKey, bridgeObj in bridges.all().items():
+        for bridge_key, bridge_obj in bridges.all().items():
             lines = []
-            lines.append(self._bridgestring(bridgeObj))
-            for thing in bridgeObj.things():
+            lines.append(self._bridgestring(bridge_obj))
+            for thing in bridge_obj.things():
                 lines.append(self._thingstring(thing))
             lines.append('}')
 
-            self._writeFile(bridgeKey, lines)
+            self._write_file(bridge_key, lines)
 
     def _bridgestring(self, bridge: Bridge):
         bridgestring = 'Bridge {type}:{bridgetype}:{id} "{nameprefix} {name} ({id})"%s {{'
@@ -38,17 +38,17 @@ class ThingsCreator(BaseCreator):
         if len(properties) == 0:
             return ''
 
-        propertiesPairs = []
+        properties_pairs = []
 
         for (key, value) in properties.items():
             if type(value) is int:
-                propertiesPairs.append('%s=%d' % (key, value))
+                properties_pairs.append('%s=%d' % (key, value))
             elif type(value) is bool:
-                propertiesPairs.append('%s=%s' % (key, 'true' if value else 'false'))
+                properties_pairs.append('%s=%s' % (key, 'true' if value else 'false'))
             else:
-                propertiesPairs.append('%s="%s"' % (key, value))
+                properties_pairs.append('%s="%s"' % (key, value))
 
-        return ' [%s]' % (', '.join(propertiesPairs))
+        return ' [%s]' % (', '.join(properties_pairs))
 
     def _channelsstring(self, thing: Equipment):
         if not thing.hasChannels():

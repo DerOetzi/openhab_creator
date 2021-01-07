@@ -9,12 +9,12 @@ class Formatter(object):
             return ''
 
     @staticmethod
-    def formatId(rawId: str) -> str:
-        id = rawId.strip()
-        id = id.replace('ö', 'oe')
-        id = id.replace('ä', 'ae')
-        id = id.replace('ü', 'ue')
-        id = id.replace('ß', 'ss')
-        id = id.replace(' ', '')
-        id = id.replace('_', '')
-        return id
+    def format_id(raw_id: str) -> str:
+        formatted_id = raw_id.strip()
+        formatted_id = formatted_id.replace('ö', 'oe')
+        formatted_id = formatted_id.replace('ä', 'ae')
+        formatted_id = formatted_id.replace('ü', 'ue')
+        formatted_id = formatted_id.replace('ß', 'ss')
+        formatted_id = formatted_id.replace(' ', '')
+        formatted_id = formatted_id.replace('_', '')
+        return formatted_id

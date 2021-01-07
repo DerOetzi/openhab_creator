@@ -6,6 +6,7 @@ from openhab_creator.models.location import Location
 if TYPE_CHECKING:
     from openhab_creator.models.floor import Floor
 
+
 class Room(Location):
     VALIDTYPES = [
         "room",
@@ -30,4 +31,3 @@ class Room(Location):
 
     def roomstring(self) -> str:
         return 'Group %s "%s" <%s> (%s) ["Room","%s"]' % (self._id, self._name, self._icon, self._floor.id(), self._typed)
-

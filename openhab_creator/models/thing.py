@@ -17,10 +17,10 @@ class Thing(BaseObject):
 
     def _initializeSecrets(self, configuration: dict) -> None:
         if 'secrets' in configuration:
-            for secretKey in configuration['secrets']:
-                self._secrets[secretKey] = self._getSecret(secretKey)
+            for secret_key in configuration['secrets']:
+                self._secrets[secret_key] = self._getSecret(secret_key)
 
-    def _getSecret(self, secretKey: str) -> str:
+    def _getSecret(self, secret_key: str) -> str:
         raise NotImplementedError("Must override _getSecret")
 
     def _initializeReplacements(self) -> None:

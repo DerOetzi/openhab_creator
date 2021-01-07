@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import List, TYPE_CHECKING
+from typing import Dict, List, TYPE_CHECKING
 
 from openhab_creator.secretsregistry import SecretsRegistry
 
@@ -15,7 +15,7 @@ class Bridge(Thing):
         'mqtt'
     ]
 
-    _things: List[Equipment] = []
+    _things: List[Equipment]
     _bridgetype: str
     _nameprefix: str
 
@@ -29,8 +29,10 @@ class Bridge(Thing):
         self._initializeSecrets(configuration)
         self._initializeReplacements()
 
-    def _getSecret(self, secretKey: str) -> str:
-        return SecretsRegistry.secret(self._typed, self._id, secretKey)
+        self._things = []
+
+    def _getSecret(self, secret_key: str) -> str:
+        return SecretsRegistry.secret(self._typed, self._id, secret_key)
 
     def _initializeReplacements(self) -> None:
         super()._initializeReplacements()
@@ -48,3 +50,19 @@ class Bridge(Thing):
 
     def things(self) -> List[Equipment]:
         return self._things
+
+
+class BridgeManager(object):
+    __registry: Dict[str, Bridge]
+
+    def __init__(self):
+        self.__registry = {}
+
+    def register(self, bridge_key: str, bridge: Bridge):
+        self.__registry[bridge_key] = bridge
+
+    def all(self):
+        return self.__registry
+
+    def get(self, bridge_key: str):
+        return self.__registry[bridge_key]

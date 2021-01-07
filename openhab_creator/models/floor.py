@@ -32,3 +32,16 @@ class Floor(Location):
 
     def floorstring(self) -> str:
         return 'Group %s "%s" <%s> ["Floor", "%s"]' % (self._id, self._name, self._icon, self._typed)
+
+
+class FloorManager(object):
+    __registry: List[Floor]
+
+    def __init__(self):
+        self.__registry = []
+
+    def register(self, floor: Floor) -> None:
+        self.__registry.append(floor)
+
+    def all(self) -> List[Floor]:
+        return self.__registry

@@ -1,3 +1,5 @@
+from openhab_creator.exception import ConfigurationException
+
 from openhab_creator.models.formatter import Formatter
 
 class BaseObject(object):
@@ -8,11 +10,13 @@ class BaseObject(object):
 
     def __init__(self, name: str, configuration: dict, validtypes: list, id: str = None):
         if id is None:
-            id = configuration.get('id', None)
-            if id is None:
-                id = Formatter.formatId(name)
+            self._id = configuration.get('id', None)
+            if self._id is None:
+                self._id = Formatter.format_id(name)
+        else:
+            self._id = id
 
-        self._id = Formatter.ucfirst(id)
+        self._id = Formatter.ucfirst(self._id)
 
         self._name = name
 
@@ -24,7 +28,7 @@ class BaseObject(object):
             if typed in validtypes:
                 self._typed = typed
             else:
-                raise Exception('Invalid type {} for {}'.format(typed, name))
+                raise ConfigurationException('Invalid type {} for {}'.format(typed, name))
 
         self._icon = configuration.get('icon', None)
         if self._icon is None:
@@ -43,4 +47,4 @@ class BaseObject(object):
         return self.__str__()
 
     def __str__(self) -> str:
-        return f'{self._name} ({self.id}, {self._typed})'
+        return f'{self._name} ({self._id}, {self._typed})'

@@ -9,7 +9,7 @@ from openhab_creator.models.formatter import Formatter
 from openhab_creator.models.thing import Thing
 
 if TYPE_CHECKING:
-    from openhab_creator.models.bridgemanager import BridgeManager
+    from openhab_creator.models.bridge import BridgeManager
     from openhab_creator.models.location import Location
     from openhab_creator.models.bridge import Bridge
 
@@ -21,20 +21,20 @@ class Equipment(Thing):
         'sensor'
     ]
 
-    _parent = None
+    _parent: Equipment
     _location: Location
     _subequipment: List
     _channels: List
-    _bridge: Bridge = None
+    _bridge: Bridge
 
     def __init__(self, configuration: dict, location: Location, bridges: BridgeManager, parent: Equipment = None):
         name = configuration.get('name', '')
-        id = configuration.get('id', None)
-        if id is None:
-            id = location.id() + Formatter.formatId(name)
+        config_id = configuration.get('id', None)
+        if config_id is None:
+            config_id = location.id() + Formatter.format_id(name)
         name = location.name() + ' ' + name
 
-        super().__init__(name.strip(), configuration, Equipment.VALIDTYPES, id)
+        super().__init__(name.strip(), configuration, Equipment.VALIDTYPES, config_id)
         self._parent = parent
         self._location = location
         self._subequipment = []
@@ -56,8 +56,8 @@ class Equipment(Thing):
                 self._subequipment.append(
                     Equipment(subequipment, self._location, bridges, self))
 
-        subequipmentList = configuration.pop('equipment', [])
-        for subequipment in subequipmentList:
+        subequipment_list = configuration.pop('equipment', [])
+        for subequipment in subequipment_list:
             self._subequipment.append(
                 Equipment(subequipment, self._location, bridges, self))
 
@@ -76,8 +76,8 @@ class Equipment(Thing):
     def isThing(self) -> bool:
         return not self.hasSubequipment()
 
-    def _getSecret(self, secretKey: str) -> str:
-        return SecretsRegistry.secret(self._bridge.typed(), self._typed, self._id, secretKey)
+    def _getSecret(self, secret_key: str) -> str:
+        return SecretsRegistry.secret(self._bridge.typed(), self._typed, self._id, secret_key)
 
     def _initializeReplacements(self, configuration: dict) -> None:
         super()._initializeReplacements()
@@ -91,12 +91,12 @@ class Equipment(Thing):
 
     def _initializeChannels(self, configuration: dict) -> None:
         if 'channels' in configuration:
-            for channelKey, channelDefinition in configuration['channels'].items():
+            for channel_key, channel_definition in configuration['channels'].items():
                 channel = {
-                    "type": channelDefinition['type'],
-                    "id": channelKey,
-                    "name": channelDefinition['name'],
-                    "properties": deepcopy(channelDefinition['properties'])
+                    "type": channel_definition['type'],
+                    "id": channel_key,
+                    "name": channel_definition['name'],
+                    "properties": deepcopy(channel_definition['properties'])
                 }
 
                 self._channels.append(channel)
@@ -115,3 +115,16 @@ class Equipment(Thing):
 
     def channels(self) -> List:
         return deepcopy(self._channels)
+
+
+class EquipmentManager(object):
+    __registry: List[Equipment]
+
+    def __init__(self):
+        self.__registry = []
+
+    def register(self, equipment: Equipment) -> None:
+        self.__registry.append(equipment)
+
+    def all(self):
+        return self.__registry
