@@ -24,7 +24,6 @@ setuptools.setup(
         'License :: OSI Approved :: MIT License',
 
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3 :: Only',
@@ -32,7 +31,7 @@ setuptools.setup(
     keywords='smart home, openhab',
     package_dir={'openhab_creator': 'openhab_creator'},
     packages=['openhab_creator'],
-    python_requires='>=3.6, <4',
+    python_requires='>=3.7, <4',
     install_requires = requirements,
     entry_points={
         'console_scripts': [

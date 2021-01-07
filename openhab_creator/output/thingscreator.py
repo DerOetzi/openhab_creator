@@ -1,20 +1,25 @@
 import os
-from openhab_creator.model import Thing, Bridge, Equipment
 
-class ThingsCreator:
-    def __init__(self, outputdir):
-        self._outputdir = '%s/things' % outputdir
+from openhab_creator.models.bridge import Bridge
+from openhab_creator.models.bridgemanager import BridgeManager
+from openhab_creator.models.equipment import Equipment
+from openhab_creator.models.thing import Thing
 
-    def build(self, bridges, checkOnly = False):
-        for bridgeKey, bridgeObj in bridges.items():
+from openhab_creator.output.basecreator import BaseCreator
+
+class ThingsCreator(BaseCreator):
+    def __init__(self, outputdir, checkOnly):
+        super().__init__('things', outputdir, checkOnly)
+
+    def build(self, bridges: BridgeManager):
+        for bridgeKey, bridgeObj in bridges.all().items():
             lines = []
             lines.append(self._bridgestring(bridgeObj))
             for thing in bridgeObj.things():
                 lines.append(self._thingstring(thing))
             lines.append('}')
 
-            if not checkOnly:
-                self._writeFile(bridgeKey, lines)
+            self._writeFile(bridgeKey, lines)
 
     def _bridgestring(self, bridge: Bridge):
         bridgestring = 'Bridge {type}:{bridgetype}:{id} "{nameprefix} {name} ({id})"%s {{'
@@ -61,11 +66,4 @@ class ThingsCreator:
         lines.append('  }}')
 
         return "\n".join(lines)
-
-    def _writeFile(self, bridgeKey, lines: list):
-        if not os.path.exists(self._outputdir):
-            os.makedirs(self._outputdir)
-
-        with open('%s/%s.things' % (self._outputdir, bridgeKey), 'w') as f:
-            f.writelines("\n".join(lines))
 

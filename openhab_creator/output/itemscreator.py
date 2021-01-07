@@ -1,7 +1,8 @@
 import os
+from typing import List
 
 class ItemsCreator(object):
-    def __init__(self, outputdir):
+    def __init__(self, outputdir: str):
         self._outputdir = '%s/items' % outputdir
 
     def buildLocations(self, floors, checkOnly = False):
