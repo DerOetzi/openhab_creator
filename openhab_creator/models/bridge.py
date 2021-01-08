@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import Dict, List, TYPE_CHECKING
 
+from openhab_creator.exception import ConfigurationException
 from openhab_creator.secretsregistry import SecretsRegistry
 
 from openhab_creator.models.thing import Thing
@@ -15,24 +16,26 @@ class Bridge(Thing):
         'mqtt'
     ]
 
-    _things: List[Equipment]
-    _bridgetype: str
-    _nameprefix: str
-
     def __init__(self, configuration: dict):
         name = configuration.get('name')
-        super().__init__(name, configuration, Bridge.VALIDTYPES)
+        super().__init__(name, configuration)
 
-        self._bridgetype = configuration.get('bridgetype')
-        self._nameprefix = configuration.get('nameprefix', '')
+        self._bridgetype: str = configuration.get('bridgetype')
+        self._nameprefix: str = configuration.get('nameprefix', '')
 
         self._initializeSecrets(configuration)
         self._initializeReplacements()
 
-        self._things = []
+        self._things: List[Equipment] = []
 
     def _getSecret(self, secret_key: str) -> str:
         return SecretsRegistry.secret(self._typed, self._id, secret_key)
+
+    def _default_type(self) -> str:
+        raise ConfigurationException('Bridge always need a type defined in configuration')
+
+    def _is_valid_type(self, typed: str) -> bool:
+        return typed in Bridge.VALIDTYPES
 
     def _initializeReplacements(self) -> None:
         super()._initializeReplacements()

@@ -1,15 +1,11 @@
 from openhab_creator.exception import ConfigurationException
 
-from openhab_creator.models.formatter import Formatter
+from openhab_creator.output.formatter import Formatter
 
 class BaseObject(object):
-    _id: str
-    _name: str
-    _typed: str
-    _icon: str
-
-    def __init__(self, name: str, configuration: dict, validtypes: list, id: str = None):
-        if id is None:
+    def __init__(self, name: str, configuration: dict, id: str = None):
+        self._id: str = id
+        if self._id is None:
             self._id = configuration.get('id', None)
             if self._id is None:
                 self._id = Formatter.format_id(name)
@@ -18,21 +14,25 @@ class BaseObject(object):
 
         self._id = Formatter.ucfirst(self._id)
 
-        self._name = name
+        self._name: str = name
 
-        typed = configuration.get('type', None)
-        if typed is None:
-            self._typed = validtypes[0]
+        self._typed: str = configuration.get('type', None)
+        if self._typed is None:
+            self._typed = self._default_type()
         else:
-            typed = typed.lower()
-            if typed in validtypes:
-                self._typed = typed
-            else:
-                raise ConfigurationException('Invalid type {} for {}'.format(typed, name))
+            self._typed = self._typed.lower()
+            if not self._is_valid_type(self._typed):
+                raise ConfigurationException(f'Invalid type {self._typed} for {name}')
 
-        self._icon = configuration.get('icon', None)
+        self._icon: str = configuration.get('icon', None)
         if self._icon is None:
             self._icon = self._typed
+
+    def _default_type(self) -> str:
+        raise NotImplementedError("Must override _default_type")
+
+    def _is_valid_type(self, typed: str) -> bool:
+        raise NotImplementedError('Must override _is_valid_type')
 
     def id(self) -> str:
         return self._id
@@ -42,6 +42,9 @@ class BaseObject(object):
 
     def typed(self) -> str:
         return self._typed
+
+    def icon(self) -> str:
+        return self._icon
 
     def __repr__(self) -> str:
         return self.__str__()

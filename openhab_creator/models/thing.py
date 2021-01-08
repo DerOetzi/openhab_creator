@@ -8,8 +8,8 @@ class Thing(BaseObject):
     _replacements: Dict[str, str]
     _properties: Dict[str, str]
 
-    def __init__(self, name: str, configuration: dict, validtypes: List[str], id: str = None):
-        super().__init__(name, configuration, validtypes, id)
+    def __init__(self, name: str, configuration: dict, id: str = None):
+        super().__init__(name, configuration, id)
         self._secrets = {}
         self._replacements = {}
         self._properties = configuration['properties'] if 'properties' in configuration else {

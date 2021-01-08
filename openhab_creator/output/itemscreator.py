@@ -6,18 +6,11 @@ import os
 if TYPE_CHECKING:
     from openhab_creator.models.floor import FloorManager
 
-from openhab_creator.output.basecreator import BaseCreator
+from openhab_creator.output.itemcreator import ItemCreator
+from openhab_creator.output.locationscreator import LocationsCreator
 
 
-class ItemsCreator(BaseCreator):
-    def __init__(self, outputdir: str, check_only: bool = False):
-        super().__init__('items', outputdir, check_only)
-
-    def buildLocations(self, floors: FloorManager):
-        lines = []
-        for floor in floors.all():
-            lines.append(floor.floorstring())
-            for room in floor.rooms():
-                lines.append(room.roomstring())
-
-        self._write_file('locations', lines)
+class ItemsCreator(ItemCreator):
+    def build(self, floors: FloorManager):
+        locations_creator = LocationsCreator(self._outputdir, self._check_only)
+        locations_creator.build(floors)

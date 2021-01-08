@@ -55,7 +55,7 @@ class Creator(object):
         things_creator.build(self._bridges)
 
         items_creator = ItemsCreator(self._outputdir, self._check_only)
-        items_creator.buildLocations(self._floors)
+        items_creator.build(self._floors)
 
         if self._secretsfile is not None:
             SecretsRegistry.handleMissing()

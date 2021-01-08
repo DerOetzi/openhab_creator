@@ -1,11 +1,12 @@
 from __future__ import annotations
-from typing import List, TYPE_CHECKING
+from typing import Dict, List, TYPE_CHECKING
 
 from copy import deepcopy
 
+from openhab_creator.exception import ConfigurationException
 from openhab_creator.secretsregistry import SecretsRegistry
 
-from openhab_creator.models.formatter import Formatter
+from openhab_creator.output.formatter import Formatter
 from openhab_creator.models.thing import Thing
 
 if TYPE_CHECKING:
@@ -16,16 +17,10 @@ if TYPE_CHECKING:
 
 class Equipment(Thing):
 
-    VALIDTYPES = [
-        'lightbulb',
-        'sensor'
-    ]
-
-    _parent: Equipment
-    _location: Location
-    _subequipment: List
-    _channels: List
-    _bridge: Bridge
+    VALIDTYPES = {
+        'lightbulb': 'Lightbulb',
+        'sensor': 'Sensor'
+    }
 
     def __init__(self, configuration: dict, location: Location, bridges: BridgeManager, parent: Equipment = None):
         name = configuration.get('name', '')
@@ -34,21 +29,27 @@ class Equipment(Thing):
             config_id = location.id() + Formatter.format_id(name)
         name = location.name() + ' ' + name
 
-        super().__init__(name.strip(), configuration, Equipment.VALIDTYPES, config_id)
-        self._parent = parent
-        self._location = location
-        self._subequipment = []
-        self._channels = []
+        super().__init__(name.strip(), configuration, config_id)
+        self._parent: Equipment = parent
+        self._location: Location = location
+        self._subequipment: List[Equipment] = []
+        self._channels: List = []
 
-        self._bridge = None
+        self._bridge: Bridge = None
 
         self._initializeSubequiment(configuration, bridges)
         self._initializeThing(configuration, bridges)
 
+    def _default_type(self) -> str:
+        raise ConfigurationException('Equipment always need a type defined in configuration')
+
+    def _is_valid_type(self, typed: str) -> bool:
+        return typed in Equipment.VALIDTYPES
+
     def _initializeSubequiment(self, configuration: dict, bridges: BridgeManager) -> None:
         count = configuration.pop('count', 0)
         if count > 0:
-            pattern = '{} %d'.format(configuration.get('name', '')).strip()
+            pattern = f"{configuration.get('name', '')} %d".strip()
 
             for i in range(1, count + 1):
                 subequipment = configuration
@@ -118,13 +119,17 @@ class Equipment(Thing):
 
 
 class EquipmentManager(object):
-    __registry: List[Equipment]
+    __registry: Dict[str, List[Equipment]]
 
     def __init__(self):
-        self.__registry = []
+        self.__registry = {}
 
     def register(self, equipment: Equipment) -> None:
-        self.__registry.append(equipment)
+        typed = equipment.typed()
+        if typed not in self.__registry:
+            self.__registry[typed] = []
+
+        self.__registry[typed].append(equipment)
 
     def all(self):
         return self.__registry

@@ -1,7 +1,6 @@
 import os
 
-from openhab_creator.models.bridge import Bridge
-from openhab_creator.models.bridgemanager import BridgeManager
+from openhab_creator.models.bridge import Bridge, BridgeManager
 from openhab_creator.models.equipment import Equipment
 from openhab_creator.models.thing import Thing
 

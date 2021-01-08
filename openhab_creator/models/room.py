@@ -8,26 +8,33 @@ if TYPE_CHECKING:
 
 
 class Room(Location):
-    VALIDTYPES = [
-        "room",
-        "bedroom",
-        "livingroom",
-        "dinningroom",
-        "bathroom",
-        "kitchen",
-        "office",
-        "corridor"
-    ]
-
-    _floor: Floor
+    VALIDTYPES = {
+        "room": "Room",
+        "bedroom": "Bedroom",
+        "livingroom": "LivingRoom",
+        "dinningroom": "Room",
+        "bathroom": "Bathroom",
+        "kitchen": "Kitchen",
+        "office": "Room",
+        "corridor": "Corridor"
+    }
 
     def __init__(self, configuration: dict, floor: Floor):
         name = configuration.get('name')
 
-        super().__init__(name, configuration, Room.VALIDTYPES)
+        super().__init__(name, configuration)
 
-        self._floor = floor
+        self.__floor: Floor = floor
         floor.addRoom(self)
 
-    def roomstring(self) -> str:
-        return 'Group %s "%s" <%s> (%s) ["Room","%s"]' % (self._id, self._name, self._icon, self._floor.id(), self._typed)
+    def _default_type(self) -> str:
+        return 'room'
+
+    def _is_valid_type(self, typed: str) -> bool:
+        return typed in Room.VALIDTYPES
+
+    def floor(self) -> Floor:
+        return self.__floor
+
+    def typedFormatted(self):
+        return Room.VALIDTYPES[self._typed]

@@ -8,21 +8,27 @@ if TYPE_CHECKING:
 
 
 class Floor(Location):
-    VALIDTYPES = [
-        'floor',
-        'attic',
-        'basement',
-        'groundfloor',
-        'firstfloor'
-    ]
+    VALIDTYPES = {
+        'floor':'Floor',
+        'attic': 'Attic',
+        'basement': 'Basement',
+        'groundfloor': 'GroundFloor',
+        'firstfloor': 'FirstFloor'
+    }
 
     _rooms = []
 
     def __init__(self, configuration: dict):
         name = configuration.get('name')
 
-        super().__init__(name, configuration, Floor.VALIDTYPES)
+        super().__init__(name, configuration)
         self._rooms = []
+
+    def _default_type(self) -> str:
+        return 'floor'
+
+    def _is_valid_type(self, typed: str) -> bool:
+        return typed in Floor.VALIDTYPES
 
     def addRoom(self, room: Room):
         self._rooms.append(room)
@@ -30,9 +36,8 @@ class Floor(Location):
     def rooms(self) -> List[Room]:
         return self._rooms
 
-    def floorstring(self) -> str:
-        return 'Group %s "%s" <%s> ["Floor", "%s"]' % (self._id, self._name, self._icon, self._typed)
-
+    def typedFormatted(self):
+        return Floor.VALIDTYPES[self._typed]
 
 class FloorManager(object):
     __registry: List[Floor]
