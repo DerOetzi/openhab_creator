@@ -25,7 +25,7 @@ class Room(Location):
         super().__init__(name, configuration)
 
         self.__floor: Floor = floor
-        floor.addRoom(self)
+        floor.add_room(self)
 
     def _default_type(self) -> str:
         return 'room'
@@ -36,5 +36,5 @@ class Room(Location):
     def floor(self) -> Floor:
         return self.__floor
 
-    def typedFormatted(self):
+    def typed_formatted(self):
         return Room.VALIDTYPES[self._typed]

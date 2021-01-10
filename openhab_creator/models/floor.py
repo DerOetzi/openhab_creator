@@ -30,13 +30,13 @@ class Floor(Location):
     def _is_valid_type(self, typed: str) -> bool:
         return typed in Floor.VALIDTYPES
 
-    def addRoom(self, room: Room):
+    def add_room(self, room: Room):
         self._rooms.append(room)
 
     def rooms(self) -> List[Room]:
         return self._rooms
 
-    def typedFormatted(self):
+    def typed_formatted(self):
         return Floor.VALIDTYPES[self._typed]
 
 class FloorManager(object):

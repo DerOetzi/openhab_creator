@@ -9,14 +9,19 @@ class BaseCreator(object):
         self._outputdir: str = outputdir
         self._check_only: bool = check_only
 
-    def _write_file(self, filename: str, lines: List[str]) -> None:
+        self.__lines: List[str] = []
+
+    def _append(self, lines: str) -> None:
+        self.__lines.append(lines)
+
+    def _write_file(self, filename: str) -> None:
         if self._check_only:
             return
 
         self.__create_outputdir_if_not_exists()
 
         with open(f'{self._outputdir}/{self._typed}/{filename}.{self._typed}', 'w') as f:
-            f.writelines("\n".join(lines))
+            f.writelines("\n".join(self.__lines))
 
     def __create_outputdir_if_not_exists(self) -> None:
         if not os.path.exists(f'{self._outputdir}/{self._typed}'):

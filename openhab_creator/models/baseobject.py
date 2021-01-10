@@ -1,3 +1,4 @@
+from __future__ import annotations
 from openhab_creator.exception import ConfigurationException
 
 from openhab_creator.output.formatter import Formatter
@@ -27,6 +28,12 @@ class BaseObject(object):
         self._icon: str = configuration.get('icon', None)
         if self._icon is None:
             self._icon = self._typed
+
+    def _cast(self, obj: BaseObject) -> None:
+        self._id = obj._id
+        self._name = obj._name
+        self._typed = obj._typed
+        self._icon = obj._icon
 
     def _default_type(self) -> str:
         raise NotImplementedError("Must override _default_type")

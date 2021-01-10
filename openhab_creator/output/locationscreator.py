@@ -10,22 +10,21 @@ if TYPE_CHECKING:
 
 class LocationsCreator(ItemCreator):
     def build(self, floors: FloorManager):
-        lines = []
         for floor in floors.all():
-            lines.append(self.__create_floor(floor))
+            self.__create_floor(floor)
             for room in floor.rooms():
-                lines.append(self.__create_room(room))
+                self.__create_room(room)
 
-        self._write_file('locations', lines)
+        self._write_file('locations')
 
-    def __create_floor(self, floor: Floor) -> str:
-        return self._create_group(
+    def __create_floor(self, floor: Floor) -> None:
+        self._create_group(
             floor.id(), floor.name(), floor.icon(),
-            tags=[floor.typedFormatted()]
+            tags=[floor.typed_formatted()]
         )
 
-    def __create_room(self, room: Room) -> str:
-        return self._create_group(
+    def __create_room(self, room: Room) -> None:
+        self._create_group(
             room.id(), room.name(), room.icon(),
-            [room.floor().id()], [room.typedFormatted()]
+            [room.floor().id()], [room.typed_formatted()]
         )

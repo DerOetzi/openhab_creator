@@ -2,7 +2,7 @@ import os
 
 from openhab_creator.models.bridge import Bridge, BridgeManager
 from openhab_creator.models.equipment import Equipment
-from openhab_creator.models.thing import Thing
+from openhab_creator.models.basething import BaseThing
 
 from openhab_creator.output.basecreator import BaseCreator
 
@@ -12,26 +12,28 @@ class ThingsCreator(BaseCreator):
 
     def build(self, bridges: BridgeManager):
         for bridge_key, bridge_obj in bridges.all().items():
-            lines = []
-            lines.append(self._bridgestring(bridge_obj))
+            self.__append_bridge(bridge_obj)
             for thing in bridge_obj.things():
-                lines.append(self._thingstring(thing))
-            lines.append('}')
+                self.__append_thing(thing)
+            
+            self._append('}')
 
-            self._write_file(bridge_key, lines)
+            self._write_file(bridge_key)
 
-    def _bridgestring(self, bridge: Bridge):
+    def __append_bridge(self, bridge: Bridge) -> None:
         bridgestring = 'Bridge {type}:{bridgetype}:{id} "{nameprefix} {name} ({id})"%s {{'
         bridgestring = bridgestring % self._propertiesstring(bridge.properties())
-        return bridgestring.format_map(bridge.replacements())
+        bridgestring = bridgestring.format_map(bridge.replacements())
+        self._append(bridgestring)
 
-    def _thingstring(self, thing: Equipment):
+    def __append_thing(self, thing: Equipment) -> None:
         thingstring = '  Thing {thingtype} {thinguid} "{bridgenameprefix} {nameprefix} {name} ({id})" @ "{type}"%s%s'
         thingstring = thingstring % (
             self._propertiesstring(thing.properties()),
             self._channelsstring(thing)
         )
-        return thingstring.format_map(thing.replacements())
+        thingstring = thingstring.format_map(thing.replacements())
+        self._append(thingstring)
 
     def _propertiesstring(self, properties):
         if len(properties) == 0:
@@ -50,7 +52,7 @@ class ThingsCreator(BaseCreator):
         return ' [%s]' % (', '.join(properties_pairs))
 
     def _channelsstring(self, thing: Equipment):
-        if not thing.hasChannels():
+        if not thing.has_channels():
             return ''
         
         lines = []
