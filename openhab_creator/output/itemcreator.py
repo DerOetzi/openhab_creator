@@ -1,4 +1,4 @@
-from typing import Any, List, Dict, Literal
+from typing import Any, List, Dict, Literal, Optional
 
 from openhab_creator.output.basecreator import BaseCreator
 
@@ -10,7 +10,7 @@ class ItemCreator(BaseCreator):
     def __init__(self, outputdir: str, check_only: bool):
         super().__init__('items', outputdir, check_only)
 
-    def _create_group(self, id: str, name: str, icon: str = None, groups: List[str] = [], tags: List[str] = [], typed: Grouptypes = None) -> None:
+    def _create_group(self, id: str, name: str, icon: Optional[str] = None, groups: List[str] = [], tags: List[str] = [], typed: Optional[Grouptypes] = None) -> None:
         groupstring = f"Group{self.__grouptype(typed)} {id}\n  \"{name}\""
         groupstring += self.__iconstring(icon)
         groupstring += self.__groupsstring(groups)
@@ -19,7 +19,7 @@ class ItemCreator(BaseCreator):
 
         self._append(groupstring)
 
-    def __grouptype(self, typed: Grouptypes = None):
+    def __grouptype(self, typed: Optional[Grouptypes] = None):
         if typed == 'onoff':
             return ':Switch:OR(ON,OFF)'
         elif typed == 'dimmer_avg':
@@ -29,7 +29,7 @@ class ItemCreator(BaseCreator):
         else:
             return ''
 
-    def _create_item(self, typed: Itemtypes, id: str, name: str, icon: str = None, groups: List[str] = [], tags: List[str] = [], metadata: Dict[str, Any] = {}) -> None:
+    def _create_item(self, typed: Itemtypes, id: str, name: str, icon: Optional[str] = None, groups: List[str] = [], tags: List[str] = [], metadata: Dict[str, Any] = {}) -> None:
         itemstring = f"{typed} {id}\n  \"{name}\""
         itemstring += self.__iconstring(icon)
         itemstring += self.__groupsstring(groups)
@@ -39,7 +39,7 @@ class ItemCreator(BaseCreator):
 
         self._append(itemstring)
 
-    def __iconstring(self, icon: str = None) -> str:
+    def __iconstring(self, icon: Optional[str] = None) -> str:
         if icon is None:
             return ''
 

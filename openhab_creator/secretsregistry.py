@@ -1,24 +1,31 @@
+from __future__ import annotations
+from typing import Dict, List
+
 import csv
 
-class SecretsRegistry(object):
-    SECRETS_REGISTRY = {}
+from io import TextIOWrapper
 
-    MISSING_KEYS = []
+
+class SecretsRegistry(object):
+    SECRETS_REGISTRY: Dict[str, str] = {}
+
+    MISSING_KEYS: List[str] = []
 
     @staticmethod
-    def init(secretsfile):
+    def init(secretsfile: TextIOWrapper) -> None:
         reader = csv.DictReader(secretsfile)
 
         for row in reader:
             if row['value'].strip() == '':
                 print("Empty secret: %s" % row['key'])
-                SecretsRegistry.SECRETS_REGISTRY[row['key'].lower()] = '__%s__' % (row['key'].upper())
+                SecretsRegistry.SECRETS_REGISTRY[row['key'].lower()] = '__%s__' % (
+                    row['key'].upper())
             else:
-                SecretsRegistry.SECRETS_REGISTRY[row['key'].lower()] = row['value'].strip()
-        pass
+                SecretsRegistry.SECRETS_REGISTRY[row['key'].lower(
+                )] = row['value'].strip()
 
     @staticmethod
-    def secret(*args):
+    def secret(*args: List[str]) -> str:
         key = '_'.join(args).lower()
 
         if key in SecretsRegistry.SECRETS_REGISTRY:
@@ -29,12 +36,12 @@ class SecretsRegistry(object):
             return "__%s__" % key.upper()
 
     @staticmethod
-    def hasMissing():
+    def has_missing() -> bool:
         return len(SecretsRegistry.MISSING_KEYS) > 0
 
     @staticmethod
-    def handleMissing():
-        if SecretsRegistry.hasMissing():
+    def handle_missing() -> None:
+        if SecretsRegistry.has_missing():
             print("Missing secrets:")
             for key in SecretsRegistry.MISSING_KEYS:
                 print(key)

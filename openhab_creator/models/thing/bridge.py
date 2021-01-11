@@ -4,7 +4,9 @@ from typing import Dict, List, TYPE_CHECKING
 from openhab_creator.exception import ConfigurationException
 from openhab_creator.secretsregistry import SecretsRegistry
 
-from openhab_creator.models.basething import BaseThing
+from openhab_creator.models import ConfigurationType
+
+from openhab_creator.models.thing import BaseThing
 
 if TYPE_CHECKING:
     from openhab_creator.models.equipment import Equipment
@@ -16,7 +18,7 @@ class Bridge(BaseThing):
         'mqtt'
     ]
 
-    def __init__(self, configuration: dict):
+    def __init__(self, configuration: ConfigurationType):
         name = configuration.get('name')
         super().__init__(name, configuration)
 
@@ -32,7 +34,8 @@ class Bridge(BaseThing):
         return SecretsRegistry.secret(self._typed, self._id, secret_key)
 
     def _default_type(self) -> str:
-        raise ConfigurationException('Bridge always need a type defined in configuration')
+        raise ConfigurationException(
+            'Bridge always need a type defined in configuration')
 
     def _is_valid_type(self, typed: str) -> bool:
         return typed in Bridge.VALIDTYPES
@@ -48,24 +51,8 @@ class Bridge(BaseThing):
     def nameprefix(self) -> str:
         return self._nameprefix
 
-    def append_thing(self, thing: Equipment) -> None:
-        self._things.append(thing)
-
     def things(self) -> List[Equipment]:
         return self._things
 
-
-class BridgeManager(object):
-    __registry: Dict[str, Bridge]
-
-    def __init__(self):
-        self.__registry = {}
-
-    def register(self, bridge_key: str, bridge: Bridge) -> None:
-        self.__registry[bridge_key] = bridge
-
-    def all(self) -> Dict[str, Bridge]:
-        return self.__registry
-
-    def get(self, bridge_key: str) -> Bridge:
-        return self.__registry[bridge_key]
+    def append_thing(self, thing: Equipment) -> None:
+        self._things.append(thing)

@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 from openhab_creator.models.location import Location
 
 if TYPE_CHECKING:
-    from openhab_creator.models.floor import Floor
+    from openhab_creator.models.location.floor import Floor
 
 
 class Room(Location):

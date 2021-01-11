@@ -1,20 +1,26 @@
 from __future__ import annotations
-from typing import Dict, List, Type, Literal, TYPE_CHECKING
+from typing import Dict, List, Literal, Optional, Type, TYPE_CHECKING
 
 from copy import deepcopy
 
-from openhab_creator.exception import ConfigurationException, BuildException
+from openhab_creator.exception import BuildException, ConfigurationException
+
 from openhab_creator.secretsregistry import SecretsRegistry
 
-from openhab_creator.output.formatter import Formatter
-from openhab_creator.models.basething import BaseThing
+from openhab_creator.models.thing import BaseThing
 
 if TYPE_CHECKING:
-    from openhab_creator.models.bridge import BridgeManager
+    from openhab_creator.models import ConfigurationType
     from openhab_creator.models.location import Location
-    from openhab_creator.models.bridge import Bridge
+    from openhab_creator.models.thing.bridge import Bridge
+    from openhab_creator.models.thing.manager import BridgeManager
 
-Pointtype = Literal['controls']
+from openhab_creator.output.formatter import Formatter
+
+PointKeyType = Literal['controls']
+PointType = Dict[str, str]
+Pointstype = Dict[PointKeyType, PointType]
+
 
 class Equipment(BaseThing):
 
@@ -23,7 +29,7 @@ class Equipment(BaseThing):
         'sensor': 'Sensor'
     }
 
-    def __init__(self, configuration: dict, location: Location, bridges: BridgeManager, parent: Equipment = None):
+    def __init__(self, configuration: ConfigurationType, location: Location, bridges: BridgeManager, parent: Optional[Equipment] = None):
         self._blankname: str = configuration.get('name', '')
         config_id = configuration.get('id', None)
         if config_id is None:
@@ -31,12 +37,12 @@ class Equipment(BaseThing):
         name = location.name() + ' ' + self._blankname
 
         super().__init__(name.strip(), configuration, config_id)
-        self._parent: Equipment = parent
+        self._parent: Optional[Equipment] = parent
         self._configuration: Dict = configuration
         self._location: Location = location
         self._subequipment: List[Equipment] = []
         self._channels: List = []
-        self._points: Dict[str, Dict[str, str]] = {}
+        self._points: Pointstype = {}
 
         self._bridge: Bridge = None
 
@@ -45,13 +51,13 @@ class Equipment(BaseThing):
 
     def _cast(self, obj: Equipment, newtype: Type) -> None:
         super()._cast(obj)
-        self._blankname = obj._blankname
-        self._parent = None
-        self._configuration = obj._configuration
-        self._location = obj._location
-        self._channels = obj._channels
-        self._points = obj._points
-        self._bridge = obj._bridge
+        self._blankname: str = str(obj._blankname)
+        self._parent: Optional[Equipment] = None
+        self._configuration: Dict = deepcopy(obj._configuration)
+        self._location: Location = deepcopy(obj._location)
+        self._channels: List = deepcopy(obj._channels)
+        self._points: Pointstype = deepcopy(obj._points)
+        self._bridge: Bridge = deepcopy(obj._bridge)
 
         if obj.has_subequipment():
             self._subequipment = []
@@ -69,7 +75,7 @@ class Equipment(BaseThing):
     def _is_valid_type(self, typed: str) -> bool:
         return typed in Equipment.VALIDTYPES
 
-    def _initialize_subequiment(self, configuration: dict, bridges: BridgeManager) -> None:
+    def _initialize_subequiment(self, configuration: ConfigurationType, bridges: BridgeManager) -> None:
         count = configuration.pop('count', 0)
         if count > 0:
             pattern = f"{configuration.get('name', '')} %d".strip()
@@ -85,7 +91,7 @@ class Equipment(BaseThing):
             self._subequipment.append(
                 Equipment(subequipment, self._location, bridges, self))
 
-    def _initialize_thing(self, configuration: dict, bridges: BridgeManager) -> None:
+    def _initialize_thing(self, configuration: ConfigurationType, bridges: BridgeManager) -> None:
         if self.is_thing():
             self._bridge = bridges.get(configuration.get('bridge'))
             self._bridge.append_thing(self)
@@ -96,28 +102,10 @@ class Equipment(BaseThing):
 
             self._points = configuration.get('points', {})
 
-    def parent(self) -> Equipment:
-        return self._parent
-
-    def has_parent(self) -> bool:
-        return self._parent is not None
-
-    def blankname(self) -> str:
-        if self._blankname == '':
-            return self._name
-
-        return self._blankname
-
-    def location(self) -> Location:
-        return self._location
-
-    def is_thing(self) -> bool:
-        return not self.has_subequipment()
-
     def _get_secret(self, secret_key: str) -> str:
         return SecretsRegistry.secret(self._bridge.typed(), self._typed, self._id, secret_key)
 
-    def _initialize_replacements(self, configuration: dict) -> None:
+    def _initialize_replacements(self, configuration: ConfigurationType) -> None:
         super()._initialize_replacements()
         self._replacements['binding'] = self._bridge.typed()
         self._replacements['bridgeuid'] = self._bridge.id()
@@ -140,6 +128,24 @@ class Equipment(BaseThing):
 
                 self._channels.append(channel)
 
+    def parent(self) -> Equipment:
+        return self._parent
+
+    def has_parent(self) -> bool:
+        return self._parent is not None
+
+    def blankname(self) -> str:
+        if self._blankname == '':
+            return self._name
+
+        return self._blankname
+
+    def location(self) -> Location:
+        return self._location
+
+    def is_thing(self) -> bool:
+        return not self.has_subequipment()
+
     def has_subequipment(self) -> bool:
         return len(self._subequipment) > 0
 
@@ -155,41 +161,20 @@ class Equipment(BaseThing):
     def channels(self) -> List:
         return deepcopy(self._channels)
 
-    def points(self, pointtype: Pointtype) -> Dict[str, str]:
-        if pointtype in self._points:
-            return self._points[pointtype]
+    def points(self, point_key: PointKeyType) -> PointType:
+        if point_key in self._points:
+            return self._points[point_key]
 
         return {}
 
-    def channel(self, pointtype: Pointtype, point: str):
-        if pointtype not in self._points:
-            raise BuildException(f'Unknown pointtype {pointtype}')
+    def channel(self, point_key: PointKeyType, point: str) -> str:
+        if point_key not in self._points:
+            raise BuildException(f'Unknown pointtype {point_key}')
 
-        if point not in self._points[pointtype]:
-            raise BuildException(f'Unknown point {point} in {pointtype}')
+        if point not in self._points[point_key]:
+            raise BuildException(f'Unknown point {point} in {point_key}')
 
-        channel_uid = self._points[pointtype][point]
+        channel_uid = self._points[point_key][point]
 
         channelstring = f'{{binding}}:{{thingtype}}:{{bridgeuid}}:{{thinguid}}:{channel_uid}'
         return channelstring.format_map(self._replacements)
-        
-
-
-class EquipmentManager(object):
-    __registry: Dict[str, List[Equipment]]
-
-    def __init__(self):
-        self.__registry = {}
-
-    def register(self, equipment: Equipment) -> None:
-        typed = equipment.typed()
-        if typed not in self.__registry:
-            self.__registry[typed] = []
-
-        self.__registry[typed].append(equipment)
-
-    def all(self) -> Dict[str, List[Equipment]]:
-        return self.__registry
-
-    def lightbulbs(self) -> List[Equipment]:
-        return self.__registry['lightbulb']

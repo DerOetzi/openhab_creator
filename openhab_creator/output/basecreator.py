@@ -1,10 +1,10 @@
 import os
-from typing import List
+from typing import List, Optional
 
 
 class BaseCreator(object):
 
-    def __init__(self, typed: str, outputdir: str, check_only: bool = False):
+    def __init__(self, typed: str, outputdir: str, check_only: Optional[bool] = False):
         self._typed: str = typed
         self._outputdir: str = outputdir
         self._check_only: bool = check_only

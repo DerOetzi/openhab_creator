@@ -1,24 +1,22 @@
 from __future__ import annotations
-from typing import List, TYPE_CHECKING
+from typing import Dict, List, TYPE_CHECKING
 
 from openhab_creator.models.location import Location
 
 if TYPE_CHECKING:
-    from openhab_creator.models.room import Room
+    from openhab_creator.models.location.room import Room
 
 
 class Floor(Location):
     VALIDTYPES = {
-        'floor':'Floor',
+        'floor': 'Floor',
         'attic': 'Attic',
         'basement': 'Basement',
         'groundfloor': 'GroundFloor',
         'firstfloor': 'FirstFloor'
     }
 
-    _rooms = []
-
-    def __init__(self, configuration: dict):
+    def __init__(self, configuration: Dict):
         name = configuration.get('name')
 
         super().__init__(name, configuration)
@@ -38,15 +36,3 @@ class Floor(Location):
 
     def typed_formatted(self):
         return Floor.VALIDTYPES[self._typed]
-
-class FloorManager(object):
-    __registry: List[Floor]
-
-    def __init__(self):
-        self.__registry = []
-
-    def register(self, floor: Floor) -> None:
-        self.__registry.append(floor)
-
-    def all(self) -> List[Floor]:
-        return self.__registry
