@@ -16,12 +16,15 @@ class BaseCreator(object):
 
     def _write_file(self, filename: str) -> None:
         if self._check_only:
+            self.__lines.clear()
             return
 
         self.__create_outputdir_if_not_exists()
 
         with open(f'{self._outputdir}/{self._typed}/{filename}.{self._typed}', 'w') as f:
             f.writelines("\n".join(self.__lines))
+
+        self.__lines.clear()
 
     def __create_outputdir_if_not_exists(self) -> None:
         if not os.path.exists(f'{self._outputdir}/{self._typed}'):

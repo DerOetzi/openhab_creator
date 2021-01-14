@@ -1,50 +1,61 @@
 from __future__ import annotations
-from typing import Dict, Optional, Union, TYPE_CHECKING
+from typing import Dict, List, Optional
 
 from copy import deepcopy
 
-from openhab_creator.models import ConfigurationType, BaseObject
-
-SecretsType = Dict[str, str]
-ReplacementsType = Dict[str, str]
-PropertyType = Union[str, bool, int]
-PropertiesType = Dict[str, PropertyType]
+from openhab_creator.exception import BuildException
+from openhab_creator.models import BaseObject
 
 
 class BaseThing(BaseObject):
-    def __init__(self, name: str, configuration: ConfigurationType, id: Optional(str) = None):
-        super().__init__(name, configuration, id)
-        self._secrets: SecretsType = {}
-        self._replacements: ReplacementsType = {}
-        self._properties: PropertiesType = configuration['properties'] if 'properties' in configuration else {
-        }
+    def __init__(self, typed: str, name: str, identifier: Optional[str] = None,
+                 secrets: Optional[List[str]] = [],
+                 properties: Optional[Dict] = {},
+                 points: Optional[Dict[str, Dict[str, str]]] = {}):
 
-    def _cast(self, obj: BaseThing) -> None:
-        super()._cast(obj)
-        self._secrets: SecretsType = deepcopy(obj._secrets)
-        self._replacements: ReplacementsType = deepcopy(obj._replacements)
-        self._properties: PropertiesType = deepcopy(obj._properties)
+        super().__init__(typed, name, identifier)
 
-    def _initialize_secrets(self, configuration: ConfigurationType) -> None:
-        if 'secrets' in configuration:
-            for secret_key in configuration['secrets']:
-                self._secrets[secret_key] = self._get_secret(secret_key)
+        self._replacements: Dict[str, str] = {}
+
+        self.__secrets_config: List[str] = secrets
+        self.__secrets: Dict[str, str] = {}
+        self.__properties: Dict = properties
+        self.__points: Dict[str, Dict] = points
+
+    def _init_secrets(self):
+        for secret_key in self.__secrets_config:
+            self.__secrets[secret_key] = self._get_secret(secret_key)
 
     def _get_secret(self, secret_key: str) -> str:
         raise NotImplementedError("Must override _getSecret")
 
-    def _initialize_replacements(self) -> None:
+    def _init_replacements(self) -> None:
         self._replacements = {
             "name": self._name,
             "type": self._typed,
-            "id": self._id
+            "identifier": self._identifier
         }
 
-        for key, value in self._secrets.items():
+        for key, value in self.__secrets.items():
             self._replacements[key] = value
 
-    def replacements(self) -> ReplacementsType:
+    def replacements(self) -> Dict[str, str]:
         return self._replacements
 
-    def properties(self) -> PropertiesType:
-        return self._properties
+    def properties(self) -> Dict:
+        return self.__properties
+
+    def points(self, point_key: str) -> Dict[str, str]:
+        if point_key in self.__points:
+            return self.__points[point_key]
+
+        return {}
+
+    def point(self, point_key: str, point: str) -> str:
+        if point_key not in self.__points:
+            raise BuildException(f'Unknown pointtype {point_key}')
+
+        if point not in self.__points[point_key]:
+            raise BuildException(f'Unknown point {point} in {point_key}')
+
+        return self.__points[point_key][point]

@@ -1,47 +1,38 @@
 from __future__ import annotations
-from typing import Dict, List, TYPE_CHECKING
+
+from typing import TYPE_CHECKING, Dict, List, Optional, Union, Literal
 
 from openhab_creator.exception import ConfigurationException
+from openhab_creator.models.thing import BaseThing
 from openhab_creator.secretsregistry import SecretsRegistry
 
-from openhab_creator.models import ConfigurationType
-
-from openhab_creator.models.thing import BaseThing
-
 if TYPE_CHECKING:
-    from openhab_creator.models.equipment import Equipment
+    from openhab_creator.models.thing.equipment import Equipment
 
 
 class Bridge(BaseThing):
-    VALIDTYPES = [
-        'deconz',
-        'mqtt'
-    ]
+    def __init__(self, typed: str, name: str,
+                 config: Dict[str, Union[str, bool]],
+                 identifier: Optional[str] = None,
+                 secrets: Optional[List[str]] = [],
+                 properties: Optional[Dict[str, Dict]] = {},
+                 points: Optional[str, Dict[str, str]] = {}):
 
-    def __init__(self, configuration: ConfigurationType):
-        name = configuration.get('name')
-        super().__init__(name, configuration)
+        super().__init__(typed, name, identifier, secrets, properties, points)
 
-        self._bridgetype: str = configuration.get('bridgetype')
-        self._nameprefix: str = configuration.get('nameprefix', '')
-
-        self._initialize_secrets(configuration)
-        self._initialize_replacements()
+        self._bridgetype: str = config.get('bridgetype')
+        self._nameprefix: str = config.get('nameprefix', '')
 
         self._things: List[Equipment] = []
 
+        self._init_secrets()
+        self._init_replacements()
+
     def _get_secret(self, secret_key: str) -> str:
-        return SecretsRegistry.secret(self._typed, self._id, secret_key)
+        return SecretsRegistry.secret(self._typed, self._identifier, secret_key)
 
-    def _default_type(self) -> str:
-        raise ConfigurationException(
-            'Bridge always need a type defined in configuration')
-
-    def _is_valid_type(self, typed: str) -> bool:
-        return typed in Bridge.VALIDTYPES
-
-    def _initialize_replacements(self) -> None:
-        super()._initialize_replacements()
+    def _init_replacements(self) -> None:
+        super()._init_replacements()
         self._replacements['bridgetype'] = self._bridgetype
         self._replacements['nameprefix'] = self._nameprefix
 

@@ -10,8 +10,8 @@ class ItemCreator(BaseCreator):
     def __init__(self, outputdir: str, check_only: bool):
         super().__init__('items', outputdir, check_only)
 
-    def _create_group(self, id: str, name: str, icon: Optional[str] = None, groups: List[str] = [], tags: List[str] = [], typed: Optional[Grouptypes] = None) -> None:
-        groupstring = f"Group{self.__grouptype(typed)} {id}\n  \"{name}\""
+    def _create_group(self, identifier: str, name: str, icon: Optional[str] = None, groups: List[str] = [], tags: List[str] = [], typed: Optional[Grouptypes] = None) -> None:
+        groupstring = f"Group{self.__grouptype(typed)} {identifier}\n  \"{name}\""
         groupstring += self.__iconstring(icon)
         groupstring += self.__groupsstring(groups)
         groupstring += self.__tagsstring(tags)

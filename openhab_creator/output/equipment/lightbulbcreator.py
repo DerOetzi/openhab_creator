@@ -2,21 +2,21 @@ from __future__ import annotations
 from typing import List
 
 from openhab_creator.exception import BuildException
-from openhab_creator.models.equipment import Equipment
-from openhab_creator.models.equipment.lightbulb import Lightbulb
+from openhab_creator.models.thing.equipment import Equipment
+from openhab_creator.models.thing.equipment.lightbulb import Lightbulb
 
 from openhab_creator.output.itemcreator import ItemCreator, Grouptypes
 
 
 class LightbulbCreator(ItemCreator):
-    def build(self, lightbulbs: List[Equipment]) -> None:
+    def build(self, lightbulbs: List[Lightbulb]) -> None:
         self._create_group(
             'Lightcontrol', 'Lightcontrol items', groups=['Config'])
 
         self._create_group(
             'Nightmode', 'Nightmode configuration items', groups=['Config'])
 
-        for lightbulb in [Lightbulb(e) for e in lightbulbs]:
+        for lightbulb in lightbulbs:
             self.__build_parent(lightbulb)
 
         self._write_file('lightbulb')
@@ -25,7 +25,7 @@ class LightbulbCreator(ItemCreator):
         self._create_group(
             lightbulb.lightbulb_id(),
             f'Lightbulb {lightbulb.blankname()}',
-            "light", [lightbulb.location().id()], ['Lightbulb']
+            "light", [lightbulb.location().identifier()], ['Lightbulb']
         )
 
         self._create_item(

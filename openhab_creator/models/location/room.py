@@ -1,9 +1,11 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional, List
 
+from openhab_creator.exception import ConfigurationException
 from openhab_creator.models.location import Location
 
 if TYPE_CHECKING:
+    from openhab_creator.models.configuration import SmarthomeConfiguration
     from openhab_creator.models.location.floor import Floor
 
 
@@ -19,19 +21,18 @@ class Room(Location):
         "corridor": "Corridor"
     }
 
-    def __init__(self, configuration: dict, floor: Floor):
-        name = configuration.get('name')
+    def __init__(self, configuration: SmarthomeConfiguration, floor: Floor,
+                 name: str, typed: Optional[str] = 'room', identifier: Optional[str] = None,
+                 equipment: Optional[List] = []):
 
-        super().__init__(name, configuration)
+        if typed not in Room.VALIDTYPES:
+            raise ConfigurationException(f'No valid type "{typed} for room"')
+
+        super().__init__(typed, name, identifier)
 
         self.__floor: Floor = floor
-        floor.add_room(self)
 
-    def _default_type(self) -> str:
-        return 'room'
-
-    def _is_valid_type(self, typed: str) -> bool:
-        return typed in Room.VALIDTYPES
+        self._init_equipment(configuration, equipment)
 
     def floor(self) -> Floor:
         return self.__floor
