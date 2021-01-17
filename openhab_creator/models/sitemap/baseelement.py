@@ -1,5 +1,7 @@
 from __future__ import annotations
-from typing import Optional, List
+
+import re
+from typing import List, Optional
 
 
 class BaseElement(object):
@@ -32,4 +34,7 @@ class BaseElement(object):
         for element in self._elements:
             lines.append(element.dump())
 
-        return "{\n" + "\n".join(lines) + "\n}"
+        block = "\n".join(lines)
+        block = re.sub('^', ' '*4, block, flags=re.MULTILINE)
+
+        return "{\n" + block + "\n}"

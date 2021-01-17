@@ -3,9 +3,11 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Dict, Optional, Union
 
 from openhab_creator.exception import BuildException
+from openhab_creator.models.thing.equipment.equipmenttype import EquipmentType
 from openhab_creator.models.thing.equipment.equipment import Equipment
 
 
+@EquipmentType('lightbulb')
 class Lightbulb(Equipment):
     def __init__(self,
                  typed: str,

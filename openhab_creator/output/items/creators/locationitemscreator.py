@@ -3,6 +3,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
+from openhab_creator.output.items.itemscreatorregistry import \
+    ItemsCreatorRegistry
 
 if TYPE_CHECKING:
     from openhab_creator.models.configuration import SmarthomeConfiguration
@@ -10,6 +12,7 @@ if TYPE_CHECKING:
     from openhab_creator.models.location.room import Room
 
 
+@ItemsCreatorRegistry(2)
 class LocationItemsCreator(BaseItemsCreator):
     def build(self, configuration: SmarthomeConfiguration):
         for floor in configuration.floors():

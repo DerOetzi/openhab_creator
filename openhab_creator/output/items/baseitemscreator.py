@@ -1,11 +1,19 @@
-from typing import Any, List, Dict, Literal, Optional
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Any, Dict, List, Literal, Optional
 
 from openhab_creator.output.basecreator import BaseCreator
 
+if TYPE_CHECKING:
+    from openhab_creator.models.configuration import SmarthomeConfiguration
+
 
 class BaseItemsCreator(BaseCreator):
-    def __init__(self, outputdir: str, check_only: bool):
-        super().__init__('items', outputdir, check_only)
+    def __init__(self, outputdir: str):
+        super().__init__('items', outputdir)
+
+    def build(self, configuration: SmarthomeConfiguration) -> None:
+        raise NotImplementedError("Must override build")
 
     def _create_group(self,
                       identifier: str,

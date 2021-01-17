@@ -4,10 +4,9 @@ from typing import List, Optional
 
 class BaseCreator(object):
 
-    def __init__(self, typed: str, outputdir: str, check_only: Optional[bool] = False, subdir: Optional[str] = None):
+    def __init__(self, typed: str, outputdir: str, subdir: Optional[str] = None):
         self._typed: str = typed
         self._outputdir: str = outputdir
-        self._check_only: bool = check_only
 
         self._subdir: str = subdir
         if self._subdir is None:
@@ -19,10 +18,6 @@ class BaseCreator(object):
         self.__lines.append(lines)
 
     def _write_file(self, filename: str) -> None:
-        if self._check_only:
-            self.__lines.clear()
-            return
-
         self.__create_outputdir_if_not_exists()
 
         with open(f'{self._outputdir}/{self._subdir}/{filename}.{self._typed}', 'w') as f:

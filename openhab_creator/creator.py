@@ -30,13 +30,20 @@ class Creator(object):
 
         configuration = SmarthomeConfiguration(**self.__json_config)
 
-        things_creator = ThingsCreator(self._outputdir, self._check_only)
+        if SecretsRegistry.has_missing():
+            SecretsRegistry.handle_missing()
+            return
+
+        if self._check_only:
+            return
+
+        things_creator = ThingsCreator(self._outputdir)
         things_creator.build(configuration)
 
-        items_creator = ItemsCreator(self._outputdir, self._check_only)
+        items_creator = ItemsCreator(self._outputdir)
         items_creator.build(configuration)
 
-        sitemap_creator = SitemapCreator(self._outputdir, self._check_only)
+        sitemap_creator = SitemapCreator(self._outputdir)
         sitemap_creator.build(configuration)
 
         if self._secretsfile is not None:

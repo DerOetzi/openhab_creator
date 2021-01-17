@@ -11,8 +11,8 @@ from openhab_creator.output.basecreator import BaseCreator
 
 
 class ThingsCreator(BaseCreator):
-    def __init__(self, outputdir: str, check_only: bool):
-        super().__init__('things', outputdir, check_only)
+    def __init__(self, outputdir: str):
+        super().__init__('things', outputdir)
 
     def build(self, configuration: SmarthomeConfiguration) -> None:
         for bridge_key, bridge_obj in configuration.bridges().items():

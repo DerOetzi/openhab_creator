@@ -3,18 +3,15 @@ from __future__ import annotations
 import json
 from typing import Dict, List
 
+import openhab_creator.models.thing.equipment.types
 from openhab_creator.models.location.floor import Floor
 from openhab_creator.models.location.location import Location
 from openhab_creator.models.thing.bridge import Bridge
 from openhab_creator.models.thing.equipment.equipment import Equipment
-from openhab_creator.models.thing.equipment.lightbulb import Lightbulb
+from openhab_creator.models.thing.equipment.equipmenttype import EquipmentType
 
 
 class SmarthomeConfiguration(object):
-    EQUIPMENT_CLASSES = {
-        'lightbulb': Lightbulb,
-        'sensor': Equipment
-    }
 
     def __init__(self, bridges: Dict, templates: Dict, locations: Dict):
         self.__bridges: Dict[str, Bridge] = {}
@@ -50,17 +47,17 @@ class SmarthomeConfiguration(object):
     def floors(self) -> List[Floor]:
         return self.__locations['floors']
 
-    def lightbulbs(self) -> List[Lightbulb]:
-        return self.__equipment['lightbulb']
+    def equipment(self, typed: str) -> List[Equipment]:
+        return self.__equipment[typed]
 
     def equipment_factory(self, equipment_configuration: Dict, location: Location) -> Equipment:
         equipment_configuration = self.__merge_template(
             equipment_configuration)
         typed = equipment_configuration['typed']
 
-        equipment = SmarthomeConfiguration.EQUIPMENT_CLASSES[typed](configuration=self,
-                                                                    location=location,
-                                                                    **equipment_configuration)
+        equipment = EquipmentType.new(configuration=self,
+                                      location=location,
+                                      **equipment_configuration)
 
         if typed not in self.__equipment:
             self.__equipment[typed] = []

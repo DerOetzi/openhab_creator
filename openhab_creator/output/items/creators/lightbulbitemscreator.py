@@ -3,20 +3,23 @@ from __future__ import annotations
 from typing import List
 
 from openhab_creator.exception import BuildException
+from openhab_creator.models.configuration import SmarthomeConfiguration
 from openhab_creator.models.thing.equipment.equipment import Equipment
-from openhab_creator.models.thing.equipment.lightbulb import Lightbulb
+from openhab_creator.models.thing.equipment.types.lightbulb import Lightbulb
 from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
+from openhab_creator.output.items.itemscreatorregistry import ItemsCreatorRegistry
 
 
+@ItemsCreatorRegistry(3)
 class LightbulbItemsCreator(BaseItemsCreator):
-    def build_items(self, lightbulbs: List[Lightbulb]) -> None:
+    def build(self, configuration: SmarthomeConfiguration) -> None:
         self._create_group(
             'Lightcontrol', 'Lightcontrol items', groups=['Config'])
 
         self._create_group(
             'Nightmode', 'Nightmode configuration items', groups=['Config'])
 
-        for lightbulb in lightbulbs:
+        for lightbulb in configuration.equipment('lightbulb'):
             self.__build_parent(lightbulb)
 
         self._write_file('lightbulb')
