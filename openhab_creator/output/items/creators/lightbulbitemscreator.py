@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import List
 
+from openhab_creator import _
 from openhab_creator.exception import BuildException
 from openhab_creator.models.configuration import SmarthomeConfiguration
 from openhab_creator.models.thing.equipment.equipment import Equipment
@@ -14,10 +15,10 @@ from openhab_creator.output.items.itemscreatorregistry import ItemsCreatorRegist
 class LightbulbItemsCreator(BaseItemsCreator):
     def build(self, configuration: SmarthomeConfiguration) -> None:
         self._create_group(
-            'Lightcontrol', 'Lightcontrol items', groups=['Config'])
+            'Lightcontrol', _('Lightcontrol items'), groups=['Config'])
 
         self._create_group(
-            'Nightmode', 'Nightmode configuration items', groups=['Config'])
+            'Nightmode', _('Nightmode configuration items'), groups=['Config'])
 
         for lightbulb in configuration.equipment('lightbulb'):
             self.__build_parent(lightbulb)
@@ -27,14 +28,14 @@ class LightbulbItemsCreator(BaseItemsCreator):
     def __build_parent(self, lightbulb: Lightbulb) -> None:
         self._create_group(
             lightbulb.lightbulb_id(),
-            f'Lightbulb {lightbulb.blankname()}',
+            _('Lightbulb {blankname}').format(blankname=lightbulb.blankname()),
             "light", [lightbulb.location().identifier()], ['Lightbulb']
         )
 
         self._create_item(
-            'Number',
+            'String',
             lightbulb.lightcontrol_id(),
-            'Control',
+            _('Lightcontrol'),
             'lightcontrol', [lightbulb.lightbulb_id(), 'Lightcontrol'],
             ['Setpoint']
         )
@@ -43,7 +44,7 @@ class LightbulbItemsCreator(BaseItemsCreator):
             self._create_item(
                 'Number',
                 lightbulb.nightmode_id(),
-                'Nightmode configuration',
+                _('Nightmode configuration'),
                 'nightmode', [lightbulb.lightbulb_id(), 'Nightmode'],
                 ['Setpoint']
             )
@@ -55,17 +56,17 @@ class LightbulbItemsCreator(BaseItemsCreator):
         if parent_lightbulb.has_subequipment():
             self.__build_parent_group(parent_lightbulb.has_brightness(),
                                       parent_lightbulb.brightness_id(),
-                                      'Brightness', parent_lightbulb.lightbulb_id(),
+                                      _('Brightness'), parent_lightbulb.lightbulb_id(),
                                       ['Control', 'Light'], 'dimmer_avg')
 
             self.__build_parent_group(parent_lightbulb.has_colortemperature(),
                                       parent_lightbulb.colortemperature_id(),
-                                      'Colortemperature', parent_lightbulb.lightbulb_id(),
+                                      _('Colortemperature'), parent_lightbulb.lightbulb_id(),
                                       ['Control', 'ColorTemperature'], 'number_avg')
 
             self.__build_parent_group(parent_lightbulb.has_onoff(),
                                       parent_lightbulb.onoff_id(),
-                                      'On/Off', parent_lightbulb.lightbulb_id(),
+                                      _('On/Off'), parent_lightbulb.lightbulb_id(),
                                       ['Switch', 'Light'], 'onoff')
 
             for sublightbulb in parent_lightbulb.subequipment():
@@ -93,7 +94,7 @@ class LightbulbItemsCreator(BaseItemsCreator):
         if lightbulb.has_parent():
             self._create_group(
                 lightbulb.lightbulb_id(),
-                f'Lightbulb {lightbulb.name()}', 'light',
+                _('Lightbulb {name}').format(name=lightbulb.name()), 'light',
                 [lightbulb.parent().lightbulb_id()],
                 ['Lightbulb']
             )
@@ -113,7 +114,7 @@ class LightbulbItemsCreator(BaseItemsCreator):
 
             self._create_item('Dimmer',
                               lightbulb.brightness_id(),
-                              'Brightness', 'light', groups, [
+                              _('Brightness'), 'light', groups, [
                                   'Control', 'Light'],
                               {'channel': lightbulb.channel('controls', 'brightness')})
 
@@ -128,7 +129,7 @@ class LightbulbItemsCreator(BaseItemsCreator):
 
             self._create_item('Number',
                               lightbulb.colortemperature_id(),
-                              'Colortemperature', 'light', groups, [
+                              _('Colortemperature'), 'light', groups, [
                                   'Control', 'ColorTemperature'],
                               {'channel': lightbulb.channel('controls', 'colortemperature')})
 
@@ -143,5 +144,6 @@ class LightbulbItemsCreator(BaseItemsCreator):
 
             self._create_item('Switch',
                               lightbulb.onoff_id(),
-                              'On/Off', 'light', groups, ['Switch', 'Light'],
+                              _('On/Off'), 'light', groups, [
+                                  'Switch', 'Light'],
                               {'channel': lightbulb.channel('controls', 'onoff')})

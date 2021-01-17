@@ -20,8 +20,8 @@ class Lightbulb(Equipment):
         if config is None:
             config = {}
 
-        self.__singlebulb = config.pop('singlebulb', False)
-        self.__nightmode = config.pop('singlebulb', False)
+        self.__singlebulb: bool = config.pop('singlebulb', False)
+        self.__nightmode: bool = config.pop('nightmode', False)
 
         super().__init__(typed=typed, config=config, **equipment_args)
 
@@ -69,3 +69,6 @@ class Lightbulb(Equipment):
 
     def onoff_id(self):
         return f'onoff{self._identifier}'
+
+    def __str__(self):
+        return f'{self._name} ({self._identifier}, {self.__singlebulb}, {self.__nightmode})'
