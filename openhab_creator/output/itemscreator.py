@@ -1,25 +1,27 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
 
 import os
+from typing import TYPE_CHECKING
+
+from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
+from openhab_creator.output.items.lightbulbitemscreator import LightbulbItemsCreator
+from openhab_creator.output.items.locationitemscreator import LocationItemsCreator
 
 if TYPE_CHECKING:
     from openhab_creator.models.configuration import SmarthomeConfiguration
 
-from openhab_creator.output.itemcreator import ItemCreator
-from openhab_creator.output.locationscreator import LocationsCreator
-from openhab_creator.output.equipment.lightbulbcreator import LightbulbCreator
 
-
-class ItemsCreator(ItemCreator):
+class ItemsCreator(BaseItemsCreator):
     def build(self, configuration: SmarthomeConfiguration) -> None:
         self.__buildGeneral()
 
-        locations_creator = LocationsCreator(self._outputdir, self._check_only)
+        locations_creator = LocationItemsCreator(
+            self._outputdir, self._check_only)
         locations_creator.build(configuration)
 
-        lightbulb_creator = LightbulbCreator(self._outputdir, self._check_only)
-        lightbulb_creator.build(configuration.lightbulbs())
+        lightbulb_creator = LightbulbItemsCreator(
+            self._outputdir, self._check_only)
+        lightbulb_creator.build_items(configuration.lightbulbs())
 
     def __buildGeneral(self) -> None:
         self._create_group('Config', 'Configuration items')

@@ -1,15 +1,15 @@
 from __future__ import annotations
+
 from typing import List
 
 from openhab_creator.exception import BuildException
-from openhab_creator.models.thing.equipment import Equipment
+from openhab_creator.models.thing.equipment.equipment import Equipment
 from openhab_creator.models.thing.equipment.lightbulb import Lightbulb
+from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
 
-from openhab_creator.output.itemcreator import ItemCreator, Grouptypes
 
-
-class LightbulbCreator(ItemCreator):
-    def build(self, lightbulbs: List[Lightbulb]) -> None:
+class LightbulbItemsCreator(BaseItemsCreator):
+    def build_items(self, lightbulbs: List[Lightbulb]) -> None:
         self._create_group(
             'Lightcontrol', 'Lightcontrol items', groups=['Config'])
 
@@ -52,15 +52,18 @@ class LightbulbCreator(ItemCreator):
         if parent_lightbulb.has_subequipment():
             self.__build_parent_group(parent_lightbulb.has_brightness(),
                                       parent_lightbulb.brightness_id(),
-                                      'Brightness', parent_lightbulb.lightbulb_id(), ['Control', 'Light'], 'dimmer_avg')
+                                      'Brightness', parent_lightbulb.lightbulb_id(),
+                                      ['Control', 'Light'], 'dimmer_avg')
 
             self.__build_parent_group(parent_lightbulb.has_colortemperature(),
                                       parent_lightbulb.colortemperature_id(),
-                                      'Colortemperature', parent_lightbulb.lightbulb_id(), ['Control', 'ColorTemperature'], 'number_avg')
+                                      'Colortemperature', parent_lightbulb.lightbulb_id(),
+                                      ['Control', 'ColorTemperature'], 'number_avg')
 
             self.__build_parent_group(parent_lightbulb.has_onoff(),
                                       parent_lightbulb.onoff_id(),
-                                      'On/Off', parent_lightbulb.lightbulb_id(), ['Switch', 'Light'], 'onoff')
+                                      'On/Off', parent_lightbulb.lightbulb_id(),
+                                      ['Switch', 'Light'], 'onoff')
 
             for sublightbulb in parent_lightbulb.subequipment():
                 self.__build_thing(sublightbulb)
@@ -69,7 +72,13 @@ class LightbulbCreator(ItemCreator):
 
         return False
 
-    def __build_parent_group(self, create: bool, group_id: str, name: str, lightbulb_id: str, tags: List[str], typed: Grouptypes) -> None:
+    def __build_parent_group(self,
+                             create: bool,
+                             group_id: str,
+                             name: str,
+                             lightbulb_id: str,
+                             tags: List[str],
+                             typed: str) -> None:
         if create:
             self._create_group(
                 group_id, name,

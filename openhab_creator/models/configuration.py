@@ -1,14 +1,12 @@
 from __future__ import annotations
 
+import json
 from typing import Dict, List
 
-import json
-
-from openhab_creator.models.location import Location
 from openhab_creator.models.location.floor import Floor
+from openhab_creator.models.location.location import Location
 from openhab_creator.models.thing.bridge import Bridge
-from openhab_creator.models.thing.equipment import Equipment
-
+from openhab_creator.models.thing.equipment.equipment import Equipment
 from openhab_creator.models.thing.equipment.lightbulb import Lightbulb
 
 
@@ -23,6 +21,7 @@ class SmarthomeConfiguration(object):
         self.__templates: Dict[str, Dict] = templates
         self.__locations: Dict[str, List[Location]] = {}
         self.__equipment: Dict[str, List[Equipment]] = {}
+        self.__name: str = ''
 
         self.__init_bridges(bridges)
         self.__init_locations(locations)
@@ -33,10 +32,14 @@ class SmarthomeConfiguration(object):
 
     def __init_locations(self, locations: Dict) -> None:
         if 'indoor' in locations:
+            self.__name = locations['indoor']['name']
             self.__locations['floors'] = []
             for floor in locations['indoor']['floors']:
                 self.__locations['floors'].append(
                     Floor(configuration=self, **floor))
+
+    def name(self) -> str:
+        return self.__name
 
     def bridges(self) -> Dict[str, Bridge]:
         return self.__bridges

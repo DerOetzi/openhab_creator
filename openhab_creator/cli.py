@@ -1,7 +1,7 @@
 import click
 
 from . import __version__
-from .creator import Creator
+from openhab_creator.creator import Creator
 
 
 @click.command()

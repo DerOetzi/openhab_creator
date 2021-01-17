@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Dict, List, Optional
 
 from openhab_creator.exception import ConfigurationException
-from openhab_creator.models.location import Location
+from openhab_creator.models.location.location import Location
 from openhab_creator.models.location.room import Room
 
 if TYPE_CHECKING:

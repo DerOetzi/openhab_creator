@@ -1,9 +1,8 @@
 from __future__ import annotations
-from typing import Dict, List
 
 import csv
-
 from io import TextIOWrapper
+from typing import Dict, List
 
 
 class SecretsRegistry(object):

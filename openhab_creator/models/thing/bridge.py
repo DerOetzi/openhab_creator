@@ -1,13 +1,13 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Dict, List, Optional, Union, Literal
+from typing import TYPE_CHECKING, Dict, List, Literal, Optional, Union
 
 from openhab_creator.exception import ConfigurationException
-from openhab_creator.models.thing import BaseThing
-from openhab_creator.secretsregistry import SecretsRegistry
+from openhab_creator.models.thing.basething import BaseThing
+from openhab_creator.models.secretsregistry import SecretsRegistry
 
 if TYPE_CHECKING:
-    from openhab_creator.models.thing.equipment import Equipment
+    from openhab_creator.models.thing.equipment.equipment import Equipment
 
 
 class Bridge(BaseThing):

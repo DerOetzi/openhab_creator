@@ -1,13 +1,12 @@
 from __future__ import annotations
-from typing import Dict
 
 import os
+from typing import Dict
 
 from openhab_creator.models.configuration import SmarthomeConfiguration
+from openhab_creator.models.thing.basething import BaseThing
 from openhab_creator.models.thing.bridge import Bridge
-from openhab_creator.models.thing.equipment import Equipment
-from openhab_creator.models.thing import BaseThing
-
+from openhab_creator.models.thing.equipment.equipment import Equipment
 from openhab_creator.output.basecreator import BaseCreator
 
 
