@@ -9,6 +9,7 @@ from openhab_creator.creator import Creator
 @click.argument('outputdir', envvar="OPENHAB_CONFIGDIR", type=click.Path(exists=True))
 @click.option('-s', '--secrets', 'secretsfile', required=False, type=click.File('r'), )
 @click.option('-c', '--check-only', 'check_only', is_flag=True, default=False)
+@click.option('-i', '--icons', 'icons', is_flag=True, default=False)
 def cli(**kwargs):
     creator = Creator(**kwargs)
     creator.run()

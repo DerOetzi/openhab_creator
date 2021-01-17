@@ -5,21 +5,23 @@ from typing import TYPE_CHECKING, Dict
 
 from openhab_creator import __version__
 from openhab_creator.models.configuration import SmarthomeConfiguration
-from openhab_creator.output.itemscreator import ItemsCreator
-from openhab_creator.output.thingscreator import ThingsCreator
-from openhab_creator.output.sitemapcreator import SitemapCreator
 from openhab_creator.models.secretsregistry import SecretsRegistry
+from openhab_creator.output.iconscreator import IconsCreator
+from openhab_creator.output.itemscreator import ItemsCreator
+from openhab_creator.output.sitemapcreator import SitemapCreator
+from openhab_creator.output.thingscreator import ThingsCreator
 
 if TYPE_CHECKING:
     from io import BufferedReader, TextIOWrapper
 
 
 class Creator(object):
-    def __init__(self, configfile: BufferedReader, outputdir: str, secretsfile: TextIOWrapper, check_only: bool):
+    def __init__(self, configfile: BufferedReader, outputdir: str, secretsfile: TextIOWrapper, check_only: bool, icons: bool):
         self.__json_config: Dict = json.load(configfile)
         self._outputdir: str = outputdir
         self._secretsfile: TextIOWrapper = secretsfile
         self._check_only: bool = check_only
+        self._icons: bool = icons
 
     def run(self) -> None:
         print("openHAB Configuration Creator (%s)" % __version__)
@@ -46,5 +48,6 @@ class Creator(object):
         sitemap_creator = SitemapCreator(self._outputdir)
         sitemap_creator.build(configuration)
 
-        if self._secretsfile is not None:
-            SecretsRegistry.handle_missing()
+        if self._icons:
+            icons_creator = IconsCreator(self._outputdir)
+            icons_creator.build()
