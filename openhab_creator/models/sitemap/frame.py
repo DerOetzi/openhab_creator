@@ -9,4 +9,4 @@ class Frame(BaseElement):
         super().__init__(label)
 
     def dump(self) -> str:
-        return f'Frame {self.labelstring()} {self.dump_elements()}'
+        return super().dump('Frame')

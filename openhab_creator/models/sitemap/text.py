@@ -5,8 +5,8 @@ from openhab_creator.models.sitemap.baseelement import BaseElement
 
 
 class Text(BaseElement):
-    def __init__(self, label: Optional[str] = None, item: Optional[str] = None):
-        super().__init__(label)
+    def __init__(self, **args):
+        super().__init__(**args)
 
     def dump(self) -> str:
-        return f'Text {self.itemstring()}{self.labelstring()} {self.dump_elements()}'
+        return super().dump('Text')

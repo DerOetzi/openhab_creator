@@ -20,7 +20,7 @@ class LightbulbSitemapCreator(BaseSitemapCreator):
     def build_mainpage(self, configuration: SmarthomeConfiguration) -> Text:
         frames = {}
 
-        page = Text(_('Lights'))
+        page = Text(label=_('Lights'), icon='light')
 
         for lightbulb in configuration.equipment('lightbulb'):
             location = lightbulb.location()
@@ -40,4 +40,20 @@ class LightbulbSitemapCreator(BaseSitemapCreator):
         return page
 
     def _create_control(self, lightbulb: Lightbulb) -> Switch:
-        return Switch(lightbulb.name(), lightbulb.lightcontrol_id())
+        mappings = {
+            'OFF': _('Off')
+        }
+
+        if lightbulb.is_singlebulb():
+            mappings['ALL'] = _('All')
+            for subequipment in lightbulb.subequipment():
+                mappings[f'{subequipment.identifier()}'] = subequipment.blankname()
+        else:
+            mappings['ALL'] = _('On')
+
+        if lightbulb.is_nightmode():
+            mappings['NIGHT'] = _('Night')
+
+        return Switch(item=lightbulb.lightcontrol_id(),
+                      label=lightbulb.name(),
+                      mappings=mappings)
