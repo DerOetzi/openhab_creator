@@ -58,38 +58,42 @@ class LightbulbSitemapCreator(BaseSitemapCreator):
     def _create_lightcontrol(self, lightbulb: Lightbulb, mainpage: bool) -> Switch:
         config = {
             'item': lightbulb.lightcontrol_id(),
-            'mappings': {
-                'OFF': _('Off')
-            }
+            'mappings': [
+                (0, 'OFF', _('Off'))
+            ]
         }
 
         if mainpage:
             config['label'] = lightbulb.name()
             config['visibility'] = [(0, lightbulb.hide_id(), '!=', 'ON')]
 
+        order = 2
+
         if lightbulb.is_singlebulb():
-            config['mappings']['ALL'] = _('All')
+            config['mappings'].append((1, 'ALL', _('All')))
+
             for subequipment in lightbulb.subequipment():
-                config['mappings'][f'{subequipment.identifier()}'] = subequipment.blankname(
-                )
+                config['mappings'].append(
+                    (order, subequipment.identifier(), subequipment.blankname()))
+                order += 1
         else:
-            config['mappings']['ALL'] = _('On')
+            config['mappings'].append((1, 'ALL', _('On')))
 
         if lightbulb.is_nightmode():
-            config['mappings']['NIGHT'] = _('Night')
+            config['mappings'].append((order, 'NIGHT', _('Night')))
 
         return Switch(**config)
 
     def _create_auto(self, lightbulb: Lightbulb, always: bool) -> Switch:
         config = {
             'item': lightbulb.auto_id(),
-            'mappings': {
-                'ON': _('Automation')
-            }
+            'mappings': [
+                (1, 'ON', _('Automation'))
+            ]
         }
 
         if always:
-            config['mappings']['OFF'] = _('Off')
+            config['mappings'].append((0, 'OFF', _('Off')))
         else:
             config['visibility'] = [
                 (0, lightbulb.autodisplay_id(), '==', 'ON')
@@ -100,18 +104,18 @@ class LightbulbSitemapCreator(BaseSitemapCreator):
     def _create_hide(self, lightbulb: Lightbulb) -> Switch:
         return Switch(
             item=lightbulb.hide_id(),
-            mappings={
-                'OFF': _('Display'),
-                'ON': _('Hide')
-            }
+            mappings=[
+                (0, 'OFF', _('Display')),
+                (1, 'ON', _('Hide'))
+            ]
         )
 
     def _create_autoreactivation(self, lightbulb: Lightbulb) -> Switch:
         return Switch(
             item=lightbulb.autoreactivation_id(),
-            mappings={
-                '0': _('OFF'),
-                '30': '30 M',
-                '60': '1 H'
-            }
+            mappings=[
+                (0, '0', _('OFF')),
+                (1, '30', '30 M'),
+                (2, '60', '1 H')
+            ]
         )

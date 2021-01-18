@@ -25,7 +25,7 @@ class LightbulbItemsCreator(BaseItemsCreator):
         )
 
         self._create_group(
-            'AutoReactivationLight', ('Reactivation scene controlled configuration items'), groups=['Config']
+            'AutoReactivationLight', _('Reactivation scene controlled configuration items'), groups=['Config']
         )
 
         for lightbulb in configuration.equipment('lightbulb'):
@@ -83,7 +83,7 @@ class LightbulbItemsCreator(BaseItemsCreator):
 
         if (lightbulb.is_nightmode()):
             self._create_item(
-                'Number',
+                'String',
                 lightbulb.nightmode_id(),
                 _('Nightmode configuration'),
                 'nightmode', [lightbulb.lightbulb_id(), 'Nightmode'],
