@@ -10,3 +10,6 @@ if TYPE_CHECKING:
 class BaseSitemapCreator(object):
     def build_mainpage(self, configuration: SmarthomeConfiguration) -> BaseElement:
         raise NotImplementedError("Must override build")
+
+    def build_configpage(self, configuration: SmarthomeConfiguration) -> BaseElement:
+        raise NotImplementedError("Must override build")

@@ -3,8 +3,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Dict, Optional, Union
 
 from openhab_creator.exception import BuildException
-from openhab_creator.models.thing.equipment.equipmenttype import EquipmentType
-from openhab_creator.models.thing.equipment.equipment import Equipment
+from openhab_creator.models.thing.equipmenttype import EquipmentType
+from openhab_creator.models.thing.equipment import Equipment
 
 
 @EquipmentType('lightbulb')
@@ -60,6 +60,18 @@ class Lightbulb(Equipment):
 
     def nightmode_id(self):
         return f'nightmode{self._identifier}'
+
+    def auto_id(self):
+        return f'autoLight{self._identifier}'
+
+    def autodisplay_id(self):
+        return f'autoDisplayLight{self._identifier}'
+
+    def autoreactivation_id(self):
+        return f'autoReactivationLight{self._identifier}'
+
+    def hide_id(self):
+        return f'hideLight{self._identifier}'
 
     def brightness_id(self):
         return f'brightness{self._identifier}'

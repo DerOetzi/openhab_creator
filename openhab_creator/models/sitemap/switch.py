@@ -12,7 +12,7 @@ class Switch(BaseElement):
         super().__init__(**args)
 
     def dump(self) -> str:
-        mappings = '[' + ",".join([f'{command}={label}' for command,
+        mappings = '[' + ",".join([f'{command}="{label}"' for command,
                                    label in self._mappings.items()]) + ']'
         additional = {
             'mappings': mappings

@@ -7,7 +7,7 @@ from openhab_creator.models.thing.basething import BaseThing
 from openhab_creator.models.secretsregistry import SecretsRegistry
 
 if TYPE_CHECKING:
-    from openhab_creator.models.thing.equipment.equipment import Equipment
+    from openhab_creator.models.thing.equipment import Equipment
 
 
 class Bridge(BaseThing):

@@ -6,7 +6,7 @@ from openhab_creator.models.baseobject import BaseObject
 
 if TYPE_CHECKING:
     from openhab_creator.models.configuration import SmarthomeConfiguration
-    from openhab_creator.models.thing.equipment.equipment import Equipment
+    from openhab_creator.models.thing.equipment import Equipment
 
 
 class Location(BaseObject):

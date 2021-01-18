@@ -5,8 +5,8 @@ from typing import List
 from openhab_creator import _
 from openhab_creator.exception import BuildException
 from openhab_creator.models.configuration import SmarthomeConfiguration
-from openhab_creator.models.thing.equipment.equipment import Equipment
-from openhab_creator.models.thing.equipment.types.lightbulb import Lightbulb
+from openhab_creator.models.thing.equipment import Equipment
+from openhab_creator.models.thing.types.lightbulb import Lightbulb
 from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
 from openhab_creator.output.items.itemscreatorregistry import ItemsCreatorRegistry
 
@@ -19,6 +19,14 @@ class LightbulbItemsCreator(BaseItemsCreator):
 
         self._create_group(
             'Nightmode', _('Nightmode configuration items'), groups=['Config'])
+
+        self._create_group(
+            'AutoLight', _('Scene controlled configuration items'), groups=['Auto']
+        )
+
+        self._create_group(
+            'AutoReactivationLight', ('Reactivation scene controlled configuration items'), groups=['Config']
+        )
 
         for lightbulb in configuration.equipment('lightbulb'):
             self.__build_parent(lightbulb)
@@ -37,7 +45,40 @@ class LightbulbItemsCreator(BaseItemsCreator):
             lightbulb.lightcontrol_id(),
             _('Lightcontrol'),
             'lightcontrol', [lightbulb.lightbulb_id(), 'Lightcontrol'],
-            ['Setpoint']
+            ['Control']
+        )
+
+        self._create_item(
+            'Switch',
+            lightbulb.hide_id(),
+            _('Hide on lights page'),
+            'hide', [lightbulb.lightbulb_id(), 'Config'],
+            ['Control']
+        )
+
+        self._create_item(
+            'Switch',
+            lightbulb.auto_id(),
+            _('Scene controlled'),
+            'auto', [lightbulb.lightbulb_id(), 'AutoLight'],
+            ['Control']
+        )
+
+        self._create_item(
+            'Switch',
+            lightbulb.autodisplay_id(),
+            _('Display scene controlled'),
+            groups=[lightbulb.lightbulb_id()],
+            tags=['Status']
+        )
+
+        self._create_item(
+            'Number',
+            lightbulb.autoreactivation_id(),
+            _('Reactivate scene controlled'),
+            icon='reactivation',
+            groups=[lightbulb.lightbulb_id(), 'AutoReactivationLight'],
+            tags=['Setpoint']
         )
 
         if (lightbulb.is_nightmode()):

@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 
 import openhab_creator.output.sitemap.creators
 from openhab_creator.models.sitemap.frame import Frame
+from openhab_creator.models.sitemap.text import Text
 from openhab_creator.output.basecreator import BaseCreator
 from openhab_creator.output.sitemap.sitemapcreatorregistry import \
     SitemapCreatorRegistry
@@ -26,6 +27,16 @@ class SitemapCreator(BaseCreator):
 
         mainpage_frame = re.sub('^', ' '*4, mainpage_frame, flags=re.MULTILINE)
         self._append(mainpage_frame)
+
+        second_frame = Frame()
+
+        statuspage = Text(label='Status', icon='smarthome')
+        statuspage.append(
+            SitemapCreatorRegistry.pipeline_configpage(configuration))
+        second_frame.append(statuspage)
+
+        self._append(
+            re.sub('^', ' '*4, second_frame.dump(), flags=re.MULTILINE))
 
         self._append('}')
 

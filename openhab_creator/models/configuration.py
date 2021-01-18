@@ -3,12 +3,12 @@ from __future__ import annotations
 import json
 from typing import Dict, List
 
-import openhab_creator.models.thing.equipment.types
+import openhab_creator.models.thing.types
 from openhab_creator.models.location.floor import Floor
 from openhab_creator.models.location.location import Location
 from openhab_creator.models.thing.bridge import Bridge
-from openhab_creator.models.thing.equipment.equipment import Equipment
-from openhab_creator.models.thing.equipment.equipmenttype import EquipmentType
+from openhab_creator.models.thing.equipment import Equipment
+from openhab_creator.models.thing.equipmenttype import EquipmentType
 
 
 class SmarthomeConfiguration(object):

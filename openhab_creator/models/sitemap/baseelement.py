@@ -1,14 +1,15 @@
 from __future__ import annotations
 
 import re
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Tuple
 
 
 class BaseElement(object):
     def __init__(self,
                  label: Optional[str] = None,
                  item: Optional[str] = None,
-                 icon: Optional[str] = None):
+                 icon: Optional[str] = None,
+                 visibility: Optional[List[Tuple[int, str, str, str]]] = None):
 
         self._attributes = {}
 
@@ -21,7 +22,19 @@ class BaseElement(object):
         if icon is not None:
             self._attributes['icon'] = f'"{icon}"'
 
+        self.__init_visibility(visibility)
+
         self._elements: List[BaseElement] = []
+
+    def __init_visibility(self, visibility: Optional[List[Tuple[int, str, str, str]]] = None) -> None:
+        if visibility is None:
+            return
+
+        sorted_list = sorted(visibility, key=lambda tup: tup[0])
+        pairs = ','.join([item + compare + value for order,
+                          item, compare, value in sorted_list])
+
+        self._attributes['visibility'] = f'[{pairs}]'
 
     def append(self, element: BaseElement) -> None:
         self._elements.append(element)

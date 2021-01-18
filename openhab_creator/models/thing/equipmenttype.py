@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import Type
 
-from openhab_creator.models.thing.equipment.equipment import Equipment
+from openhab_creator.models.thing.equipment import Equipment
 
 
 class EquipmentType(object):
