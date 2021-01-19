@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import List
+from typing import List, Optional
 
 from openhab_creator import _
 from openhab_creator.exception import BuildException
@@ -110,6 +110,11 @@ class LightbulbItemsCreator(BaseItemsCreator):
                                       _('On/Off'), parent_lightbulb.lightbulb_id(),
                                       ['Switch', 'Light'], 'onoff')
 
+            self.__build_parent_group(parent_lightbulb.has_rgb(),
+                                      parent_lightbulb.rgb_id(),
+                                      _('RGB Color'), parent_lightbulb.lightbulb_id(),
+                                      ['Control', 'Color'])
+
             for sublightbulb in parent_lightbulb.subequipment():
                 self.__build_thing(sublightbulb)
 
@@ -123,7 +128,7 @@ class LightbulbItemsCreator(BaseItemsCreator):
                              name: str,
                              lightbulb_id: str,
                              tags: List[str],
-                             typed: str) -> None:
+                             typed: Optional[str] = None) -> None:
         if create:
             self._create_group(
                 group_id, name,
@@ -143,6 +148,7 @@ class LightbulbItemsCreator(BaseItemsCreator):
         self.__build_brightness_item(lightbulb)
         self.__build_colortemperature_item(lightbulb)
         self.__build_onoff_item(lightbulb)
+        self.__build_rgb_item(lightbulb)
 
     def __build_brightness_item(self, lightbulb: Lightbulb) -> None:
         if lightbulb.has_brightness():
@@ -188,3 +194,18 @@ class LightbulbItemsCreator(BaseItemsCreator):
                               _('On/Off'), 'light', groups, [
                                   'Switch', 'Light'],
                               {'channel': lightbulb.channel('controls', 'onoff')})
+
+    def __build_rgb_item(self, lightbulb: Lightbulb) -> None:
+        if lightbulb.has_rgb():
+            groups = []
+
+            groups.append(lightbulb.lightbulb_id())
+
+            if lightbulb.has_parent():
+                groups.append(lightbulb.parent().rgb_id())
+
+            self._create_item('Color',
+                              lightbulb.rgb_id(),
+                              _('RGB Color'), 'light', groups, [
+                                  'Control', 'Color'],
+                              {'channel': lightbulb.channel('controls', 'rgb')})

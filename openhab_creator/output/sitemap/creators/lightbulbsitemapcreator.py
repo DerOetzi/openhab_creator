@@ -114,7 +114,7 @@ class LightbulbSitemapCreator(BaseSitemapCreator):
         return Switch(
             item=lightbulb.autoreactivation_id(),
             mappings=[
-                (0, '0', _('OFF')),
+                (0, '0', _('Off')),
                 (1, '30', '30 M'),
                 (2, '60', '1 H')
             ]

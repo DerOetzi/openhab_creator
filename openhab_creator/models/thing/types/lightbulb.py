@@ -46,41 +46,54 @@ class Lightbulb(Equipment):
 
         return 'onoff' in self.points('controls')
 
+    def has_rgb(self) -> bool:
+        for subequipment in self.subequipment():
+            if subequipment.has_rgb():
+                return True
+
+        return 'rgb' in self.points('controls')
+
     def is_singlebulb(self) -> bool:
         return self.__singlebulb or (self.has_parent() and self.parent().__singlebulb)
 
     def is_nightmode(self) -> bool:
         return self.__nightmode
 
-    def lightbulb_id(self):
+    def lightbulb_id(self) -> str:
         return f'lightbulb{self._identifier}'
 
-    def lightcontrol_id(self):
+    def lightcontrol_id(self) -> str:
         return f'lightcontrol{self._identifier}'
 
-    def nightmode_id(self):
+    def nightmode_id(self) -> str:
         return f'nightmode{self._identifier}'
 
-    def auto_id(self):
+    def auto_id(self) -> str:
         return f'autoLight{self._identifier}'
 
-    def autodisplay_id(self):
+    def autodisplay_id(self) -> str:
         return f'autoDisplayLight{self._identifier}'
 
-    def autoreactivation_id(self):
+    def autoreactivation_id(self) -> str:
         return f'autoReactivationLight{self._identifier}'
 
-    def hide_id(self):
+    def autoabsence_id(self) -> str:
+        return f'autoAbscenceLight{self._identifier}'
+
+    def hide_id(self) -> str:
         return f'hideLight{self._identifier}'
 
-    def brightness_id(self):
+    def brightness_id(self) -> str:
         return f'brightness{self._identifier}'
 
-    def colortemperature_id(self):
+    def colortemperature_id(self) -> str:
         return f'colortemperatuer{self._identifier}'
 
-    def onoff_id(self):
+    def onoff_id(self) -> str:
         return f'onoff{self._identifier}'
 
-    def __str__(self):
+    def rgb_id(self) -> str:
+        return f'rgb{self._identifier}'
+
+    def __str__(self) -> str:
         return f'{self._name} ({self._identifier}, {self.__singlebulb}, {self.__nightmode})'
