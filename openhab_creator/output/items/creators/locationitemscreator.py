@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from openhab_creator.models.location.room import Room
 
 
-@ItemsCreatorRegistry(2)
+@ItemsCreatorRegistry(1)
 class LocationItemsCreator(BaseItemsCreator):
     def build(self, configuration: SmarthomeConfiguration):
         for floor in configuration.floors():

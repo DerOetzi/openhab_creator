@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from copy import deepcopy
 from typing import Dict, List
 
 import openhab_creator.models.thing.types
@@ -69,7 +70,7 @@ class SmarthomeConfiguration(object):
     def __merge_template(self, equipment: Dict) -> Dict:
         template = equipment.pop('template', None)
         if template is not None:
-            equipment = {**self.__templates[template], **equipment}
+            equipment = {**deepcopy(self.__templates[template]), **equipment}
 
         if 'equipment' in equipment:
             subequipment_new = []

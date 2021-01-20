@@ -1,14 +1,18 @@
 from __future__ import annotations
 
-from typing import List, Optional
+from typing import TYPE_CHECKING, List, Optional
 
 from openhab_creator import _
 from openhab_creator.exception import BuildException
 from openhab_creator.models.configuration import SmarthomeConfiguration
 from openhab_creator.models.thing.equipment import Equipment
-from openhab_creator.models.thing.types.lightbulb import Lightbulb
 from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
-from openhab_creator.output.items.itemscreatorregistry import ItemsCreatorRegistry
+from openhab_creator.output.items.itemscreatorregistry import \
+    ItemsCreatorRegistry
+
+if TYPE_CHECKING:
+    from openhab_creator.models.thing.types.lightbulb import Lightbulb
+    from openhab_creator.models.thing.types.wallswitch import WallSwitch
 
 
 @ItemsCreatorRegistry(3)
@@ -30,6 +34,12 @@ class LightbulbItemsCreator(BaseItemsCreator):
 
         for lightbulb in configuration.equipment('lightbulb'):
             self.__build_parent(lightbulb)
+
+            if not self.__build_subequipment(lightbulb):
+                self.__build_thing(lightbulb)
+
+            self.__build_buttons_assignment(
+                lightbulb, configuration.equipment('wallswitch'))
 
         self._write_file('lightbulb')
 
@@ -89,9 +99,6 @@ class LightbulbItemsCreator(BaseItemsCreator):
                 'nightmode', [lightbulb.lightbulb_id(), 'Nightmode'],
                 ['Setpoint']
             )
-
-        if not self.__build_subequipment(lightbulb):
-            self.__build_thing(lightbulb)
 
     def __build_subequipment(self, parent_lightbulb: Lightbulb) -> bool:
         if parent_lightbulb.has_subequipment():
@@ -209,3 +216,14 @@ class LightbulbItemsCreator(BaseItemsCreator):
                               _('RGB Color'), 'light', groups, [
                                   'Control', 'Color'],
                               {'channel': lightbulb.channel('controls', 'rgb')})
+
+    def __build_buttons_assignment(self, lightbulb: Lightbulb, wallswitches: List[WallSwitch]) -> None:
+        for wallswitch in wallswitches:
+            for button_key in range(0, wallswitch.buttons_count()):
+                self._create_item(typed='String',
+                                  identifier=wallswitch.buttonassignment_id(
+                                      button_key, lightbulb),
+                                  name=wallswitch.buttonassignment_name(
+                                      button_key),
+                                  icon='config',
+                                  groups=[wallswitch.buttonassignment_id(button_key)])

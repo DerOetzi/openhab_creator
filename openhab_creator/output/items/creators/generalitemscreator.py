@@ -16,7 +16,12 @@ class GeneralItemsCreator(BaseItemsCreator):
     def build(self, configuration: SmarthomeConfiguration) -> None:
         self._create_group('Config', _('Configuration items'))
         self._create_group('Sensor', _('Sensor items'))
+
         self._create_group(
             'Auto', _('Scene controlled configuration items'), groups=['Config'])
+
+        self._create_group(
+            'LowBattery', _('Low battery status items'), 'lowbattery', typed='number_max'
+        )
 
         self._write_file('generals')

@@ -3,6 +3,7 @@ from __future__ import annotations
 from copy import deepcopy
 from typing import TYPE_CHECKING, Dict, List, Literal, Optional, Type, Union
 
+from openhab_creator import _
 from openhab_creator.exception import BuildException, ConfigurationException
 from openhab_creator.models.secretsregistry import SecretsRegistry
 from openhab_creator.models.thing.basething import BaseThing
@@ -26,8 +27,7 @@ class Equipment(BaseThing):
                  properties: Optional[Dict] = {},
                  points: Optional[Dict[str, Dict[str, str]]] = {},
                  equipment: Optional[List] = [],
-                 channels: Optional[Dict] = {},
-                 battery: Optional[Dict[str, str]] = None):
+                 channels: Optional[Dict] = {}):
 
         self. __blankname: str = str(name)
         if identifier is None:
@@ -42,7 +42,6 @@ class Equipment(BaseThing):
         self._location: Optional[Location] = location
         self._subequipment: List[Equipment] = []
         self._channels: List = []
-        self._battery: Optional[Dict[str, str]] = battery
 
         self._bridge: Bridge = None
 
@@ -133,3 +132,18 @@ class Equipment(BaseThing):
 
         channelstring = f'{{binding}}:{{thingtype}}:{{bridgeuid}}:{{thinguid}}:{channel_uid}'
         return channelstring.format_map(self._replacements)
+
+    def has_battery(self) -> bool:
+        return 'battery' in self._points
+
+    def battery_id(self) -> str:
+        typed = Formatter.ucfirst(self._typed)
+        return f'battery{typed}{self._identifier}'
+
+    def lowbattery_id(self) -> str:
+        typed = Formatter.ucfirst(self._typed)
+        return f'batteryLow{typed}{self._identifier}'
+
+    def levelbattery_id(self) -> str:
+        typed = Formatter.ucfirst(self._typed)
+        return f'batteryLevel{typed}{self._identifier}'

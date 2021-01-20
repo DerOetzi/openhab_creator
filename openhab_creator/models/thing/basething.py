@@ -20,7 +20,7 @@ class BaseThing(BaseObject):
         self.__secrets_config: List[str] = secrets
         self.__secrets: Dict[str, str] = {}
         self.__properties: Dict = properties
-        self.__points: Dict[str, Dict] = points
+        self._points: Dict[str, Dict] = points
 
     def _init_secrets(self):
         for secret_key in self.__secrets_config:
@@ -46,16 +46,16 @@ class BaseThing(BaseObject):
         return self.__properties
 
     def points(self, point_key: str) -> Dict[str, str]:
-        if point_key in self.__points:
-            return self.__points[point_key]
+        if point_key in self._points:
+            return self._points[point_key]
 
         return {}
 
     def point(self, point_key: str, point: str) -> str:
-        if point_key not in self.__points:
+        if point_key not in self._points:
             raise BuildException(f'Unknown pointtype {point_key}')
 
-        if point not in self.__points[point_key]:
+        if point not in self._points[point_key]:
             raise BuildException(f'Unknown point {point} in {point_key}')
 
-        return self.__points[point_key][point]
+        return self._points[point_key][point]
