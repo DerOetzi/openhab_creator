@@ -16,7 +16,8 @@ class Floor(Location):
         'attic': 'Attic',
         'basement': 'Basement',
         'groundfloor': 'GroundFloor',
-        'firstfloor': 'FirstFloor'
+        'firstfloor': 'FirstFloor',
+        'secondfloor': 'SecondFloor'
     }
 
     def __init__(self, configuration: SmarthomeConfiguration,

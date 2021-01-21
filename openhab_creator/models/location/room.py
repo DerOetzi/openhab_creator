@@ -12,13 +12,20 @@ if TYPE_CHECKING:
 class Room(Location):
     VALIDTYPES = {
         "room": "Room",
-        "bedroom": "Bedroom",
-        "livingroom": "LivingRoom",
-        "dinningroom": "Room",
         "bathroom": "Bathroom",
+        "bedroom": "Bedroom",
+        "boilerroom": "BoilerRoom",
+        "cellar": "Cellar",
+        "corridor": "Corridor",
+        "diningroom": "DiningRoom",
+        "entry": "Entry",
+        "familyroom": "FamilyRoom",
+        "guestroom": "GuestRoom",
         "kitchen": "Kitchen",
-        "office": "Room",
-        "corridor": "Corridor"
+        "laundryroom": "LaundryRoom",
+        "livingroom": "LivingRoom",
+        "office": "Office",
+        "veranda": "Veranda"
     }
 
     def __init__(self, configuration: SmarthomeConfiguration, floor: Floor,
