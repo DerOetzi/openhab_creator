@@ -18,6 +18,20 @@ if TYPE_CHECKING:
 @ItemsCreatorRegistry(3)
 class LightbulbItemsCreator(BaseItemsCreator):
     def build(self, configuration: SmarthomeConfiguration) -> None:
+        self.__build_general_groups()
+
+        for lightbulb in configuration.equipment('lightbulb'):
+            self.__build_parent(lightbulb)
+
+            if not self.__build_subequipment(lightbulb):
+                self.__build_thing(lightbulb)
+
+            self.__build_buttons_assignment(
+                lightbulb, configuration.equipment('wallswitch'))
+
+        self._write_file('lightbulb')
+
+    def __build_general_groups(self) -> None:
         self._create_group(
             'Lightcontrol', _('Lightcontrol items'), groups=['Config'])
 
@@ -32,16 +46,13 @@ class LightbulbItemsCreator(BaseItemsCreator):
             'AutoReactivationLight', _('Reactivation scene controlled configuration items'), groups=['Config']
         )
 
-        for lightbulb in configuration.equipment('lightbulb'):
-            self.__build_parent(lightbulb)
+        self._create_group(
+            'AutoAbsenceLight', _('Absence scene controlled configuration items'), groups=['Config']
+        )
 
-            if not self.__build_subequipment(lightbulb):
-                self.__build_thing(lightbulb)
-
-            self.__build_buttons_assignment(
-                lightbulb, configuration.equipment('wallswitch'))
-
-        self._write_file('lightbulb')
+        self._create_group(
+            'AutoDarkness', _('Darkness scene controlled configuration items'), groups=['Config']
+        )
 
     def __build_parent(self, lightbulb: Lightbulb) -> None:
         self._create_group(
@@ -88,6 +99,24 @@ class LightbulbItemsCreator(BaseItemsCreator):
             _('Reactivate scene controlled'),
             icon='reactivation',
             groups=[lightbulb.lightbulb_id(), 'AutoReactivationLight'],
+            tags=['Setpoint']
+        )
+
+        self._create_item(
+            'Switch',
+            lightbulb.autodarkness_id(),
+            _('In the dark'),
+            icon='darkness',
+            groups=[lightbulb.lightbulb_id(), 'AutoDarkness'],
+            tags=['Setpoint']
+        )
+
+        self._create_item(
+            'Switch',
+            lightbulb.autoabsence_id(),
+            _('Even in absence'),
+            icon='absence',
+            groups=[lightbulb.lightbulb_id(), 'AutoAbsenceLight'],
             tags=['Setpoint']
         )
 

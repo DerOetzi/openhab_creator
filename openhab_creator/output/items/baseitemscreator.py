@@ -103,5 +103,5 @@ class BaseItemsCreator(BaseCreator):
                               name=_('Battery level [%d %%]'),
                               icon='battery',
                               groups=['Sensor', equipment.battery_id()],
-                              tags=['Status'],
+                              tags=['Level'],
                               metadata={'channel': equipment.channel('battery', 'level')})

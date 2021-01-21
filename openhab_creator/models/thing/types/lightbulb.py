@@ -77,6 +77,9 @@ class Lightbulb(Equipment):
     def autoreactivation_id(self) -> str:
         return f'autoReactivationLight{self._identifier}'
 
+    def autodarkness_id(self) -> str:
+        return f'autoDarkness{self._identifier}'
+
     def autoabsence_id(self) -> str:
         return f'autoAbscenceLight{self._identifier}'
 

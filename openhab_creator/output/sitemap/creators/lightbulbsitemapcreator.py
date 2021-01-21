@@ -54,6 +54,9 @@ class LightbulbSitemapCreator(BaseSitemapCreator):
             frame.append(self._create_auto(lightbulb, True))
             frame.append(self._create_autoreactivation(lightbulb))
 
+            frame.append(self._create_autoabsence(lightbulb))
+            frame.append(self._create_autodarkness(lightbulb))
+
             frame.append(self._create_wallswitch_page(
                 lightbulb, configuration.equipment('wallswitch')))
 
@@ -106,6 +109,24 @@ class LightbulbSitemapCreator(BaseSitemapCreator):
                 (0, '0', _('Off')),
                 (1, '30', '30 M'),
                 (2, '60', '1 H')
+            ]
+        )
+
+    def _create_autoabsence(self, lightbulb: Lightbulb) -> Switch:
+        return Switch(
+            item=lightbulb.autoabsence_id(),
+            mappings=[
+                (0, 'OFF', _('Off')),
+                (1, 'ON', _('On'))
+            ]
+        )
+
+    def _create_autodarkness(self, lightbulb: Lightbulb) -> Switch:
+        return Switch(
+            item=lightbulb.autodarkness_id(),
+            mappings=[
+                (0, 'OFF', _('Always')),
+                (1, 'ON', _('Only'))
             ]
         )
 
