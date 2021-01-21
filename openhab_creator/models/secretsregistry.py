@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import csv
-from io import TextIOWrapper
+import os
 from typing import Dict, List
 
 
@@ -11,17 +11,18 @@ class SecretsRegistry(object):
     MISSING_KEYS: List[str] = []
 
     @staticmethod
-    def init(secretsfile: TextIOWrapper) -> None:
-        reader = csv.DictReader(secretsfile)
+    def init(configdir: str) -> None:
+        with open(os.path.join(configdir, 'secrets.csv')) as secretsfile:
+            reader = csv.DictReader(secretsfile)
 
-        for row in reader:
-            if row['value'].strip() == '':
-                print("Empty secret: %s" % row['key'])
-                SecretsRegistry.SECRETS_REGISTRY[row['key'].lower()] = '__%s__' % (
-                    row['key'].upper())
-            else:
-                SecretsRegistry.SECRETS_REGISTRY[row['key'].lower(
-                )] = row['value'].strip()
+            for row in reader:
+                if row['value'].strip() == '':
+                    print("Empty secret: %s" % row['key'])
+                    SecretsRegistry.SECRETS_REGISTRY[row['key'].lower()] = '__%s__' % (
+                        row['key'].upper())
+                else:
+                    SecretsRegistry.SECRETS_REGISTRY[row['key'].lower(
+                    )] = row['value'].strip()
 
     @staticmethod
     def secret(*args: List[str]) -> str:

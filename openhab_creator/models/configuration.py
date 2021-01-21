@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import json
 from copy import deepcopy
 from typing import Dict, List
@@ -14,27 +15,50 @@ from openhab_creator.models.thing.equipmenttype import EquipmentType
 
 class SmarthomeConfiguration(object):
 
-    def __init__(self, bridges: Dict, templates: Dict, locations: Dict):
+    def __init__(self, name: str, configdir: str):
         self.__bridges: Dict[str, Bridge] = {}
-        self.__templates: Dict[str, Dict] = templates
         self.__locations: Dict[str, List[Location]] = {}
         self.__equipment: Dict[str, List[Equipment]] = {}
-        self.__name: str = ''
+        self.__name: str = name
 
-        self.__init_bridges(bridges)
-        self.__init_locations(locations)
+        self.__init_bridges(configdir)
 
-    def __init_bridges(self, bridges: Dict) -> None:
+        self.__templates: Dict[str, Dict] = self.__read_jsons_from_dir(
+            os.path.join(configdir, 'templates'))
+
+        self.__init_locations(configdir)
+
+    def __init_bridges(self, configdir: str) -> None:
+        bridges = self.__read_jsons_from_dir(
+            os.path.join(configdir, 'bridges'))
+
         for bridge_key, bridge_configuration in bridges.items():
             self.__bridges[bridge_key] = Bridge(**bridge_configuration)
 
-    def __init_locations(self, locations: Dict) -> None:
-        if 'indoor' in locations:
-            self.__name = locations['indoor']['name']
-            self.__locations['floors'] = []
-            for floor in locations['indoor']['floors']:
-                self.__locations['floors'].append(
-                    Floor(configuration=self, **floor))
+    def __init_locations(self, configdir: str) -> None:
+        self.__init_floors(configdir)
+
+    def __init_floors(self, configdir: str) -> None:
+        floors = self.__read_jsons_from_dir(
+            f'{configdir}/locations/indoor/floors')
+
+        self.__locations['floors'] = []
+
+        for floor_key in sorted(floors.keys()):
+            self.__locations['floors'].append(
+                Floor(configuration=self, **floors[floor_key]))
+
+    def __read_jsons_from_dir(self, srcdir: str) -> Dict[str, Dict]:
+        results = {}
+
+        if os.path.exists(srcdir):
+            for dir_entry in os.scandir(srcdir):
+                name = os.path.basename(dir_entry)
+                if name.endswith('.json'):
+                    with open(dir_entry) as json_file:
+                        results[name[:-5]] = json.load(json_file)
+
+        return results
 
     def name(self) -> str:
         return self.__name

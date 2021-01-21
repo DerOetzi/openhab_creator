@@ -16,23 +16,25 @@ if TYPE_CHECKING:
 
 
 class Creator(object):
-    def __init__(self, configfile: BufferedReader, outputdir: str, secretsfile: TextIOWrapper, check_only: bool, icons: bool):
-        self.__json_config: Dict = json.load(configfile)
+    def __init__(self, name: str, configdir: str, outputdir: str, anonym: bool, check_only: bool, icons: bool, rules: bool):
+        self._name: str = name
+        self._configdir: str = configdir
         self._outputdir: str = outputdir
-        self._secretsfile: TextIOWrapper = secretsfile
+        self._anonym: bool = anonym
         self._check_only: bool = check_only
         self._icons: bool = icons
+        self._rules: bool = rules
 
     def run(self) -> None:
         print("openHAB Configuration Creator (%s)" % __version__)
         print("Output directory: %s" % self._outputdir)
 
-        if self._secretsfile is not None:
-            SecretsRegistry.init(self._secretsfile)
+        if not self._anonym:
+            SecretsRegistry.init(self._configdir)
 
-        configuration = SmarthomeConfiguration(**self.__json_config)
+        configuration = SmarthomeConfiguration(self._name, self._configdir)
 
-        if SecretsRegistry.has_missing():
+        if not self._anonym and SecretsRegistry.has_missing():
             SecretsRegistry.handle_missing()
             return
 
