@@ -9,6 +9,7 @@ from openhab_creator.creator import Creator
 @click.argument('configdir', type=click.Path(exists=True))
 @click.argument('outputdir', envvar="OPENHAB_CONFIGDIR", type=click.Path(exists=True))
 @click.option('-a', '--anonym', 'anonym', is_flag=True, default=False)
+@click.option('-b', '--basics', 'basics', is_flag=True, default=False)
 @click.option('-c', '--check-only', 'check_only', is_flag=True, default=False)
 @click.option('-i', '--icons', 'icons', is_flag=True, default=False)
 @click.option('-r', '--rules', 'rules', is_flag=True, default=False)

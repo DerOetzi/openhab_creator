@@ -2,7 +2,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import os
-import shutil
 from pathlib import Path
 from cairosvg import svg2png
 

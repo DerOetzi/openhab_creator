@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING, Dict
 from openhab_creator import __version__
 from openhab_creator.models.configuration import SmarthomeConfiguration
 from openhab_creator.models.secretsregistry import SecretsRegistry
+from openhab_creator.output.basicconfigcreator import BasicConfigCreator
 from openhab_creator.output.iconscreator import IconsCreator
 from openhab_creator.output.itemscreator import ItemsCreator
 from openhab_creator.output.sitemapcreator import SitemapCreator
@@ -16,7 +17,11 @@ if TYPE_CHECKING:
 
 
 class Creator(object):
-    def __init__(self, name: str, configdir: str, outputdir: str, anonym: bool, check_only: bool, icons: bool, rules: bool):
+    def __init__(self, name: str,
+                 configdir: str, outputdir: str,
+                 anonym: bool, check_only: bool,
+                 icons: bool, rules: bool, basics: bool):
+
         self._name: str = name
         self._configdir: str = configdir
         self._outputdir: str = outputdir
@@ -24,6 +29,7 @@ class Creator(object):
         self._check_only: bool = check_only
         self._icons: bool = icons
         self._rules: bool = rules
+        self._basics: bool = basics
 
     def run(self) -> None:
         print("openHAB Configuration Creator (%s)" % __version__)
@@ -53,3 +59,7 @@ class Creator(object):
         if self._icons:
             icons_creator = IconsCreator(self._outputdir)
             icons_creator.build()
+
+        if self._basics:
+            basic_creator = BasicConfigCreator(self._outputdir)
+            basic_creator.build()
