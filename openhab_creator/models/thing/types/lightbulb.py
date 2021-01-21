@@ -13,9 +13,7 @@ class Lightbulb(Equipment):
                  typed: str,
                  config: Optional[Dict[str, Union[str, bool]]] = None,
                  **equipment_args):
-        if "lightbulb" != typed:
-            raise BuildException(
-                "Tried to parse not lightbulb Equipment to lightbulb")
+        self._check_type(typed, 'lightbulb')
 
         if config is None:
             config = {}
@@ -60,28 +58,31 @@ class Lightbulb(Equipment):
         return self.__nightmode
 
     def lightbulb_id(self) -> str:
-        return f'lightbulb{self._identifier}'
+        return self.identifier('lightbulb')
 
     def lightcontrol_id(self) -> str:
-        return f'lightcontrol{self._identifier}'
+        return self.identifier('lightcontrol')
 
     def nightmode_id(self) -> str:
-        return f'nightmode{self._identifier}'
+        return self.identifier('nightmode')
 
     def auto_id(self) -> str:
-        return f'autoLight{self._identifier}'
+        return self.identifier('autoLight')
 
     def autodisplay_id(self) -> str:
-        return f'autoDisplayLight{self._identifier}'
+        return self.identifier('autoDisplayLight')
 
     def autoreactivation_id(self) -> str:
-        return f'autoReactivationLight{self._identifier}'
+        return self.identifier('autoReactivationLight')
 
     def autodarkness_id(self) -> str:
-        return f'autoDarkness{self._identifier}'
+        return self.identifier('autoDarkness')
 
     def autoabsence_id(self) -> str:
-        return f'autoAbscenceLight{self._identifier}'
+        return self.identifier('autoAbscenceLight')
+
+    def motiondetectorperiod_id(self) -> str:
+        return self.identifier('motionDetectorPeriod')
 
     def hide_id(self) -> str:
         return f'hideLight{self._identifier}'

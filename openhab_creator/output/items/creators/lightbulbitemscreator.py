@@ -12,10 +12,11 @@ from openhab_creator.output.items.itemscreatorregistry import \
 
 if TYPE_CHECKING:
     from openhab_creator.models.thing.types.lightbulb import Lightbulb
+    from openhab_creator.models.thing.types.motiondetector import MotionDetector
     from openhab_creator.models.thing.types.wallswitch import WallSwitch
 
 
-@ItemsCreatorRegistry(3)
+@ItemsCreatorRegistry(4)
 class LightbulbItemsCreator(BaseItemsCreator):
     def build(self, configuration: SmarthomeConfiguration) -> None:
         self.__build_general_groups()
@@ -28,6 +29,10 @@ class LightbulbItemsCreator(BaseItemsCreator):
 
             self.__build_buttons_assignment(
                 lightbulb, configuration.equipment('wallswitch'))
+
+            self.__build_motion_assignment(
+                lightbulb, configuration.equipment('motiondetector')
+            )
 
         self._write_file('lightbulb')
 
@@ -52,6 +57,10 @@ class LightbulbItemsCreator(BaseItemsCreator):
 
         self._create_group(
             'AutoDarkness', _('Darkness scene controlled configuration items'), groups=['Config']
+        )
+
+        self._create_group(
+            'MotionDetectorPeriod', _('Motiondetector period configuration items'), groups=['Config']
         )
 
     def __build_parent(self, lightbulb: Lightbulb) -> None:
@@ -117,6 +126,15 @@ class LightbulbItemsCreator(BaseItemsCreator):
             _('Even in absence'),
             icon='absence',
             groups=[lightbulb.lightbulb_id(), 'AutoAbsenceLight'],
+            tags=['Setpoint']
+        )
+
+        self._create_item(
+            'Number:Dimensionless',
+            lightbulb.motiondetectorperiod_id(),
+            _('Motiondetector period'),
+            'timeout',
+            groups=[lightbulb.lightbulb_id(), 'MotionDetectorPeriod'],
             tags=['Setpoint']
         )
 
@@ -256,3 +274,12 @@ class LightbulbItemsCreator(BaseItemsCreator):
                                       button_key),
                                   icon='config',
                                   groups=[wallswitch.buttonassignment_id(button_key)])
+
+    def __build_motion_assignment(self, lightbulb: Lightbulb, motiondetectors: List[MotionDetector]) -> None:
+        for motiondetector in motiondetectors:
+            self._create_item(typed='Switch',
+                              identifier=motiondetector.assignment_id(
+                                  lightbulb),
+                              name=motiondetector.name(),
+                              icon='presence',
+                              groups=[motiondetector.assignment_id()])

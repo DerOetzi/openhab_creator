@@ -10,15 +10,15 @@ class BaseObject(object):
     def __init__(self, typed: str, name: str, identifier: Optional[str] = None):
         self._name: str = name
         self._identifier: str = identifier
-        self._typed: str = typed
+        self._typed: str = typed.lower()
 
         if self._identifier is None:
             self._identifier = Formatter.format_id(self._name)
 
         self._identifier = Formatter.ucfirst(self._identifier)
 
-    def identifier(self) -> str:
-        return self._identifier
+    def identifier(self, prefix: Optional[str] = '') -> str:
+        return f'{prefix}{self._identifier}'
 
     def name(self) -> str:
         return self._name

@@ -33,7 +33,8 @@ class WallSwitchItemsCreator(BaseItemsCreator):
                           wallswitch.button_id(),
                           _('Button state'),
                           groups=[wallswitch.wallswitch_id()],
-                          tags=['Status'])
+                          tags=['Status'],
+                          metadata={"channel": wallswitch.channel('status', 'button')})
 
         self._create_group(wallswitch.wallswitchassignment_id(),
                            _('Wallswitch assignment'),

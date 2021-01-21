@@ -17,31 +17,29 @@ class WallSwitch(Equipment):
                  typed: str,
                  config: Dict[str, Union[str, List['str']]],
                  **equipment_args: Dict):
-        if "wallswitch" != typed:
-            raise BuildException(
-                "Tried to parse not wallswitch Equipment to wallswitch")
+        self._check_type(typed, 'wallswitch')
 
         self.__buttons: List[str] = config.pop('buttons')
 
         super().__init__(typed=typed, config=config, **equipment_args)
 
     def wallswitch_id(self) -> str:
-        return f'Wallswitch{self._identifier}'
+        return self.identifier('wallSwitch')
 
     def wallswitchassignment_id(self) -> str:
-        return f'WallswitchAssignment{self._identifier}'
+        return self.identifier('WallSwitchAssignment')
 
     def button_id(self) -> str:
-        return f'WallswitchButton{self._identifier}'
+        return self.identifier('wallSwitchButton')
 
     def buttons_count(self):
         return len(self.__buttons)
 
     def buttonassignment_id(self, button_key: int, lightbulb: Optional[Lightbulb] = None) -> str:
         if lightbulb is None:
-            return f'WallswitchAssignment{button_key}{self._identifier}'
+            return f'WallSwitchAssignment{button_key}{self._identifier}'
         else:
-            return f'WallswitchAssignment{button_key}{self._identifier}_{lightbulb.identifier()}'
+            return f'WallSwitchAssignment{button_key}{self._identifier}_{lightbulb.identifier()}'
 
     def buttonassignment_name(self, button_key: int) -> str:
         return _('Button {count} ({name})').format_map({

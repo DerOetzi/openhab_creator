@@ -48,6 +48,11 @@ class Equipment(BaseThing):
         self.__init_subequipment(configuration, equipment, location)
         self.__init_thing(configuration, config, channels)
 
+    def _check_type(self, typed: str, expected: str) -> None:
+        if typed.lower() != expected.lower():
+            raise BuildException(
+                "Tried to parse no {typed} equipment to {self.__class__.__name__}")
+
     def __init_subequipment(self,
                             configuration: SmarthomeConfiguration,
                             equipment: Dict,
