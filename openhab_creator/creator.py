@@ -6,8 +6,11 @@ from typing import TYPE_CHECKING, Dict
 from openhab_creator import __version__
 from openhab_creator.models.configuration import SmarthomeConfiguration
 from openhab_creator.models.secretsregistry import SecretsRegistry
-from openhab_creator.output.content.basicconfigcreator import BasicConfigCreator
+from openhab_creator.output.content.basicconfigcreator import \
+    BasicConfigCreator
 from openhab_creator.output.content.iconscreator import IconsCreator
+from openhab_creator.output.content.jsr223creator import JSR223Creator
+from openhab_creator.output.content.rulescreator import RulesCreator
 from openhab_creator.output.items.itemscreator import ItemsCreator
 from openhab_creator.output.sitemap.sitemapcreator import SitemapCreator
 from openhab_creator.output.things.thingscreator import ThingsCreator
@@ -34,6 +37,10 @@ class Creator(object):
         print("openHAB Configuration Creator (%s)" % __version__)
         print("Output directory: %s" % self._outputdir)
 
+        if self._basics:
+            basic_creator = BasicConfigCreator(self._outputdir)
+            basic_creator.build()
+
         if not self._anonym:
             SecretsRegistry.init(self._configdir)
 
@@ -55,10 +62,11 @@ class Creator(object):
         sitemap_creator = SitemapCreator(self._outputdir)
         sitemap_creator.build(configuration)
 
-        if self._icons:
-            icons_creator = IconsCreator(self._outputdir)
-            icons_creator.build()
+        if self._jsr223_helper or self._basics:
+            JSR223Creator(self._outputdir).build()
 
-        if self._basics:
-            basic_creator = BasicConfigCreator(self._outputdir)
-            basic_creator.build()
+        if self._rules or self._basics:
+            RulesCreator(self._outputdir).build(self._configdir)
+
+        if self._icons or self._basics:
+            IconsCreator(self._outputdir).build()
