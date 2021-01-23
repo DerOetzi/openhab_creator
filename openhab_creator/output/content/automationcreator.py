@@ -9,14 +9,23 @@ from openhab_creator.output.content.basecontentcreator import \
     BaseContentCreator
 
 
-class RulesCreator(BaseContentCreator):
+class AutomationCreator(BaseContentCreator):
+    BASESRCPATH = 'automation/helper/Core/automation/'
 
     def build(self, configdir: str):
-        self._copy_all_files_from_subdir(
-            '/automation/lib', '/automation/lib/python/personal')
+        self._copy_all_files_from_subdir('scripts')
 
         self._copy_all_files_from_subdir(
-            '/automation/scripts', '/automation/jsr223/personal')
+            f'{self.BASESRCPATH}lib/python/core', '/automation/lib/python/core')
+
+        self._copy_all_files_from_subdir(
+            f'{self.BASESRCPATH}jsr223/python/core', '/automation/jsr223/core')
+
+        self._copy_all_files_from_subdir(
+            '/automation/libraries', '/automation/lib/python/personal')
+
+        self._copy_all_files_from_subdir(
+            '/automation/rules', '/automation/jsr223/personal')
 
         self.__prepare_and_copy_configuration(configdir)
 

@@ -9,8 +9,7 @@ from openhab_creator.models.secretsregistry import SecretsRegistry
 from openhab_creator.output.content.basicconfigcreator import \
     BasicConfigCreator
 from openhab_creator.output.content.iconscreator import IconsCreator
-from openhab_creator.output.content.jsr223creator import JSR223Creator
-from openhab_creator.output.content.rulescreator import RulesCreator
+from openhab_creator.output.content.automationcreator import AutomationCreator
 from openhab_creator.output.items.itemscreator import ItemsCreator
 from openhab_creator.output.sitemap.sitemapcreator import SitemapCreator
 from openhab_creator.output.things.thingscreator import ThingsCreator
@@ -20,8 +19,8 @@ class Creator(object):
     def __init__(self, name: str,
                  configdir: str, outputdir: str,
                  anonym: bool, check_only: bool,
-                 icons: bool, basics: bool,
-                 rules: bool, jsr223_helper: bool):
+                 icons: bool, all: bool,
+                 automation: bool):
 
         self._name: str = name
         self._configdir: str = configdir
@@ -29,15 +28,14 @@ class Creator(object):
         self._anonym: bool = anonym
         self._check_only: bool = check_only
         self._icons: bool = icons
-        self._basics: bool = basics
-        self._jsr223_helper: bool = jsr223_helper
-        self._rules: bool = rules
+        self._all: bool = all
+        self._automation: bool = automation
 
     def run(self) -> None:
         print("openHAB Configuration Creator (%s)" % __version__)
         print("Output directory: %s" % self._outputdir)
 
-        if self._basics:
+        if self._all:
             basic_creator = BasicConfigCreator(self._outputdir)
             basic_creator.build()
 
@@ -62,11 +60,8 @@ class Creator(object):
         sitemap_creator = SitemapCreator(self._outputdir)
         sitemap_creator.build(configuration)
 
-        if self._jsr223_helper or self._basics:
-            JSR223Creator(self._outputdir).build()
+        if self._automation or self._all:
+            AutomationCreator(self._outputdir).build(self._configdir)
 
-        if self._rules or self._basics:
-            RulesCreator(self._outputdir).build(self._configdir)
-
-        if self._icons or self._basics:
+        if self._icons or self._all:
             IconsCreator(self._outputdir).build()
