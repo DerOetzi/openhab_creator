@@ -4,7 +4,7 @@ from openhab_creator.output.content.basecontentcreator import BaseContentCreator
 
 
 class JSR223Creator(BaseContentCreator):
-    BASESRCPATH = 'rules/helper/Core/automation/'
+    BASESRCPATH = 'automation/helper/Core/automation/'
 
     def build(self):
         self._copy_all_files_from_subdir(

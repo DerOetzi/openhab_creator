@@ -13,10 +13,10 @@ class RulesCreator(BaseContentCreator):
 
     def build(self, configdir: str):
         self._copy_all_files_from_subdir(
-            '/rules/lib', '/automation/lib/python/personal')
+            '/automation/lib', '/automation/lib/python/personal')
 
         self._copy_all_files_from_subdir(
-            '/rules/scripts', '/automation/jsr223/personal')
+            '/automation/scripts', '/automation/jsr223/personal')
 
         self.__prepare_and_copy_configuration(configdir)
 
