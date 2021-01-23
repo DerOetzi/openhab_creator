@@ -6,21 +6,19 @@ from typing import TYPE_CHECKING, Dict
 from openhab_creator import __version__
 from openhab_creator.models.configuration import SmarthomeConfiguration
 from openhab_creator.models.secretsregistry import SecretsRegistry
-from openhab_creator.output.basicconfigcreator import BasicConfigCreator
-from openhab_creator.output.iconscreator import IconsCreator
-from openhab_creator.output.itemscreator import ItemsCreator
-from openhab_creator.output.sitemapcreator import SitemapCreator
-from openhab_creator.output.thingscreator import ThingsCreator
-
-if TYPE_CHECKING:
-    from io import BufferedReader, TextIOWrapper
+from openhab_creator.output.content.basicconfigcreator import BasicConfigCreator
+from openhab_creator.output.content.iconscreator import IconsCreator
+from openhab_creator.output.items.itemscreator import ItemsCreator
+from openhab_creator.output.sitemap.sitemapcreator import SitemapCreator
+from openhab_creator.output.things.thingscreator import ThingsCreator
 
 
 class Creator(object):
     def __init__(self, name: str,
                  configdir: str, outputdir: str,
                  anonym: bool, check_only: bool,
-                 icons: bool, rules: bool, basics: bool):
+                 icons: bool, basics: bool,
+                 rules: bool, jsr223_helper: bool):
 
         self._name: str = name
         self._configdir: str = configdir
@@ -28,8 +26,9 @@ class Creator(object):
         self._anonym: bool = anonym
         self._check_only: bool = check_only
         self._icons: bool = icons
-        self._rules: bool = rules
         self._basics: bool = basics
+        self._jsr223_helper: bool = jsr223_helper
+        self._rules: bool = rules
 
     def run(self) -> None:
         print("openHAB Configuration Creator (%s)" % __version__)
