@@ -32,7 +32,11 @@ class SitemapCreator(BaseCreator):
 
         statuspage = Text(label='Status', icon='smarthome')
         statuspage.append(
-            SitemapCreatorPipeline.pipeline_configpage(configuration))
+            SitemapCreatorPipeline.pipeline_statusgpage(configuration)
+        )
+        statuspage.append(
+            SitemapCreatorPipeline.pipeline_configpage(configuration)
+        )
         second_frame.append(statuspage)
 
         self._append(

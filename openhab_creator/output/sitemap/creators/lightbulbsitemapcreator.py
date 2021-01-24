@@ -15,30 +15,42 @@ if TYPE_CHECKING:
     from openhab_creator.models.configuration import SmarthomeConfiguration
     from openhab_creator.models.thing.types.lightbulb import Lightbulb
     from openhab_creator.models.thing.types.wallswitch import WallSwitch
+    from openhab_creator.models.thing.types.motiondetector import MotionDetector
 
 
-@SitemapCreatorPipeline(mainpage=0, configpage=3, equipment_needed=['lightbulb'])
+@SitemapCreatorPipeline(mainpage=0, statuspage=0, configpage=3, equipment_needed=['lightbulb'])
 class LightbulbSitemapCreator(BaseSitemapCreator):
     def build_mainpage(self, configuration: SmarthomeConfiguration) -> Text:
-        frames = {}
 
         page = Text(label=_('Lights'), icon='light')
 
         for lightbulb in configuration.equipment('lightbulb'):
-            location = lightbulb.location()
+            location = lightbulb.toplevel_location()
+            frame, is_new = self._page_frame(location)
 
-            if isinstance(location, Room):
-                location = location.floor()
-
-            if location.identifier() in frames:
-                frame = frames[location.identifier()]
-            else:
-                frame = Frame(location.name())
-                frames[location.identifier()] = frame
+            if is_new:
                 page.append(frame)
 
             frame.append(self._create_lightcontrol(lightbulb, True))
             frame.append(self._create_auto(lightbulb, False))
+
+        return page
+
+    def build_statuspage(self, configuration: SmarthomeConfiguration) -> Text:
+        page = Text(item='SwitchingCycles')
+
+        for lightbulb in configuration.equipment('lightbulb'):
+            location = lightbulb.toplevel_location()
+            frame, is_new = self._page_frame(location)
+
+            if is_new:
+                page.append(frame)
+
+            if lightbulb.has_subequipment():
+                for subequipment in lightbulb.subequipment():
+                    frame.append(Text(item=subequipment.switchingcycles_id()))
+            else:
+                frame.append(Text(item=lightbulb.switchingcycles_id()))
 
         return page
 
@@ -57,8 +69,15 @@ class LightbulbSitemapCreator(BaseSitemapCreator):
             frame.append(self._create_autoabsence(lightbulb))
             frame.append(self._create_autodarkness(lightbulb))
 
+            self._clear_page_frames()
+
             frame.append(self._create_wallswitch_page(
                 lightbulb, configuration.equipment('wallswitch')))
+
+            self._clear_page_frames()
+
+            frame.append(self._create_motion_detector_page(
+                lightbulb, configuration.equipment('motiondetector')))
 
             page.append(frame)
 
@@ -132,17 +151,23 @@ class LightbulbSitemapCreator(BaseSitemapCreator):
 
     def _create_wallswitch_page(self, lightbulb: Lightbulb, wallswitches: List[WallSwitch]) -> Text:
         page = Text(label=_('Wallswitch assignments {lightbulb}').format(
-            lightbulb=lightbulb.name()), icon='config')
+            lightbulb=lightbulb.name()), icon='configuration')
 
         mappings = self._create_lightcontrol_mappings(lightbulb)
         mappings.append((0, 'NULL', _('No assignment')))
 
         for wallswitch in wallswitches:
+            location = wallswitch.toplevel_location()
+            frame, is_new = self._page_frame(location)
+
+            if is_new:
+                page.append(frame)
+
             subpage = Text(
                 label=_('Assignment {wallswitch} to {lightbulb}').format(
                     wallswitch=wallswitch.name(), lightbulb=lightbulb.name()),
-                icon="config")
-            page.append(subpage)
+                icon="configuration")
+            frame.append(subpage)
 
             for button_key in range(0, wallswitch.buttons_count()):
                 subpage.append(
@@ -171,3 +196,18 @@ class LightbulbSitemapCreator(BaseSitemapCreator):
             mappings.append((order, '"NIGHT"', _('Night')))
 
         return mappings
+
+    def _create_motion_detector_page(self, lightbulb: Lightbulb, motiondetectors: List[MotionDetector]) -> Text:
+        page = Text(label=_('Motiondetector assignments {lightbulb}').format(
+            lightbulb=lightbulb.name()), icon='motiondetector')
+
+        for motiondetector in motiondetectors:
+            location = motiondetector.toplevel_location()
+            frame, is_new = self._page_frame(location)
+            if is_new:
+                page.append(frame)
+
+            frame.append(Switch(item=motiondetector.assignment_id(
+                lightbulb), mappings=[(0, 'OFF', _('Off')), (1, 'ON', _('On'))]))
+
+        return page

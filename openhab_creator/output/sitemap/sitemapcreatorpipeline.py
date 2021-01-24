@@ -47,6 +47,21 @@ class SitemapCreatorPipeline(object):
         return frame
 
     @staticmethod
+    def pipeline_statusgpage(configuration: SmarthomeConfiguration) -> Frame:
+        creators = SitemapCreatorPipeline.__creators(
+            'statuspage', configuration)
+
+        frame = Frame(_('Status'))
+
+        for creator in creators:
+            print(
+                f'Sitemap creator (statuspage) {creator["statuspage"]} {creator["class"].__name__}')
+            c = creator['class']()
+            frame.append(c.build_statuspage(configuration))
+
+        return frame
+
+    @staticmethod
     def pipeline_configpage(configuration: SmarthomeConfiguration) -> Frame:
         creators = SitemapCreatorPipeline.__creators(
             'configpage', configuration)

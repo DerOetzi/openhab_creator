@@ -24,6 +24,9 @@ class Location(BaseObject):
     def has_parent(self):
         return self._parent is not None
 
+    def parent(self) -> Location:
+        return self._parent
+
     def build_location_tags(self):
         tags = {f'{self.__class__.__name__.lower()}': f'{self._name}'}
 

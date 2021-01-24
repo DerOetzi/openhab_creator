@@ -32,6 +32,7 @@ class MotionDetectorItemsCreator(BaseItemsCreator):
         self._create_item('Switch',
                           motiondetector.presence_id(),
                           _('Presence'),
+                          icon='motiondetector',
                           groups=[motiondetector.motiondetector_id()],
                           tags=['Presence'],
                           metadata={"channel": motiondetector.channel('status', 'presence')})

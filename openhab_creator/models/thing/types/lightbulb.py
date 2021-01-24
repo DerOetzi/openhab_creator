@@ -85,6 +85,9 @@ class Lightbulb(Equipment):
     def motiondetectorperiod_id(self) -> str:
         return self.identifier('motionDetectorPeriod')
 
+    def switchingcycles_id(self) -> str:
+        return self.identifier('switchingCycles')
+
     def hide_id(self) -> str:
         return f'hideLight{self._identifier}'
 

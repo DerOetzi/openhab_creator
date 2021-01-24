@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openHAB Creator\n"
-"POT-Creation-Date: 2021-01-24 16:55+0100\n"
-"PO-Revision-Date: 2021-01-24 16:56+0100\n"
+"POT-Creation-Date: 2021-01-24 23:31+0100\n"
+"PO-Revision-Date: 2021-01-24 23:32+0100\n"
 "Last-Translator: Johannes Ott <info@johannes-ott.net>\n"
 "Language-Team: Johannes Ott\n"
 "Language: de\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
-#: openhab_creator/models/thing/types/lightbulb.py:107
+#: openhab_creator/models/thing/types/lightbulb.py:110
 msgid "Lightbulb"
 msgstr "Leuchte"
 
@@ -87,69 +87,77 @@ msgstr "Konfigurationsitems Szenensteuerung Dunkelheit"
 msgid "Motiondetector period configuration items"
 msgstr "Konfigurationsitems Wartezeit Bewegungsmelder"
 
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:69
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:67
+msgid "Lights switching cycles [%d]"
+msgstr "Beleuchtung Schaltzyklen [%d]"
+
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:73
 msgid "Lightbulb {blankname}"
 msgstr "Leuchte {blankname}"
 
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:76
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:80
 msgid "Lightcontrol"
 msgstr "Lichtsteuerung"
 
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:84
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:88
 msgid "Hide on lights page"
 msgstr "Auf Beleuchtungsseite ausblenden"
 
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:92
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:96
 msgid "Scene controlled"
 msgstr "Szenensteuerung"
 
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:100
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:104
 msgid "Display scene controlled"
 msgstr "Szenensteuerung anzeigen"
 
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:108
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:112
 msgid "Reactivate scene controlled"
 msgstr "Reaktivierung Szenensteuerung"
 
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:117
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:121
 msgid "In the dark"
 msgstr "Bei Dunkelheit"
 
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:126
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:130
 msgid "Even in absence"
 msgstr "Auch bei Abwesenheit"
 
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:135
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:139
 msgid "Motiondetector period"
 msgstr "Wartezeit Bewegungsmelder"
 
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:145
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:149
 msgid "Nightmode configuration"
 msgstr "Nachtmodus"
 
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:154
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:218
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:158
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:231
 msgid "Brightness"
 msgstr "Helligkeit"
 
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:159
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:233
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:163
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:246
 msgid "Colortemperature"
 msgstr "Farbtemperatur"
 
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:164
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:248
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:168
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:261
 msgid "On/Off"
 msgstr "An/Aus"
 
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:169
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:263
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:173
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:276
 msgid "RGB Color"
 msgstr "RGB Farbe"
 
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:197
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:201
 msgid "Lightbulb {name}"
 msgstr "Leuchte {name}"
+
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:208
+msgid "Switching cycles {name} [%d]"
+msgstr "Schaltzyklen {name} [%d]"
 
 #: openhab_creator/output/items/creators/motiondetectoritemscreator.py:17
 msgid "Motiondetector assignment items"
@@ -163,7 +171,7 @@ msgstr "Bewegungsmelder {name}"
 msgid "Presence"
 msgstr "Anwesenheit"
 
-#: openhab_creator/output/items/creators/motiondetectoritemscreator.py:40
+#: openhab_creator/output/items/creators/motiondetectoritemscreator.py:41
 msgid "Motiondetector assignment"
 msgstr "Bewegungsmelderzuordnung"
 
@@ -184,63 +192,73 @@ msgid "Wallswitch assignment"
 msgstr "Schalterzuordnung"
 
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:25
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:46
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:58
 msgid "Lights"
 msgstr "Beleuchtung"
 
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:83
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:102
 msgid "Automation"
 msgstr "Automatik"
 
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:88
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:109
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:119
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:155
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:107
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:128
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:138
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:180
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:211
 msgid "Off"
 msgstr "Aus"
 
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:100
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:119
 msgid "Display"
 msgstr "Anzeigen"
 
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:101
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:120
 msgid "Hide"
 msgstr "Ausblenden"
 
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:120
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:168
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:139
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:193
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:211
 msgid "On"
 msgstr "An"
 
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:128
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:147
 msgid "Always"
 msgstr "Immer"
 
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:129
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:148
 msgid "Only"
 msgstr "Nur"
 
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:134
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:153
 msgid "Wallswitch assignments {lightbulb}"
 msgstr "Schalterzuordnungen {lightbulb}"
 
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:138
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:157
 msgid "No assignment"
 msgstr "Keine Zuordnung"
 
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:142
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:167
 msgid "Assignment {wallswitch} to {lightbulb}"
 msgstr "Zuordnung {wallswitch} zu {lightbulb}"
 
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:161
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:186
 msgid "All"
 msgstr "Alle"
 
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:171
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:196
 msgid "Night"
 msgstr "Nacht"
 
-#: openhab_creator/output/sitemap/sitemapcreatorregistry.py:50
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:201
+msgid "Motiondetector assignments {lightbulb}"
+msgstr "Bewegungsmelderzuordnung {lightbulb}"
+
+#: openhab_creator/output/sitemap/sitemapcreatorpipeline.py:54
+msgid "Status"
+msgstr "Status"
+
+#: openhab_creator/output/sitemap/sitemapcreatorpipeline.py:69
 msgid "Configuration"
 msgstr "Konfiguration"
 

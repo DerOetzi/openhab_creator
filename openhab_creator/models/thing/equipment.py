@@ -123,6 +123,14 @@ class Equipment(BaseThing):
     def location(self) -> Location:
         return self._location
 
+    def toplevel_location(self) -> Location:
+        location = self._location
+
+        while location.has_parent():
+            location = location.parent()
+
+        return location
+
     def bridge(self) -> Bridge:
         return self._bridge
 

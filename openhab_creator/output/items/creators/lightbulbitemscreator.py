@@ -63,6 +63,10 @@ class LightbulbItemsCreator(BaseItemsCreator):
             'MotionDetectorPeriod', _('Motiondetector period configuration items'), groups=['Config']
         )
 
+        self._create_group(
+            'SwitchingCycles', _('Lights switching cycles [%d]'), icon='configuration', typed='number_avg'
+        )
+
     def __build_parent(self, lightbulb: Lightbulb) -> None:
         self._create_group(
             lightbulb.lightbulb_id(),
@@ -199,6 +203,15 @@ class LightbulbItemsCreator(BaseItemsCreator):
                 ['Lightbulb']
             )
 
+        self._create_item('Number:Dimensionless',
+                          lightbulb.switchingcycles_id(),
+                          _('Switching cycles {name} [%d]').format(
+                              name=lightbulb.name()),
+                          'configuration',
+                          ['Sensor', 'SwitchingCycles', lightbulb.lightbulb_id()],
+                          ['Measurement'],
+                          {'influxdb': ('switchingcycle', lightbulb.influxdb_tags())})
+
         self.__build_brightness_item(lightbulb)
         self.__build_colortemperature_item(lightbulb)
         self.__build_onoff_item(lightbulb)
@@ -272,7 +285,7 @@ class LightbulbItemsCreator(BaseItemsCreator):
                                       button_key, lightbulb),
                                   name=wallswitch.buttonassignment_name(
                                       button_key),
-                                  icon='config',
+                                  icon='configuration',
                                   groups=[wallswitch.buttonassignment_id(button_key)])
 
     def __build_motion_assignment(self, lightbulb: Lightbulb, motiondetectors: List[MotionDetector]) -> None:
@@ -281,5 +294,5 @@ class LightbulbItemsCreator(BaseItemsCreator):
                               identifier=motiondetector.assignment_id(
                                   lightbulb),
                               name=motiondetector.name(),
-                              icon='presence',
+                              icon='motiondetector',
                               groups=[motiondetector.assignment_id()])
