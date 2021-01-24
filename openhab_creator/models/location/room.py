@@ -37,12 +37,12 @@ class Room(Location):
 
         super().__init__(typed, name, identifier)
 
-        self.__floor: Floor = floor
+        self._parent = floor
 
         self._init_equipment(configuration, equipment)
 
     def floor(self) -> Floor:
-        return self.__floor
+        return self._parent
 
     def typed_formatted(self):
         return Room.VALIDTYPES[self._typed]

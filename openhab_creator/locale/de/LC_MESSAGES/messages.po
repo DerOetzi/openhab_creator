@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openHAB Creator\n"
-"POT-Creation-Date: 2021-01-21 23:05+0100\n"
-"PO-Revision-Date: 2021-01-21 23:06+0100\n"
+"POT-Creation-Date: 2021-01-24 16:55+0100\n"
+"PO-Revision-Date: 2021-01-24 16:56+0100\n"
 "Last-Translator: Johannes Ott <info@johannes-ott.net>\n"
 "Language-Team: Johannes Ott\n"
 "Language: de\n"
@@ -18,19 +18,31 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
+#: openhab_creator/models/thing/types/lightbulb.py:107
+msgid "Lightbulb"
+msgstr "Leuchte"
+
+#: openhab_creator/models/thing/types/motiondetector.py:37
+msgid "Motiondetector"
+msgstr "Bewegungsmelder"
+
 #: openhab_creator/models/thing/types/wallswitch.py:45
 msgid "Button {count} ({name})"
 msgstr "Taste {count} ({name})"
 
-#: openhab_creator/output/items/baseitemscreator.py:90
+#: openhab_creator/models/thing/types/wallswitch.py:51
+msgid "Wallswitch"
+msgstr "Schalter"
+
+#: openhab_creator/output/items/baseitemscreator.py:108
 msgid "Battery"
 msgstr "Batterie"
 
-#: openhab_creator/output/items/baseitemscreator.py:95
+#: openhab_creator/output/items/baseitemscreator.py:113
 msgid "Battery low"
 msgstr "Batteriestand niedrig"
 
-#: openhab_creator/output/items/baseitemscreator.py:103
+#: openhab_creator/output/items/baseitemscreator.py:121
 msgid "Battery level [%d %%]"
 msgstr "Batteriestand"
 

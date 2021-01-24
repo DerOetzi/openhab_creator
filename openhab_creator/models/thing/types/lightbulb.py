@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Dict, Optional, Union
 
+from openhab_creator import _
 from openhab_creator.exception import BuildException
 from openhab_creator.models.thing.equipmenttype import EquipmentType
 from openhab_creator.models.thing.equipment import Equipment
@@ -101,3 +102,7 @@ class Lightbulb(Equipment):
 
     def __str__(self) -> str:
         return f'{self._name} ({self._identifier}, {self.__singlebulb}, {self.__nightmode})'
+
+    def name_with_type(self):
+        typed = _("Lightbulb")
+        return f'{self._name} ({typed})'

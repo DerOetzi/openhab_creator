@@ -32,3 +32,7 @@ class MotionDetector(Equipment):
             return self.identifier('MotionDetectorAssignment')
         else:
             return f'MotionDetectorAssignment{self._identifier}_{lightbulb.identifier()}'
+
+    def name_with_type(self):
+        typed = _("Motiondetector")
+        return f'{self._name} ({typed})'

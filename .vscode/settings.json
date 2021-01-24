@@ -1,0 +1,6 @@
+{
+    "search.exclude": {
+      "openhab_creator/content/automation/helper*": true
+    }
+
+}

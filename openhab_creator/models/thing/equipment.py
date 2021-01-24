@@ -152,3 +152,14 @@ class Equipment(BaseThing):
     def levelbattery_id(self) -> str:
         typed = Formatter.ucfirst(self._typed)
         return f'batteryLevel{typed}{self._identifier}'
+
+    def name_with_type(self):
+        return self._name
+
+    def influxdb_tags(self) -> Dict:
+        tags = {
+            'label': self.name_with_type(),
+            'type': self._typed
+        }
+
+        return {**tags, **self._location.build_location_tags()}

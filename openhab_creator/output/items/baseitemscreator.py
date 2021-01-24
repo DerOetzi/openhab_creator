@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any, Dict, List, Literal, Optional
 
 from openhab_creator import _
+from openhab_creator.exception import BuildException
 from openhab_creator.output.basecreator import BaseCreator
 
 if TYPE_CHECKING:
@@ -52,6 +53,10 @@ class BaseItemsCreator(BaseCreator):
                      groups: List[str] = [],
                      tags: List[str] = [],
                      metadata: Dict[str, Any] = {}) -> None:
+        if 'Sensor' in groups and 'influxdb' not in metadata:
+            raise BuildException(
+                'Members of group sensor need influxdb metadata')
+
         itemstring = f"{typed} {identifier}\n  \"{name}\""
         itemstring += self.__iconstring(icon)
         itemstring += self.__groupsstring(groups)
@@ -83,7 +88,20 @@ class BaseItemsCreator(BaseCreator):
         if len(metadata) == 0:
             return ''
 
-        return "\n  {" + ",".join([key + '="' + value + '"' for key, value in metadata.items()]) + '}'
+        pairs = []
+
+        for metadata_key, metadata_value in metadata.items():
+            if isinstance(metadata_value, str):
+                metadata_str = f'{metadata_key}="{metadata_value}"'
+            else:
+                metadata_str = f'{metadata_key}="{metadata_value[0]}" ['
+                metadata_str += ','.join(
+                    [key + '="' + value + '"' for key, value in metadata_value[1].items()])
+                metadata_str += ']'
+
+            pairs.append(metadata_str)
+
+        return "\n  {" + ", ".join(pairs) + '}'
 
     def _create_battery(self, equipment: Equipment, parent_equipment: str) -> None:
         if equipment.has_battery():
@@ -104,4 +122,6 @@ class BaseItemsCreator(BaseCreator):
                               icon='battery',
                               groups=['Sensor', equipment.battery_id()],
                               tags=['Measurement', 'Level'],
-                              metadata={'channel': equipment.channel('battery', 'level')})
+                              metadata={
+                                  'channel': equipment.channel('battery', 'level'),
+                                  'influxdb': ('batteries', equipment.influxdb_tags())})

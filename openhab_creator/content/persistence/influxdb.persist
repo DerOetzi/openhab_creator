@@ -1,0 +1,9 @@
+Strategies {
+    every5Minutes : "0/5 * * * * ?"
+
+    default = everyChange
+}
+
+Items {
+    Sensor* : strategy = every5Minutes, everyChange, restoreOnStartup
+}

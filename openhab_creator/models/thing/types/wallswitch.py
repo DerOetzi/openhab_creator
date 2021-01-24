@@ -46,3 +46,7 @@ class WallSwitch(Equipment):
             'count': (button_key + 1),
             'name': self.__buttons[button_key]
         })
+
+    def name_with_type(self):
+        typed = _("Wallswitch")
+        return f'{self._name} ({typed})'
