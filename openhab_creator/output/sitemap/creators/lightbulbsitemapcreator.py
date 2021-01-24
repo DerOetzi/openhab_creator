@@ -9,7 +9,7 @@ from openhab_creator.models.sitemap.selection import Selection
 from openhab_creator.models.sitemap.switch import Switch
 from openhab_creator.models.sitemap.text import Text
 from openhab_creator.output.sitemap.basesitemapcreator import BaseSitemapCreator
-from openhab_creator.output.sitemap.sitemapcreatorregistry import SitemapCreatorRegistry
+from openhab_creator.output.sitemap.sitemapcreatorpipeline import SitemapCreatorPipeline
 
 if TYPE_CHECKING:
     from openhab_creator.models.configuration import SmarthomeConfiguration
@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from openhab_creator.models.thing.types.wallswitch import WallSwitch
 
 
-@SitemapCreatorRegistry(mainpage=0, configpage=3)
+@SitemapCreatorPipeline(mainpage=0, configpage=3, equipment_needed=['lightbulb'])
 class LightbulbSitemapCreator(BaseSitemapCreator):
     def build_mainpage(self, configuration: SmarthomeConfiguration) -> Text:
         frames = {}

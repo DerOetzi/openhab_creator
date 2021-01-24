@@ -7,8 +7,8 @@ import openhab_creator.output.sitemap.creators
 from openhab_creator.models.sitemap.frame import Frame
 from openhab_creator.models.sitemap.text import Text
 from openhab_creator.output.basecreator import BaseCreator
-from openhab_creator.output.sitemap.sitemapcreatorregistry import \
-    SitemapCreatorRegistry
+from openhab_creator.output.sitemap.sitemapcreatorpipeline import \
+    SitemapCreatorPipeline
 
 if TYPE_CHECKING:
     from openhab_creator.models.configuration import SmarthomeConfiguration
@@ -22,7 +22,7 @@ class SitemapCreator(BaseCreator):
 
         self._append(f'sitemap default label="{configuration.name()}" {{')
 
-        mainpage_frame = SitemapCreatorRegistry.pipeline_mainpage(
+        mainpage_frame = SitemapCreatorPipeline.pipeline_mainpage(
             configuration).dump()
 
         mainpage_frame = re.sub('^', ' '*4, mainpage_frame, flags=re.MULTILINE)
@@ -32,7 +32,7 @@ class SitemapCreator(BaseCreator):
 
         statuspage = Text(label='Status', icon='smarthome')
         statuspage.append(
-            SitemapCreatorRegistry.pipeline_configpage(configuration))
+            SitemapCreatorPipeline.pipeline_configpage(configuration))
         second_frame.append(statuspage)
 
         self._append(

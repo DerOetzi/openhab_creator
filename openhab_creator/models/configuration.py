@@ -75,6 +75,9 @@ class SmarthomeConfiguration(object):
     def equipment(self, typed: str) -> List[Equipment]:
         return self.__equipment[typed]
 
+    def has_equipment(self, typed: str) -> bool:
+        return typed in self.__equipment
+
     def equipment_factory(self, equipment_configuration: Dict, location: Location) -> Equipment:
         equipment_configuration = self.__merge_template(
             equipment_configuration)
