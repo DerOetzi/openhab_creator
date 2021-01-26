@@ -67,6 +67,8 @@ class LightbulbItemsCreator(BaseItemsCreator):
             'SwitchingCycles', _('Lights switching cycles [%d]'), icon='configuration', typed='number_avg'
         )
 
+        self._create_group('SwitchingCyclesReset', _('Switching cycles reset'))
+
     def __build_parent(self, lightbulb: Lightbulb) -> None:
         self._create_group(
             lightbulb.lightbulb_id(),
@@ -134,12 +136,12 @@ class LightbulbItemsCreator(BaseItemsCreator):
         )
 
         self._create_item(
-            'Number:Dimensionless',
+            'Number',  # TODO Number:Time See openhab-webui#765
             lightbulb.motiondetectorperiod_id(),
-            _('Motiondetector period'),
+            _('Motiondetector period [%d s]'),
             'timeout',
             groups=[lightbulb.lightbulb_id(), 'MotionDetectorPeriod'],
-            tags=['Setpoint']
+            tags=['Duration']
         )
 
         if (lightbulb.is_nightmode()):
@@ -207,10 +209,18 @@ class LightbulbItemsCreator(BaseItemsCreator):
                           lightbulb.switchingcycles_id(),
                           _('Switching cycles {name} [%d]').format(
                               name=lightbulb.name()),
-                          'configuration',
+                          'switchingcycles',
                           ['Sensor', 'SwitchingCycles', lightbulb.lightbulb_id()],
                           ['Measurement'],
                           {'influxdb': ('switchingcycle', lightbulb.influxdb_tags())})
+
+        self._create_item('Switch',
+                          lightbulb.switchingcyclesreset_id(),
+                          _('Reset'),
+                          'configuration',
+                          ['SwitchingCyclesReset', lightbulb.lightbulb_id()],
+                          ['Control'],
+                          {'expire': '10s,state=OFF'})
 
         self.__build_brightness_item(lightbulb)
         self.__build_colortemperature_item(lightbulb)

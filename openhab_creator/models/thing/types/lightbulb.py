@@ -88,6 +88,9 @@ class Lightbulb(Equipment):
     def switchingcycles_id(self) -> str:
         return self.identifier('switchingCycles')
 
+    def switchingcyclesreset_id(self) -> str:
+        return self.identifier('switchingCyclesReset')
+
     def hide_id(self) -> str:
         return f'hideLight{self._identifier}'
 

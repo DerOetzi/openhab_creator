@@ -39,11 +39,14 @@ class BaseElement(object):
     def append(self, element: BaseElement) -> None:
         self._elements.append(element)
 
+    def has_elements(self) -> bool:
+        return len(self._elements) > 0
+
     def dump(self, typed: str, additional: Optional[Dict[str, str]] = {}) -> str:
         attributes = {**self._attributes, **additional}
 
         attributes_str = "\n    ".join(
-            [key + '=' + value for key, value in attributes.items()])
+            [f'{key}={value}' for key, value in attributes.items()])
 
         return f'{typed} {attributes_str}{self.dump_elements()}'
 

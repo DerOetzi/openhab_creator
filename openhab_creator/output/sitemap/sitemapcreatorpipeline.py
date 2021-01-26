@@ -7,6 +7,7 @@ from openhab_creator.models.sitemap.frame import Frame
 
 if TYPE_CHECKING:
     from openhab_creator.models.configuration import SmarthomeConfiguration
+    from openhab_creator.models.sitemap.page import Page
     from openhab_creator.output.sitemap.basesitemapcreator import BaseSitemapCreator
 
 
@@ -47,26 +48,24 @@ class SitemapCreatorPipeline(object):
         return frame
 
     @staticmethod
-    def pipeline_statusgpage(configuration: SmarthomeConfiguration) -> Frame:
+    def pipeline_statusgpage(configuration: SmarthomeConfiguration, page: Page) -> Page:
         creators = SitemapCreatorPipeline.__creators(
             'statuspage', configuration)
-
-        frame = Frame(_('Status'))
 
         for creator in creators:
             print(
                 f'Sitemap creator (statuspage) {creator["statuspage"]} {creator["class"].__name__}')
             c = creator['class']()
-            frame.append(c.build_statuspage(configuration))
+            page.append(c.build_statuspage(configuration))
 
-        return frame
+        return page
 
     @staticmethod
-    def pipeline_configpage(configuration: SmarthomeConfiguration) -> Frame:
+    def pipeline_configpage(configuration: SmarthomeConfiguration, page: Page) -> Page:
         creators = SitemapCreatorPipeline.__creators(
             'configpage', configuration)
 
-        frame = Frame(_('Configuration'))
+        frame = page.frame('configuration', _('Configuration'))
 
         for creator in creators:
             print(
@@ -74,7 +73,7 @@ class SitemapCreatorPipeline(object):
             c = creator['class']()
             frame.append(c.build_configpage(configuration))
 
-        return frame
+        return page
 
     @staticmethod
     def __creators(typed: str, configuration: SmarthomeConfiguration) -> List[BaseSitemapCreator]:

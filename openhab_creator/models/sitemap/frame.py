@@ -9,4 +9,7 @@ class Frame(BaseElement):
         super().__init__(label)
 
     def dump(self) -> str:
+        if not self.has_elements():
+            return ''
+
         return super().dump('Frame')
