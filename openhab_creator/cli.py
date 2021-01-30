@@ -1,7 +1,10 @@
 import click
+import click_log
 
-from . import __version__
+from . import __version__, logger
 from openhab_creator.creator import Creator
+
+click_log.basic_config(logger)
 
 
 @click.command()
@@ -13,6 +16,7 @@ from openhab_creator.creator import Creator
 @click.option('--check-only', 'check_only', is_flag=True, default=False)
 @click.option('--icons', 'icons', is_flag=True, default=False)
 @click.option('--automation', '--automation', 'automation', is_flag=True, default=False)
+@click_log.simple_verbosity_option(logger)
 def cli(**kwargs):
     creator = Creator(**kwargs)
     creator.run()

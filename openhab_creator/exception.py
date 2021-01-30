@@ -4,3 +4,7 @@ class ConfigurationException(Exception):
 
 class BuildException(Exception):
     pass
+
+
+class RegistryException(Exception):
+    pass
