@@ -8,14 +8,19 @@ from openhab_creator.exception import RegistryException
 from openhab_creator.models.configuration.baseobject import BaseObject
 
 if TYPE_CHECKING:
-    from openhab_creator.models.thing.equipment import Equipment
+    from openhab_creator.models.configuration import Configuration
+    from openhab_creator.models.configuration.equipment import Equipment
 
 
 class Location(BaseObject):
-    def __init__(self, name: str, identifier: Optional[str] = None, equipment: Optional[List[Dict]] = None):
+    def __init__(self,
+                 configuration: Configuration,
+                 name: str,
+                 identifier: Optional[str] = None,
+                 equipment: Optional[List[Dict]] = None):
         super().__init__(name, identifier)
 
-        self.equipment = []
+        self.__EQUIPMENT: Final[List[Equipment]] = []
         self.parent = None
 
     @abstractproperty
@@ -27,16 +32,8 @@ class Location(BaseObject):
         pass
 
     @property
-    def category(self) -> str:
-        return self.__class__.__name__.lower()
-
-    @property
     def equipment(self) -> List[Equipment]:
         return self.__EQUIPMENT
-
-    @equipment.setter
-    def equipment(self, equipment: List[str]):
-        self.__EQUIPMENT: Final[List[Equipment]] = equipment
 
     @property
     def parent(self) -> Optional[Location]:
@@ -82,12 +79,12 @@ class LocationFactory(object):
         cls.REGISTRY[location_type.lower()] = location_cls
 
     @classmethod
-    def new(cls, **args: Dict) -> Location:
+    def new(cls, configuration: Configuration, **args: Dict) -> Location:
         cls.__init()
 
         location_type = args.pop('typed').lower()
         if location_type in cls.REGISTRY:
-            return cls.REGISTRY[location_type.lower()](**args)
+            return cls.REGISTRY[location_type.lower()](configuration=configuration, **args)
 
         raise RegistryException(f'No class for location type: {location_type}')
 

@@ -25,6 +25,10 @@ class BaseObject(ABC):
         identifier = Formatter.format_id(identifier)
         self.__IDENTIFIER: Final[str] = Formatter.ucfirst(identifier)
 
+    @property
+    def category(self) -> str:
+        return self.__class__.__name__.lower()
+
     def __repr__(self) -> str:
         return self.__str__()
 

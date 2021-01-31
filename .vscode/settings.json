@@ -2,6 +2,7 @@
     "search.exclude": {
       "openhab_creator/content/automation/helper*": true,
       "versioneer.py": true,
+      "**/_version.py": true,
       "**/*.po": true
     },
 

@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 class Equipment(BaseObject):
 
     def __init__(self,
-                 configuration: Optional[Configuration] = None,
+                 configuration: Configuration,
                  location: Optional[Location] = None,
                  name: Optional[str] = '',
                  identifier: Optional[str] = None,
@@ -36,8 +36,7 @@ class Equipment(BaseObject):
 
         self.__PARENT: Final[Optional[Equipment]] = parent
 
-        self.__POINTS: Final[Optional[Dict[str, str]]
-                             ] = [] if points is None else points
+        self.__POINTS: Final[Dict[str, str]] = {} if points is None else points
 
     def __init_name_and_identifier(self, identifier: Optional[str] = None) -> Tuple[str, Optional[str]]:
 
@@ -77,7 +76,7 @@ class Equipment(BaseObject):
 
     @property
     def points(self) -> Dict[str, str]:
-        self.__POINTS
+        return self.__POINTS
 
     def has_point(self, point: str) -> bool:
         return point in self.points
@@ -87,7 +86,7 @@ class Equipment(BaseObject):
             raise BuildException(
                 f'Cannot create channel for point "{point}" for equipment {self.identifier}')
 
-        # TODO return f'{self.thing.channelprefix}:{self.points[point]}'
+        return f'{self.thing.channelprefix}:{self.points[point]}'
 
     @property
     def has_battery(self) -> bool:

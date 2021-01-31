@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from typing import TYPE_CHECKING, Dict
 
-from openhab_creator import __version__
+from openhab_creator import __version__, logger
 
 from openhab_creator.models.configuration import Configuration
 from openhab_creator.models.configuration.equipment import EquipmentFactory
@@ -33,15 +33,15 @@ class Creator(object):
     def configdir(self) -> str:
         return self.__configdir
 
+    @property
+    def anonym(self) -> bool:
+        return self.__anonym
+
     def run(self) -> None:
-        print("openHAB Configuration Creator (%s)" % __version__)
-        print("Output directory: %s" % self.__outputdir)
+        logger.info(f"openHAB Configuration Creator ({__version__})")
+        logger.info(f"Output directory: {self.__outputdir}")
 
-        configuration = Configuration(self.name, self.configdir)
+        configuration = Configuration(self.name, self.configdir, self.anonym)
 
-        test_equipment = {
-            'name': 'Test',
-            'template': 'dimmablelight'
-        }
-
-        equipment = EquipmentFactory.new(configuration, **test_equipment)
+        if configuration.secrets.handle_missing():
+            return
