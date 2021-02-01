@@ -4,13 +4,16 @@ import csv
 import json
 import os
 from copy import deepcopy
-from typing import Dict, Final, List
+from typing import TYPE_CHECKING, Dict, Final, List
 
 from openhab_creator import logger
 from openhab_creator.exception import ConfigurationException
 from openhab_creator.models.configuration.equipment.bridge import Bridge
 from openhab_creator.models.configuration.location import (Location,
                                                            LocationFactory)
+
+if TYPE_CHECKING:
+    from openhab_creator.models.configuration.equipment import Equipment
 
 
 class SecretsStorage(object):
@@ -71,6 +74,7 @@ class SecretsStorage(object):
 class Configuration(object):
     def __init__(self, name: str, configdir: str, anonym: bool):
         self.__SECRETS_STORAGE = SecretsStorage(configdir, anonym)
+        self.__EQUIPMENT: Dict[str, List[Equipment]] = {}
         self.__init_bridges(configdir)
         self.__init_templates(configdir)
         self.__init_locations(configdir)
@@ -144,3 +148,21 @@ class Configuration(object):
     @property
     def secrets(self) -> SecretsStorage:
         return self.__SECRETS_STORAGE
+
+    def add_equipment(self, equipment: Equipment):
+        category = equipment.category
+
+        if category not in self.__EQUIPMENT:
+            self.__EQUIPMENT[category] = []
+
+        self.__EQUIPMENT[category].append(equipment)
+
+    def has_equipment(self, category: str) -> bool:
+        return category in self.__EQUIPMENT and len(self.__EQUIPMENT[category]) > 0
+
+    def equipment(self, category: str) -> List[Equipment]:
+        if not self.has_equipment(category):
+            raise ConfigurationException(
+                f'No Equipment with category {category}')
+
+        return self.__EQUIPMENT[category]

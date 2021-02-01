@@ -1,3 +1,8 @@
+from __future__ import annotations
+
+from typing import Any, Dict, Optional
+
+
 class Formatter(object):
     @staticmethod
     def ucfirst(raw: str) -> str:
@@ -18,3 +23,24 @@ class Formatter(object):
         formatted_id = formatted_id.replace(' ', '')
         formatted_id = formatted_id.replace('_', '')
         return formatted_id
+
+    @staticmethod
+    def key_value_pairs(pairs: Dict[str, Any],
+                        prefix: Optional[str] = '',
+                        suffix: Optional[str] = '',
+                        separator: Optional[str] = ', ') -> str:
+        output = [
+            f'{key}={Formatter.value(value)}' for key, value in pairs.items()]
+
+        return prefix + separator.join(output) + suffix
+
+    @staticmethod
+    def value(value: Any) -> str:
+        if isinstance(value, str):
+            value = f'"{value}"'
+        elif isinstance(value, bool):
+            value = 'true' if value else 'false'
+        else:
+            value = str(value)
+
+        return value

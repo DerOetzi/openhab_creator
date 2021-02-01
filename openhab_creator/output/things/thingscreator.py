@@ -1,75 +1,66 @@
 from __future__ import annotations
 
 import os
-from typing import Dict
+from typing import TYPE_CHECKING
 
-from openhab_creator.models.configuration import SmarthomeConfiguration
-from openhab_creator.models.thing.basething import BaseThing
-from openhab_creator.models.thing.bridge import Bridge
-from openhab_creator.models.thing.equipment import Equipment
+from openhab_creator.models.configuration import Configuration
 from openhab_creator.output.basecreator import BaseCreator
+from openhab_creator.output.formatter import Formatter
+
+if TYPE_CHECKING:
+    from openhab_creator.models.configuration.equipment.bridge import Bridge
+    from openhab_creator.models.configuration.equipment.thing import Channel
 
 
 class ThingsCreator(BaseCreator):
     def __init__(self, outputdir: str):
         super().__init__('things', outputdir)
 
-    def build(self, configuration: SmarthomeConfiguration) -> None:
-        for bridge_key, bridge_obj in configuration.bridges().items():
+    def build(self, configuration: Configuration) -> None:
+        for bridge_key, bridge_obj in configuration.bridges.items():
             self.__append_bridge(bridge_obj)
-            for thing in bridge_obj.things():
-                self.__append_thing(thing)
 
             self._append('}')
-
             self._write_file(bridge_key)
 
     def __append_bridge(self, bridge: Bridge) -> None:
-        bridgestring = 'Bridge {type}:{bridgetype}:{identifier} "{nameprefix} {name} ({identifier})"%s {{'
-        bridgestring = bridgestring % self._propertiesstring(
-            bridge.properties())
-        bridgestring = bridgestring.format_map(bridge.replacements())
+        bridgething = bridge.thing
+
+        bridgestring = f'Bridge {bridge.binding}:{bridgething.typed}:{bridge.identifier} '
+        bridgestring += f'"{bridgething.nameprefix} {bridge.name} ({bridge.identifier})" '
+        if bridgething.has_properties:
+            bridgestring += f'{Formatter.key_value_pairs(bridgething.properties, "[", "]")} '
+
+        bridgestring += '{'
+
         self._append(bridgestring)
 
-    def __append_thing(self, thing: Equipment) -> None:
-        thingstring = '  Thing {thingtype} {thinguid} "{bridgenameprefix} {nameprefix} {name} ({identifier})" @ "{type}"%s%s'
-        thingstring = thingstring % (
-            self._propertiesstring(thing.properties()),
-            self._channelsstring(thing)
-        )
-        thingstring = thingstring.format_map(thing.replacements())
-        self._append(thingstring)
+        self.__append_things(bridge)
 
-    def _propertiesstring(self, properties: Dict[str, str]) -> str:
-        if len(properties) == 0:
-            return ''
+    def __append_things(self, bridge: Bridge) -> None:
+        for thing in bridge.things:
+            thingstring = f'  Thing {thing.typed} {thing.uid} '
+            thingstring += f'"{thing.nameprefix} {thing.name} ({thing.identifier})" '
+            thingstring += f'@ "{thing.category}" '
 
-        properties_pairs = []
+            if thing.has_properties:
+                thingstring += f'{Formatter.key_value_pairs(thing.properties, "[", "]")} '
 
-        for (key, value) in properties.items():
-            if type(value) is int:
-                properties_pairs.append('%s=%d' % (key, value))
-            elif type(value) is bool:
-                properties_pairs.append('%s=%s' % (
-                    key, 'true' if value else 'false'))
-            else:
-                properties_pairs.append('%s="%s"' % (key, value))
+            if thing.has_channels:
+                thingstring += '{'
 
-        return ' [%s]' % (', '.join(properties_pairs))
+            self._append(thingstring)
 
-    def _channelsstring(self, thing: Equipment) -> str:
-        if not thing.has_channels():
-            return ''
+            self.__append_thing_channels(thing.channels)
 
-        lines = []
-        lines.append('{{')
-        lines.append('    Channels:')
+            if thing.has_channels:
+                self._append('  }')
 
-        for channel in thing.channels():
-            lines.append('      Type %s : %s "%s"%s' % (
-                channel['type'], channel['id'], channel['name'],
-                self._propertiesstring(channel['properties'])
-            ))
-        lines.append('  }}')
+    def __append_thing_channels(self, channels: List[Channel]) -> None:
+        self._append('    Channels:')
 
-        return "\n".join(lines)
+        for channel in channels:
+            channelstring = f'      Type {channel.typed} : {channel.identifier} "{channel.name}" '
+            channelstring += f'{Formatter.key_value_pairs(channel.properties, "[", "]")} '
+
+            self._append(channelstring)

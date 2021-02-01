@@ -3,6 +3,7 @@ from __future__ import annotations
 from importlib import import_module
 from typing import TYPE_CHECKING, Any, Dict, Final, List, Optional, Tuple, Type
 
+from openhab_creator import logger
 from openhab_creator.exception import BuildException, ConfigurationException, RegistryException
 from openhab_creator.models.configuration.baseobject import BaseObject
 from openhab_creator.models.configuration.equipment.thing import Thing
@@ -20,7 +21,7 @@ class Equipment(BaseObject):
                  name: Optional[str] = '',
                  identifier: Optional[str] = None,
                  thing: Optional[Dict] = None,
-                 equipment: List[Dict] = None,
+                 subequipment: Optional[List[Dict]] = None,
                  parent: Optional[Equipment] = None,
                  secrets: Optional[List[str]] = None,
                  points: Optional[Dict[str, str]] = None):
@@ -38,17 +39,33 @@ class Equipment(BaseObject):
 
         self.__POINTS: Final[Dict[str, str]] = {} if points is None else points
 
+        self.__init_subequipment(
+            configuration, [] if subequipment is None else subequipment)
+
     def __init_name_and_identifier(self, identifier: Optional[str] = None) -> Tuple[str, Optional[str]]:
 
         if self.location is not None:
-            name = f'{self.location.name()} {self.blankname}'.strip()
+            name = f'{self.location.name} {self.blankname}'.strip()
 
             if identifier is None:
-                identifier = f'{self.location.identifier()}{self.blankname}'
+                identifier = f'{self.location.identifier}{self.blankname}'
         else:
             name = self.blankname
 
         return name, identifier
+
+    def __init_subequipment(self, configuration: Configuration, subequipment: List[Dict]) -> None:
+        self.__SUBEQUIPMENT: Final[List[Equipment]] = []
+
+        for subequipment_definition in subequipment:
+            name = f'{self.blankname} {subequipment_definition["name"]}'
+            subequipment_definition['name'] = name.strip()
+            self.__SUBEQUIPMENT.append(EquipmentFactory.new(configuration=configuration,
+                                                            location=self.location,
+                                                            parent=self,
+                                                            **subequipment_definition))
+
+        logger.debug(self.__SUBEQUIPMENT)
 
     @property
     def blankname(self) -> str:
@@ -77,6 +94,10 @@ class Equipment(BaseObject):
     @property
     def points(self) -> Dict[str, str]:
         return self.__POINTS
+
+    @property
+    def subequipment(self) -> List[Equipment]:
+        return self.__SUBEQUIPMENT
 
     def has_point(self, point: str) -> bool:
         return point in self.points
@@ -111,7 +132,9 @@ class EquipmentFactory(object):
         cls.REGISTRY[equipment_type.lower()] = equipment_cls
 
     @classmethod
-    def new(cls, configuration: Configuration, **equipment_configuration: Dict) -> Equipment:
+    def new(cls,
+            configuration: Configuration,
+            **equipment_configuration: Dict) -> Equipment:
         cls.__init()
 
         equipment_configuration = cls.__merge_template(
@@ -119,11 +142,17 @@ class EquipmentFactory(object):
 
         equipment_type = equipment_configuration.pop('typed').lower()
 
-        if equipment_type in cls.REGISTRY:
-            return cls.REGISTRY[equipment_type.lower()](configuration=configuration, **equipment_configuration)
+        if equipment_type not in cls.REGISTRY:
+            raise RegistryException(
+                f'No class for equipment type: {equipment_type}')
 
-        raise RegistryException(
-            f'No class for equipment type: {equipment_type}')
+        equipment = cls.REGISTRY[equipment_type.lower()](configuration=configuration,
+                                                         **equipment_configuration)
+
+        if not equipment.is_child:
+            configuration.add_equipment(equipment)
+
+        return equipment
 
     @classmethod
     def __merge_template(cls, configuration: Configuration, equipment_configuration: Dict) -> Dict:
@@ -131,13 +160,6 @@ class EquipmentFactory(object):
         if template is not None:
             equipment_configuration = {
                 **configuration.template(template), **equipment_configuration}
-
-        if 'equipment' in equipment_configuration:
-            subequipment_new = []
-            for subequipment in equipment_configuration['equipment']:
-                subequipment_new.append(
-                    cls.__merge_template(configuration, subequipment))
-            equipment_configuration['equipment'] = subequipment_new
 
         return equipment_configuration
 

@@ -1,11 +1,12 @@
 from __future__ import annotations
 
-from importlib import import_module
 from abc import abstractproperty
+from importlib import import_module
 from typing import TYPE_CHECKING, Dict, Final, List, Optional, Type
 
 from openhab_creator.exception import RegistryException
 from openhab_creator.models.configuration.baseobject import BaseObject
+from openhab_creator.models.configuration.equipment import EquipmentFactory
 
 if TYPE_CHECKING:
     from openhab_creator.models.configuration import Configuration
@@ -20,8 +21,18 @@ class Location(BaseObject):
                  equipment: Optional[List[Dict]] = None):
         super().__init__(name, identifier)
 
-        self.__EQUIPMENT: Final[List[Equipment]] = []
+        self.__init_equipment(
+            configuration, [] if equipment is None else equipment)
+
         self.parent = None
+
+    def __init_equipment(self, configuration: Configuration, equipment: List[Dict]) -> None:
+        self.__EQUIPMENT: Final[List[Equipment]] = []
+
+        for equipment_definition in equipment:
+            self.__EQUIPMENT.append(EquipmentFactory.new(configuration=configuration,
+                                                         location=self,
+                                                         **equipment_definition))
 
     @abstractproperty
     def area(self) -> str:

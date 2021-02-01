@@ -21,6 +21,10 @@ class Properties(object):
             self.__PROPERTIES[property_key] = property_value
 
     @property
+    def empty(self) -> bool:
+        return len(self.all) == 0
+
+    @property
     def all(self) -> Dict[str, Any]:
         return self.__PROPERTIES
 
@@ -65,15 +69,19 @@ class Thing(object):
 
         self.__THINGTYPE: Final[str] = thingtype
 
-        self.__NAMEPREFIX: Final[str] = nameprefix
-
         self.__init_bridge(configuration, bridge)
+
+        self.__init_nameprefix(nameprefix)
+
+        self.__init_binding()
 
         self.__init_secrets(
             configuration, [] if secrets_config is None else secrets_config)
 
         self.__THINGUID: Final[str] = equipment_node.identifier if thinguid is None else self.__replace_secrets(
             thinguid)
+
+        self.__init_channelprefix()
 
         self.__PROPERTIES = Properties(
             self.secrets, {} if properties is None else properties)
@@ -84,11 +92,27 @@ class Thing(object):
                       configuration: Optional[Configuration] = None,
                       bridge_key: Optional[str] = None) -> None:
 
-        if configuration is None or bridge_key is None:
-            self.__BRIDGE: Final[Bridge] = None
-        else:
-            self.__BRIDGE: Final[Bridge] = configuration.bridge(bridge_key)
-            self.__BRIDGE.add_thing(self)
+        bridge = None
+
+        if not (configuration is None or bridge_key is None):
+            bridge = configuration.bridge(bridge_key)
+            bridge.add_thing(self)
+
+        self.__BRIDGE: Final[Bridge] = bridge
+
+    def __init_nameprefix(self, nameprefix: str) -> None:
+        if self.has_bridge:
+            nameprefix = f'{self.bridge.thing.nameprefix} {nameprefix}'
+
+        self.__NAMEPREFIX: Final[str] = nameprefix
+
+    def __init_binding(self) -> None:
+        if self.has_bridge:
+            binding = self.bridge.binding
+        elif hasattr(self.equipment_node, 'binding'):
+            binding = self.equipment_node.binding
+
+        self.__BINDING: Final[str] = binding
 
     def __init_secrets(self, configuration: Configuration, secrets_config: List[str]) -> None:
         self.__SECRETS: Final[Dict[str, str]] = {
@@ -107,6 +131,19 @@ class Thing(object):
 
         logger.debug(f'secrets: {self.__SECRETS}')
 
+    def __init_channelprefix(self) -> None:
+        prefixes = [
+            self.binding,
+            self.typed
+        ]
+
+        if self.has_bridge:
+            prefixes.append(self.bridge.thing.uid)
+
+        prefixes.append(self.uid)
+
+        self.__CHANNELPREFIX: Final[str] = ':'.join(prefixes)
+
     def __init_channels(self, channels: Dict[str, Any]) -> None:
         self.__CHANNELS: Final[List[Any]] = []
 
@@ -124,20 +161,31 @@ class Thing(object):
         return self.__EQUIPMENT_NODE
 
     @property
-    def binding(self) -> str:
-        if self.has_bridge:
-            binding = self.bridge.binding
-        elif hasattr(self.equipment_node, 'binding'):
-            binding = self.equipment_node.binding
-
-        return binding
+    def nameprefix(self) -> str:
+        return self.__NAMEPREFIX
 
     @property
-    def thingtype(self) -> str:
+    def name(self) -> str:
+        return self.equipment_node.name
+
+    @property
+    def identifier(self) -> str:
+        return self.equipment_node.identifier
+
+    @property
+    def category(self) -> str:
+        return self.equipment_node.category
+
+    @property
+    def binding(self) -> str:
+        return self.__BINDING
+
+    @property
+    def typed(self) -> str:
         return self.__THINGTYPE
 
     @property
-    def thinguid(self) -> str:
+    def uid(self) -> str:
         return self.__THINGUID
 
     @property
@@ -153,8 +201,16 @@ class Thing(object):
         return self.__SECRETS
 
     @property
+    def has_properties(self) -> bool:
+        return not self.__PROPERTIES.empty
+
+    @property
     def properties(self) -> Dict[str, Any]:
-        return self.__PROPERTIES
+        return self.__PROPERTIES.all
+
+    @property
+    def has_channels(self) -> bool:
+        return len(self.channels) > 0
 
     @property
     def channels(self) -> List[Any]:
@@ -162,14 +218,4 @@ class Thing(object):
 
     @property
     def channelprefix(self) -> str:
-        prefixes = [
-            self.binding,
-            self.thingtype
-        ]
-
-        if self.has_bridge:
-            prefixes.append(self.bridge.thing.thinguid)
-
-        prefixes.append(self.thinguid)
-
-        return ':'.join(prefixes)
+        return self.__CHANNELPREFIX
