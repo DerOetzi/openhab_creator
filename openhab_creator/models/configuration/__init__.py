@@ -4,7 +4,7 @@ import csv
 import json
 import os
 from copy import deepcopy
-from typing import TYPE_CHECKING, Dict, Final, List
+from typing import TYPE_CHECKING, Dict, List
 
 from openhab_creator import logger
 from openhab_creator.exception import ConfigurationException
@@ -18,9 +18,9 @@ if TYPE_CHECKING:
 
 class SecretsStorage(object):
     def __init__(self, configdir: str, anonym: bool):
-        self.__STORAGE: Final[Dict[str, str]] = {}
-        self.__ANONYM: Final[bool] = anonym
-        self.__MISSING_KEYS: Final[List[str]] = []
+        self.storage: Dict[str, str] = {}
+        self.anonym: bool = anonym
+        self.missing_keys: List[str] = []
 
         if not anonym:
             self.__read_secrets(configdir)
@@ -33,39 +33,31 @@ class SecretsStorage(object):
                 key = row['key'].lower()
                 if row['value'].strip() == '':
                     logger.warning(f"Empty secret: {key}")
-                    self.__STORAGE[key] = '__%s__' % (
+                    self.storage[key] = '__%s__' % (
                         key.upper())
                 else:
-                    self.__STORAGE[key.lower()] = row['value'].strip()
-
-    @property
-    def anonym(self) -> bool:
-        return self.__ANONYM
-
-    @property
-    def secrets(self) -> Dict[str, str]:
-        return deepcopy(self.__STORAGE)
+                    self.storage[key.lower()] = row['value'].strip()
 
     def secret(self, *args: List[str]) -> str:
         key = '_'.join(args).lower()
 
-        if key in self.__STORAGE:
-            value = self.__STORAGE[key]
+        if key in self.storage:
+            value = self.storage[key]
         else:
-            if key not in self.__MISSING_KEYS:
-                self.__MISSING_KEYS.append(key)
+            if key not in self.missing_keys:
+                self.missing_keys.append(key)
             value = "__%s__" % key.upper()
 
         return value
 
     @property
     def has_missing(self) -> bool:
-        return len(self.__MISSING_KEYS) > 0 and not self.anonym
+        return len(self.missing_keys) > 0 and not self.anonym
 
     def handle_missing(self) -> bool:
         if self.has_missing:
             logger.error("Missing secrets:")
-            for key in self.__MISSING_KEYS:
+            for key in self.missing_keys:
                 logger.error(key)
 
         return self.has_missing
@@ -73,41 +65,41 @@ class SecretsStorage(object):
 
 class Configuration(object):
     def __init__(self, name: str, configdir: str, anonym: bool):
-        self.__SECRETS_STORAGE = SecretsStorage(configdir, anonym)
-        self.__EQUIPMENT: Dict[str, List[Equipment]] = {}
-        self.__init_bridges(configdir)
-        self.__init_templates(configdir)
-        self.__init_locations(configdir)
+        self.secrets = SecretsStorage(configdir, anonym)
+        self.equipment_registry: Dict[str, List[Equipment]] = {}
+        self._init_bridges(configdir)
+        self._init_templates(configdir)
+        self._init_locations(configdir)
 
-    def __init_bridges(self, configdir: str) -> None:
-        self.__BRIDGES: Final[Dict[str, Bridge]] = {}
+    def _init_bridges(self, configdir: str) -> None:
+        self.bridges: Dict[str, Bridge] = {}
 
-        bridges = self.__read_jsons_from_dir(configdir, 'bridges')
+        bridges = self.read_jsons_from_dir(configdir, 'bridges')
 
         for bridge_key, bridge_configuration in bridges.items():
-            self.__BRIDGES[bridge_key] = Bridge(
+            self.bridges[bridge_key] = Bridge(
                 configuration=self, **bridge_configuration)
 
-    def __init_templates(self, configdir: str) -> None:
-        self.__TEMPLATES: Final[Dict[str, Dict]] = self.__read_jsons_from_dir(
+    def _init_templates(self, configdir: str) -> None:
+        self.templates: Dict[str, Dict] = self.read_jsons_from_dir(
             configdir, 'templates')
 
-    def __init_locations(self, configdir: str) -> None:
-        self.__LOCATIONS: Final[Dict[str, List[Location]]] = {}
+    def _init_locations(self, configdir: str) -> None:
+        self.locations: Dict[str, List[Location]] = {}
 
-        self.__init_floors(configdir)
+        self._init_floors(configdir)
 
-    def __init_floors(self, configdir: str) -> None:
-        self.__LOCATIONS['floors'] = []
+    def _init_floors(self, configdir: str) -> None:
+        self.locations['floors'] = []
 
-        floors = self.__read_jsons_from_dir(
+        floors = self.read_jsons_from_dir(
             configdir, 'locations/indoor/floors')
 
         for floor_key in sorted(floors.keys()):
-            self.__LOCATIONS['floors'].append(LocationFactory.new(
+            self.locations['floors'].append(LocationFactory.new(
                 configuration=self, **floors[floor_key]))
 
-    def __read_jsons_from_dir(self, configdir: str, subdir: str) -> Dict[str, Dict]:
+    def read_jsons_from_dir(self, configdir: str, subdir: str) -> Dict[str, Dict]:
         results = {}
 
         srcdir = os.path.join(configdir, subdir)
@@ -121,10 +113,6 @@ class Configuration(object):
 
         return results
 
-    @property
-    def bridges(self) -> Dict[str, Bridge]:
-        return self.__BRIDGES
-
     def bridge(self, bridge_key: str) -> Bridge:
         bridge_key = bridge_key.lower()
         if bridge_key not in self.bridges:
@@ -132,10 +120,6 @@ class Configuration(object):
                 f'No bridge "{bridge_key}" in configuration')
 
         return self.bridges[bridge_key]
-
-    @property
-    def templates(self) -> Dict[str, Dict]:
-        return self.__TEMPLATES
 
     def template(self, template_key: str) -> Dict:
         template_key = template_key.lower()
@@ -145,24 +129,20 @@ class Configuration(object):
 
         return deepcopy(self.templates[template_key])
 
-    @property
-    def secrets(self) -> SecretsStorage:
-        return self.__SECRETS_STORAGE
-
     def add_equipment(self, equipment: Equipment):
         category = equipment.category
 
-        if category not in self.__EQUIPMENT:
-            self.__EQUIPMENT[category] = []
+        if category not in self.equipment_registry:
+            self.equipment_registry[category] = []
 
-        self.__EQUIPMENT[category].append(equipment)
+        self.equipment_registry[category].append(equipment)
 
     def has_equipment(self, category: str) -> bool:
-        return category in self.__EQUIPMENT and len(self.__EQUIPMENT[category]) > 0
+        return category in self.equipment_registry and len(self.equipment_registry[category]) > 0
 
     def equipment(self, category: str) -> List[Equipment]:
         if not self.has_equipment(category):
             raise ConfigurationException(
                 f'No Equipment with category {category}')
 
-        return self.__EQUIPMENT[category]
+        return self.equipment_registry[category]

@@ -17,20 +17,12 @@ class Bridge(Equipment):
                  thing: Dict,
                  secrets: Optional[List[str]] = None):
 
-        self.__BINDING: Final[str] = binding
+        self.binding: str = binding
 
         super().__init__(configuration=configuration,
                          name=name, thing=thing, secrets=secrets)
 
-        self.__THINGS: Final[List[Thing]] = []
-
-    @property
-    def binding(self) -> str:
-        return self.__BINDING
-
-    @property
-    def things(self) -> List[Thing]:
-        return self.__THINGS
+        self.things: List[Thing] = []
 
     def add_thing(self, thing: Thing) -> None:
         self.things.append(thing)

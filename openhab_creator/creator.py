@@ -18,36 +18,12 @@ class Creator(object):
                  anonym: bool, check_only: bool,
                  icons: bool):
 
-        self.__NAME: Final[str] = name
-        self.__CONFIGDIR: Final[str] = configdir
-        self.__OUTPUTDIR: Final[str] = outputdir
-        self.__ANONYM: Final[bool] = anonym
-        self.__CHECK_ONLY: Final[bool] = check_only
-        self.__ICONS: Final[bool] = icons
-
-    @property
-    def name(self) -> str:
-        return self.__NAME
-
-    @property
-    def configdir(self) -> str:
-        return self.__CONFIGDIR
-
-    @property
-    def outputdir(self) -> str:
-        return self.__OUTPUTDIR
-
-    @property
-    def anonym(self) -> bool:
-        return self.__ANONYM
-
-    @property
-    def check_only(self) -> bool:
-        return self.__CHECK_ONLY
-
-    @property
-    def icons(self) -> bool:
-        return self.__ICONS
+        self.name: str = name
+        self.configdir: str = configdir
+        self.outputdir: str = outputdir
+        self.anonym: bool = anonym
+        self.check_only: bool = check_only
+        self.icons: bool = icons
 
     def run(self) -> None:
         logger.info(f"openHAB Configuration Creator ({__version__})")

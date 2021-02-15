@@ -21,18 +21,18 @@ class Location(BaseObject):
                  equipment: Optional[List[Dict]] = None):
         super().__init__(name, identifier)
 
-        self.__init_equipment(
+        self._init_equipment(
             configuration, [] if equipment is None else equipment)
 
         self.parent = None
 
-    def __init_equipment(self, configuration: Configuration, equipment: List[Dict]) -> None:
-        self.__EQUIPMENT: Final[List[Equipment]] = []
+    def _init_equipment(self, configuration: Configuration, equipment: List[Dict]) -> None:
+        self.equipment: List[Equipment] = []
 
         for equipment_definition in equipment:
-            self.__EQUIPMENT.append(EquipmentFactory.new(configuration=configuration,
-                                                         location=self,
-                                                         **equipment_definition))
+            self.equipment.append(EquipmentFactory.new(configuration=configuration,
+                                                       location=self,
+                                                       **equipment_definition))
 
     @abstractproperty
     def area(self) -> str:
@@ -43,20 +43,8 @@ class Location(BaseObject):
         pass
 
     @property
-    def equipment(self) -> List[Equipment]:
-        return self.__EQUIPMENT
-
-    @property
-    def parent(self) -> Optional[Location]:
-        return self.__parent
-
-    @parent.setter
-    def parent(self, parent: Optional[Location] = None):
-        self.__parent = parent
-
-    @property
     def has_parent(self) -> bool:
-        return self.__parent is not None
+        return self.parent is not None
 
     @property
     def location_tags(self) -> Dict[str, str]:
@@ -69,13 +57,13 @@ class Location(BaseObject):
 
 
 class LocationFactory(object):
-    REGISTRY: Final[Dict[str, Type['Location']]] = {}
+    registry: Dict[str, Type['Location']] = {}
 
-    __initialized: bool = False
+    initialized: bool = False
 
     @classmethod
-    def __init(cls):
-        if not cls.__initialized:
+    def _init(cls):
+        if not cls.initialized:
             import_module(
                 'openhab_creator.models.configuration.location.indoor')
             import_module(
@@ -83,19 +71,19 @@ class LocationFactory(object):
             import_module(
                 'openhab_creator.models.configuration.location.indoor.rooms')
 
-            cls.__initialized = True
+            cls.initialized = True
 
     @classmethod
-    def register(cls, location_type: str, location_cls: Type[Location]) -> None:
-        cls.REGISTRY[location_type.lower()] = location_cls
+    def register(cls, location_cls: Type[Location]) -> None:
+        cls.registry[location_cls.__name__.lower()] = location_cls
 
     @classmethod
     def new(cls, configuration: Configuration, **args: Dict) -> Location:
-        cls.__init()
+        cls._init()
 
         location_type = args.pop('typed').lower()
-        if location_type in cls.REGISTRY:
-            return cls.REGISTRY[location_type.lower()](configuration=configuration, **args)
+        if location_type in cls.registry:
+            return cls.registry[location_type.lower()](configuration=configuration, **args)
 
         raise RegistryException(f'No class for location type: {location_type}')
 
@@ -105,5 +93,5 @@ class LocationType(object):
         self.args = args
 
     def __call__(self, location_cls: Type[Location]):
-        LocationFactory.register(location_cls.__name__, location_cls)
+        LocationFactory.register(location_cls)
         return location_cls

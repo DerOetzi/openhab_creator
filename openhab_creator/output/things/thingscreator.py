@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import os
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, List
 
 from openhab_creator.models.configuration import Configuration
 from openhab_creator.output.basecreator import BaseCreator
@@ -18,12 +18,12 @@ class ThingsCreator(BaseCreator):
 
     def build(self, configuration: Configuration) -> None:
         for bridge_key, bridge_obj in configuration.bridges.items():
-            self.__append_bridge(bridge_obj)
+            self._append_bridge(bridge_obj)
 
             self._append('}')
             self._write_file(bridge_key)
 
-    def __append_bridge(self, bridge: Bridge) -> None:
+    def _append_bridge(self, bridge: Bridge) -> None:
         bridgething = bridge.thing
 
         bridgestring = f'Bridge {bridge.binding}:{bridgething.typed}:{bridge.identifier} '
@@ -35,9 +35,9 @@ class ThingsCreator(BaseCreator):
 
         self._append(bridgestring)
 
-        self.__append_things(bridge)
+        self._append_things(bridge)
 
-    def __append_things(self, bridge: Bridge) -> None:
+    def _append_things(self, bridge: Bridge) -> None:
         for thing in bridge.things:
             thingstring = f'  Thing {thing.typed} {thing.uid} '
             thingstring += f'"{thing.nameprefix} {thing.name} ({thing.identifier})" '
@@ -51,12 +51,12 @@ class ThingsCreator(BaseCreator):
 
             self._append(thingstring)
 
-            self.__append_thing_channels(thing.channels)
-
             if thing.has_channels:
+                self._append_thing_channels(thing.channels)
                 self._append('  }')
 
-    def __append_thing_channels(self, channels: List[Channel]) -> None:
+    def _append_thing_channels(self, channels: List[Channel]) -> None:
+
         self._append('    Channels:')
 
         for channel in channels:

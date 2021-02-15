@@ -1,6 +1,6 @@
 from __future__ import annotations
 from abc import ABC
-from typing import Optional, Final
+from typing import Optional
 
 from openhab_creator.output.formatter import Formatter
 
@@ -9,21 +9,17 @@ class BaseObject(ABC):
     def __init__(self,
                  name: str,
                  identifier: Optional[str] = None):
-        self.__NAME: Final[str] = name
+        self.name: str = name
         self.identifier = name if identifier is None else identifier
 
     @property
-    def name(self) -> str:
-        return self.__NAME
-
-    @property
     def identifier(self) -> str:
-        return self.__IDENTIFIER
+        return self._identifier
 
     @identifier.setter
     def identifier(self, identifier: str):
         identifier = Formatter.format_id(identifier)
-        self.__IDENTIFIER: Final[str] = Formatter.ucfirst(identifier)
+        self._identifier: str = Formatter.ucfirst(identifier)
 
     @property
     def category(self) -> str:
@@ -33,4 +29,4 @@ class BaseObject(ABC):
         return self.__str__()
 
     def __str__(self) -> str:
-        return f'{self.name} ({self.identifier}, {self.__class__.__name__})'
+        return f'{self.name} ({self.identifier}, {self.category})'
