@@ -129,6 +129,10 @@ class Configuration(object):
 
         return deepcopy(self.templates[template_key])
 
+    @property
+    def floors(self) -> List[Location]:
+        return self.locations['floors']
+
     def add_equipment(self, equipment: Equipment):
         category = equipment.category
 

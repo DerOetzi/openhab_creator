@@ -21,13 +21,13 @@ class SitemapCreator(BaseCreator):
 
     def build(self, configuration: SmarthomeConfiguration):
 
-        self._append(f'sitemap default label="{configuration.name()}" {{')
+        self.append(f'sitemap default label="{configuration.name()}" {{')
 
         mainpage_frame = SitemapCreatorPipeline.pipeline_mainpage(
             configuration).dump()
 
         mainpage_frame = re.sub('^', ' '*4, mainpage_frame, flags=re.MULTILINE)
-        self._append(mainpage_frame)
+        self.append(mainpage_frame)
 
         second_frame = Frame()
 
@@ -39,9 +39,9 @@ class SitemapCreator(BaseCreator):
 
         second_frame.append(statuspage)
 
-        self._append(
+        self.append(
             re.sub('^', ' '*4, second_frame.dump(), flags=re.MULTILINE))
 
-        self._append('}')
+        self.append('}')
 
         self._write_file('default')

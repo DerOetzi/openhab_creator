@@ -7,15 +7,15 @@ from openhab_creator.exception import BuildException
 from openhab_creator.output.basecreator import BaseCreator
 
 if TYPE_CHECKING:
-    from openhab_creator.models.thing.equipment import Equipment
-    from openhab_creator.models.configuration import SmarthomeConfiguration
+    from openhab_creator.models.configuration.equipment import Equipment
+    from openhab_creator.models.configuration import Configuration
 
 
 class BaseItemsCreator(BaseCreator):
     def __init__(self, outputdir: str):
         super().__init__('items', outputdir)
 
-    def build(self, configuration: SmarthomeConfiguration) -> None:
+    def build(self, configuration: Configuration) -> None:
         raise NotImplementedError("Must override build")
 
     def _create_group(self,
@@ -31,7 +31,7 @@ class BaseItemsCreator(BaseCreator):
         groupstring += self.__tagsstring(tags)
         groupstring += "\n"
 
-        self._append(groupstring)
+        self.append(groupstring)
 
     def __grouptype(self, typed: Optional[str] = None):
         if typed == 'onoff':
@@ -64,7 +64,7 @@ class BaseItemsCreator(BaseCreator):
         itemstring += self.__metadatastring(metadata)
         itemstring += "\n"
 
-        self._append(itemstring)
+        self.append(itemstring)
 
     def __iconstring(self, icon: Optional[str] = None) -> str:
         if icon is None:

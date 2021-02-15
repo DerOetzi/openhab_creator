@@ -4,21 +4,20 @@ from typing import TYPE_CHECKING, List, Optional
 
 from openhab_creator import _
 from openhab_creator.exception import BuildException
-from openhab_creator.models.configuration import SmarthomeConfiguration
-from openhab_creator.models.thing.equipment import Equipment
+from openhab_creator.models.configuration import Configuration
+from openhab_creator.models.configuration.equipment import Equipment
 from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
-from openhab_creator.output.items.itemscreatorregistry import \
-    ItemsCreatorRegistry
+from openhab_creator.output.items import ItemsCreatorPipeline
 
 if TYPE_CHECKING:
-    from openhab_creator.models.thing.types.lightbulb import Lightbulb
-    from openhab_creator.models.thing.types.motiondetector import MotionDetector
-    from openhab_creator.models.thing.types.wallswitch import WallSwitch
+    from openhab_creator.models.configuration.equipment.types.lightbulb import Lightbulb
+    from openhab_creator.models.configuration.equipment.types.motiondetector import MotionDetector
+    from openhab_creator.models.configuration.equipment.types.wallswitch import WallSwitch
 
 
-@ItemsCreatorRegistry(4)
+@ItemsCreatorPipeline(4)
 class LightbulbItemsCreator(BaseItemsCreator):
-    def build(self, configuration: SmarthomeConfiguration) -> None:
+    def build(self, configuration: Configuration) -> None:
         self.__build_general_groups()
 
         for lightbulb in configuration.equipment('lightbulb'):
@@ -27,14 +26,14 @@ class LightbulbItemsCreator(BaseItemsCreator):
             if not self.__build_subequipment(lightbulb):
                 self.__build_thing(lightbulb)
 
-            self.__build_buttons_assignment(
-                lightbulb, configuration.equipment('wallswitch'))
+            # self.__build_buttons_assignment(
+            #    lightbulb, configuration.equipment('wallswitch'))
 
-            self.__build_motion_assignment(
-                lightbulb, configuration.equipment('motiondetector')
-            )
+            # self.__build_motion_assignment(
+            #    lightbulb, configuration.equipment('motiondetector')
+            # )
 
-        self._write_file('lightbulb')
+        self.write_file('lightbulb')
 
     def __build_general_groups(self) -> None:
         self._create_group(
@@ -71,111 +70,111 @@ class LightbulbItemsCreator(BaseItemsCreator):
 
     def __build_parent(self, lightbulb: Lightbulb) -> None:
         self._create_group(
-            lightbulb.lightbulb_id(),
-            _('Lightbulb {blankname}').format(blankname=lightbulb.blankname()),
-            "light", [lightbulb.location().identifier()], ['Lightbulb']
+            lightbulb.lightbulb_id,
+            _('Lightbulb {blankname}').format(blankname=lightbulb.blankname),
+            "light", [lightbulb.location.identifier], ['Lightbulb']
         )
 
         self._create_item(
             'String',
-            lightbulb.lightcontrol_id(),
+            lightbulb.lightcontrol_id,
             _('Lightcontrol'),
-            'lightcontrol', [lightbulb.lightbulb_id(), 'Lightcontrol'],
+            'lightcontrol', [lightbulb.lightbulb_id, 'Lightcontrol'],
             ['Control']
         )
 
         self._create_item(
             'Switch',
-            lightbulb.hide_id(),
+            lightbulb.hide_id,
             _('Hide on lights page'),
-            'hide', [lightbulb.lightbulb_id(), 'Config'],
+            'hide', [lightbulb.lightbulb_id, 'Config'],
             ['Control']
         )
 
         self._create_item(
             'Switch',
-            lightbulb.auto_id(),
+            lightbulb.auto_id,
             _('Scene controlled'),
-            'auto', [lightbulb.lightbulb_id(), 'AutoLight'],
+            'auto', [lightbulb.lightbulb_id, 'AutoLight'],
             ['Control']
         )
 
         self._create_item(
             'Switch',
-            lightbulb.autodisplay_id(),
+            lightbulb.autodisplay_id,
             _('Display scene controlled'),
-            groups=[lightbulb.lightbulb_id()],
+            groups=[lightbulb.lightbulb_id],
             tags=['Status']
         )
 
         self._create_item(
             'Number',
-            lightbulb.autoreactivation_id(),
+            lightbulb.autoreactivation_id,
             _('Reactivate scene controlled'),
             icon='reactivation',
-            groups=[lightbulb.lightbulb_id(), 'AutoReactivationLight'],
+            groups=[lightbulb.lightbulb_id, 'AutoReactivationLight'],
             tags=['Setpoint']
         )
 
         self._create_item(
             'Switch',
-            lightbulb.autodarkness_id(),
+            lightbulb.autodarkness_id,
             _('In the dark'),
             icon='darkness',
-            groups=[lightbulb.lightbulb_id(), 'AutoDarkness'],
+            groups=[lightbulb.lightbulb_id, 'AutoDarkness'],
             tags=['Setpoint']
         )
 
         self._create_item(
             'Switch',
-            lightbulb.autoabsence_id(),
+            lightbulb.autoabsence_id,
             _('Even in absence'),
             icon='absence',
-            groups=[lightbulb.lightbulb_id(), 'AutoAbsenceLight'],
+            groups=[lightbulb.lightbulb_id, 'AutoAbsenceLight'],
             tags=['Setpoint']
         )
 
         self._create_item(
             'Number',  # TODO Number:Time See openhab-webui#765
-            lightbulb.motiondetectorperiod_id(),
+            lightbulb.motiondetectorperiod_id,
             _('Motiondetector period [%d s]'),
             'timeout',
-            groups=[lightbulb.lightbulb_id(), 'MotionDetectorPeriod'],
+            groups=[lightbulb.lightbulb_id, 'MotionDetectorPeriod'],
             tags=['Duration']
         )
 
-        if (lightbulb.is_nightmode()):
+        if (lightbulb.nightmode):
             self._create_item(
                 'String',
-                lightbulb.nightmode_id(),
+                lightbulb.nightmode_id,
                 _('Nightmode configuration'),
-                'nightmode', [lightbulb.lightbulb_id(), 'Nightmode'],
+                'nightmode', [lightbulb.lightbulb_id, 'Nightmode'],
                 ['Setpoint']
             )
 
     def __build_subequipment(self, parent_lightbulb: Lightbulb) -> bool:
-        if parent_lightbulb.has_subequipment():
-            self.__build_parent_group(parent_lightbulb.has_brightness(),
-                                      parent_lightbulb.brightness_id(),
-                                      _('Brightness'), parent_lightbulb.lightbulb_id(),
+        if parent_lightbulb.has_subequipment:
+            self.__build_parent_group(parent_lightbulb.has_brightness,
+                                      parent_lightbulb.brightness_id,
+                                      _('Brightness'), parent_lightbulb.lightbulb_id,
                                       ['Control', 'Light'], 'dimmer_avg')
 
-            self.__build_parent_group(parent_lightbulb.has_colortemperature(),
-                                      parent_lightbulb.colortemperature_id(),
-                                      _('Colortemperature'), parent_lightbulb.lightbulb_id(),
+            self.__build_parent_group(parent_lightbulb.has_colortemperature,
+                                      parent_lightbulb.colortemperature_id,
+                                      _('Colortemperature'), parent_lightbulb.lightbulb_id,
                                       ['Control', 'ColorTemperature'], 'number_avg')
 
-            self.__build_parent_group(parent_lightbulb.has_onoff(),
-                                      parent_lightbulb.onoff_id(),
-                                      _('On/Off'), parent_lightbulb.lightbulb_id(),
+            self.__build_parent_group(parent_lightbulb.has_onoff,
+                                      parent_lightbulb.onoff_id,
+                                      _('On/Off'), parent_lightbulb.lightbulb_id,
                                       ['Switch', 'Light'], 'onoff')
 
-            self.__build_parent_group(parent_lightbulb.has_rgb(),
-                                      parent_lightbulb.rgb_id(),
-                                      _('RGB Color'), parent_lightbulb.lightbulb_id(),
+            self.__build_parent_group(parent_lightbulb.has_rgb,
+                                      parent_lightbulb.rgb_id,
+                                      _('RGB Color'), parent_lightbulb.lightbulb_id,
                                       ['Control', 'Color'])
 
-            for sublightbulb in parent_lightbulb.subequipment():
+            for sublightbulb in parent_lightbulb.subequipment:
                 self.__build_thing(sublightbulb)
 
             return True
@@ -197,28 +196,28 @@ class LightbulbItemsCreator(BaseItemsCreator):
             )
 
     def __build_thing(self, lightbulb: Lightbulb) -> None:
-        if lightbulb.has_parent():
+        if lightbulb.is_child:
             self._create_group(
-                lightbulb.lightbulb_id(),
-                _('Lightbulb {name}').format(name=lightbulb.name()), 'light',
-                [lightbulb.parent().lightbulb_id()],
+                lightbulb.lightbulb_id,
+                _('Lightbulb {name}').format(name=lightbulb.name), 'light',
+                [lightbulb.parent.lightbulb_id],
                 ['Lightbulb']
             )
 
         self._create_item('Number:Dimensionless',
-                          lightbulb.switchingcycles_id(),
+                          lightbulb.switchingcycles_id,
                           _('Switching cycles {name} [%d]').format(
-                              name=lightbulb.name()),
+                              name=lightbulb.name),
                           'switchingcycles',
-                          ['Sensor', 'SwitchingCycles', lightbulb.lightbulb_id()],
+                          ['Sensor', 'SwitchingCycles', lightbulb.lightbulb_id],
                           ['Measurement'],
-                          {'influxdb': ('switchingcycle', lightbulb.influxdb_tags())})
+                          {'influxdb': ('switchingcycle', lightbulb.influxdb_tags)})
 
         self._create_item('Switch',
-                          lightbulb.switchingcyclesreset_id(),
+                          lightbulb.switchingcyclesreset_id,
                           _('Reset'),
                           'configuration',
-                          ['SwitchingCyclesReset', lightbulb.lightbulb_id()],
+                          ['SwitchingCyclesReset', lightbulb.lightbulb_id],
                           ['Control'],
                           {'expire': '10s,state=OFF'})
 
@@ -228,64 +227,64 @@ class LightbulbItemsCreator(BaseItemsCreator):
         self.__build_rgb_item(lightbulb)
 
     def __build_brightness_item(self, lightbulb: Lightbulb) -> None:
-        if lightbulb.has_brightness():
+        if lightbulb.has_brightness:
             groups = []
 
-            groups.append(lightbulb.lightbulb_id())
+            groups.append(lightbulb.lightbulb_id)
 
-            if lightbulb.has_parent():
-                groups.append(lightbulb.parent().brightness_id())
+            if lightbulb.is_child:
+                groups.append(lightbulb.parent.brightness_id)
 
             self._create_item('Dimmer',
-                              lightbulb.brightness_id(),
+                              lightbulb.brightness_id,
                               _('Brightness'), 'light', groups, [
                                   'Control', 'Light'],
-                              {'channel': lightbulb.channel('controls', 'brightness')})
+                              {'channel': lightbulb.channel('brightness')})
 
     def __build_colortemperature_item(self, lightbulb: Lightbulb) -> None:
-        if lightbulb.has_colortemperature():
+        if lightbulb.has_colortemperature:
             groups = []
 
-            groups.append(lightbulb.lightbulb_id())
+            groups.append(lightbulb.lightbulb_id)
 
-            if lightbulb.has_parent():
-                groups.append(lightbulb.parent().colortemperature_id())
+            if lightbulb.is_child:
+                groups.append(lightbulb.parent.colortemperature_id)
 
             self._create_item('Number',
-                              lightbulb.colortemperature_id(),
+                              lightbulb.colortemperature_id,
                               _('Colortemperature'), 'light', groups, [
                                   'Control', 'ColorTemperature'],
-                              {'channel': lightbulb.channel('controls', 'colortemperature')})
+                              {'channel': lightbulb.channel('colortemperature')})
 
     def __build_onoff_item(self, lightbulb: Lightbulb) -> None:
-        if lightbulb.has_onoff():
+        if lightbulb.has_onoff:
             groups = []
 
-            groups.append(lightbulb.lightbulb_id())
+            groups.append(lightbulb.lightbulb_id)
 
-            if lightbulb.has_parent():
-                groups.append(lightbulb.parent().onoff_id())
+            if lightbulb.is_child:
+                groups.append(lightbulb.parent.onoff_id)
 
             self._create_item('Switch',
-                              lightbulb.onoff_id(),
+                              lightbulb.onoff_id,
                               _('On/Off'), 'light', groups, [
                                   'Switch', 'Light'],
-                              {'channel': lightbulb.channel('controls', 'onoff')})
+                              {'channel': lightbulb.channel('onoff')})
 
     def __build_rgb_item(self, lightbulb: Lightbulb) -> None:
-        if lightbulb.has_rgb():
+        if lightbulb.has_rgb:
             groups = []
 
-            groups.append(lightbulb.lightbulb_id())
+            groups.append(lightbulb.lightbulb_id)
 
-            if lightbulb.has_parent():
-                groups.append(lightbulb.parent().rgb_id())
+            if lightbulb.is_child:
+                groups.append(lightbulb.parent.rgb_id)
 
             self._create_item('Color',
-                              lightbulb.rgb_id(),
+                              lightbulb.rgb_id,
                               _('RGB Color'), 'light', groups, [
                                   'Control', 'Color'],
-                              {'channel': lightbulb.channel('controls', 'rgb')})
+                              {'channel': lightbulb.channel('rgb')})
 
     def __build_buttons_assignment(self, lightbulb: Lightbulb, wallswitches: List[WallSwitch]) -> None:
         for wallswitch in wallswitches:
@@ -303,6 +302,6 @@ class LightbulbItemsCreator(BaseItemsCreator):
             self._create_item(typed='Switch',
                               identifier=motiondetector.assignment_id(
                                   lightbulb),
-                              name=motiondetector.name(),
+                              name=motiondetector.name,
                               icon='motiondetector',
-                              groups=[motiondetector.assignment_id()])
+                              groups=[motiondetector.assignment_id])

@@ -4,16 +4,15 @@ from typing import TYPE_CHECKING
 
 from openhab_creator import _
 from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
-from openhab_creator.output.items.itemscreatorregistry import \
-    ItemsCreatorRegistry
+from openhab_creator.output.items import ItemsCreatorPipeline
 
 if TYPE_CHECKING:
-    from openhab_creator.models.configuration import SmarthomeConfiguration
+    from openhab_creator.models.configuration import Configuration
 
 
-@ItemsCreatorRegistry(0)
+@ItemsCreatorPipeline(0)
 class GeneralItemsCreator(BaseItemsCreator):
-    def build(self, configuration: SmarthomeConfiguration) -> None:
+    def build(self, configuration: Configuration) -> None:
         self._create_group('Config', _('Configuration items'))
         self._create_group('Sensor', _('Sensor items'))
 
@@ -24,4 +23,4 @@ class GeneralItemsCreator(BaseItemsCreator):
             'LowBattery', _('Low battery status items'), 'lowbattery', typed='number_max'
         )
 
-        self._write_file('generals')
+        self.write_file('generals')

@@ -5,26 +5,26 @@ from typing import List, Optional
 class BaseCreator(object):
 
     def __init__(self, typed: str, outputdir: str, subdir: Optional[str] = None):
-        self._typed: str = typed
-        self._outputdir: str = outputdir
+        self.typed: str = typed
+        self.outputdir: str = outputdir
 
-        self._subdir: str = subdir
-        if self._subdir is None:
-            self._subdir = self._typed
+        self.subdir: str = subdir
+        if self.subdir is None:
+            self.subdir = self.typed
 
-        self.__lines: List[str] = []
+        self.lines: List[str] = []
 
-    def _append(self, lines: str) -> None:
-        self.__lines.append(lines)
+    def append(self, lines: str) -> None:
+        self.lines.append(lines)
 
-    def _write_file(self, filename: str) -> None:
-        self.__create_outputdir_if_not_exists()
+    def write_file(self, filename: str) -> None:
+        self._create_outputdir_if_not_exists()
 
-        with open(f'{self._outputdir}/{self._subdir}/{filename}.{self._typed}', 'w') as f:
-            f.writelines("\n".join(self.__lines))
+        with open(f'{self.outputdir}/{self.subdir}/{filename}.{self.typed}', 'w') as f:
+            f.writelines("\n".join(self.lines))
 
-        self.__lines.clear()
+        self.lines.clear()
 
-    def __create_outputdir_if_not_exists(self) -> None:
-        if not os.path.exists(f'{self._outputdir}/{self._subdir}'):
-            os.makedirs(f'{self._outputdir}/{self._subdir}')
+    def _create_outputdir_if_not_exists(self) -> None:
+        if not os.path.exists(f'{self.outputdir}/{self.subdir}'):
+            os.makedirs(f'{self.outputdir}/{self.subdir}')

@@ -1,30 +1,12 @@
 from __future__ import annotations
 
-from typing import Optional, Dict, Final
+from typing import Optional, Dict
 
 from openhab_creator.models.configuration.equipment import Equipment, EquipmentType
 
 
 @EquipmentType
 class Lightbulb(Equipment):
-    ITEM_IDENTIFIERS: Final[Dict[str, str]] = {
-        'lightbulb': 'lightbulb',
-        'lightcontrol': 'lightcontrol',
-        'auto': 'autoLight',
-        'autodisplay': 'autoDisplayLight',
-        'autoreactivation': 'autoReactivationLight',
-        'autodarkness': 'autoDarkness',
-        'autoabsence': 'autoAbsenceLight',
-        'motiondetectorperiod': 'motionDetectorPeriod',
-        'switchingcycles': 'switchingCycles',
-        'switchingcyclesreset': 'switchingCyckesReset',
-        'hide': 'hideLight',
-        'brightness': 'brightness',
-        'colortemperature': 'colortemperatur',
-        'onoff': 'onoff',
-        'rgb': 'rgb',
-        'nightmode': 'nightmode'
-    }
 
     def __init__(self,
                  singlebulb: Optional[bool] = False,
@@ -53,6 +35,27 @@ class Lightbulb(Equipment):
             has_command or subequipment.has_command(command)
 
         return has_command
+
+    @property
+    def item_identifiers(self) -> Dict[str, str]:
+        return {
+            'lightbulb': 'lightbulb',
+            'lightcontrol': 'lightcontrol',
+            'auto': 'autoLight',
+            'autodisplay': 'autoDisplayLight',
+            'autoreactivation': 'autoReactivationLight',
+            'autodarkness': 'autoDarkness',
+            'autoabsence': 'autoAbsenceLight',
+            'motiondetectorperiod': 'motionDetectorPeriod',
+            'switchingcycles': 'switchingCycles',
+            'switchingcyclesreset': 'switchingCyckesReset',
+            'hide': 'hideLight',
+            'brightness': 'brightness',
+            'colortemperature': 'colortemperatur',
+            'onoff': 'onoff',
+            'rgb': 'rgb',
+            'nightmode': 'nightmode'
+        }
 
     @property
     def has_brightness(self) -> bool:

@@ -5,11 +5,10 @@ from typing import TYPE_CHECKING, Dict, Final
 
 from openhab_creator import __version__, logger
 from openhab_creator.models.configuration import Configuration
-from openhab_creator.output.content.automationcreator import AutomationCreator
-from openhab_creator.output.content.basicconfigcreator import \
-    BasicConfigCreator
-from openhab_creator.output.content.iconscreator import IconsCreator
-from openhab_creator.output.things.thingscreator import ThingsCreator
+from openhab_creator.output.content import (AutomationCreator,
+                                            BasicConfigCreator, IconsCreator)
+from openhab_creator.output.things import ThingsCreator
+from openhab_creator.output.items import ItemsCreator
 
 
 class Creator(object):
@@ -37,6 +36,7 @@ class Creator(object):
         BasicConfigCreator(self.outputdir).build()
 
         ThingsCreator(self.outputdir).build(configuration)
+        ItemsCreator(self.outputdir).build(configuration)
 
         AutomationCreator(self.outputdir).build(self.configdir, configuration)
 

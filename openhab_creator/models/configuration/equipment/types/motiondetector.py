@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Dict, Final
+from typing import Dict
 
 from openhab_creator.models.configuration.equipment import (Equipment,
                                                             EquipmentType)
@@ -8,8 +8,10 @@ from openhab_creator.models.configuration.equipment import (Equipment,
 
 @EquipmentType
 class MotionDetector(Equipment):
-    ITEM_IDENTIFIERS: Final[Dict[str, str]] = {
-        'motiondetector': 'motionDetector',
-        'presence': 'motionDetectorPresence',
-        'assignment': 'motionDetectorAssignment'
-    }
+    @property
+    def item_identifiers(self) -> Dict[str, str]:
+        return {
+            'motiondetector': 'motionDetector',
+            'presence': 'motionDetectorPresence',
+            'assignment': 'motionDetectorAssignment'
+        }

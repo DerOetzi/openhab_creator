@@ -24,5 +24,9 @@ class Bridge(Equipment):
 
         self.things: List[Thing] = []
 
+    @property
+    def item_identifiers(self) -> Dict[str, str]:
+        return {}
+
     def add_thing(self, thing: Thing) -> None:
         self.things.append(thing)

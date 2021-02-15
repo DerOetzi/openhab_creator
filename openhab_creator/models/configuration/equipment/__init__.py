@@ -1,7 +1,7 @@
 from __future__ import annotations
 
+from abc import abstractproperty
 from importlib import import_module
-from functools import update_wrapper
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Type
 
 from openhab_creator import logger
@@ -69,13 +69,21 @@ class Equipment(BaseObject):
 
         logger.debug(self.subequipment)
 
+    @abstractproperty
+    def item_identifiers(self) -> Dict[str, str]:
+        pass
+
     @property
-    def is_thing(self):
+    def is_thing(self) -> bool:
         return self.thing is not None
 
     @property
     def is_child(self) -> bool:
         return self.parent is not None
+
+    @property
+    def has_subequipment(self) -> bool:
+        return len(self.subequipment) > 0
 
     @property
     def subequipment(self) -> List[Equipment]:
@@ -90,6 +98,10 @@ class Equipment(BaseObject):
                 f'Cannot create channel for point "{point}" for equipment {self.identifier}')
 
         return f'{self.thing.channelprefix}:{self.points[point]}'
+
+    @property
+    def influxdb_tags(self) -> Dict[str, str]:
+        return {}  # TODO
 
     @property
     def has_battery(self) -> bool:
@@ -148,4 +160,13 @@ class EquipmentFactory(object):
 
 class EquipmentType(object):
     def __init__(self, equipment_cls: Type[Equipment]):
-        EquipmentFactory.register(equipment_cls)
+        def init(self, *arg, **kwargs):
+            equipment_cls.__init__(self, *arg, **kwargs)
+
+            for key, value in self.item_identifiers.items():
+                self.__dict__[f'{key}_id'] = f'{value}{self.identifier}'
+
+        wrappedclass = type(equipment_cls.__name__,
+                            (equipment_cls, Equipment), {'__init__': init})
+
+        EquipmentFactory.register(wrappedclass)
