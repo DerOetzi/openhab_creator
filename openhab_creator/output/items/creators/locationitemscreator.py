@@ -2,8 +2,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
+from openhab_creator.models.items import Group
 from openhab_creator.output.items import ItemsCreatorPipeline
+from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
 
 if TYPE_CHECKING:
     from openhab_creator.models.configuration import Configuration
@@ -15,20 +16,23 @@ if TYPE_CHECKING:
 class LocationItemsCreator(BaseItemsCreator):
     def build(self, configuration: Configuration):
         for floor in configuration.floors:
-            self.__create_floor(floor)
+            self._create_floor(floor)
             for room in floor.rooms:
-                self.__create_room(room)
+                self._create_room(room)
 
         self.write_file('locations')
 
-    def __create_floor(self, floor: Floor) -> None:
-        self._create_group(
-            floor.identifier, floor.name, floor.category,
-            tags=[floor.__class__.__name__]
-        )
+    def _create_floor(self, floor: Floor) -> None:
+        Group(floor.identifier)\
+            .label(floor.name)\
+            .icon(floor.category)\
+            .tags(floor.semantic)\
+            .append_to(self)
 
-    def __create_room(self, room: Room) -> None:
-        self._create_group(
-            room.identifier, room.name, room.category,
-            [room.parent.identifier], [room.__class__.__name__]
-        )
+    def _create_room(self, room: Room) -> None:
+        Group(room.identifier)\
+            .label(room.name)\
+            .icon(room.category)\
+            .groups(room.parent.identifier)\
+            .tags(room.semantic)\
+            .append_to(self)

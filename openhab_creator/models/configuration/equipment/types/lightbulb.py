@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Optional, Dict
 
+from openhab_creator import _
 from openhab_creator.models.configuration.equipment import Equipment, EquipmentType
 
 
@@ -72,3 +73,8 @@ class Lightbulb(Equipment):
     @property
     def has_rgb(self) -> bool:
         return self.has_commands['rgb']
+
+    @property
+    def name_with_type(self) -> str:
+        typed = _("Lightbulb")
+        return f'{self.name} ({typed})'

@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 
 from openhab_creator import _
 from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
+from openhab_creator.models.items import Group, GroupType
 from openhab_creator.output.items import ItemsCreatorPipeline
 
 if TYPE_CHECKING:
@@ -13,14 +14,23 @@ if TYPE_CHECKING:
 @ItemsCreatorPipeline(0)
 class GeneralItemsCreator(BaseItemsCreator):
     def build(self, configuration: Configuration) -> None:
-        self._create_group('Config', _('Configuration items'))
-        self._create_group('Sensor', _('Sensor items'))
+        Group('Config')\
+            .label(_('Configuration items'))\
+            .append_to(self)
 
-        self._create_group(
-            'Auto', _('Scene controlled configuration items'), groups=['Config'])
+        Group('Sensor')\
+            .label(_('Sensor items'))\
+            .append_to(self)
 
-        self._create_group(
-            'LowBattery', _('Low battery status items'), 'lowbattery', typed='number_max'
-        )
+        Group('Auto')\
+            .label(_('Scene controlled configuration items'))\
+            .config()\
+            .append_to(self)
+
+        Group('LowBattery')\
+            .label(_('Low battery status items'))\
+            .icon('lowbattery')\
+            .typed(GroupType.NUMBER_AVG)\
+            .append_to(self)
 
         self.write_file('generals')

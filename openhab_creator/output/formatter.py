@@ -28,9 +28,15 @@ class Formatter(object):
     def key_value_pairs(pairs: Dict[str, Any],
                         prefix: Optional[str] = '',
                         suffix: Optional[str] = '',
-                        separator: Optional[str] = ', ') -> str:
-        output = [
-            f'{key}={Formatter.value(value)}' for key, value in pairs.items()]
+                        separator: Optional[str] = ', ',
+                        escape: Optional[bool] = True) -> str:
+
+        if escape:
+            output = [
+                f'{key}={Formatter.value(value)}' for key, value in pairs.items()]
+        else:
+            output = [
+                f'{key}={value}' for key, value in pairs.items()]
 
         return prefix + separator.join(output) + suffix
 

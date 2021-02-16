@@ -3,45 +3,45 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from openhab_creator import _
-from openhab_creator.output.items.itemscreatorregistry import ItemsCreatorRegistry
+from openhab_creator.output.items import ItemsCreatorPipeline
 from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
+from openhab_creator.models.items import Group, Switch
 
 if TYPE_CHECKING:
-    from openhab_creator.models.configuration import SmarthomeConfiguration
-    from openhab_creator.models.thing.types.motiondetector import MotionDetector
+    from openhab_creator.models.configuration import Configuration
+    from openhab_creator.models.configuration.equipment.types.motiondetector import MotionDetector
 
 
-@ItemsCreatorRegistry(3)
+@ItemsCreatorPipeline(3)
 class MotionDetectorItemsCreator(BaseItemsCreator):
-    def build(self, configuration: SmarthomeConfiguration) -> None:
-        self._create_group('MotionDetectorAssignment', _(
-            'Motiondetector assignment items'), groups=['Config'])
+    def build(self, configuration: Configuration) -> None:
+        Group('MotionDetectorAssignment')\
+            .label(_('Motiondetector assignment items'))\
+            .config()\
+            .append_to(self)
 
         for motiondetector in configuration.equipment('motiondetector'):
             self._create_motiondetector_groups(motiondetector)
 
-        self._write_file('motiondetector')
+        self.write_file('motiondetector')
 
     def _create_motiondetector_groups(self, motiondetector: MotionDetector):
-        self._create_group(motiondetector.motiondetector_id(),
-                           _('Motiondetector {name}').format(
-                               name=motiondetector.name()),
-                           groups=[motiondetector.location().identifier()],
-                           tags=['MotionDetector'])
+        Group(motiondetector.motiondetector_id)\
+            .label(_('Motiondetector {name}').format(name=motiondetector.name))\
+            .location(motiondetector.location)\
+            .tags(motiondetector.semantic)\
+            .append_to(self)
 
-        self._create_item('Switch',
-                          motiondetector.presence_id(),
-                          _('Presence'),
-                          icon='motiondetector',
-                          groups=[motiondetector.motiondetector_id()],
-                          tags=['Presence'],
-                          metadata={"channel": motiondetector.channel('status', 'presence')})
+        Switch(motiondetector.presence_id)\
+            .label(_('Presence'))\
+            .icon(motiondetector.category)\
+            .groups(motiondetector.motiondetector_id)\
+            .tags('Presence')\
+            .channel(motiondetector.channel('presence'))\
+            .append_to(self)
 
-        self._create_group(motiondetector.assignment_id(),
-                           _('Motiondetector assignment'),
-                           groups=[
-                               motiondetector.motiondetector_id(),
-                               'MotionDetectorAssignment'])
+        Group(motiondetector.assignment_id())\
+            .label(_('Motiondetector assignment'))\
+            .groups(motiondetector.motiondetector_id, 'MotionDetectorAssignment')
 
-        self._create_battery(
-            motiondetector, motiondetector.motiondetector_id())
+        self._create_battery(motiondetector, motiondetector.motiondetector_id)

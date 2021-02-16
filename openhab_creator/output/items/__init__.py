@@ -27,7 +27,6 @@ class ItemsCreatorPipeline(object):
         self.order_id = order_id
 
     def __call__(self, itemscreator_cls: Type[BaseItemsCreator]):
-        print(itemscreator_cls)
         ItemsCreatorPipeline.pipeline.insert(self.order_id, itemscreator_cls)
 
     @classmethod

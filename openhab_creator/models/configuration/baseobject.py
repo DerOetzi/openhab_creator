@@ -22,8 +22,12 @@ class BaseObject(ABC):
         self._identifier: str = Formatter.ucfirst(identifier)
 
     @property
+    def semantic(self) -> str:
+        return self.__class__.__name__
+
+    @property
     def category(self) -> str:
-        return self.__class__.__name__.lower()
+        return self.semantic.lower()
 
     def __repr__(self) -> str:
         return self.__str__()

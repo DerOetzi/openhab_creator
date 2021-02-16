@@ -73,6 +73,10 @@ class Equipment(BaseObject):
     def item_identifiers(self) -> Dict[str, str]:
         pass
 
+    @abstractproperty
+    def name_with_type(self) -> str:
+        pass
+
     @property
     def is_thing(self) -> bool:
         return self.thing is not None
@@ -100,12 +104,36 @@ class Equipment(BaseObject):
         return f'{self.thing.channelprefix}:{self.points[point]}'
 
     @property
-    def influxdb_tags(self) -> Dict[str, str]:
-        return {}  # TODO
+    def has_battery(self) -> bool:
+        return self.has_battery_level or self.has_battery_low
 
     @property
-    def has_battery(self) -> bool:
-        return 'battery_level' in self.points or 'battery_low' in self.points
+    def has_battery_level(self) -> bool:
+        return 'battery_level' in self.points
+
+    @property
+    def has_battery_low(self) -> bool:
+        return 'battery_low' in self.points
+
+    @property
+    def battery_id(self) -> str:
+        return f'battery{self.semantic}{self.identifier}'
+
+    @property
+    def lowbattery_id(self) -> str:
+        return f'batteryLow{self.semantic}{self.identifier}'
+
+    @property
+    def levelbattery_id(self) -> str:
+        return f'batteryLevel{self.semantic}{self.identifier}'
+
+    @property
+    def influxdb_tags(self) -> Dict[str, str]:
+        tags = {
+            'label': self.name_with_type
+        }
+
+        return {**tags, **self.location.location_tags}
 
 
 class EquipmentFactory(object):

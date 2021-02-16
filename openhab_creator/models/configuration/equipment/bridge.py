@@ -30,3 +30,7 @@ class Bridge(Equipment):
 
     def add_thing(self, thing: Thing) -> None:
         self.things.append(thing)
+
+    @property
+    def name_with_type(self) -> str:
+        return f'{self.name} (Bridge)'

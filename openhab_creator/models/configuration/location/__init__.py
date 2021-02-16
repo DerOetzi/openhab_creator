@@ -48,7 +48,7 @@ class Location(BaseObject):
 
     @property
     def location_tags(self) -> Dict[str, str]:
-        tags = {'area': self.area, self.typed: self.name}
+        tags = {'area': self.area, self.typed.lower(): self.name}
 
         if self.has_parent:
             tags = {**tags, **self.parent.location_tags}
