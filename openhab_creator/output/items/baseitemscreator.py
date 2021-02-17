@@ -4,7 +4,8 @@ from typing import TYPE_CHECKING, Any, Dict, List, Literal, Optional
 
 from openhab_creator import _
 from openhab_creator.exception import BuildException
-from openhab_creator.models.items import Group, Number, Switch
+from openhab_creator.models.items import (Group, Number, PointType,
+                                          PropertyType, Switch)
 from openhab_creator.output.basecreator import BaseCreator
 
 if TYPE_CHECKING:
@@ -31,8 +32,9 @@ class BaseItemsCreator(BaseCreator):
                 Switch(equipment.lowbattery_id)\
                     .label(_('Battery low'))\
                     .icon('lowbattery')\
-                    .groups('LowBattery')\
+                    .groups('LowBattery', equipment.battery_id)\
                     .channel(equipment.channel('battery_low'))\
+                    .semantic(PointType.LOWBATTERY)\
                     .append_to(self)
 
             if equipment.has_battery_level:
@@ -43,5 +45,5 @@ class BaseItemsCreator(BaseCreator):
                     .groups(equipment.battery_id)\
                     .sensor('batteries', equipment.influxdb_tags)\
                     .channel(equipment.channel('battery_level'))\
-                    .tags('Measurement', 'Level')\
+                    .semantic(PointType.MEASUREMENT, PropertyType.LEVEL)\
                     .append_to(self)

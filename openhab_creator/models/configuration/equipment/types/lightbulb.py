@@ -33,7 +33,7 @@ class Lightbulb(Equipment):
         has_command = self.has_point(command)
 
         for subequipment in self.subequipment:
-            has_command or subequipment.has_command(command)
+            has_command = has_command or subequipment.has_command(command)
 
         return has_command
 

@@ -1,13 +1,59 @@
 from __future__ import annotations
 
 from abc import abstractproperty
-from typing import TYPE_CHECKING, Dict, List, Optional
+from enum import Enum
+from typing import TYPE_CHECKING, Dict, List, Optional, Union
 
+from openhab_creator.models.configuration.baseobject import BaseObject
 from openhab_creator.output.formatter import Formatter
 
 if TYPE_CHECKING:
     from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
     from openhab_creator.models.configuration.location import Location
+
+
+class PointType(Enum):
+    ALARM = 'Alarm'
+    CONTROL = 'Control'
+    SWITCH = 'Switch'
+    MEASUREMENT = 'Measurement'
+    SETPOINT = 'Setpoint'
+    STATUS = 'Status'
+    LOWBATTERY = 'LowBattery'
+    OPENLEVEL = 'OpenLevel'
+    OPENSTATE = 'OpenState'
+    TAMPERED = 'Tampered'
+    TILT = 'Tilt'
+
+
+class PropertyType(Enum):
+    TEMPERATURE = 'Temperature'
+    LIGHT = 'Light'
+    COLORTEMPERATURE = 'ColorTemperature'
+    HUMIDITY = 'Humidity'
+    PRESENCE = 'Presence'
+    PRESSURE = 'Pressure'
+    SMOKE = 'Smoke'
+    NOISE = 'Noise'
+    RAIN = 'Rain'
+    WIND = 'Wind'
+    WATER = 'Water'
+    CO2 = 'CO2'
+    CO = 'CO'
+    ENERGY = 'Energy'
+    POWER = 'Power'
+    VOLTAGE = 'Voltage'
+    CURRENT = 'Current'
+    FREQUENCY = 'Frequency'
+    GAS = 'Gas'
+    SOUNDVOLUME = 'SoundVolume'
+    OIL = 'Oil'
+    DURATION = 'Duration'
+    LEVEL = 'Level'
+    OPENING = 'Opening'
+    TIMESTAMP = 'Timestamp'
+    ULTRAVIOLET = 'Ultraviolet'
+    VIBRATION = 'Vibration'
 
 
 class BaseItem(object):
@@ -62,6 +108,17 @@ class BaseItem(object):
             value += f'state={state}'
 
         self._metadata['expire'] = {'value': value}
+        return self
+
+    def semantic(self, *semantic_tags: List[Union[BaseObject, PointType, PropertyType]]) -> BaseItem:
+        for tag in semantic_tags:
+            if isinstance(tag, BaseObject):
+                self._tags.append(tag.semantic)
+            elif isinstance(tag, PointType):
+                self._tags.append(tag.value)
+            elif isinstance(tag, PropertyType):
+                self._tags.append(tag.value)
+
         return self
 
     def tags(self, *tags: List[str]) -> BaseItem:

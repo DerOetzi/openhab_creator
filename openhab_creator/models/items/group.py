@@ -6,10 +6,11 @@ from enum import Enum
 
 
 class GroupType(Enum):
+    COLOR = ':Color:OR(ON,OFF)'
+    DIMMER_AVG = ':Dimmer:AVG'
     NUMBER_AVG = ':Number:AVG'
     NUMBER_MAX = ':Number:MAX'
     ONOFF = ':Switch:OR(ON,OFF)'
-    DIMMER_AVG = ':Dimmer:AVG'
 
 
 class Group(BaseItem):
