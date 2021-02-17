@@ -26,7 +26,7 @@ class LocationItemsCreator(BaseItemsCreator):
         Group(floor.identifier)\
             .label(floor.name)\
             .icon(floor.category)\
-            .tags(floor.semantic)\
+            .semantic(floor)\
             .append_to(self)
 
     def _create_room(self, room: Room) -> None:
@@ -34,5 +34,5 @@ class LocationItemsCreator(BaseItemsCreator):
             .label(room.name)\
             .icon(room.category)\
             .groups(room.parent.identifier)\
-            .tags(room.semantic)\
+            .semantic(room)\
             .append_to(self)

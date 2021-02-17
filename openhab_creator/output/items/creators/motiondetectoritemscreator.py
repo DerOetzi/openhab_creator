@@ -3,9 +3,9 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from openhab_creator import _
+from openhab_creator.models.items import Group, PointType, PropertyType, Switch
 from openhab_creator.output.items import ItemsCreatorPipeline
 from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
-from openhab_creator.models.items import Group, Switch
 
 if TYPE_CHECKING:
     from openhab_creator.models.configuration import Configuration
@@ -29,19 +29,20 @@ class MotionDetectorItemsCreator(BaseItemsCreator):
         Group(motiondetector.motiondetector_id)\
             .label(_('Motiondetector {name}').format(name=motiondetector.name))\
             .location(motiondetector.location)\
-            .tags(motiondetector.semantic)\
+            .semantic(motiondetector)\
             .append_to(self)
 
         Switch(motiondetector.presence_id)\
             .label(_('Presence'))\
             .icon(motiondetector.category)\
             .groups(motiondetector.motiondetector_id)\
-            .tags('Presence')\
+            .semantic(PointType.STATUS, PropertyType.PRESENCE)\
             .channel(motiondetector.channel('presence'))\
             .append_to(self)
 
         Group(motiondetector.assignment_id())\
             .label(_('Motiondetector assignment'))\
-            .groups(motiondetector.motiondetector_id, 'MotionDetectorAssignment')
+            .groups(motiondetector.motiondetector_id, 'MotionDetectorAssignment')\
+            .append_to(self)
 
         self._create_battery(motiondetector, motiondetector.motiondetector_id)

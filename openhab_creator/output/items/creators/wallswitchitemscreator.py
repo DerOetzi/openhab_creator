@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from openhab_creator import _
-from openhab_creator.models.items import Group, Number
+from openhab_creator.models.items import Group, Number, PointType
 from openhab_creator.output.items import ItemsCreatorPipeline
 from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
 
@@ -29,13 +29,13 @@ class WallSwitchItemsCreator(BaseItemsCreator):
         Group(wallswitch.wallswitch_id)\
             .label(_('Wallswitch {name}').format(name=wallswitch.name))\
             .location(wallswitch.location)\
-            .tags(wallswitch.semantic)\
+            .semantic(wallswitch)\
             .append_to(self)
 
         Number(wallswitch.button_id)\
             .label(_('Button state'))\
             .groups(wallswitch.wallswitch_id)\
-            .tags('Status')\
+            .semantic(PointType.STATUS)\
             .channel(wallswitch.channel('button'))\
             .append_to(self)
 
