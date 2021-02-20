@@ -1,35 +1,23 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Dict, Tuple
-
-from openhab_creator.models.sitemap.frame import Frame
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from openhab_creator.models.baseobject import BaseObject
     from openhab_creator.models.sitemap.baseelement import BaseElement
-    from openhab_creator.models.configuration import SmarthomeConfiguration
+    from openhab_creator.models.configuration import Configuration
+    from openhab_creator.models.sitemap import Sitemap, Page
 
 
 class BaseSitemapCreator(object):
-    def __init__(self):
-        self.__page_frames: Dict[str, Frame] = {}
+    def build_mainpage(self, sitemap: Sitemap, configuration: Configuration) -> None:
+        raise NotImplementedError("Must override build_mainpage")
 
-    def _page_frame(self, obj: BaseObject) -> Tuple[Frame, bool]:
-        is_new = False
-        if obj.identifier() in self.__page_frames:
-            frame = self.__page_frames[obj.identifier()]
-        else:
-            frame = Frame(obj.name())
-            self.__page_frames[obj.identifier()] = frame
-            is_new = True
+    def build_statuspage(self, statuspage: Page, configuration: Configuration) -> None:
+        raise NotImplementedError("Must override build_statuspage")
 
-        return frame, is_new
+    def build_configpage(self, configpage: Page, configuration: Configuration) -> None:
+        raise NotImplementedError("Must override build_configpage")
 
-    def _clear_page_frames(self) -> None:
-        self.__page_frames.clear()
-
-    def build_mainpage(self, configuration: SmarthomeConfiguration) -> BaseElement:
-        raise NotImplementedError("Must override build")
-
-    def build_configpage(self, configuration: SmarthomeConfiguration) -> BaseElement:
-        raise NotImplementedError("Must override build")
+    @classmethod
+    def has_needed_equipment(cls, configuration: Configuration) -> bool:
+        return True

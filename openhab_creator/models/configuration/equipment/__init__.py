@@ -93,6 +93,14 @@ class Equipment(BaseObject):
     def subequipment(self) -> List[Equipment]:
         return self._subequipment
 
+    @property
+    def toplevel_location(self) -> Location:
+        location = self.location
+        while location.has_parent:
+            location = location.parent
+
+        return location
+
     def has_point(self, point: str) -> bool:
         return point in self.points
 

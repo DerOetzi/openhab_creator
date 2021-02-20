@@ -1,64 +1,88 @@
 from __future__ import annotations
 
 import re
-from typing import Dict, List, Optional, Tuple
+from abc import abstractproperty
+from typing import List, Optional, Dict, Tuple
+
+from openhab_creator.output.formatter import Formatter
 
 
 class BaseElement(object):
-    def __init__(self,
-                 label: Optional[str] = None,
-                 item: Optional[str] = None,
-                 icon: Optional[str] = None,
-                 visibility: Optional[List[Tuple[int, str, str, str]]] = None):
+    def __init__(self, item: Optional[str] = None, label: Optional[str] = ''):
+        self.attributes: Dict[str, str] = {}
 
-        self._attributes = {}
+        self._format: Optional[str] = None
+        self.label(label)
 
-        if item is not None:
-            self._attributes['item'] = item
+        self.attribute('item', item)
+        self.elements: List[BaseElement] = []
 
-        if label is not None:
-            self._attributes['label'] = f'"{label}"'
+    @abstractproperty
+    def elementtype(self) -> str:
+        pass
 
-        if icon is not None:
-            self._attributes['icon'] = f'"{icon}"'
+    def item(self, item: Optional[str] = None) -> BaseElement:
+        return self.attribute('item', item)
 
-        self.__init_visibility(visibility)
+    def label(self, label: Optional[str] = '') -> BaseElement:
+        self._label = label
+        return self.attribute('label', Formatter.label(self._label, self._format), '"', '"')
 
-        self._elements: List[BaseElement] = []
+    def format(self, format: Optional[str] = None) -> BaseElement:
+        self._format = format
+        return self.attribute('label', Formatter.label(self._label, self._format), '"', '"')
 
-    def __init_visibility(self, visibility: Optional[List[Tuple[int, str, str, str]]] = None) -> None:
-        if visibility is None:
-            return
+    def icon(self, icon: str) -> BaseElement:
+        return self.attribute('icon', icon, '"', '"')
 
-        sorted_list = sorted(visibility, key=lambda tup: tup[0])
-        pairs = ','.join([item + compare + value for order,
-                          item, compare, value in sorted_list])
+    def visibility(self, visibility: List[Tuple[str, str, str]]) -> BaseElement:
+        return self.attribute('visibility', Formatter.key_value_tuples(visibility, separator=",\n           "), '[', ']')
 
-        self._attributes['visibility'] = f'[{pairs}]'
+    def element(self, element: BaseElement) -> BaseElement:
+        self.elements.append(element)
+        return self
 
-    def append(self, element: BaseElement) -> None:
-        self._elements.append(element)
+    def append_to(self, parent_element: BaseElement) -> BaseElement:
+        parent_element.element(self)
+        return self
 
-    def has_elements(self) -> bool:
-        return len(self._elements) > 0
+    def dump(self) -> str:
+        element_attributes = Formatter.key_value_pairs(
+            self.attributes, separator="\n  ", escape=False)
 
-    def dump(self, typed: str, additional: Optional[Dict[str, str]] = {}) -> str:
-        attributes = {**self._attributes, **additional}
+        length = len(self.elementtype) - 1
 
-        attributes_str = "\n    ".join(
-            [f'{key}={value}' for key, value in attributes.items()])
+        element_attributes = re.sub(
+            '^', ' '*length, element_attributes, flags=re.MULTILINE)
 
-        return f'{typed} {attributes_str}{self.dump_elements()}'
+        return f'{self.elementtype} {element_attributes[length:]}{self.dump_elements()}'
 
     def dump_elements(self) -> str:
-        if len(self._elements) == 0:
-            return ''
+        output = ''
+        if self.has_elements:
+            lines = []
+            for element in self.elements:
+                lines.append(element.dump())
 
-        lines = []
-        for element in self._elements:
-            lines.append(element.dump())
+            block = "\n".join(lines)
+            block = re.sub('^', ' '*4, block, flags=re.MULTILINE)
 
-        block = "\n".join(lines)
-        block = re.sub('^', ' '*4, block, flags=re.MULTILINE)
+            output = " {\n" + block + "\n}"
 
-        return " {\n" + block + "\n}"
+        return output
+
+    @property
+    def has_elements(self) -> bool:
+        return len(self.elements) > 0
+
+    def attribute(self,
+                  key: str,
+                  attr: Optional[str] = None,
+                  prefix: Optional[str] = '',
+                  suffix: Optional[str] = '') -> BaseElement:
+        if attr is None:
+            self.attributes.pop(key, None)
+        else:
+            self.attributes[key] = f'{prefix}{attr}{suffix}'
+
+        return self

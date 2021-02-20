@@ -1,34 +1,64 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Dict
 
+from typing import TYPE_CHECKING, Dict, Optional
+
+from openhab_creator.models.sitemap.baseelement import BaseElement
 from openhab_creator.models.sitemap.text import Text
-from openhab_creator.models.sitemap.frame import Frame
 
 if TYPE_CHECKING:
-    from openhab_creator.models.sitemap.baseelement import BaseElement
+    from openhab_creator.models.configuration.baseobject import BaseObject
+
+
+class Frame(BaseElement):
+    def __init__(self, label: Optional[str] = ''):
+        super().__init__(label=label)
+
+    @property
+    def elementtype(self) -> str:
+        return 'Frame'
+
+    def dump(self) -> str:
+        output = ''
+        if self.has_elements:
+            output = super().dump()
+
+        return output
 
 
 class Page(Text):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.main_frame: Frame = Frame()
+        super().element(self.main_frame)
+        self.frames: Dict[Frame] = {}
 
-    def __init__(self, **args):
-        super().__init__(**args)
-        self.__main: Frame = Frame()
-        super().append(self.__main)
-
-        self.__frames: Dict[str, Frame] = {}
+    def element(self, element: BaseElement) -> Page:
+        return self.main_frame.element(element)
 
     def frame(self, identifier: str, label: str) -> Frame:
-        if identifier not in self.__frames:
-            self.__frames[identifier] = Frame(label)
-            super().append(self.__frames[identifier])
+        if identifier not in self.frames:
+            self.frames[identifier] = Frame(label)
+            super().element(self.frames[identifier])
 
-        return self.__frames[identifier]
+        return self.frames[identifier]
 
-    def append(self, element: BaseElement) -> None:
-        self.__main.append(element)
+    @property
+    def has_elements(self) -> bool:
+        return self.main_frame.has_elements or len(self.frames) > 0
 
     def dump(self) -> str:
-        if len(self.__frames) == 0 and not self.__main.has_elements():
-            return ''
+        output = ''
+        if self.has_elements:
+            output = super().dump()
 
-        return super().dump()
+        return output
+
+
+class Sitemap(Page):
+    def __init__(self, name: str, label: str):
+        self.name = name
+        super().__init__(label=label)
+
+    @property
+    def elementtype(self) -> str:
+        return f'sitemap {self.name}'

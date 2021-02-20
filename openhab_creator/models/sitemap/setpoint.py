@@ -1,25 +1,23 @@
 from __future__ import annotations
-from typing import Dict
+
+from typing import Optional
 
 from openhab_creator.models.sitemap.baseelement import BaseElement
 
 
 class Setpoint(BaseElement):
-    def __init__(self, **args: Dict):
-        self.__min_value = args.pop('min_value', 0)
-        self.__max_value = args.pop('max_value', 1000)
-        self.__step = args.pop('step', 1)
+    def __init__(self,
+                 item: str,
+                 min_value: int,
+                 max_value: int,
+                 step: Optional[int] = 1,
+                 label: Optional[str] = ''):
+        super().__init__(item, label)
 
-        super().__init__(**args)
+        self.attribute('minValue', min_value)
+        self.attribute('maxValue', max_value)
+        self.attribute('step', step)
 
-    def dump(self) -> str:
-        additional = {
-            "minValue": self.__min_value,
-            "maxValue": self.__max_value,
-            "step": self.__step
-        }
-
-        return super().dump('Setpoint', additional)
-
-    def append(self, element: BaseElement) -> None:
-        return
+    @property
+    def elementtype(self) -> str:
+        return 'Setpoint'

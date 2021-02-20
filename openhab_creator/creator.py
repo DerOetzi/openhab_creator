@@ -9,6 +9,7 @@ from openhab_creator.output.content import (AutomationCreator,
                                             BasicConfigCreator, IconsCreator)
 from openhab_creator.output.things import ThingsCreator
 from openhab_creator.output.items import ItemsCreator
+from openhab_creator.output.sitemap import SitemapCreator
 
 
 class Creator(object):
@@ -37,6 +38,7 @@ class Creator(object):
 
         ThingsCreator(self.outputdir).build(configuration)
         ItemsCreator(self.outputdir).build(configuration)
+        SitemapCreator(self.outputdir).build(configuration)
 
         AutomationCreator(self.outputdir).build(self.configdir, configuration)
 

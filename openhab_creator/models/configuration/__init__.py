@@ -65,6 +65,7 @@ class SecretsStorage(object):
 
 class Configuration(object):
     def __init__(self, name: str, configdir: str, anonym: bool):
+        self.name = name
         self.secrets = SecretsStorage(configdir, anonym)
         self.equipment_registry: Dict[str, List[Equipment]] = {}
         self._init_bridges(configdir)

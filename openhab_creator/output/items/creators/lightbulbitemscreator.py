@@ -29,12 +29,13 @@ class LightbulbItemsCreator(BaseItemsCreator):
             if not self.__build_subequipment(lightbulb):
                 self.__build_thing(lightbulb)
 
-            self.__build_buttons_assignment(
-                lightbulb, configuration.equipment('wallswitch'))
+            if configuration.has_equipment('wallswitch'):
+                self.__build_buttons_assignment(
+                    lightbulb, configuration.equipment('wallswitch'))
 
-            self.__build_motion_assignment(
-                lightbulb, configuration.equipment('motiondetector')
-            )
+            if configuration.has_equipment('motiondetector'):
+                self.__build_motion_assignment(
+                    lightbulb, configuration.equipment('motiondetector'))
 
         self.write_file('lightbulb')
 
