@@ -21,7 +21,7 @@ class SitemapCreator(BaseCreator):
 
         SitemapCreatorPipeline.build_mainpage(sitemap, configuration)
 
-        statuspage = Page(label=_('State'))
+        statuspage = Page(label=_('State')).icon('status')
         SitemapCreatorPipeline.build_statuspage(statuspage, configuration)
 
         configpage = Page(label=_('Configuration')).icon('configuration')
