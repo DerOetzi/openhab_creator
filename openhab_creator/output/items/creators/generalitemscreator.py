@@ -28,9 +28,10 @@ class GeneralItemsCreator(BaseItemsCreator):
             .append_to(self)
 
         Group('LowBattery')\
-            .label(_('Low battery status items'))\
+            .label(_('Batteries status'))\
+            .map('lowbattery')\
             .icon('lowbattery')\
-            .typed(GroupType.NUMBER_AVG)\
+            .typed(GroupType.NUMBER_MAX)\
             .append_to(self)
 
         self.write_file('generals')

@@ -3,7 +3,7 @@ from __future__ import annotations
 from importlib import import_module
 from typing import TYPE_CHECKING, List, Optional, Type
 
-from openhab_creator import _
+from openhab_creator import _, logger
 from openhab_creator.models.sitemap import Page, Sitemap, Text
 from openhab_creator.output.basecreator import BaseCreator
 
@@ -22,6 +22,7 @@ class SitemapCreator(BaseCreator):
         SitemapCreatorPipeline.build_mainpage(sitemap, configuration)
 
         statuspage = Page(label=_('State'))
+        SitemapCreatorPipeline.build_statuspage(statuspage, configuration)
 
         configpage = Page(label=_('Configuration')).icon('configuration')
         SitemapCreatorPipeline.build_configpage(configpage, configuration)
@@ -74,13 +75,26 @@ class SitemapCreatorPipeline(object):
         cls._init()
         for creator in cls.mainpage_pipeline:
             if creator.has_needed_equipment(configuration):
+                logger.info(f'Sitemap creator (mainpage): {creator.__name__}')
                 c = creator()
                 c.build_mainpage(sitemap, configuration)
+
+    @classmethod
+    def build_statuspage(cls, statuspage: Page, configuration: Configuration) -> None:
+        cls._init()
+        for creator in cls.statuspage_pipeline:
+            if creator.has_needed_equipment(configuration):
+                logger.info(
+                    f'Sitemap creator (statuspage): {creator.__name__}')
+                c = creator()
+                c.build_statuspage(statuspage, configuration)
 
     @classmethod
     def build_configpage(cls, configpage: Page, configuration: Configuration) -> None:
         cls._init()
         for creator in cls.configpage_pipeline:
             if creator.has_needed_equipment(configuration):
+                logger.info(
+                    f'Sitemap creator (configpage): {creator.__name__}')
                 c = creator()
                 c.build_configpage(configpage, configuration)

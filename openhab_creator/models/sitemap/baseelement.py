@@ -36,7 +36,16 @@ class BaseElement(object):
         return self.attribute('icon', icon, '"', '"')
 
     def visibility(self, visibility: List[Tuple[str, str, str]]) -> BaseElement:
-        return self.attribute('visibility', Formatter.key_value_tuples(visibility, separator=",\n           "), '[', ']')
+        return self.attribute('visibility',
+                              Formatter.key_value_tuples(
+                                  visibility, separator=",\n           "),
+                              '[', ']')
+
+    def valuecolor(self, valuecolors: List[Tuple[str, str]]) -> BaseElement:
+        return self.attribute('valuecolor',
+                              Formatter.key_value_tuples(
+                                  valuecolors, separator=",\n              "),
+                              '[', ']')
 
     def element(self, element: BaseElement) -> BaseElement:
         self.elements.append(element)

@@ -6,10 +6,11 @@ from typing import TYPE_CHECKING, Dict, Final
 from openhab_creator import __version__, logger
 from openhab_creator.models.configuration import Configuration
 from openhab_creator.output.content import (AutomationCreator,
-                                            BasicConfigCreator, IconsCreator)
-from openhab_creator.output.things import ThingsCreator
+                                            BasicConfigCreator, IconsCreator,
+                                            TransformationCreator)
 from openhab_creator.output.items import ItemsCreator
 from openhab_creator.output.sitemap import SitemapCreator
+from openhab_creator.output.things import ThingsCreator
 
 
 class Creator(object):
@@ -40,6 +41,7 @@ class Creator(object):
         ItemsCreator(self.outputdir).build(configuration)
         SitemapCreator(self.outputdir).build(configuration)
 
+        TransformationCreator(self.outputdir).build()
         AutomationCreator(self.outputdir).build(self.configdir, configuration)
 
         if self.icons:

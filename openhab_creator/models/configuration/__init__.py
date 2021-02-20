@@ -67,7 +67,9 @@ class Configuration(object):
     def __init__(self, name: str, configdir: str, anonym: bool):
         self.name = name
         self.secrets = SecretsStorage(configdir, anonym)
-        self.equipment_registry: Dict[str, List[Equipment]] = {}
+        self.equipment_registry: Dict[str, List[Equipment]] = {
+            'battery': []
+        }
         self._init_bridges(configdir)
         self._init_templates(configdir)
         self._init_locations(configdir)
@@ -141,6 +143,9 @@ class Configuration(object):
             self.equipment_registry[category] = []
 
         self.equipment_registry[category].append(equipment)
+
+        if equipment.has_battery:
+            self.equipment_registry['battery'].append(equipment)
 
     def has_equipment(self, category: str) -> bool:
         return category in self.equipment_registry and len(self.equipment_registry[category]) > 0

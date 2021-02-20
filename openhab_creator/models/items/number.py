@@ -18,7 +18,7 @@ class Number(BaseItem):
 
     def percentage(self, digits: Optional[int] = 0) -> Number:
         self.typed(NumberType.DIMENSIONLESS)
-        self.output(f'%.{digits}f %%')
+        self.format(f'%.{digits}f %%')
         return self
 
     def typed(self, typed: NumberType) -> Number:

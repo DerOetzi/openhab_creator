@@ -60,7 +60,7 @@ class BaseItem(object):
     def __init__(self, name: str):
         self._name: str = name
         self._label: str = ''
-        self._output: Optional[str] = None
+        self._format: Optional[str] = None
         self._icon: Optional[str] = None
         self._groups: List[str] = []
         self._tags: List[str] = []
@@ -74,8 +74,11 @@ class BaseItem(object):
         self._label = label
         return self
 
-    def output(self, format: str) -> BaseItem:
-        self._output = format
+    def map(self, mapname: str) -> BaseItem:
+        return self.format(f'MAP({mapname}.map):%s')
+
+    def format(self, format: str) -> BaseItem:
+        self._format = format
         return self
 
     def icon(self, icon: str) -> BaseItem:
@@ -141,12 +144,9 @@ class BaseItem(object):
         itemscreator.append('')
 
     def _append_label(self, itemscreator: BaseItemsCreator) -> None:
-        label = self._label
+        label = Formatter.label(self._label, self._format)
 
-        if self._output is not None:
-            label += f' [{self._output}]'
-
-        if label.strip() != '':
+        if label is not None:
             itemscreator.append(f'  "{label.strip()}"')
 
     def _append_icon(self, itemscreator: BaseItemsCreator) -> None:

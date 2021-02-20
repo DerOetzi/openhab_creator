@@ -1,6 +1,8 @@
 import os
 from typing import List, Optional
 
+from openhab_creator import logger
+
 
 class BaseCreator(object):
 
@@ -22,6 +24,8 @@ class BaseCreator(object):
 
         with open(f'{self.outputdir}/{self.subdir}/{filename}.{self.typed}', 'w') as f:
             f.writelines("\n".join(self.lines))
+
+        logger.info(f'File {self.subdir}/{filename}.{self.typed} written')
 
         self.lines.clear()
 

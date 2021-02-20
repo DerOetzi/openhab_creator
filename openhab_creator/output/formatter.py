@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import Any, Dict, Optional, List, Tuple
 
+from openhab_creator.output.color import Color
+
 
 class Formatter(object):
     @staticmethod
@@ -66,6 +68,8 @@ class Formatter(object):
             value = f'"{value}"'
         elif isinstance(value, bool):
             value = 'true' if value else 'false'
+        elif isinstance(value, Color):
+            value = f'"{value.value}"'
         else:
             value = str(value)
 

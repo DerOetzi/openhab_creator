@@ -78,7 +78,7 @@ class LightbulbItemsCreator(BaseItemsCreator):
         Group('SwitchingCycles')\
             .typed(GroupType.NUMBER_AVG)\
             .label(_('Lights switching cycles'))\
-            .output('%d')\
+            .format('%d')\
             .icon('configuration')\
             .append_to(self)
 
@@ -146,7 +146,7 @@ class LightbulbItemsCreator(BaseItemsCreator):
         Number(lightbulb.motiondetectorperiod_id)\
             .typed(NumberType.TIME)\
             .label(_('Motiondetector period'))\
-            .output('%d s')\
+            .format('%d s')\
             .icon('timeout')\
             .groups('MotionDetectorPeriod', lightbulb.lightbulb_id)\
             .semantic(PointType.SETPOINT, PropertyType.DURATION)\
@@ -215,7 +215,7 @@ class LightbulbItemsCreator(BaseItemsCreator):
         Number(lightbulb.switchingcycles_id)\
             .typed(NumberType.DIMENSIONLESS)\
             .label(_('Switching cycles {name}').format(name=lightbulb.name))\
-            .output('%d')\
+            .format('%d')\
             .icon('switchingcycles')\
             .sensor('switchingcycle', lightbulb.influxdb_tags)\
             .groups('SwitchingCycles', lightbulb.lightbulb_id)\
