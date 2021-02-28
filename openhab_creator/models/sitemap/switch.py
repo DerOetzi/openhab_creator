@@ -9,7 +9,7 @@ from openhab_creator.models.sitemap.baseelement import BaseElement
 class Switch(BaseElement):
     def __init__(self,
                  item: str,
-                 mappings: List[Tuple[int, str, str]],
+                 mappings: List[Tuple[str, str]],
                  label: Optional[str] = ''):
         super().__init__(item, label)
 

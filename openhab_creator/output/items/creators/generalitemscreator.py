@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 
 from openhab_creator import _
 from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
-from openhab_creator.models.items import Group, GroupType
+from openhab_creator.models.items import Group, GroupType, String
 from openhab_creator.output.items import ItemsCreatorPipeline
 
 if TYPE_CHECKING:
@@ -32,6 +32,12 @@ class GeneralItemsCreator(BaseItemsCreator):
             .map('lowbattery')\
             .icon('lowbattery')\
             .typed(GroupType.NUMBER_MAX)\
+            .append_to(self)
+
+        String('guiPeriod')\
+            .label(_('Period'))\
+            .icon('period')\
+            .config()\
             .append_to(self)
 
         self.write_file('generals')

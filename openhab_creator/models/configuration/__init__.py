@@ -4,13 +4,14 @@ import csv
 import json
 import os
 from copy import deepcopy
-from typing import TYPE_CHECKING, Dict, List
+from typing import TYPE_CHECKING, Dict, List, Optional
 
 from openhab_creator import logger
 from openhab_creator.exception import ConfigurationException
 from openhab_creator.models.configuration.equipment.bridge import Bridge
 from openhab_creator.models.configuration.location import (Location,
                                                            LocationFactory)
+from openhab_creator.models.grafana.dashboard import Dashboard
 
 if TYPE_CHECKING:
     from openhab_creator.models.configuration.equipment import Equipment
@@ -39,16 +40,28 @@ class SecretsStorage(object):
                     self.storage[key.lower()] = row['value'].strip()
 
     def secret(self, *args: List[str]) -> str:
-        key = '_'.join(args).lower()
+        value = self.secret_optional(*args)
 
-        if key in self.storage:
-            value = self.storage[key]
-        else:
+        if value is None:
+            key = self.secret_key(*args)
             if key not in self.missing_keys:
                 self.missing_keys.append(key)
             value = "__%s__" % key.upper()
 
         return value
+
+    def secret_optional(self, *args: List[str]) -> Optional[str]:
+        key = self.secret_key(*args)
+
+        if key in self.storage:
+            value = self.storage[key]
+        else:
+            value = None
+
+        return value
+
+    def secret_key(self, *args: List[str]) -> str:
+        return '_'.join(args).lower()
 
     @property
     def has_missing(self) -> bool:
@@ -70,6 +83,8 @@ class Configuration(object):
         self.equipment_registry: Dict[str, List[Equipment]] = {
             'battery': []
         }
+        self.dashboard = Dashboard(self)
+
         self._init_bridges(configdir)
         self._init_templates(configdir)
         self._init_locations(configdir)

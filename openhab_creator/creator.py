@@ -35,7 +35,7 @@ class Creator(object):
         if configuration.secrets.handle_missing() or self.check_only:
             return
 
-        BasicConfigCreator(self.outputdir).build()
+        BasicConfigCreator(self.outputdir).build(configuration)
 
         ThingsCreator(self.outputdir).build(configuration)
         ItemsCreator(self.outputdir).build(configuration)
