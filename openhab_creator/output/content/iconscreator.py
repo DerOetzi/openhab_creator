@@ -35,7 +35,7 @@ class IconsCreator(BaseContentCreator):
         with open(srcfile, 'r') as f:
             content = f.read()
             for color in Color:
-                content = content.replace(f'__{color.name}__', color.value)
+                content = content.replace(f'__{color.name}__', str(color))
 
         return content
 

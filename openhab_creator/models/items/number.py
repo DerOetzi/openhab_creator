@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-from enum import Enum
 from typing import Optional
 
+from openhab_creator import CreatorEnum
 from openhab_creator.models.items.baseitem import BaseItem
 
 
-class NumberType(Enum):
+class NumberType(CreatorEnum):
     DIMENSIONLESS = ':Dimensionless'
     TIME = ''  # TODO Number:Time See openhab-webui#765
 
@@ -22,7 +22,7 @@ class Number(BaseItem):
         return self
 
     def typed(self, typed: NumberType) -> Number:
-        self._typed = typed.value
+        self._typed = str(typed)
         return self
 
     @property

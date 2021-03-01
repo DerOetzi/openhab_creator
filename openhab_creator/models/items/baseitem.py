@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 from abc import abstractproperty
-from enum import Enum
 from typing import TYPE_CHECKING, Dict, List, Optional, Union
 
+from openhab_creator import CreatorEnum
 from openhab_creator.models.configuration.baseobject import BaseObject
 from openhab_creator.output.formatter import Formatter
 
@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from openhab_creator.models.configuration.location import Location
 
 
-class PointType(Enum):
+class PointType(CreatorEnum):
     ALARM = 'Alarm'
     CONTROL = 'Control'
     SWITCH = 'Switch'
@@ -26,7 +26,7 @@ class PointType(Enum):
     TILT = 'Tilt'
 
 
-class PropertyType(Enum):
+class PropertyType(CreatorEnum):
     TEMPERATURE = 'Temperature'
     LIGHT = 'Light'
     COLORTEMPERATURE = 'ColorTemperature'
@@ -117,10 +117,8 @@ class BaseItem(object):
         for tag in semantic_tags:
             if isinstance(tag, BaseObject):
                 self._tags.append(tag.semantic)
-            elif isinstance(tag, PointType):
-                self._tags.append(tag.value)
-            elif isinstance(tag, PropertyType):
-                self._tags.append(tag.value)
+            elif isinstance(tag, PointType) or isinstance(tag, PropertyType):
+                self._tags.append(str(tag))
 
         return self
 

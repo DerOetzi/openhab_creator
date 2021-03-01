@@ -46,8 +46,8 @@ class BatterySitemapCreator(BaseSitemapCreator):
                 level.visibility([(battery.lowbattery_id, '==', 'OFF')])
                 low.visibility([(battery.lowbattery_id, '!=', 'OFF')])
 
-        self.add_grafana(configuration.dashboard, page,
-                         list(dict.fromkeys(locations)))
+        self._add_grafana(configuration.dashboard, page,
+                          list(dict.fromkeys(locations)), 'Batteries_')
 
     @property
     def _valuecolors_low(self) -> List[Color]:
@@ -66,15 +66,3 @@ class BatterySitemapCreator(BaseSitemapCreator):
             ('>=20', Color.ORANGE),
             ('>=0', Color.RED)
         ]
-
-    def add_grafana(self,
-                    dashboard: Dashboard,
-                    page: Page,
-                    locations: List[str]) -> None:
-        grafana_urls = []
-        for location in locations:
-            panel_urls = dashboard.panel_urls(f'Batteries_{location}')
-            if panel_urls is not None:
-                grafana_urls.append(panel_urls)
-
-        self._graph_frame(page, grafana_urls)

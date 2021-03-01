@@ -64,12 +64,10 @@ class Formatter(object):
 
     @staticmethod
     def value(value: Any) -> str:
-        if isinstance(value, str):
+        if isinstance(value, str) or isinstance(value, Color):
             value = f'"{value}"'
         elif isinstance(value, bool):
             value = 'true' if value else 'false'
-        elif isinstance(value, Color):
-            value = f'"{value.value}"'
         else:
             value = str(value)
 

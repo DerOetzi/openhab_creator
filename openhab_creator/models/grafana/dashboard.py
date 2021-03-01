@@ -1,45 +1,37 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Optional, Dict
-from enum import Enum
 
 import requests
 
-from openhab_creator import _, logger
+from openhab_creator import _, logger, CreatorEnum
 
 if TYPE_CHECKING:
     from openhab_creator.models.configuration import Configuration
 
 
-class Retention(Enum):
+class Retention(CreatorEnum):
     MONTHLY = 'm'
     YEARLY = 'y'
 
 
-class Period(Enum):
-    DAY = {
-        'period': '24h',
-        'name': _('Day'),
-        'retention': Retention.MONTHLY
-    }
+class Period(CreatorEnum):
+    DAY = '24h', _('Day'), Retention.MONTHLY
+    WEEK = '7d', _('Week'), Retention.MONTHLY
+    MONTH = '31d', _('Month'), Retention.MONTHLY
+    YEAR = '1y', _('Year'), Retention.YEARLY
 
-    WEEK = {
-        'period': '7d',
-        'name': _('Week'),
-        'retention': Retention.MONTHLY
-    }
+    def __init__(self, value: str, label: str, retention: Retention):
+        self._label: str = label
+        self._retention: Retention = retention
 
-    MONTH = {
-        'period': '31d',
-        'name': _('Month'),
-        'retention': Retention.MONTHLY
-    }
+    @property
+    def label(self) -> str:
+        return self._label
 
-    YEAR = {
-        'period': '1y',
-        'name': _('Year'),
-        'retention': Retention.YEARLY
-    }
+    @property
+    def retention(self) -> Retention:
+        return self._retention
 
 
 class Dashboard(object):
@@ -80,13 +72,11 @@ class Dashboard(object):
         if identifier in self.panels:
             panel_config = self.panels[identifier]
 
-            for period_config in Period:
-                period = period_config.value['period']
-                retention = period_config.value['retention'].value
+            for period in Period:
 
                 url = f'{self.host}/render/d-solo/openhab3?'
                 url += f'from=now-{period}&to=now&'
-                url += f'var-rp={retention}&'
+                url += f'var-rp={period.retention}&'
                 url += f'panelId={panel_config["id"]}&'
                 url += f'width=700&height={panel_config["height"]}'
 

@@ -1,7 +1,7 @@
-from enum import Enum
+from openhab_creator import CreatorEnum
 
 
-class Color(Enum):
+class Color(CreatorEnum):
     GREEN = "#00c83c"
     DARKGREEN = "#00b22a"
     RED = "#f00014"

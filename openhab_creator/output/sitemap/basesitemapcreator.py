@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Dict, List
+from typing import TYPE_CHECKING, Dict, List, Optional
 
 from openhab_creator import _
 
@@ -11,6 +11,7 @@ if TYPE_CHECKING:
     from openhab_creator.models.sitemap.baseelement import BaseElement
     from openhab_creator.models.configuration import Configuration
     from openhab_creator.models.sitemap import Sitemap, Page, Frame
+    from openhab_creator.models.grafana import Dashboard
 
 
 class BaseSitemapCreator(object):
@@ -27,20 +28,31 @@ class BaseSitemapCreator(object):
     def has_needed_equipment(cls, configuration: Configuration) -> bool:
         return True
 
+    def _add_grafana(self,
+                     dashboard: Dashboard,
+                     page: Page,
+                     identifiers: List[str],
+                     prefix: Optional[str] = '') -> None:
+        grafana_urls = []
+        for identifier in identifiers:
+            panel_urls = dashboard.panel_urls(f'{prefix}{identifier}')
+            if panel_urls is not None:
+                grafana_urls.append(panel_urls)
+
+        self._graph_frame(page, grafana_urls)
+
     def _graph_frame(self, page: Page, grafana_urls: List[Dict[str, str]]) -> None:
         if len(grafana_urls) > 0:
             frame = page.frame('period', _('Course'))
 
             mappings = []
 
-            for period_config in Period:
-                period = period_config.value['period']
-                name = period_config.value['name']
-                mappings.append((period, name))
+            for period in Period:
+                mappings.append((f'"{period}"', period.label))
 
             Switch('guiPeriod', mappings)\
                 .append_to(frame)
 
             for panel_urls in grafana_urls:
-                Image(panel_urls[Period.DAY.value['period']])\
+                Image(panel_urls[Period.DAY])\
                     .append_to(frame)
