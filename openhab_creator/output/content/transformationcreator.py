@@ -2,21 +2,9 @@ from __future__ import annotations
 
 from typing import Dict
 
-from openhab_creator import _, logger, CreatorEnum
+from openhab_creator import _, logger
+from openhab_creator.models.common import MapTransformation
 from openhab_creator.output.basecreator import BaseCreator
-
-
-class MapTransformations(CreatorEnum):
-    LOWBATTERY = "lowbattery", {
-        '0': _('Ok'),
-        '1': _('Low'),
-        'OFF': _('Ok'),
-        'ON': _('Low')
-    }
-
-    def __init__(self, filename: str, mappings: Dict[str, str]):
-        self.filename: str = filename
-        self.mappings: Dict[str, str] = mappings
 
 
 class TransformationCreator(BaseCreator):
@@ -27,7 +15,7 @@ class TransformationCreator(BaseCreator):
         self.build_maps()
 
     def build_maps(self) -> None:
-        for map_definition in MapTransformations:
+        for map_definition in MapTransformation:
             for key, value in map_definition.mappings.items():
                 self.append(f'{key}={value}')
 

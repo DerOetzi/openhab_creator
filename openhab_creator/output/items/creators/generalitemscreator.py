@@ -3,10 +3,11 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from openhab_creator import _
-from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
-from openhab_creator.models.items import Group, GroupType, String
-from openhab_creator.output.items import ItemsCreatorPipeline
 from openhab_creator.models.grafana import Period
+from openhab_creator.models.items import Group, GroupType, String
+from openhab_creator.models.common import MapTransformation
+from openhab_creator.output.items import ItemsCreatorPipeline
+from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
 
 if TYPE_CHECKING:
     from openhab_creator.models.configuration import Configuration
@@ -30,7 +31,7 @@ class GeneralItemsCreator(BaseItemsCreator):
 
         Group('LowBattery')\
             .label(_('Batteries status'))\
-            .map('lowbattery')\
+            .map(MapTransformation.LOWBATTERY)\
             .icon('lowbattery')\
             .typed(GroupType.NUMBER_MAX)\
             .append_to(self)

@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING, Any, Dict, List, Literal, Optional
 
 from openhab_creator import _
 from openhab_creator.exception import BuildException
+from openhab_creator.models.common import MapTransformation
 from openhab_creator.models.items import (Group, Number, PointType,
                                           PropertyType, Switch)
 from openhab_creator.output.basecreator import BaseCreator
@@ -31,6 +32,7 @@ class BaseItemsCreator(BaseCreator):
             if equipment.has_battery_low:
                 Switch(equipment.lowbattery_id)\
                     .label(_('Battery low'))\
+                    .map(MapTransformation.LOWBATTERY)\
                     .icon('lowbattery')\
                     .groups('LowBattery', equipment.battery_id)\
                     .channel(equipment.channel('battery_low'))\

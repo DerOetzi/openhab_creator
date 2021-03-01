@@ -52,22 +52,22 @@ class LightbulbItemsCreator(BaseItemsCreator):
 
         Group('AutoLight')\
             .label(_('Scene controlled configuration items'))\
-            .groups('Auto')\
+            .auto()\
             .append_to(self)
 
         Group('AutoReactivationLight')\
             .label(_('Reactivation scene controlled configuration items'))\
-            .config()\
+            .auto()\
             .append_to(self)
 
         Group('AutoAbsenceLight')\
             .label(_('Absence scene controlled configuration items'))\
-            .config()\
+            .auto()\
             .append_to(self)
 
         Group('AutoDarkness')\
             .label(_('Darkness scene controlled configuration items'))\
-            .config()\
+            .auto()\
             .append_to(self)
 
         Group('MotionDetectorPeriod')\

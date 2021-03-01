@@ -2,17 +2,20 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from openhab_creator.models.items import Group
+from openhab_creator import _
+from openhab_creator.models.common import MapTransformation
+from openhab_creator.models.items import Group, Switch
 from openhab_creator.output.items import ItemsCreatorPipeline
 from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
 
 if TYPE_CHECKING:
     from openhab_creator.models.configuration import Configuration
+    from openhab_creator.models.configuration.location import Location
     from openhab_creator.models.configuration.location.indoor.floors import Floor
-    from openhab_creator.models.configuration.location.indoor.rooms import Room
+    from openhab_creator.models.configuration.location.indoor import Indoor
 
 
-@ItemsCreatorPipeline(1)
+@ItemsCreatorPipeline(2)
 class LocationItemsCreator(BaseItemsCreator):
     def build(self, configuration: Configuration):
         for floor in configuration.floors:
@@ -29,10 +32,26 @@ class LocationItemsCreator(BaseItemsCreator):
             .semantic(floor)\
             .append_to(self)
 
-    def _create_room(self, room: Room) -> None:
+    def _create_room(self, room: Indoor) -> None:
         Group(room.identifier)\
             .label(room.name)\
             .icon(room.category)\
             .groups(room.parent.identifier)\
             .semantic(room)\
+            .append_to(self)
+
+        self._create_automation(room)
+
+    def _create_automation(self, location: Location) -> None:
+        Switch(location.autoactive_id)\
+            .label(_('Automation active'))\
+            .map(MapTransformation.ACTIVE)\
+            .auto()\
+            .location(location)\
+            .append_to(self)
+
+        Switch(location.autoguest_id)\
+            .label(_('Only guest present'))\
+            .auto()\
+            .location(location)\
             .append_to(self)

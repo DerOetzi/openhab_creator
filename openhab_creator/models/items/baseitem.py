@@ -4,6 +4,7 @@ from abc import abstractproperty
 from typing import TYPE_CHECKING, Dict, List, Optional, Union
 
 from openhab_creator import CreatorEnum
+from openhab_creator.models.common import MapTransformation
 from openhab_creator.models.configuration.baseobject import BaseObject
 from openhab_creator.output.formatter import Formatter
 
@@ -74,7 +75,7 @@ class BaseItem(object):
         self._label = label
         return self
 
-    def map(self, mapname: str) -> BaseItem:
+    def map(self, mapname: MapTransformation) -> BaseItem:
         return self.format(f'MAP({mapname}.map):%s')
 
     def format(self, format: str) -> BaseItem:
@@ -91,6 +92,9 @@ class BaseItem(object):
 
     def config(self) -> BaseItem:
         return self.groups('Config')
+
+    def auto(self) -> BaseItem:
+        return self.groups('Auto')
 
     def location(self, location: Location) -> BaseItem:
         return self.groups(location.identifier)

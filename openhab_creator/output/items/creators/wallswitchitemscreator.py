@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from openhab_creator.models.configuration.equipment.types.wallswitch import WallSwitch
 
 
-@ItemsCreatorPipeline(2)
+@ItemsCreatorPipeline(3)
 class WallSwitchItemsCreator(BaseItemsCreator):
     def build(self, configuration: Configuration) -> None:
         Group('WallswitchesAssignment')\

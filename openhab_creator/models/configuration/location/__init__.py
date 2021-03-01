@@ -55,6 +55,14 @@ class Location(BaseObject):
 
         return tags
 
+    @property
+    def autoactive_id(self) -> str:
+        return f'autoActive{self.identifier}'
+
+    @property
+    def autoguest_id(self) -> str:
+        return f'autoGuest{self.identifier}'
+
 
 class LocationFactory(object):
     registry: Dict[str, Type['Location']] = {}
