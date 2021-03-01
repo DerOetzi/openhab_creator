@@ -6,6 +6,7 @@ from openhab_creator import _
 from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
 from openhab_creator.models.items import Group, GroupType, String
 from openhab_creator.output.items import ItemsCreatorPipeline
+from openhab_creator.models.grafana import Period
 
 if TYPE_CHECKING:
     from openhab_creator.models.configuration import Configuration
@@ -38,6 +39,7 @@ class GeneralItemsCreator(BaseItemsCreator):
             .label(_('Period'))\
             .icon('period')\
             .config()\
+            .expire('10m', f'{Period.DAY}')\
             .append_to(self)
 
         self.write_file('generals')

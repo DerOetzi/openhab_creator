@@ -33,11 +33,11 @@ class LightbulbSitemapCreator(BaseSitemapCreator):
             Switch(lightbulb.lightcontrol_id, self._create_lightcontrol_mappings(
                 lightbulb))\
                 .label(lightbulb.name)\
-                .visibility([(lightbulb.hide_id, '!=', 'ON')])\
+                .visibility((lightbulb.hide_id, '!=', 'ON'))\
                 .append_to(frame)
 
             Switch(lightbulb.auto_id, [('ON', _('Automation'))])\
-                .visibility([(lightbulb.autodisplay_id, '==', 'ON')])\
+                .visibility((lightbulb.autodisplay_id, '==', 'ON'))\
                 .append_to(frame)
 
     def build_configpage(self, configpage: Page, configuration: Configuration) -> None:

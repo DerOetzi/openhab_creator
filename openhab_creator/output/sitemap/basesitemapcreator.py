@@ -55,4 +55,20 @@ class BaseSitemapCreator(object):
 
             for panel_urls in grafana_urls:
                 Image(panel_urls[Period.DAY])\
+                    .visibility(
+                        ('guiPeriod', '==', Period.DAY),
+                        ('guiPeriod', '==', 'Uninitialized')
+                )\
+                    .append_to(frame)
+
+                Image(panel_urls[Period.WEEK])\
+                    .visibility(('guiPeriod', '==', Period.WEEK))\
+                    .append_to(frame)
+
+                Image(panel_urls[Period.MONTH])\
+                    .visibility(('guiPeriod', '==', Period.MONTH))\
+                    .append_to(frame)
+
+                Image(panel_urls[Period.YEAR])\
+                    .visibility(('guiPeriod', '==', Period.YEAR))\
                     .append_to(frame)

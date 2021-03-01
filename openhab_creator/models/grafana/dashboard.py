@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Optional, Dict
 
 import requests
+import json
 
 from openhab_creator import _, logger, CreatorEnum
 
@@ -39,32 +40,40 @@ class Dashboard(object):
         self.host: Optional[str] = configuration.secrets.secret_optional(
             'grafana', 'host')
 
-        self.__init_from_grafana()
+        if self.__init_from_grafana():
+            self._save_dashboard_to_configdir(configuration.configdir)
 
-    def __init_from_grafana(self) -> None:
+    def __init_from_grafana(self) -> bool:
+        success = False
         if self.host is not None:
             try:
                 response = requests.get(
                     f'{self.host}/api/dashboards/uid/openhab3')
                 if response.status_code == 200:
                     self.online = response.json()['dashboard']
+                    success = True
                     self.__init_panels()
                 else:
                     logger.error(response.json()['message'])
             except requests.exceptions.ConnectionError:
                 logger.error(f'Could not connect to grafana on {self.host}')
 
+        return success
+
     def __init_panels(self) -> None:
         self.panels = {}
 
         for panel in self.online['panels']:
-            if 'description' in panel and panel['description'] != '':
-                self.panels[panel['description']] = {
-                    'description': panel['description'],
+            if 'title' in panel and panel['title'] != '':
+                self.panels[panel['title']] = {
                     'id': panel['id'],
                     'height': panel['gridPos']['h'] * 35
                 }
-                logger.debug(self.panels[panel['description']])
+                logger.debug(self.panels[panel['title']])
+
+    def _save_dashboard_to_configdir(self, configdir: str) -> None:
+        with open(f'{configdir}/grafana_dashboard.json', 'w') as fp:
+            json.dump(self.online, fp, indent=4)
 
     def panel_urls(self, identifier: str) -> Optional[Dict[str, str]]:
         urls = {}

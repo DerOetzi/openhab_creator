@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openHAB Creator\n"
-"POT-Creation-Date: 2021-02-20 23:52+0100\n"
-"PO-Revision-Date: 2021-02-20 23:52+0100\n"
+"POT-Creation-Date: 2021-03-01 16:17+0100\n"
+"PO-Revision-Date: 2021-03-01 17:17+0100\n"
 "Last-Translator: Johannes Ott <info@johannes-ott.net>\n"
 "Language-Team: Johannes Ott\n"
 "Language: de\n"
@@ -33,6 +33,22 @@ msgstr "Schalter"
 #: openhab_creator/models/configuration/equipment/types/wallswitch.py:47
 msgid "Button {count} ({name})"
 msgstr "Taste {count} ({name})"
+
+#: openhab_creator/models/grafana/dashboard.py:19
+msgid "Day"
+msgstr "Tag"
+
+#: openhab_creator/models/grafana/dashboard.py:20
+msgid "Week"
+msgstr "Woche"
+
+#: openhab_creator/models/grafana/dashboard.py:21
+msgid "Month"
+msgstr "Monat"
+
+#: openhab_creator/models/grafana/dashboard.py:22
+msgid "Year"
+msgstr "Jahr"
 
 #: openhab_creator/output/content/transformationcreator.py:11
 #: openhab_creator/output/content/transformationcreator.py:13
@@ -70,8 +86,13 @@ msgid "Scene controlled configuration items"
 msgstr "Konfigurationsitems Szenensteuerung"
 
 #: openhab_creator/output/items/creators/generalitemscreator.py:31
+#: openhab_creator/output/sitemap/creators/batterysitemapcreator.py:51
 msgid "Batteries status"
 msgstr "Batterienstatus"
+
+#: openhab_creator/output/items/creators/generalitemscreator.py:38
+msgid "Period"
+msgstr "Zeitraum"
 
 #: openhab_creator/output/items/creators/lightbulbitemscreator.py:44
 msgid "Lightcontrol items"
@@ -220,6 +241,10 @@ msgstr "Konfiguration"
 #: openhab_creator/output/sitemap/__init__.py:30
 msgid "State and configuration"
 msgstr "Status und Konfiguration"
+
+#: openhab_creator/output/sitemap/basesitemapcreator.py:46
+msgid "Course"
+msgstr "Verlauf"
 
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:25
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:44

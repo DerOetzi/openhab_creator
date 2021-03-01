@@ -2,9 +2,13 @@ from __future__ import annotations
 
 import re
 from abc import abstractproperty
-from typing import List, Optional, Dict, Tuple
+from typing import TYPE_CHECKING, List, Optional, Dict, Tuple, Union
 
 from openhab_creator.output.formatter import Formatter
+
+if TYPE_CHECKING:
+    from openhab_creator import CreatorEnum
+    from openhab_creator.output.color import Color
 
 
 class BaseElement(object):
@@ -35,13 +39,13 @@ class BaseElement(object):
     def icon(self, icon: str) -> BaseElement:
         return self.attribute('icon', icon, '"', '"')
 
-    def visibility(self, visibility: List[Tuple[str, str, str]]) -> BaseElement:
+    def visibility(self, *visibility: List[Tuple[str, str, Union[str, CreatorEnum]]]) -> BaseElement:
         return self.attribute('visibility',
                               Formatter.key_value_tuples(
                                   visibility, separator=",\n           "),
                               '[', ']')
 
-    def valuecolor(self, valuecolors: List[Tuple[str, str]]) -> BaseElement:
+    def valuecolor(self, *valuecolors: List[Tuple[str, Union[str, Color]]]) -> BaseElement:
         return self.attribute('valuecolor',
                               Formatter.key_value_tuples(
                                   valuecolors, separator=",\n              "),

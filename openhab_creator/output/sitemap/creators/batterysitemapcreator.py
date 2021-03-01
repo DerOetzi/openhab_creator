@@ -22,7 +22,7 @@ class BatterySitemapCreator(BaseSitemapCreator):
 
     def build_statuspage(self, statuspage: Page, configuration: Configuration) -> None:
         page = Page('LowBattery')\
-            .valuecolor(self._valuecolors_low)\
+            .valuecolor(*self._valuecolors_low)\
             .append_to(statuspage)
 
         locations = []
@@ -34,20 +34,21 @@ class BatterySitemapCreator(BaseSitemapCreator):
 
             if battery.has_battery_level:
                 level = Text(battery.levelbattery_id, battery.name_with_type)\
-                    .valuecolor(self._valuecolors_level)\
+                    .valuecolor(*self._valuecolors_level)\
                     .append_to(frame)
 
             if battery.has_battery_low:
                 low = Text(battery.lowbattery_id, battery.name_with_type)\
-                    .valuecolor(self._valuecolors_low)\
+                    .valuecolor(*self._valuecolors_low)\
                     .append_to(frame)
 
             if battery.has_battery_level and battery.has_battery_low:
-                level.visibility([(battery.lowbattery_id, '==', 'OFF')])
-                low.visibility([(battery.lowbattery_id, '!=', 'OFF')])
+                level.visibility((battery.lowbattery_id, '==', 'OFF'))
+                low.visibility((battery.lowbattery_id, '!=', 'OFF'))
 
         self._add_grafana(configuration.dashboard, page,
-                          list(dict.fromkeys(locations)), 'Batteries_')
+                          list(dict.fromkeys(locations)),
+                          _('Batteries status') + ' ')
 
     @property
     def _valuecolors_low(self) -> List[Color]:

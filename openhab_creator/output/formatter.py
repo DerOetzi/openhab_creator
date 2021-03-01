@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, Optional, List, Tuple
 
-from openhab_creator.output.color import Color
+from openhab_creator import CreatorEnum
 
 
 class Formatter(object):
@@ -43,7 +43,7 @@ class Formatter(object):
         return prefix + separator.join(output) + suffix
 
     @staticmethod
-    def key_value_tuples(pairs: List[str, Tuple],
+    def key_value_tuples(pairs: List[Tuple],
                          prefix: Optional[str] = '',
                          suffix: Optional[str] = '',
                          separator: Optional[str] = ', ') -> str:
@@ -64,7 +64,7 @@ class Formatter(object):
 
     @staticmethod
     def value(value: Any) -> str:
-        if isinstance(value, str) or isinstance(value, Color):
+        if isinstance(value, str) or isinstance(value, CreatorEnum):
             value = f'"{value}"'
         elif isinstance(value, bool):
             value = 'true' if value else 'false'

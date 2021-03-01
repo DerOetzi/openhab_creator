@@ -78,12 +78,13 @@ class SecretsStorage(object):
 
 class Configuration(object):
     def __init__(self, name: str, configdir: str, anonym: bool):
-        self.name = name
-        self.secrets = SecretsStorage(configdir, anonym)
+        self.configdir: str = configdir
+        self.name: str = name
+        self.secrets: SecretsStorage = SecretsStorage(configdir, anonym)
         self.equipment_registry: Dict[str, List[Equipment]] = {
             'battery': []
         }
-        self.dashboard = Dashboard(self)
+        self.dashboard: Dashboard = Dashboard(self)
 
         self._init_bridges(configdir)
         self._init_templates(configdir)
