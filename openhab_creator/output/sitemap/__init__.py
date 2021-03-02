@@ -19,6 +19,8 @@ class SitemapCreator(BaseCreator):
     def build(self, configuration: Configuration) -> None:
         sitemap = Sitemap('default', configuration.name)
 
+        second_frame = sitemap.frame('second', _('State and configuration'))\
+
         SitemapCreatorPipeline.build_mainpage(sitemap, configuration)
 
         statuspage = Page(label=_('State')).icon('status')
@@ -27,7 +29,7 @@ class SitemapCreator(BaseCreator):
         configpage = Page(label=_('Configuration')).icon('configuration')
         SitemapCreatorPipeline.build_configpage(configpage, configuration)
 
-        sitemap.frame('second', _('State and configuration'))\
+        second_frame\
             .element(statuspage)\
             .element(configpage)
 

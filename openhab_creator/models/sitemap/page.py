@@ -35,7 +35,7 @@ class Page(Text):
     def element(self, element: BaseElement) -> Page:
         return self.main_frame.element(element)
 
-    def frame(self, identifier: str, label: str) -> Frame:
+    def frame(self, identifier: str, label: Optional[str] = '') -> Frame:
         if identifier not in self.frames:
             self.frames[identifier] = Frame(label)
             super().element(self.frames[identifier])

@@ -3,8 +3,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from openhab_creator import _
-from openhab_creator.models.common import MapTransformation
-from openhab_creator.models.items import Group, Switch
+from openhab_creator.models.common import MapTransformation, Scenario
+from openhab_creator.models.items import Group, Switch, PointType
 from openhab_creator.output.items import ItemsCreatorPipeline
 from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
 
@@ -44,14 +44,25 @@ class LocationItemsCreator(BaseItemsCreator):
 
     def _create_automation(self, location: Location) -> None:
         Switch(location.autoactive_id)\
-            .label(_('Automation active'))\
+            .label(_('Automation'))\
             .map(MapTransformation.ACTIVE)\
             .auto()\
             .location(location)\
+            .semantic(PointType.SETPOINT)\
             .append_to(self)
 
         Switch(location.autoguest_id)\
-            .label(_('Only guest present'))\
+            .label(_('Guest stayed'))\
             .auto()\
             .location(location)\
+            .semantic(PointType.SETPOINT)\
             .append_to(self)
+
+        for scenario in Scenario:
+            Switch(location.scenarioassignment_id(scenario))\
+                .label(scenario.label)\
+                .icon(f'scenario-{scenario.icon}')\
+                .groups(scenario.assignment_id)\
+                .location(location)\
+                .semantic(PointType.SETPOINT)\
+                .append_to(self)
