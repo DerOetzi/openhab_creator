@@ -85,6 +85,7 @@ class Configuration(object):
             'battery': []
         }
         self.dashboard: Dashboard = Dashboard(self)
+        self.timecontrolled_locations: Dict[str, Location] = {}
 
         self._init_bridges(configdir)
         self._init_templates(configdir)
@@ -162,6 +163,10 @@ class Configuration(object):
 
         if equipment.has_battery:
             self.equipment_registry['battery'].append(equipment)
+
+        if equipment.is_timecontrolled:
+            location = equipment.location
+            self.timecontrolled_locations[location.identifier] = location
 
     def has_equipment(self, category: str) -> bool:
         return category in self.equipment_registry and len(self.equipment_registry[category]) > 0

@@ -76,7 +76,7 @@ class BaseItem(object):
         return self
 
     def map(self, mapname: MapTransformation) -> BaseItem:
-        return self.format(f'MAP({mapname}.map):%s')
+        return self.format(mapname.formatstr)
 
     def format(self, format: str) -> BaseItem:
         self._format = format

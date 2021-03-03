@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from openhab_creator import _
-from openhab_creator.models.common import MapTransformation, Scenario
+from openhab_creator.models.common import MapTransformation, Scene
 from openhab_creator.models.items import (Group, GroupType, Number, NumberType, String,
                                           Switch)
 from openhab_creator.output.items import ItemsCreatorPipeline
@@ -14,17 +14,17 @@ if TYPE_CHECKING:
 
 
 @ItemsCreatorPipeline(1)
-class ScenarioItemsCreator(BaseItemsCreator):
+class SceneItemsCreator(BaseItemsCreator):
     def build(self, configuration: Configuration) -> None:
-        Switch('autoScenario')\
+        Switch('autoScene')\
             .label(_('Time controlled'))\
             .icon('auto')\
             .expire('1h', 'ON')\
             .append_to(self)
 
-        String(Scenario.scenarioactive_id())\
-            .label(_('Scenario'))\
-            .icon('scenario')\
+        String(Scene.sceneactive_id)\
+            .label(_('Scene'))\
+            .icon('scene')\
             .auto()\
             .append_to(self)
 
@@ -34,27 +34,27 @@ class ScenarioItemsCreator(BaseItemsCreator):
             .auto()\
             .append_to(self)
 
-        for scenario in Scenario:
-            Group(scenario.assignment_id)\
+        for scene in Scene:
+            Group(scene.assignment_id)\
                 .typed(GroupType.ONOFF)\
                 .auto()\
                 .append_to(self)
 
-            if scenario.has_time:
-                Number(scenario.timeworkingday_id)\
+            if scene.has_time:
+                Number(scene.timeworkingday_id)\
                     .typed(NumberType.TIME)\
-                    .label(scenario.label)\
+                    .label(scene.label)\
                     .format('%d h')\
                     .icon('clock')\
                     .auto()\
                     .append_to(self)
 
-                Number(scenario.timeweekend_id)\
+                Number(scene.timeweekend_id)\
                     .typed(NumberType.TIME)\
-                    .label(scenario.label)\
+                    .label(scene.label)\
                     .format('%d h')\
                     .icon('clock')\
                     .auto()\
                     .append_to(self)
 
-        self.write_file('scenario')
+        self.write_file('scene')

@@ -1,17 +1,17 @@
 from __future__ import annotations
 
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Dict, List
 
-from openhab_creator import _, CreatorEnum
+from openhab_creator import _, CreatorEnum, classproperty
 
 
-class Scenario(CreatorEnum):
-    NIGHT = 'Night', _('Night'), 'normal', (0, 1)
-    MORNING = 'Morning', _('Morning'), 'normal', (5, 10)
+class Scene(CreatorEnum):
+    NIGHT = 'Night', _('Night'), 'special', (0, 1)
+    BREAKFAST = 'Breakfast', _('Breakfast'), 'food', (5, 10)
     FORENOON = 'Forenoon', _('Forenoon'), 'normal', (8, 12)
-    LUNCH = 'Lunch', _('Lunch'), 'eating', (11, 14)
+    LUNCH = 'Lunch', _('Lunch'), 'food', (11, 14)
     AFTERNOON = 'Afternoon', _('Afternoon'), 'normal', (13, 15)
-    DINNER = 'Dinner', _('Dinner'), 'eating', (17, 19)
+    DINNER = 'Dinner', _('Dinner'), 'food', (17, 19)
     EVENING = 'Evening', _('Evening'), 'normal', (18, 21)
 
     ABSENCE = 'Absence', _('Absence'), 'special'
@@ -41,16 +41,25 @@ class Scenario(CreatorEnum):
 
     @property
     def assignment_id(self) -> str:
-        return f'scenarioAssignment{self.identifier}'
+        return f'sceneAssignment{self.identifier}'
 
     @property
     def timeworkingday_id(self) -> str:
-        return f'scenarioTimeWorkingDay{self.identifier}'
+        return f'sceneTimeWorkingDay{self.identifier}'
 
     @property
     def timeweekend_id(self) -> str:
-        return f'scenarioTimeWeekend{self.identifier}'
+        return f'sceneTimeWeekend{self.identifier}'
 
-    @staticmethod
-    def scenarioactive_id() -> str:
-        return 'autoScenarioActive'
+    @classproperty
+    def sceneactive_id(self) -> str:
+        return 'autoSceneActive'
+
+    @classproperty
+    def mappings(self) -> Dict[str, str]:
+        return dict(map(lambda scene: (scene.identifier, scene.label), Scene))
+
+    @classmethod
+    def switch_mappings(cls, category: str) -> List[Tuple[str, str]]:
+        return map(lambda scene: (f'"{scene.identifier}"', scene.label), filter(
+            lambda scene: scene.category == category, Scene))

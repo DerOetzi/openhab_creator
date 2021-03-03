@@ -10,7 +10,7 @@ from openhab_creator.models.configuration.equipment import EquipmentFactory
 
 if TYPE_CHECKING:
     from openhab_creator.models.configuration import Configuration
-    from openhab_creator.models.common import Scenario
+    from openhab_creator.models.common import Scene
     from openhab_creator.models.configuration.equipment import Equipment
 
 
@@ -64,8 +64,12 @@ class Location(BaseObject):
     def autoguest_id(self) -> str:
         return f'autoGuest{self.identifier}'
 
-    def scenarioassignment_id(self, scenario: Scenario) -> str:
-        return f'{scenario.assignment_id}_{self.identifier}'
+    @property
+    def autoweekend_id(self) -> str:
+        return f'autoWeekend{self.identifier}'
+
+    def sceneassignment_id(self, scene: Scene) -> str:
+        return f'{scene.assignment_id}_{self.identifier}'
 
 
 class LocationFactory(object):

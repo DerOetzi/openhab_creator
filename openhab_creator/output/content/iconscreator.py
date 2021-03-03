@@ -21,15 +21,23 @@ class IconsCreator(BaseContentCreator):
             for srcfile in os.scandir(category.path):
                 if 'default.svg' == srcfile.name:
                     icon_name = f'{icon_basename}'
+                    icon_name2 = None
                 elif srcfile.name.endswith('.svg'):
                     icon_name = f'{icon_basename}-{srcfile.name}'[0:-4]
+                    icon_name2 = f'{icon_basename}{srcfile.name}'[0:-4]
                 else:
                     continue
 
                 print(f'Create icon: {icon_name}')
+
                 content = self.__generate_output_icons(srcfile)
+
                 self.__write_svg(icon_name, content)
                 self.__convert_write_png(icon_name, content)
+
+                if icon_name2 is not None:
+                    self.__write_svg(icon_name2, content)
+                    self.__convert_write_png(icon_name2, content)
 
     def __generate_output_icons(self, srcfile: DirEntry) -> str:
         with open(srcfile, 'r') as f:

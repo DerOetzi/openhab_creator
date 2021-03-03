@@ -2,12 +2,13 @@ from __future__ import annotations
 
 import re
 from abc import abstractproperty
-from typing import TYPE_CHECKING, List, Optional, Dict, Tuple, Union
+from typing import TYPE_CHECKING, Dict, List, Optional, Tuple, Union
 
 from openhab_creator.output.formatter import Formatter
 
 if TYPE_CHECKING:
     from openhab_creator import CreatorEnum
+    from openhab_creator.models.common import MapTransformation
     from openhab_creator.output.color import Color
 
 
@@ -31,6 +32,9 @@ class BaseElement(object):
     def label(self, label: Optional[str] = '') -> BaseElement:
         self._label = label
         return self.attribute('label', Formatter.label(self._label, self._format), '"', '"')
+
+    def map(self, mapname: MapTransformation) -> BaseElement:
+        return self.format(mapname.formatstr)
 
     def format(self, format: Optional[str] = None) -> BaseElement:
         self._format = format

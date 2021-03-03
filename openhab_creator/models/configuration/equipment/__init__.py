@@ -112,6 +112,10 @@ class Equipment(BaseObject):
         return f'{self.thing.channelprefix}:{self.points[point]}'
 
     @property
+    def is_timecontrolled(self) -> bool:
+        return False
+
+    @property
     def has_battery(self) -> bool:
         return self.has_battery_level or self.has_battery_low
 

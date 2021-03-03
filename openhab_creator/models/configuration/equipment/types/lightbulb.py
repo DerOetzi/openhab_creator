@@ -59,6 +59,10 @@ class Lightbulb(Equipment):
         }
 
     @property
+    def is_timecontrolled(self) -> bool:
+        return True
+
+    @property
     def has_brightness(self) -> bool:
         return self.has_commands['brightness']
 
