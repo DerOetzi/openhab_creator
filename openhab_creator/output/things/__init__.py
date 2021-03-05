@@ -26,7 +26,7 @@ class ThingsCreator(BaseCreator):
     def _append_bridge(self, bridge: Bridge) -> None:
         bridgething = bridge.thing
 
-        bridgestring = f'Bridge {bridge.binding}:{bridgething.typed}:{bridge.identifier} '
+        bridgestring = f'Bridge {bridge.binding}:{bridgething.typed}:{bridgething.uid} '
         bridgestring += f'"{bridgething.nameprefix} {bridge.name} ({bridge.identifier})" '
         if bridgething.has_properties:
             bridgestring += f'{Formatter.key_value_pairs(bridgething.properties, "[", "]")} '
