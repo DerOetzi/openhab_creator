@@ -44,6 +44,12 @@ class Equipment(BaseObject):
         self._init_subequipment(
             configuration, [] if subequipment is None else subequipment)
 
+        for key, value in self.item_identifiers.items():
+            self.__dict__[f'{key}_id'] = f'{value}{self.identifier}'
+
+        for point in self.conditional_points:
+            self.__dict__[f'has_{point}'] = self.has_point_recursive(point)
+
     def _name_and_identifier(self, identifier: Optional[str] = None) -> Tuple[str, Optional[str]]:
 
         if self.location is not None:
@@ -71,6 +77,10 @@ class Equipment(BaseObject):
 
     @abstractproperty
     def item_identifiers(self) -> Dict[str, str]:
+        pass
+
+    @abstractproperty
+    def conditional_points(self) -> List[str]:
         pass
 
     @abstractproperty
@@ -104,12 +114,28 @@ class Equipment(BaseObject):
     def has_point(self, point: str) -> bool:
         return point in self.points
 
+    def has_point_recursive(self, point: str) -> bool:
+        has_point = self.has_point(point)
+
+        for subequipment in self.subequipment:
+            has_point = has_point or subequipment.has_point_recursive(point)
+
+        return has_point
+
     def channel(self, point: str) -> str:
         if not (self.is_thing and self.has_point(point)):
             raise BuildException(
                 f'Cannot create channel for point "{point}" for equipment {self.identifier}')
 
         return f'{self.thing.channelprefix}:{self.points[point]}'
+
+    @property
+    def categories(self) -> List['str']:
+        categories = []
+        if self.has_battery:
+            categories.append('battery')
+
+        return categories
 
     @property
     def is_timecontrolled(self) -> bool:
@@ -199,14 +225,6 @@ class EquipmentFactory(object):
 
 
 class EquipmentType(object):
-    def __init__(self, equipment_cls: Type[Equipment]):
-        def init(self, *arg, **kwargs):
-            equipment_cls.__init__(self, *arg, **kwargs)
-
-            for key, value in self.item_identifiers.items():
-                self.__dict__[f'{key}_id'] = f'{value}{self.identifier}'
-
-        wrappedclass = type(equipment_cls.__name__,
-                            (equipment_cls, Equipment), {'__init__': init})
-
-        EquipmentFactory.register(wrappedclass)
+    def __call__(self, equipment_cls: Type[Equipment]):
+        EquipmentFactory.register(equipment_cls)
+        return equipment_cls

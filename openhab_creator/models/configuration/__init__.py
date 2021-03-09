@@ -154,15 +154,11 @@ class Configuration(object):
         return self.locations['floors']
 
     def add_equipment(self, equipment: Equipment):
-        category = equipment.category
+        for category in equipment.categories:
+            if category not in self.equipment_registry:
+                self.equipment_registry[category] = []
 
-        if category not in self.equipment_registry:
-            self.equipment_registry[category] = []
-
-        self.equipment_registry[category].append(equipment)
-
-        if equipment.has_battery:
-            self.equipment_registry['battery'].append(equipment)
+            self.equipment_registry[category].append(equipment)
 
         if equipment.is_timecontrolled:
             location = equipment.location

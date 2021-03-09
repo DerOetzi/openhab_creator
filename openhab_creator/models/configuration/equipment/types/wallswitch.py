@@ -10,7 +10,7 @@ if TYPE_CHECKING:
     from openhab_creator.models.configuration.equipment.types.lightbulb import Lightbulb
 
 
-@EquipmentType
+@EquipmentType()
 class WallSwitch(Equipment):
 
     def __init__(self,
@@ -27,6 +27,16 @@ class WallSwitch(Equipment):
             'wallswitchassignment': 'wallSwitchAssignment',
             'button': 'wallSwitchButton'
         }
+
+    @property
+    def conditional_points(self) -> List[str]:
+        return []
+
+    @property
+    def categories(self) -> List[str]:
+        categories = super().categories
+        categories.append('wallswitch')
+        return categories
 
     @property
     def name_with_type(self) -> str:

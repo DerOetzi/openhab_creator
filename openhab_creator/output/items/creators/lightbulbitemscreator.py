@@ -4,8 +4,6 @@ from typing import TYPE_CHECKING, List, Optional
 
 from openhab_creator import _
 from openhab_creator.exception import BuildException
-from openhab_creator.models.configuration import Configuration
-from openhab_creator.models.configuration.equipment import Equipment
 from openhab_creator.models.items import (Color, Dimmer, Group, GroupType,
                                           Number, NumberType, PointType,
                                           PropertyType, String, Switch)
@@ -13,6 +11,7 @@ from openhab_creator.output.items import ItemsCreatorPipeline
 from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
 
 if TYPE_CHECKING:
+    from openhab_creator.models.configuration import Configuration
     from openhab_creator.models.configuration.equipment.types.lightbulb import Lightbulb
     from openhab_creator.models.configuration.equipment.types.motiondetector import MotionDetector
     from openhab_creator.models.configuration.equipment.types.wallswitch import WallSwitch
@@ -199,9 +198,7 @@ class LightbulbItemsCreator(BaseItemsCreator):
             for sublightbulb in parent_lightbulb.subequipment:
                 self.__build_thing(sublightbulb)
 
-            return True
-
-        return False
+        return parent_lightbulb.has_subequipment
 
     def __build_thing(self, lightbulb: Lightbulb) -> None:
         if lightbulb.is_child:

@@ -1,14 +1,14 @@
 from __future__ import annotations
 
-from typing import Optional, Dict
+from typing import Optional, Dict, List
 
 from openhab_creator import _
-from openhab_creator.models.configuration.equipment import Equipment, EquipmentType
+from openhab_creator.models.configuration.equipment import EquipmentType
+from openhab_creator.models.configuration.equipment.types.sensor import Sensor
 
 
-@EquipmentType
-class Heating(Equipment):
-
+@EquipmentType()
+class Heating(Sensor):
     def __init__(self,
                  boost: Optional[bool] = False,
                  off_temp: Optional[float] = 6.0,
@@ -26,12 +26,29 @@ class Heating(Equipment):
         return {
             'heating': 'heating',
             'heatcontrol': 'heatcontrol',
-            'auto': 'autoHeating'
+            'auto': 'autoHeating',
+            'autodisplay': 'autoDisplayHeating',
+            'autoreactivation': 'autoReactivationHeating',
+            'heatsetpoint': 'heatsetpoint'
         }
+
+    @property
+    def conditional_points(self) -> List[str]:
+        return []
+
+    @property
+    def categories(self) -> List[str]:
+        categories = super().categories
+        categories.append('heating')
+        return categories
 
     @property
     def is_timecontrolled(self) -> bool:
         return True
+
+    @property
+    def semantic(self) -> str:
+        return 'HVAC'
 
     @property
     def name_with_type(self) -> str:

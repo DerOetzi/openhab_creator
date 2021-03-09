@@ -19,13 +19,15 @@ class TransformationCreator(BaseCreator):
             for key, value in map_definition.mappings.items():
                 self.append(f'{key}={value}')
 
+            unknown = _('Unknown')
+
             if 'NULL' not in map_definition.mappings:
-                self.append(f'NULL={_("Unknown")}')
+                self.append(f'NULL={unknown}')
 
             if '-' not in map_definition.mappings:
-                self.append(f'-={_("Unknown")}')
+                self.append(f'-={unknown}')
 
             if 'UNDEF' not in map_definition.mappings:
-                self.append(f'UNDEF={_("Unknown")}')
+                self.append(f'UNDEF={unknown}')
 
             self.write_file(map_definition.filename)

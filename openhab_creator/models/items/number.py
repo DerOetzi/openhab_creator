@@ -8,6 +8,7 @@ from openhab_creator.models.items.baseitem import BaseItem
 
 class NumberType(CreatorEnum):
     DIMENSIONLESS = ':Dimensionless'
+    TEMPERATURE = ':Temperature'
     TIME = ''  # TODO Number:Time See openhab-webui#765
 
 
@@ -19,6 +20,11 @@ class Number(BaseItem):
     def percentage(self, digits: Optional[int] = 0) -> Number:
         self.typed(NumberType.DIMENSIONLESS)
         self.format(f'%.{digits}f %%')
+        return self
+
+    def temperature(self, digits: Optional[int] = 1) -> Number:
+        self.typed(NumberType.TEMPERATURE)
+        self.format(f'%.{digits}f %unit%')
         return self
 
     def typed(self, typed: NumberType) -> Number:

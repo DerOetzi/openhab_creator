@@ -28,6 +28,10 @@ class Bridge(Equipment):
     def item_identifiers(self) -> Dict[str, str]:
         return {}
 
+    @property
+    def conditional_points(self) -> List[str]:
+        return []
+
     def add_thing(self, thing: Thing) -> None:
         self.things.append(thing)
 
