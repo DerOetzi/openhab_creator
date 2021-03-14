@@ -22,13 +22,13 @@ logger = logging.getLogger(__name__)
 
 
 class CreatorEnum(Enum):
-    def __new__(cls, *args, **kwds):
+    def __new__(cls, *args):
         obj = object.__new__(cls)
         obj._value_ = args[0]
         return obj
 
-    def __str__(self):
-        return self.value
+    def __str__(self) -> str:
+        return str(self.value)
 
 
 class classproperty(object):

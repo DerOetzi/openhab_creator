@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Optional, Dict, List
+from typing import Dict, List, Optional
 
 from openhab_creator import _
 from openhab_creator.models.configuration.equipment import EquipmentType
@@ -23,18 +23,22 @@ class Heating(Sensor):
 
     @property
     def item_identifiers(self) -> Dict[str, str]:
-        return {
+        return {**{
             'heating': 'heating',
             'heatcontrol': 'heatcontrol',
             'auto': 'autoHeating',
             'autodisplay': 'autoDisplayHeating',
             'autoreactivation': 'autoReactivationHeating',
-            'heatsetpoint': 'heatsetpoint'
-        }
+            'heatsetpoint': 'heatsetpoint',
+            'comforttemperature': 'comfortTemperature',
+            'ecotemperature': 'ECOTemperature'
+        }, **super().item_identifiers}
 
     @property
     def conditional_points(self) -> List[str]:
-        return []
+        conditional_points = []
+        conditional_points.extend(super().conditional_points)
+        return conditional_points
 
     @property
     def categories(self) -> List[str]:
@@ -54,3 +58,7 @@ class Heating(Sensor):
     def name_with_type(self) -> str:
         typed = _("Heating")
         return f'{self.name} ({typed})'
+
+    @property
+    def sensor_is_subequipment(self) -> bool:
+        return True

@@ -44,5 +44,3 @@ class MotionDetectorItemsCreator(BaseItemsCreator):
             .label(_('Motiondetector assignment'))\
             .groups(motiondetector.motiondetector_id, 'MotionDetectorAssignment')\
             .append_to(self)
-
-        self._create_battery(motiondetector, motiondetector.motiondetector_id)

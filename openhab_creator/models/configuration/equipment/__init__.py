@@ -44,7 +44,13 @@ class Equipment(BaseObject):
         self._init_subequipment(
             configuration, [] if subequipment is None else subequipment)
 
+        first = True
+
         for key, value in self.item_identifiers.items():
+            if first:
+                self.__dict__['equipment_id'] = f'{value}{self.identifier}'
+                first = False
+
             self.__dict__[f'{key}_id'] = f'{value}{self.identifier}'
 
         for point in self.conditional_points:
@@ -209,8 +215,7 @@ class EquipmentFactory(object):
         equipment = cls.registry[equipment_type.lower()](configuration=configuration,
                                                          **equipment_configuration)
 
-        if not equipment.is_child:
-            configuration.add_equipment(equipment)
+        configuration.add_equipment(equipment)
 
         return equipment
 

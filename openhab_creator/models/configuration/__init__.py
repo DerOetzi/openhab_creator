@@ -77,12 +77,18 @@ class SecretsStorage(object):
 
 
 class Configuration(object):
+    WITHOUT_CHILDS = 'without_childs'
+    WITH_CHILDS = 'with_childs'
+
     def __init__(self, name: str, configdir: str, anonym: bool):
         self.configdir: str = configdir
         self.name: str = name
         self.secrets: SecretsStorage = SecretsStorage(configdir, anonym)
-        self.equipment_registry: Dict[str, List[Equipment]] = {
-            'battery': []
+        self.equipment_registry: Dict[str, Dict[str, List[Equipment]]] = {
+            'battery': {
+                self.WITHOUT_CHILDS: [],
+                self.WITH_CHILDS: []
+            }
         }
         self.dashboard: Dashboard = Dashboard(self)
         self.timecontrolled_locations: Dict[str, Location] = {}
@@ -156,20 +162,39 @@ class Configuration(object):
     def add_equipment(self, equipment: Equipment):
         for category in equipment.categories:
             if category not in self.equipment_registry:
-                self.equipment_registry[category] = []
+                self.equipment_registry[category] = {
+                    self.WITHOUT_CHILDS: [],
+                    self.WITH_CHILDS: []
+                }
 
-            self.equipment_registry[category].append(equipment)
+            self.equipment_registry[category][self.WITH_CHILDS].append(
+                equipment)
+
+            if not equipment.is_child:
+                self.equipment_registry[category][self.WITHOUT_CHILDS].append(
+                    equipment)
 
         if equipment.is_timecontrolled:
             location = equipment.location
             self.timecontrolled_locations[location.identifier] = location
 
-    def has_equipment(self, category: str) -> bool:
-        return category in self.equipment_registry and len(self.equipment_registry[category]) > 0
+    def has_equipment(self, category: str,
+                      filter_childs: Optional[bool] = True) -> bool:
+        return len(self.equipment(category, filter_childs)) > 0
 
-    def equipment(self, category: str) -> List[Equipment]:
-        if not self.has_equipment(category):
-            raise ConfigurationException(
-                f'No Equipment with category {category}')
+    def equipment(self, category: str,
+                  filter_childs: Optional[bool] = True) -> List[Equipment]:
+        if category in self.equipment_registry:
+            equipment_registry = self.equipment_registry[category]
+        else:
+            equipment_registry = {
+                self.WITHOUT_CHILDS: [],
+                self.WITH_CHILDS: []
+            }
 
-        return self.equipment_registry[category]
+        if filter_childs:
+            equipment = equipment_registry[self.WITHOUT_CHILDS]
+        else:
+            equipment = equipment_registry[self.WITH_CHILDS]
+
+        return equipment

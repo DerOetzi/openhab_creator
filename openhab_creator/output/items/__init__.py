@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import os
 from importlib import import_module
-from typing import TYPE_CHECKING, List, Type
+from typing import TYPE_CHECKING, List, Type, Dict, Union
 
 from openhab_creator import logger
 
@@ -20,14 +20,17 @@ class ItemsCreator(object):
 
 
 class ItemsCreatorPipeline(object):
-    pipeline: List[BaseItemsCreator] = []
+    pipeline: List[Dict[str, Union[int, Type[BaseItemsCreator]]]] = []
     initialized: bool = False
 
     def __init__(self, order_id: int):
-        self.order_id = order_id
+        self.order_id: int = order_id
 
     def __call__(self, itemscreator_cls: Type[BaseItemsCreator]):
-        ItemsCreatorPipeline.pipeline.insert(self.order_id, itemscreator_cls)
+        ItemsCreatorPipeline.pipeline.insert(self.order_id, {
+            'order': self.order_id,
+            'class': itemscreator_cls
+        })
 
     @classmethod
     def _init(cls):
@@ -41,7 +44,8 @@ class ItemsCreatorPipeline(object):
     def build(cls, outputdir: str, configuration: Configuration) -> None:
         cls._init()
 
-        for creator in cls.pipeline:
-            logger.info(f'Item creator: {creator.__name__}')
-            c = creator(outputdir)
+        for creator in sorted(cls.pipeline, key=lambda x: x['order']):
+            logger.info(
+                f'Item creator: {creator["class"].__name__} ({creator["order"]})')
+            c = creator['class'](outputdir)
             c.build(configuration)

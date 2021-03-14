@@ -49,5 +49,3 @@ class WallSwitchItemsCreator(BaseItemsCreator):
                 .label(wallswitch.buttonassignment_name(button_key))\
                 .groups(wallswitch.wallswitchassignment_id)\
                 .append_to(self)
-
-        self._create_battery(wallswitch, wallswitch.wallswitch_id)

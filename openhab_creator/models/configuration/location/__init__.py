@@ -71,6 +71,9 @@ class Location(BaseObject):
     def sceneassignment_id(self, scene: Scene) -> str:
         return f'{scene.assignment_id}_{self.identifier}'
 
+    def __str__(self) -> str:
+        return self.identifier
+
 
 class LocationFactory(object):
     registry: Dict[str, Type['Location']] = {}

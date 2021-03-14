@@ -78,8 +78,8 @@ class BaseItem(object):
     def map(self, mapname: MapTransformation) -> BaseItem:
         return self.format(mapname.formatstr)
 
-    def format(self, format: str) -> BaseItem:
-        self._format = format
+    def format(self, format_string: str) -> BaseItem:
+        self._format = format_string
         return self
 
     def icon(self, icon: str) -> BaseItem:
@@ -99,7 +99,7 @@ class BaseItem(object):
     def location(self, location: Location) -> BaseItem:
         return self.groups(location.identifier)
 
-    def sensor(self, measurement: str, series_tags: str) -> BaseItem:
+    def sensor(self, measurement: str, series_tags: Dict[str, str]) -> BaseItem:
         self.groups('Sensor')
         self._metadata['influxdb'] = {
             'value': measurement,
@@ -115,6 +115,10 @@ class BaseItem(object):
             value += f'state={state}'
 
         self._metadata['expire'] = {'value': value}
+        return self
+
+    def scripting(self, config: Dict[str, str]) -> BaseItem:
+        self._metadata['scripting'] = {'properties': config}
         return self
 
     def semantic(self, *semantic_tags: List[Union[BaseObject, PointType, PropertyType]]) -> BaseItem:
@@ -170,6 +174,9 @@ class BaseItem(object):
                 metadata = ''
                 if 'value' in obj:
                     metadata += f'"{obj["value"]}" '
+                else:
+                    metadata += '"" '
+
                 if 'properties' in obj:
                     metadata += Formatter.key_value_pairs(
                         obj['properties'], '[', ']')
