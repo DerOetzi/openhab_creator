@@ -121,9 +121,11 @@ class BaseItem(object):
         self._metadata['scripting'] = {'properties': config}
         return self
 
-    def semantic(self, *semantic_tags: List[Union[BaseObject, PointType, PropertyType]]) -> BaseItem:
+    def semantic(self, *semantic_tags: List[Union[str, BaseObject, PointType, PropertyType]]) -> BaseItem:
         for tag in semantic_tags:
-            if isinstance(tag, BaseObject):
+            if isinstance(tag, str):
+                self._tags.append(tag)
+            elif isinstance(tag, BaseObject):
                 self._tags.append(tag.semantic)
             elif isinstance(tag, PointType) or isinstance(tag, PropertyType):
                 self._tags.append(str(tag))

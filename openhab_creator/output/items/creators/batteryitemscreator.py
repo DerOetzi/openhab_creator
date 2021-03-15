@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from openhab_creator import _
-from openhab_creator.exception import BuildException
 from openhab_creator.models.common import MapTransformation
 from openhab_creator.models.items import (Group, Number, PointType,
                                           PropertyType, Switch)

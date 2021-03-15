@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openHAB Creator\n"
-"POT-Creation-Date: 2021-03-09 22:38+0100\n"
-"PO-Revision-Date: 2021-03-09 22:40+0100\n"
+"POT-Creation-Date: 2021-03-15 23:46+0100\n"
+"PO-Revision-Date: 2021-03-15 23:47+0100\n"
 "Last-Translator: Johannes Ott <info@johannes-ott.net>\n"
 "Language-Team: Johannes Ott\n"
 "Language: de\n"
@@ -73,7 +73,7 @@ msgstr "Abwesenheit"
 msgid "Party"
 msgstr "Party"
 
-#: openhab_creator/models/configuration/equipment/types/heating.py:55
+#: openhab_creator/models/configuration/equipment/types/heating.py:61
 msgid "Heating"
 msgstr "Heizung"
 
@@ -85,7 +85,24 @@ msgstr "Leuchte"
 msgid "Motiondetector"
 msgstr "Bewegungsmelder"
 
+#: openhab_creator/models/configuration/equipment/types/sensor.py:13
+msgid "Temperature"
+msgstr "Temperatur"
+
+#: openhab_creator/models/configuration/equipment/types/sensor.py:13
+msgid "Temperatures"
+msgstr "Temperaturen"
+
+#: openhab_creator/models/configuration/equipment/types/sensor.py:18
+msgid "Humidity"
+msgstr "Luftfeuchtigkeit"
+
 #: openhab_creator/models/configuration/equipment/types/sensor.py:23
+msgid "Pressure"
+msgstr "Luftdruck"
+
+#: openhab_creator/models/configuration/equipment/types/sensor.py:54
+#: openhab_creator/output/items/creators/sensoritemscreator.py:46
 msgid "Sensor"
 msgstr "Sensor"
 
@@ -117,15 +134,15 @@ msgstr "Jahr"
 msgid "Unknown"
 msgstr "Unbekannt"
 
-#: openhab_creator/output/items/baseitemscreator.py:27
+#: openhab_creator/output/items/creators/batteryitemscreator.py:22
 msgid "Battery"
 msgstr "Batterie"
 
-#: openhab_creator/output/items/baseitemscreator.py:34
+#: openhab_creator/output/items/creators/batteryitemscreator.py:29
 msgid "Battery low"
 msgstr "Batteriestand niedrig"
 
-#: openhab_creator/output/items/baseitemscreator.py:44
+#: openhab_creator/output/items/creators/batteryitemscreator.py:39
 msgid "Battery level"
 msgstr "Batteriestand"
 
@@ -138,7 +155,7 @@ msgid "Sensor items"
 msgstr "Sensoren"
 
 #: openhab_creator/output/items/creators/generalitemscreator.py:28
-#: openhab_creator/output/items/creators/heatingitemscreator.py:36
+#: openhab_creator/output/items/creators/heatingitemscreator.py:37
 #: openhab_creator/output/items/creators/lightbulbitemscreator.py:53
 msgid "Scene controlled configuration items"
 msgstr "Konfigurationsitems Szenensteuerung"
@@ -152,44 +169,52 @@ msgstr "Batterienstatus"
 msgid "Period"
 msgstr "Zeitraum"
 
-#: openhab_creator/output/items/creators/heatingitemscreator.py:31
+#: openhab_creator/output/items/creators/heatingitemscreator.py:32
 msgid "Heat control items"
 msgstr "Heizungssteuerung Items"
 
-#: openhab_creator/output/items/creators/heatingitemscreator.py:41
+#: openhab_creator/output/items/creators/heatingitemscreator.py:42
 #: openhab_creator/output/items/creators/lightbulbitemscreator.py:58
 msgid "Reactivation scene controlled configuration items"
 msgstr "Konfigurationsitems Reaktivierung Szenensteuerung"
 
-#: openhab_creator/output/items/creators/heatingitemscreator.py:47
+#: openhab_creator/output/items/creators/heatingitemscreator.py:48
 msgid "Heating {blankname}"
 msgstr "Heizung {blankname}"
 
-#: openhab_creator/output/items/creators/heatingitemscreator.py:54
+#: openhab_creator/output/items/creators/heatingitemscreator.py:55
 msgid "Heatcontrol"
 msgstr "Heizungssteuerung"
 
-#: openhab_creator/output/items/creators/heatingitemscreator.py:61
+#: openhab_creator/output/items/creators/heatingitemscreator.py:62
 #: openhab_creator/output/items/creators/lightbulbitemscreator.py:112
 msgid "Scene controlled"
 msgstr "Szenensteuerung"
 
-#: openhab_creator/output/items/creators/heatingitemscreator.py:68
+#: openhab_creator/output/items/creators/heatingitemscreator.py:69
 #: openhab_creator/output/items/creators/lightbulbitemscreator.py:119
 msgid "Display scene controlled"
 msgstr "Szenensteuerung anzeigen"
 
-#: openhab_creator/output/items/creators/heatingitemscreator.py:74
+#: openhab_creator/output/items/creators/heatingitemscreator.py:75
 #: openhab_creator/output/items/creators/lightbulbitemscreator.py:125
 msgid "Reactivate scene controlled"
 msgstr "Reaktivierung Szenensteuerung"
 
-#: openhab_creator/output/items/creators/heatingitemscreator.py:84
-#: openhab_creator/output/items/creators/heatingitemscreator.py:105
+#: openhab_creator/output/items/creators/heatingitemscreator.py:82
+msgid "ECO temperature"
+msgstr "Absenktemperatur"
+
+#: openhab_creator/output/items/creators/heatingitemscreator.py:91
+msgid "Comfort temperature"
+msgstr "Komforttemperatur"
+
+#: openhab_creator/output/items/creators/heatingitemscreator.py:103
+#: openhab_creator/output/items/creators/heatingitemscreator.py:124
 msgid "Target temperature"
 msgstr "Solltemperatur"
 
-#: openhab_creator/output/items/creators/heatingitemscreator.py:98
+#: openhab_creator/output/items/creators/heatingitemscreator.py:117
 msgid "Heating {name}"
 msgstr "Heizung {name}"
 
@@ -436,6 +461,9 @@ msgstr "Werktage"
 #: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:53
 msgid "Weekend and holidays"
 msgstr "Wochenende und freie Tage"
+
+#~ msgid "Temperature sensor"
+#~ msgstr "Temperatursensor"
 
 #~ msgid "Morning"
 #~ msgstr "Morgens"

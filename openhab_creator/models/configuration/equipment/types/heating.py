@@ -32,7 +32,9 @@ class Heating(Sensor):
             'heatsetpoint': 'heatsetpoint',
             'comforttemperature': 'comfortTemperature',
             'ecotemperature': 'ECOTemperature'
-        }, **super().item_identifiers}
+        }, **super().item_identifiers, **{
+            'sensor': f'sensor{self.category}'
+        }}
 
     @property
     def conditional_points(self) -> List[str]:
