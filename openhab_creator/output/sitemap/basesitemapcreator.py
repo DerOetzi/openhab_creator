@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Dict, List, Optional
+from abc import abstractmethod
 
 from openhab_creator import _
 
@@ -15,17 +16,21 @@ if TYPE_CHECKING:
 
 
 class BaseSitemapCreator(object):
+    @abstractmethod
     def build_mainpage(self, sitemap: Sitemap, configuration: Configuration) -> None:
         raise NotImplementedError("Must override build_mainpage")
 
+    @abstractmethod
     def build_statuspage(self, statuspage: Page, configuration: Configuration) -> None:
         raise NotImplementedError("Must override build_statuspage")
 
+    @abstractmethod
     def build_configpage(self, configpage: Page, configuration: Configuration) -> None:
         raise NotImplementedError("Must override build_configpage")
 
     @classmethod
     def has_needed_equipment(cls, configuration: Configuration) -> bool:
+        #pylint: disable=unused-argument
         return True
 
     def _add_grafana(self,

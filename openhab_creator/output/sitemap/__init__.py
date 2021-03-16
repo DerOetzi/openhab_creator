@@ -64,6 +64,8 @@ class SitemapCreatorPipeline(object):
             SitemapCreatorPipeline.configpage_pipeline\
                 .insert(self.configpage, sitemapcreator_cls)
 
+        return sitemapcreator_cls
+
     @classmethod
     def _init(cls):
         if not cls.initialized:
@@ -75,28 +77,29 @@ class SitemapCreatorPipeline(object):
     @classmethod
     def build_mainpage(cls, sitemap: Sitemap, configuration: Configuration) -> None:
         cls._init()
-        for creator in cls.mainpage_pipeline:
-            if creator.has_needed_equipment(configuration):
-                logger.info(f'Sitemap creator (mainpage): {creator.__name__}')
-                c = creator()
-                c.build_mainpage(sitemap, configuration)
+        for creator_cls in cls.mainpage_pipeline:
+            if creator_cls.has_needed_equipment(configuration):
+                logger.info('Sitemap creator (mainpage): %s',
+                            creator_cls.__name__)
+                creator = creator_cls()
+                creator.build_mainpage(sitemap, configuration)
 
     @classmethod
     def build_statuspage(cls, statuspage: Page, configuration: Configuration) -> None:
         cls._init()
-        for creator in cls.statuspage_pipeline:
-            if creator.has_needed_equipment(configuration):
-                logger.info(
-                    f'Sitemap creator (statuspage): {creator.__name__}')
-                c = creator()
-                c.build_statuspage(statuspage, configuration)
+        for creator_cls in cls.statuspage_pipeline:
+            if creator_cls.has_needed_equipment(configuration):
+                logger.info('Sitemap creator (statuspage): %s',
+                            creator_cls.__name__)
+                creator = creator_cls()
+                creator.build_statuspage(statuspage, configuration)
 
     @classmethod
     def build_configpage(cls, configpage: Page, configuration: Configuration) -> None:
         cls._init()
-        for creator in cls.configpage_pipeline:
-            if creator.has_needed_equipment(configuration):
-                logger.info(
-                    f'Sitemap creator (configpage): {creator.__name__}')
-                c = creator()
-                c.build_configpage(configpage, configuration)
+        for creator_cls in cls.configpage_pipeline:
+            if creator_cls.has_needed_equipment(configuration):
+                logger.info('Sitemap creator (configpage): %s',
+                            creator_cls.__name__)
+                creator = creator_cls()
+                creator.build_configpage(configpage, configuration)

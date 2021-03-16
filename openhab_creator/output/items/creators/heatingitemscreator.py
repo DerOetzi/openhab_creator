@@ -101,7 +101,8 @@ class HeatingItemsCreator(BaseItemsCreator):
             Group(parent_heating.heatsetpoint_id)\
                 .typed(GroupType.NUMBER_AVG)\
                 .label(_('Target temperature'))\
-                .icon('heating')\
+                .format('%.1f °C')\
+                .icon('heatsetpoint')\
                 .groups(parent_heating.heating_id)\
                 .semantic(PointType.SETPOINT, PropertyType.TEMPERATURE)\
                 .append_to(self)

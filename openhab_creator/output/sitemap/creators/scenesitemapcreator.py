@@ -3,9 +3,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from openhab_creator import _
-from openhab_creator.models.common import Scene, MapTransformation
-from openhab_creator.models.sitemap import (Page, Selection, Setpoint, Sitemap,
-                                            Switch)
+from openhab_creator.models.common import MapTransformation, Scene
+from openhab_creator.models.sitemap import Page, Setpoint, Sitemap, Switch
 from openhab_creator.output.sitemap import SitemapCreatorPipeline
 from openhab_creator.output.sitemap.basesitemapcreator import \
     BaseSitemapCreator
@@ -34,6 +33,9 @@ class SceneSitemapCreator(BaseSitemapCreator):
         Switch(Scene.sceneactive_id, Scene.switch_mappings('special'))\
             .label(_('Special scenes'))\
             .append_to(page)
+
+    def build_statuspage(self, statuspage: Page, configuration: Configuration) -> None:
+        """No statuspage for scene items"""
 
     def build_configpage(self, configpage: Page, configuration: Configuration) -> None:
         page = Page(Scene.sceneactive_id)\

@@ -64,6 +64,7 @@ class SensorItemsCreator(BaseItemsCreator):
                         .typed(sensortype.grouptype)\
                         .label(sensortype.labelitem)\
                         .format(sensortype.format_string)\
+                        .icon(f'{sensortype}{area.lower()}')\
                         .append_to(self)
 
                 self.build_sensortype_location(sensortype, sensor)
@@ -78,6 +79,7 @@ class SensorItemsCreator(BaseItemsCreator):
                 .typed(sensortype.grouptype)\
                 .label(sensortype.labelitem)\
                 .format(sensortype.format_string)\
+                .icon(f'{sensortype}{area.lower()}')\
                 .groups(f'{sensortype}{area}')\
                 .location(location)\
                 .semantic(PointType.MEASUREMENT, sensortype.propertytype)\
@@ -92,6 +94,7 @@ class SensorItemsCreator(BaseItemsCreator):
             .typed(sensortype.numbertype)\
             .label(sensortype.labelitem)\
             .format(sensortype.format_string)\
+            .icon(f'{sensortype}{area.lower()}')\
             .groups(sensorgroup, f'{sensortype}{location}')\
             .semantic(PointType.MEASUREMENT, sensortype.propertytype)\
             .channel(sensor.channel(sensortype.point))\

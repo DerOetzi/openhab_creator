@@ -49,6 +49,12 @@ class BaseElement(object):
                                   visibility, separator=",\n           "),
                               '[', ']')
 
+    def labelcolor(self, *labelcolors: List[Tuple[str, Union[str, Color]]]) -> BaseElement:
+        return self.attribute('labelcolor',
+                              Formatter.key_value_tuples(
+                                  labelcolors, separator=",\n              "),
+                              '[', ']')
+
     def valuecolor(self, *valuecolors: List[Tuple[str, Union[str, Color]]]) -> BaseElement:
         return self.attribute('valuecolor',
                               Formatter.key_value_tuples(

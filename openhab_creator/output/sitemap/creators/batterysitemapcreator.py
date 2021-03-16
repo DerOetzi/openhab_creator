@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, List
 
-from openhab_creator import _, logger
-from openhab_creator.models.sitemap import Page, Text
+from openhab_creator import _
+from openhab_creator.models.sitemap import Page, Text, Sitemap
 from openhab_creator.output.color import Color
 from openhab_creator.output.sitemap import SitemapCreatorPipeline
 from openhab_creator.output.sitemap.basesitemapcreator import \
@@ -19,6 +19,9 @@ class BatterySitemapCreator(BaseSitemapCreator):
     @classmethod
     def has_needed_equipment(cls, configuration: Configuration) -> bool:
         return configuration.has_equipment('battery', False)
+
+    def build_mainpage(self, sitemap: Sitemap, configuration: Configuration) -> None:
+        """No mainpage for batteries"""
 
     def build_statuspage(self, statuspage: Page, configuration: Configuration) -> None:
         page = Page('LowBattery')\
@@ -49,6 +52,9 @@ class BatterySitemapCreator(BaseSitemapCreator):
         self._add_grafana(configuration.dashboard, page,
                           list(dict.fromkeys(locations)),
                           _('Batteries status') + ' ')
+
+    def build_configpage(self, configpage: Page, configuration: Configuration) -> None:
+        """No configpage for batteries"""
 
     @property
     def _valuecolors_low(self) -> List[Color]:

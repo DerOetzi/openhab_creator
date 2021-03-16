@@ -22,23 +22,18 @@ class Period(CreatorEnum):
     MONTH = '31d', _('Month'), Retention.MONTHLY
     YEAR = '1y', _('Year'), Retention.YEARLY
 
-    def __init__(self, value: str, label: str, retention: Retention):
-        self._label: str = label
-        self._retention: Retention = retention
-
-    @property
-    def label(self) -> str:
-        return self._label
-
-    @property
-    def retention(self) -> Retention:
-        return self._retention
+    def __init__(self, period: str, label: str, retention: Retention):
+        self._period = period
+        self.label: str = label
+        self.retention: Retention = retention
 
 
 class Dashboard(object):
     def __init__(self, configuration: Configuration):
         self.host: Optional[str] = configuration.secrets.secret_optional(
             'grafana', 'host')
+
+        self.panels = {}
 
         if self.__init_from_grafana():
             self._save_dashboard_to_configdir(configuration.configdir)
@@ -56,20 +51,20 @@ class Dashboard(object):
                 else:
                     logger.error(response.json()['message'])
             except requests.exceptions.ConnectionError:
-                logger.error(f'Could not connect to grafana on {self.host}')
+                logger.error('Could not connect to grafana on %s', self.host)
 
         return success
 
     def __init_panels(self) -> None:
-        self.panels = {}
-
-        for panel in self.online['panels']:
-            if 'title' in panel and panel['title'] != '':
-                self.panels[panel['title']] = {
-                    'id': panel['id'],
-                    'height': panel['gridPos']['h'] * 35
-                }
-                logger.debug(self.panels[panel['title']])
+        for row in self.online['panels']:
+            for panel in row['panels']:
+                if 'title' in panel and panel['title'] != '':
+                    self.panels[panel['title']] = {
+                        'id': panel['id'],
+                        'height': panel['gridPos']['h'] * 35
+                    }
+                    logger.debug('%s: %s', panel['title'],
+                                 self.panels[panel['title']])
 
     def _save_dashboard_to_configdir(self, configdir: str) -> None:
         with open(f'{configdir}/grafana_dashboard.json', 'w') as fp:
@@ -91,7 +86,7 @@ class Dashboard(object):
 
                 urls[period] = url
         else:
-            logger.warn(f'No panel {identifier} on dashboard')
+            logger.warning('No panel %s on dashboard', identifier)
             urls = None
 
         return urls

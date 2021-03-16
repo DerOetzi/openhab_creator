@@ -4,18 +4,20 @@ from typing import TYPE_CHECKING, List, Tuple
 
 from openhab_creator import _
 from openhab_creator.models.sitemap import (Page, Selection, Setpoint, Sitemap,
-                                            Switch, Text)
+                                            Switch)
 from openhab_creator.output.sitemap import SitemapCreatorPipeline
 from openhab_creator.output.sitemap.basesitemapcreator import \
     BaseSitemapCreator
 
 if TYPE_CHECKING:
     from openhab_creator.models.configuration import Configuration
-    from openhab_creator.models.configuration.equipment.types.lightbulb import Lightbulb
-    from openhab_creator.models.configuration.equipment.types.wallswitch import WallSwitch
+    from openhab_creator.models.configuration.equipment.types.lightbulb import \
+        Lightbulb
+    from openhab_creator.models.configuration.equipment.types.wallswitch import \
+        WallSwitch
 
 
-@SitemapCreatorPipeline(mainpage=0, configpage=3)
+@SitemapCreatorPipeline(mainpage=3, configpage=3)
 class LightbulbSitemapCreator(BaseSitemapCreator):
     @classmethod
     def has_needed_equipment(cls, configuration: Configuration) -> bool:
@@ -39,6 +41,9 @@ class LightbulbSitemapCreator(BaseSitemapCreator):
             Switch(lightbulb.auto_id, [('ON', _('Automation'))])\
                 .visibility((lightbulb.autodisplay_id, '==', 'ON'))\
                 .append_to(frame)
+
+    def build_statuspage(self, statuspage: Page, configuration: Configuration) -> None:
+        """No statuspage for lights"""
 
     def build_configpage(self, configpage: Page, configuration: Configuration) -> None:
         page = Page(label=_('Lights'))\

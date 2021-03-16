@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openHAB Creator\n"
-"POT-Creation-Date: 2021-03-15 23:46+0100\n"
-"PO-Revision-Date: 2021-03-15 23:47+0100\n"
+"POT-Creation-Date: 2021-03-16 22:07+0100\n"
+"PO-Revision-Date: 2021-03-16 22:08+0100\n"
 "Last-Translator: Johannes Ott <info@johannes-ott.net>\n"
 "Language-Team: Johannes Ott\n"
 "Language: de\n"
@@ -37,7 +37,7 @@ msgid "Ok"
 msgstr "Ok"
 
 #: openhab_creator/models/common/scene.py:9
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:134
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:139
 msgid "Night"
 msgstr "Nacht"
 
@@ -90,6 +90,7 @@ msgid "Temperature"
 msgstr "Temperatur"
 
 #: openhab_creator/models/configuration/equipment/types/sensor.py:13
+#: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:37
 msgid "Temperatures"
 msgstr "Temperaturen"
 
@@ -161,7 +162,7 @@ msgid "Scene controlled configuration items"
 msgstr "Konfigurationsitems Szenensteuerung"
 
 #: openhab_creator/output/items/creators/generalitemscreator.py:33
-#: openhab_creator/output/sitemap/creators/batterysitemapcreator.py:51
+#: openhab_creator/output/sitemap/creators/batterysitemapcreator.py:54
 msgid "Batteries status"
 msgstr "Batterienstatus"
 
@@ -210,11 +211,11 @@ msgid "Comfort temperature"
 msgstr "Komforttemperatur"
 
 #: openhab_creator/output/items/creators/heatingitemscreator.py:103
-#: openhab_creator/output/items/creators/heatingitemscreator.py:124
+#: openhab_creator/output/items/creators/heatingitemscreator.py:125
 msgid "Target temperature"
 msgstr "Solltemperatur"
 
-#: openhab_creator/output/items/creators/heatingitemscreator.py:117
+#: openhab_creator/output/items/creators/heatingitemscreator.py:118
 msgid "Heating {name}"
 msgstr "Heizung {name}"
 
@@ -307,8 +308,9 @@ msgid "Reset"
 msgstr "Zurücksetzen"
 
 #: openhab_creator/output/items/creators/locationitemscreator.py:48
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:39
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:63
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:41
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:68
+#: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:88
 msgid "Automation"
 msgstr "Automatik"
 
@@ -338,13 +340,13 @@ msgid "Motiondetector assignment"
 msgstr "Bewegungsmelderzuordnung"
 
 #: openhab_creator/output/items/creators/sceneitemscreator.py:20
-#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:40
-#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:48
+#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:42
+#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:50
 msgid "Time controlled"
 msgstr "Zeitsteuerung"
 
 #: openhab_creator/output/items/creators/sceneitemscreator.py:26
-#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:22
+#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:21
 msgid "Scene"
 msgstr "Szene"
 
@@ -373,94 +375,110 @@ msgid "State"
 msgstr "Status"
 
 #: openhab_creator/output/sitemap/__init__.py:29
-#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:86
+#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:88
 msgid "Configuration"
 msgstr "Konfiguration"
 
-#: openhab_creator/output/sitemap/basesitemapcreator.py:46
+#: openhab_creator/output/sitemap/basesitemapcreator.py:51
 msgid "Course"
 msgstr "Verlauf"
 
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:25
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:44
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:27
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:49
 msgid "Lights"
 msgstr "Beleuchtung"
 
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:60
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:65
 msgid "Display"
 msgstr "Anzeigen"
 
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:60
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:65
 msgid "Hide"
 msgstr "Ausblenden"
 
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:63
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:67
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:71
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:121
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:156
-#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:83
-#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:89
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:68
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:72
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:76
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:126
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:161
+#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:85
+#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:91
 msgid "Off"
 msgstr "Aus"
 
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:71
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:131
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:156
-#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:83
-#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:89
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:76
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:136
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:161
+#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:85
+#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:91
 msgid "On"
 msgstr "An"
 
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:75
-#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:93
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:80
+#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:95
 msgid "Always"
 msgstr "Immer"
 
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:75
-#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:93
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:80
+#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:95
 msgid "Only"
 msgstr "Nur"
 
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:88
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:93
 msgid "Wallswitch assignments {lightbulb}"
 msgstr "Schalterzuordnungen {lightbulb}"
 
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:94
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:99
 msgid "No assignment"
 msgstr "Keine Zuordnung"
 
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:109
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:114
 msgid "Assignment {wallswitch} to {lightbulb}"
 msgstr "Zuordnung {wallswitch} zu {lightbulb}"
 
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:125
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:130
 msgid "All"
 msgstr "Alle"
 
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:143
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:148
 msgid "Motiondetector {lightbulb}"
 msgstr "Bewegungsmelder {lightbulb}"
 
-#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:27
+#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:26
 msgid "Scenes"
 msgstr "Szenen"
 
-#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:31
+#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:30
 msgid "Food scenes"
 msgstr "Essenszenen"
 
-#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:35
+#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:34
 msgid "Special scenes"
 msgstr "Spezialszenen"
 
-#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:50
+#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:52
 msgid "Working days"
 msgstr "Werktage"
 
-#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:53
+#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:55
 msgid "Weekend and holidays"
 msgstr "Wochenende und freie Tage"
+
+#: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:70
+msgid "Comfort"
+msgstr "Komfort"
+
+#: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:71
+msgid "ECO"
+msgstr "Absenk"
+
+#: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:72
+msgid "Closed"
+msgstr "Geschlossen"
+
+#: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:83
+msgid "Boost"
+msgstr "Boost"
 
 #~ msgid "Temperature sensor"
 #~ msgstr "Temperatursensor"
