@@ -18,6 +18,12 @@ class MapTransformation(CreatorEnum):
 
     SCENE = "scene", Scene.mappings
 
+    TREND = "trend", {
+        'falling': _('Falling'),
+        'consistent': _('Consistent'),
+        'rising': _('Rising')
+    }
+
     def __init__(self, filename: str, mappings: Dict[str, str]):
         self.filename: str = filename
         self.mappings: Dict[str, str] = mappings

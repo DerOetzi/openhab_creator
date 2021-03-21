@@ -24,6 +24,21 @@ class SensorType(CreatorEnum):
                GroupType.NUMBER_AVG, NumberType.PRESSURE,\
                PropertyType.PRESSURE
 
+    CO2 = 'co2',\
+        _('CO2 concentration'), _('CO2 concentration'), '%,d ppm',\
+        GroupType.NUMBER_AVG, NumberType.DIMENSIONLESS,\
+        PropertyType.CO2
+
+    MOISTURE = 'moisture',\
+               _('Soil moisture'), _('Soil moisture'), '%,.0f %%',\
+               GroupType.NUMBER_AVG, NumberType.DIMENSIONLESS,\
+               PropertyType.HUMIDITY
+
+    NOISE = 'noise',\
+            _('Noise'),  _('Noise'), '%,d dB',\
+            GroupType.NUMBER_AVG, NumberType.DIMENSIONLESS,\
+            PropertyType.NOISE
+
     def __init__(self, point: str,
                  labelpage: str, labelitem: str, format_string: str,
                  grouptype: GroupType, numbertype: NumberType,

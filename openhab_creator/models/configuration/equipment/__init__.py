@@ -44,14 +44,11 @@ class Equipment(BaseObject):
         self._init_subequipment(
             configuration, [] if subequipment is None else subequipment)
 
-        first = True
-
         for key, value in self.item_identifiers.items():
-            if first:
-                self.__dict__['equipment_id'] = f'{value}{self.identifier}'
-                first = False
-
             self.__dict__[f'{key}_id'] = f'{value}{self.identifier}'
+
+            if 'equipment_id' not in self.__dict__:
+                self.__dict__['equipment_id'] = self.__dict__[f'{key}_id']
 
         for point in self.conditional_points:
             self.__dict__[f'has_{point}'] = self.has_point_recursive(point)

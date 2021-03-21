@@ -3,9 +3,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from openhab_creator import _
+from openhab_creator.models.common import MapTransformation
 from openhab_creator.models.configuration.equipment.types.sensor import (
     Sensor, SensorType)
-from openhab_creator.models.items import Group, Number, PointType
+from openhab_creator.models.items import Group, Number, PointType, String
 from openhab_creator.output.items import ItemsCreatorPipeline
 from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
 
@@ -43,13 +44,16 @@ class SensorItemsCreator(BaseItemsCreator):
 
     def build_sensor(self, sensor: Sensor) -> None:
         sensor_equipment = Group(sensor.sensor_id)\
-            .label(_('Sensor'))\
             .semantic('Sensor')
 
         if sensor.sensor_is_subequipment:
-            sensor_equipment.groups(sensor.equipment_id)
+            sensor_equipment\
+                .label(_('Sensor'))\
+                .groups(sensor.equipment_id)
         else:
-            sensor_equipment.location(sensor.location)
+            sensor_equipment\
+                .label(_('Sensor {blankname}').format(blankname=sensor.blankname))\
+                .location(sensor.location)
 
         sensor_equipment.append_to(self)
 
@@ -99,4 +103,12 @@ class SensorItemsCreator(BaseItemsCreator):
             .semantic(PointType.MEASUREMENT, sensortype.propertytype)\
             .channel(sensor.channel(sensortype.point))\
             .sensor(sensortype.point, sensor.influxdb_tags)\
+            .append_to(self)
+
+        String(f'trend{sensortype}{sensor.sensor_id}')\
+            .label(_('Trend {label}').format(label=sensortype.labelitem))\
+            .map(MapTransformation.TREND)\
+            .groups(sensorgroup)\
+            .semantic(PointType.STATUS)\
+            .sensor(f'trend{sensortype.point}', sensor.influxdb_tags)\
             .append_to(self)

@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openHAB Creator\n"
-"POT-Creation-Date: 2021-03-16 22:07+0100\n"
-"PO-Revision-Date: 2021-03-16 22:08+0100\n"
+"POT-Creation-Date: 2021-03-21 21:45+0100\n"
+"PO-Revision-Date: 2021-03-21 21:47+0100\n"
 "Last-Translator: Johannes Ott <info@johannes-ott.net>\n"
 "Language-Team: Johannes Ott\n"
 "Language: de\n"
@@ -35,6 +35,18 @@ msgstr "Niedrig"
 #: openhab_creator/models/common/maptransformation.py:16
 msgid "Ok"
 msgstr "Ok"
+
+#: openhab_creator/models/common/maptransformation.py:22
+msgid "Falling"
+msgstr "Fallend"
+
+#: openhab_creator/models/common/maptransformation.py:23
+msgid "Consistent"
+msgstr "Gleichbleibend"
+
+#: openhab_creator/models/common/maptransformation.py:24
+msgid "Rising"
+msgstr "Steigend"
 
 #: openhab_creator/models/common/scene.py:9
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:139
@@ -102,8 +114,20 @@ msgstr "Luftfeuchtigkeit"
 msgid "Pressure"
 msgstr "Luftdruck"
 
-#: openhab_creator/models/configuration/equipment/types/sensor.py:54
-#: openhab_creator/output/items/creators/sensoritemscreator.py:46
+#: openhab_creator/models/configuration/equipment/types/sensor.py:28
+msgid "CO2 concentration"
+msgstr "CO2-Gehalt"
+
+#: openhab_creator/models/configuration/equipment/types/sensor.py:33
+msgid "Soil moisture"
+msgstr "Bodenfeuchtigkeit"
+
+#: openhab_creator/models/configuration/equipment/types/sensor.py:38
+msgid "Noise"
+msgstr "Geräuschpegel"
+
+#: openhab_creator/models/configuration/equipment/types/sensor.py:69
+#: openhab_creator/output/items/creators/sensoritemscreator.py:51
 msgid "Sensor"
 msgstr "Sensor"
 
@@ -135,15 +159,15 @@ msgstr "Jahr"
 msgid "Unknown"
 msgstr "Unbekannt"
 
-#: openhab_creator/output/items/creators/batteryitemscreator.py:22
+#: openhab_creator/output/items/creators/batteryitemscreator.py:29
 msgid "Battery"
 msgstr "Batterie"
 
-#: openhab_creator/output/items/creators/batteryitemscreator.py:29
+#: openhab_creator/output/items/creators/batteryitemscreator.py:36
 msgid "Battery low"
 msgstr "Batteriestand niedrig"
 
-#: openhab_creator/output/items/creators/batteryitemscreator.py:39
+#: openhab_creator/output/items/creators/batteryitemscreator.py:46
 msgid "Battery level"
 msgstr "Batteriestand"
 
@@ -310,7 +334,7 @@ msgstr "Zurücksetzen"
 #: openhab_creator/output/items/creators/locationitemscreator.py:48
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:41
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:68
-#: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:88
+#: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:91
 msgid "Automation"
 msgstr "Automatik"
 
@@ -349,6 +373,14 @@ msgstr "Zeitsteuerung"
 #: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:21
 msgid "Scene"
 msgstr "Szene"
+
+#: openhab_creator/output/items/creators/sensoritemscreator.py:55
+msgid "Sensor {blankname}"
+msgstr "Sensor {blankname}"
+
+#: openhab_creator/output/items/creators/sensoritemscreator.py:109
+msgid "Trend {label}"
+msgstr ""
 
 #: openhab_creator/output/items/creators/wallswitchitemscreator.py:19
 msgid "Wallswitch assignment items"
@@ -464,19 +496,19 @@ msgstr "Werktage"
 msgid "Weekend and holidays"
 msgstr "Wochenende und freie Tage"
 
-#: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:70
+#: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:73
 msgid "Comfort"
 msgstr "Komfort"
 
-#: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:71
+#: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:74
 msgid "ECO"
 msgstr "Absenk"
 
-#: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:72
+#: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:75
 msgid "Closed"
 msgstr "Geschlossen"
 
-#: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:83
+#: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:86
 msgid "Boost"
 msgstr "Boost"
 

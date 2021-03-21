@@ -18,9 +18,16 @@ class BatteryItemsCreator(BaseItemsCreator):
     def build(self, configuration: Configuration) -> None:
         if configuration.has_equipment('battery', False):
             for equipment in configuration.equipment('battery', False):
+                if equipment.category == 'sensor' \
+                        and equipment.is_child \
+                        and equipment.parent.category == 'sensor':
+                    equipment_id = equipment.parent.sensor_id
+                else:
+                    equipment_id = equipment.equipment_id
+
                 Group(equipment.battery_id)\
                     .label(_('Battery'))\
-                    .groups(equipment.equipment_id)\
+                    .groups(equipment_id)\
                     .tags('Battery')\
                     .append_to(self)
 
