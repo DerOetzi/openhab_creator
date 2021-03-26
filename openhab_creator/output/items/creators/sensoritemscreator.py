@@ -89,17 +89,12 @@ class SensorItemsCreator(BaseItemsCreator):
                 .semantic(PointType.MEASUREMENT, sensortype.propertytype)\
                 .append_to(self)
 
-        if sensor.is_child and sensor.parent.category == 'sensor':
-            sensorgroup = sensor.parent.sensor_id
-        else:
-            sensorgroup = sensor.sensor_id
-
         Number(f'{sensortype}{sensor.sensor_id}')\
             .typed(sensortype.numbertype)\
             .label(sensortype.labelitem)\
             .format(sensortype.format_string)\
             .icon(f'{sensortype}{area.lower()}')\
-            .groups(sensorgroup, f'{sensortype}{location}')\
+            .groups(sensor.merged_sensor_id, f'{sensortype}{location}')\
             .semantic(PointType.MEASUREMENT, sensortype.propertytype)\
             .channel(sensor.channel(sensortype.point))\
             .sensor(sensortype.point, sensor.influxdb_tags)\
@@ -108,7 +103,7 @@ class SensorItemsCreator(BaseItemsCreator):
         String(f'trend{sensortype}{sensor.sensor_id}')\
             .label(_('Trend {label}').format(label=sensortype.labelitem))\
             .map(MapTransformation.TREND)\
-            .groups(sensorgroup)\
+            .groups(sensor.merged_sensor_id)\
             .semantic(PointType.STATUS)\
             .sensor(f'trend{sensortype.point}', sensor.influxdb_tags)\
             .append_to(self)

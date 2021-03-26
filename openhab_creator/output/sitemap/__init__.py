@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from importlib import import_module
-from typing import TYPE_CHECKING, List, Optional, Type
+from typing import TYPE_CHECKING, List, Optional, Type, Dict, Union
 
 from openhab_creator import _, logger
 from openhab_creator.models.sitemap import Page, Sitemap, Text
@@ -38,9 +38,9 @@ class SitemapCreator(BaseCreator):
 
 
 class SitemapCreatorPipeline(object):
-    mainpage_pipeline: List[BaseSitemapCreator] = []
-    statuspage_pipeline: List[BaseSitemapCreator] = []
-    configpage_pipeline: List[BaseSitemapCreator] = []
+    mainpage_pipeline: List[Dict[str, Union[int, BaseSitemapCreator]]] = []
+    statuspage_pipeline: List[Dict[str, Union[int, BaseSitemapCreator]]] = []
+    configpage_pipeline: List[Dict[str, Union[int, BaseSitemapCreator]]] = []
     initialized: bool = False
 
     def __init__(self,
@@ -54,15 +54,15 @@ class SitemapCreatorPipeline(object):
     def __call__(self, sitemapcreator_cls: Type[BaseSitemapCreator]):
         if self.mainpage > -1:
             SitemapCreatorPipeline.mainpage_pipeline\
-                .insert(self.mainpage, sitemapcreator_cls)
+                .append({'order': self.mainpage, 'class': sitemapcreator_cls})
 
         if self.statuspage > -1:
             SitemapCreatorPipeline.statuspage_pipeline\
-                .insert(self.statuspage, sitemapcreator_cls)
+                .append({'order': self.statuspage, 'class': sitemapcreator_cls})
 
         if self.configpage > -1:
             SitemapCreatorPipeline.configpage_pipeline\
-                .insert(self.configpage, sitemapcreator_cls)
+                .append({'order': self.configpage, 'class': sitemapcreator_cls})
 
         return sitemapcreator_cls
 
@@ -77,7 +77,8 @@ class SitemapCreatorPipeline(object):
     @classmethod
     def build_mainpage(cls, sitemap: Sitemap, configuration: Configuration) -> None:
         cls._init()
-        for creator_cls in cls.mainpage_pipeline:
+        for creator in sorted(cls.mainpage_pipeline, key=lambda x: x['order']):
+            creator_cls = creator['class']
             if creator_cls.has_needed_equipment(configuration):
                 logger.info('Sitemap creator (mainpage): %s',
                             creator_cls.__name__)
@@ -87,7 +88,8 @@ class SitemapCreatorPipeline(object):
     @classmethod
     def build_statuspage(cls, statuspage: Page, configuration: Configuration) -> None:
         cls._init()
-        for creator_cls in cls.statuspage_pipeline:
+        for creator in sorted(cls.statuspage_pipeline, key=lambda x: x['order']):
+            creator_cls = creator['class']
             if creator_cls.has_needed_equipment(configuration):
                 logger.info('Sitemap creator (statuspage): %s',
                             creator_cls.__name__)
@@ -97,7 +99,8 @@ class SitemapCreatorPipeline(object):
     @classmethod
     def build_configpage(cls, configpage: Page, configuration: Configuration) -> None:
         cls._init()
-        for creator_cls in cls.configpage_pipeline:
+        for creator in sorted(cls.configpage_pipeline, key=lambda x: x['order']):
+            creator_cls = creator['class']
             if creator_cls.has_needed_equipment(configuration):
                 logger.info('Sitemap creator (configpage): %s',
                             creator_cls.__name__)

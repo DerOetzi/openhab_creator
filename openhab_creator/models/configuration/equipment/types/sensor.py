@@ -54,6 +54,12 @@ class SensorType(CreatorEnum):
 
 @EquipmentType()
 class Sensor(Equipment):
+    def __init__(self, **equipment_configuration):
+        super().__init__(**equipment_configuration)
+
+        if self.is_child and self.parent.category == 'sensor':
+            self.name = self.parent.name
+
     @property
     def item_identifiers(self) -> Dict[str, str]:
         return {**{
@@ -84,3 +90,10 @@ class Sensor(Equipment):
     @property
     def sensor_is_subequipment(self) -> bool:
         return False
+
+    @property
+    def merged_sensor_id(self) -> str:
+        if self.is_child and self.parent.category == 'sensor':
+            return f'sensor{self.parent.identifier}'
+        else:
+            return f'sensor{self.identifier}'

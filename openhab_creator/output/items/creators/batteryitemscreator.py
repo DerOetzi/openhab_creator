@@ -18,10 +18,8 @@ class BatteryItemsCreator(BaseItemsCreator):
     def build(self, configuration: Configuration) -> None:
         if configuration.has_equipment('battery', False):
             for equipment in configuration.equipment('battery', False):
-                if equipment.category == 'sensor' \
-                        and equipment.is_child \
-                        and equipment.parent.category == 'sensor':
-                    equipment_id = equipment.parent.sensor_id
+                if equipment.category == 'sensor':
+                    equipment_id = equipment.merged_sensor_id
                 else:
                     equipment_id = equipment.equipment_id
 

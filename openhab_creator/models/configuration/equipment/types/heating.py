@@ -33,7 +33,7 @@ class Heating(Sensor):
             'comforttemperature': 'comfortTemperature',
             'ecotemperature': 'ECOTemperature'
         }, **super().item_identifiers, **{
-            'sensor': f'sensor{self.category}'
+            'sensor': f'sensor{self.semantic}'
         }}
 
     @property
@@ -64,3 +64,7 @@ class Heating(Sensor):
     @property
     def sensor_is_subequipment(self) -> bool:
         return True
+
+    @property
+    def merged_sensor_id(self) -> str:
+        return f'sensor{self.semantic}{self.identifier}'
