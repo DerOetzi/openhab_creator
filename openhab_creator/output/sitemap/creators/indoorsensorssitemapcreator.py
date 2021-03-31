@@ -32,6 +32,10 @@ class IndoorSensorsSitemapCreator(BaseSitemapCreator):
         page = Page(f'{sensortype}Indoor')
         locations = []
 
+        if sensortype.has_valuecolor_indoor:
+            page.valuecolor(
+                *sensortype.valuecolor_indoor(f'{sensortype}Indoor'))
+
         for sensor in sensors:
             if sensor.has_point(sensortype.point):
                 location = sensor.toplevel_location
@@ -39,9 +43,14 @@ class IndoorSensorsSitemapCreator(BaseSitemapCreator):
                 frame = page.frame(
                     location.identifier, location.name)
 
-                Text(f'{sensortype}{sensor.sensor_id}')\
-                    .label(sensor.name)\
-                    .append_to(frame)
+                sensor_text = Text(f'{sensortype}{sensor.sensor_id}')\
+                    .label(sensor.name)
+
+                if sensortype.has_valuecolor_indoor:
+                    sensor_text.valuecolor(*sensortype.valuecolor_indoor(
+                        f'{sensortype}{sensor.sensor_id}'))
+
+                sensor_text.append_to(frame)
 
         self._add_grafana(configuration.dashboard, page,
                           list(dict.fromkeys(locations)),

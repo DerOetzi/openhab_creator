@@ -1,14 +1,16 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING
 
 import os
+from typing import TYPE_CHECKING
+
 from cairosvg import svg2png
+from openhab_creator import logger
+from openhab_creator.output.color import Color
+from openhab_creator.output.content.basecontentcreator import \
+    BaseContentCreator
 
 if TYPE_CHECKING:
     from posix import DirEntry
-
-from openhab_creator.output.content.basecontentcreator import BaseContentCreator
-from openhab_creator.output.color import Color
 
 
 class IconsCreator(BaseContentCreator):
@@ -28,7 +30,7 @@ class IconsCreator(BaseContentCreator):
                 else:
                     continue
 
-                print(f'Create icon: {icon_name}')
+                logger.info('Create icon: %s', icon_name)
 
                 content = self.__generate_output_icons(srcfile)
 
