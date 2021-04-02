@@ -6,7 +6,8 @@ from openhab_creator import _
 from openhab_creator.models.common import MapTransformation
 from openhab_creator.models.configuration.equipment.types.sensor import (
     Sensor, SensorType)
-from openhab_creator.models.items import Group, Number, PointType, String
+from openhab_creator.models.items import (DateTime, Group, GroupType, Number,
+                                          PointType, PropertyType, String)
 from openhab_creator.output.items import ItemsCreatorPipeline
 from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
 
@@ -65,9 +66,9 @@ class SensorItemsCreator(BaseItemsCreator):
                 if sensortype not in self.sensors[area]:
                     self.sensors[area][sensortype] = {}
                     Group(f'{sensortype}{area}')\
-                        .typed(sensortype.grouptype)\
-                        .label(sensortype.labelitem)\
-                        .format(sensortype.format_string)\
+                        .typed(GroupType.NUMBER_AVG)\
+                        .label(sensortype.labels.item)\
+                        .format(sensortype.labels.format_str)\
                         .icon(f'{sensortype}{area.lower()}')\
                         .append_to(self)
 
@@ -80,30 +81,59 @@ class SensorItemsCreator(BaseItemsCreator):
         if location not in self.sensors[area][sensortype]:
             self.sensors[area][sensortype][location] = True
             Group(f'{sensortype}{location}')\
-                .typed(sensortype.grouptype)\
-                .label(sensortype.labelitem)\
-                .format(sensortype.format_string)\
+                .typed(GroupType.NUMBER_AVG)\
+                .label(sensortype.labels.item)\
+                .format(sensortype.labels.format_str)\
                 .icon(f'{sensortype}{area.lower()}')\
                 .groups(f'{sensortype}{area}')\
                 .location(location)\
-                .semantic(PointType.MEASUREMENT, sensortype.propertytype)\
+                .semantic(PointType.MEASUREMENT, sensortype.typed.property)\
                 .append_to(self)
 
         Number(f'{sensortype}{sensor.sensor_id}')\
-            .typed(sensortype.numbertype)\
-            .label(sensortype.labelitem)\
-            .format(sensortype.format_string)\
+            .typed(sensortype.typed.number)\
+            .label(sensortype.labels.item)\
+            .format(sensortype.labels.format_str)\
             .icon(f'{sensortype}{area.lower()}')\
             .groups(sensor.merged_sensor_id, f'{sensortype}{location}')\
-            .semantic(PointType.MEASUREMENT, sensortype.propertytype)\
+            .semantic(PointType.MEASUREMENT, sensortype.typed.property)\
             .channel(sensor.channel(sensortype.point))\
             .sensor(sensortype.point, sensor.influxdb_tags)\
             .append_to(self)
 
         String(f'trend{sensortype}{sensor.sensor_id}')\
-            .label(_('Trend {label}').format(label=sensortype.labelitem))\
+            .label(_('Trend {label}').format(label=sensortype.labels.item))\
             .map(MapTransformation.TREND)\
             .groups(sensor.merged_sensor_id)\
             .semantic(PointType.STATUS)\
             .sensor(f'trend{sensortype.point}', sensor.influxdb_tags)\
+            .append_to(self)
+
+        if sensortype.point == 'moisture':
+            self.moisture_items(sensor)
+
+    def moisture_items(self, sensor: Sensor) -> None:
+        DateTime(sensor.moisturelastreminder_id)\
+            .label(_('Last watering reminder'))\
+            .datetime()\
+            .config()\
+            .groups(sensor.merged_sensor_id)\
+            .semantic(PointType.STATUS, PropertyType.TIMESTAMP)\
+            .scripting({
+                'message': _('The plant {plant} needs to be watered!')
+                .format(plant=sensor.blankname)
+            })\
+            .append_to(self)
+
+        DateTime(sensor.moisturelastwatered_id)\
+            .label(_('Last watered'))\
+            .dateonly_weekday()\
+            .icon('wateringcan')\
+            .config()\
+            .groups(sensor.merged_sensor_id)\
+            .semantic(PointType.STATUS, PropertyType.TIMESTAMP)\
+            .scripting({
+                'message': _('The plant {plant} says thank you for watering!')
+                .format(plant=sensor.blankname)
+            })\
             .append_to(self)

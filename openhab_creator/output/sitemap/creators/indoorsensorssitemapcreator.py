@@ -3,14 +3,16 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, List
 
 from openhab_creator.models.configuration import Configuration
-from openhab_creator.models.configuration.equipment.types.sensor import SensorType
-from openhab_creator.models.sitemap import Page, Sitemap, Text
+from openhab_creator.models.configuration.equipment.types.sensor import \
+    SensorType
+from openhab_creator.models.sitemap import Frame, Page, Sitemap, Text
 from openhab_creator.output.sitemap import SitemapCreatorPipeline
 from openhab_creator.output.sitemap.basesitemapcreator import \
     BaseSitemapCreator
 
 if TYPE_CHECKING:
-    from openhab_creator.models.configuration.equipment.types.sensor import Sensor
+    from openhab_creator.models.configuration.equipment.types.sensor import \
+        Sensor
 
 
 @SitemapCreatorPipeline(mainpage=5)
@@ -28,13 +30,14 @@ class IndoorSensorsSitemapCreator(BaseSitemapCreator):
                 sitemap.element(self.build_sensorpage(
                     configuration, sensortype, sensors))
 
-    def build_sensorpage(self, configuration: Configuration, sensortype: SensorType, sensors: List[Sensor]) -> Page:
+    def build_sensorpage(self, configuration: Configuration,
+                         sensortype: SensorType, sensors: List[Sensor]) -> Page:
         page = Page(f'{sensortype}Indoor')
         locations = []
 
-        if sensortype.has_valuecolor_indoor:
+        if sensortype.colors.has_indoor:
             page.valuecolor(
-                *sensortype.valuecolor_indoor(f'{sensortype}Indoor'))
+                *sensortype.colors.indoor_colors(f'{sensortype}Indoor'))
 
         for sensor in sensors:
             if sensor.has_point(sensortype.point):
@@ -46,17 +49,24 @@ class IndoorSensorsSitemapCreator(BaseSitemapCreator):
                 sensor_text = Text(f'{sensortype}{sensor.sensor_id}')\
                     .label(sensor.name)
 
-                if sensortype.has_valuecolor_indoor:
-                    sensor_text.valuecolor(*sensortype.valuecolor_indoor(
+                if sensortype.colors.has_indoor:
+                    sensor_text.valuecolor(*sensortype.colors.indoor_colors(
                         f'{sensortype}{sensor.sensor_id}'))
 
                 sensor_text.append_to(frame)
 
+                if sensortype.point == 'moisture':
+                    self.build_moisture(frame, sensor)
+
         self._add_grafana(configuration.dashboard, page,
                           list(dict.fromkeys(locations)),
-                          f'{sensortype.labelpage} ')
+                          f'{sensortype.labels.page} ')
 
         return page
+
+    def build_moisture(self, frame: Frame, sensor: Sensor) -> None:
+        Text(sensor.moisturelastwatered_id)\
+            .append_to(frame)
 
     def build_statuspage(self, statuspage: Page, configuration: Configuration) -> None:
         """No statuspage for indoor sensors"""

@@ -1,79 +1,92 @@
 from __future__ import annotations
 
-from typing import Dict, List, Optional, Tuple
+from dataclasses import dataclass
+from typing import Dict, List, Tuple
 
 from openhab_creator import CreatorEnum, _
 from openhab_creator.models.configuration.equipment import (Equipment,
                                                             EquipmentType)
-from openhab_creator.models.items import GroupType, NumberType, PropertyType
+from openhab_creator.models.items import NumberType, PropertyType
 from openhab_creator.output import Color
+
+
+@dataclass
+class SensorLabel:
+    page: str
+    item: str
+    format_str: str
+
+
+@dataclass
+class SensorTyped:
+    property: PropertyType
+    number: NumberType
+
+
+class SensorColors:
+    def __init__(self, indoor: List[Tuple[int, Color]]):
+        self.indoor: List[Tuple[int, Color]] = indoor
+
+    @property
+    def has_indoor(self) -> bool:
+        return len(self.indoor) > 0
+
+    def indoor_colors(self, item: str) -> List[Tuple[str, Color]]:
+        valuecolors = []
+
+        for valuecolor in self.indoor:
+            valuecolors.append((f'{item}>={valuecolor[0]}', valuecolor[1]))
+
+        return valuecolors
 
 
 class SensorType(CreatorEnum):
     TEMPERATURE = 'temperature',\
-                  _('Temperatures'), _('Temperature'), '%.1f °C', \
-                  GroupType.NUMBER_AVG, NumberType.TEMPERATURE,\
-                  PropertyType.TEMPERATURE, [
-                      (28, Color.RED), (24, Color.ORANGE), (20, Color.YELLOW),
-                      (16, Color.GREEN), (8, Color.BLUE), (0, Color.GREY)
-                  ]
+                  SensorLabel(_('Temperatures'), _('Temperature'), '%.1f °C'),\
+                  SensorTyped(PropertyType.TEMPERATURE,
+                              NumberType.TEMPERATURE),\
+        SensorColors([
+            (28, Color.RED), (24, Color.ORANGE), (20, Color.YELLOW),
+            (16, Color.GREEN), (8, Color.BLUE), (0, Color.GREY)
+        ])
 
     HUMIDITY = 'humidity',\
-               _('Humidity'), _('Humidity'), '%,.0f %%',\
-               GroupType.NUMBER_AVG, NumberType.DIMENSIONLESS,\
-               PropertyType.HUMIDITY, [
+               SensorLabel(_('Humidity'), _('Humidity'), '%,.0f %%'),\
+               SensorTyped(PropertyType.HUMIDITY, NumberType.DIMENSIONLESS),\
+               SensorColors([
                    (60, Color.RED), (58, Color.ORANGE), (54, Color.YELLOW),
                    (42, Color.GREEN), (40, Color.ORANGE), (0, Color.RED)
-               ]
+               ])
 
     PRESSURE = 'pressure',\
-               _('Pressure'), _('Pressure'), '%,.1f hPa',\
-               GroupType.NUMBER_AVG, NumberType.PRESSURE,\
-               PropertyType.PRESSURE
+               SensorLabel(_('Pressure'), _('Pressure'), '%,.1f hPa'),\
+               SensorTyped(PropertyType.PRESSURE, NumberType.PRESSURE),\
+               SensorColors([])
 
     CO2 = 'co2',\
-        _('CO2 concentration'), _('CO2 concentration'), '%,d ppm',\
-        GroupType.NUMBER_AVG, NumberType.DIMENSIONLESS,\
-        PropertyType.CO2
+        SensorLabel(_('CO2 concentration'), _('CO2 concentration'), '%,d ppm'),\
+        SensorTyped(PropertyType.CO2, NumberType.DIMENSIONLESS),\
+        SensorColors([])
 
     MOISTURE = 'moisture',\
-               _('Soil moisture'), _('Soil moisture'), '%,.0f %%',\
-               GroupType.NUMBER_AVG, NumberType.DIMENSIONLESS,\
-               PropertyType.HUMIDITY, [
+               SensorLabel(_('Soil moisture'), _('Soil moisture'), '%,.0f %%'),\
+               SensorTyped(PropertyType.HUMIDITY, NumberType.DIMENSIONLESS),\
+               SensorColors([
                    (85, Color.RED), (75, Color.ORANGE), (50, Color.GREEN),
                    (40, Color.YELLOW), (30, Color.ORANGE), (0, Color.RED)
-               ]
+               ])
 
     NOISE = 'noise',\
-            _('Noise'),  _('Noise'), '%,d dB',\
-            GroupType.NUMBER_AVG, NumberType.DIMENSIONLESS,\
-            PropertyType.NOISE
+            SensorLabel(_('Noise'),  _('Noise'), '%,d dB'),\
+            SensorTyped(PropertyType.NOISE, NumberType.DIMENSIONLESS),\
+            SensorColors([])
 
-    def __init__(self, point: str,
-                 labelpage: str, labelitem: str, format_string: str,
-                 grouptype: GroupType, numbertype: NumberType,
-                 propertytype: PropertyType,
-                 valuecolor_indoor: Optional[List[Tuple[int, Color]]] = None):
+    def __init__(self, point: str, labels: SensorLabel,
+                 typed: SensorTyped, colors: SensorColors):
         self.point: str = point
-        self.labelpage: str = labelpage
-        self.labelitem: str = labelitem
-        self.format_string: str = format_string
-        self.grouptype: GroupType = grouptype
-        self.numbertype: NumberType = numbertype
-        self.propertytype = propertytype
-        self._valuecolor_indoor = [] if valuecolor_indoor is None else valuecolor_indoor
-
-    @property
-    def has_valuecolor_indoor(self) -> bool:
-        return len(self._valuecolor_indoor) > 0
-
-    def valuecolor_indoor(self, item: str) -> Optional[List[Tuple[str, Color]]]:
-        valuecolors = []
-
-        for valuecolor in self._valuecolor_indoor:
-            valuecolors.append((f'{item}>={valuecolor[0]}', valuecolor[1]))
-
-        return valuecolors
+        self.labels: SensorLabel = labels
+        self.typed: SensorTyped = typed
+        self.colors: SensorColors = colors
 
 
 @EquipmentType()
@@ -87,7 +100,9 @@ class Sensor(Equipment):
     @property
     def item_identifiers(self) -> Dict[str, str]:
         return {**{
-            'sensor': 'sensor'
+            'sensor': 'sensor',
+            'moisturelastwatered': 'moistureLastWatered',
+            'moisturelastreminder': 'moistureLastReminder'
         }, **dict((v.point, v.point) for v in SensorType)}
 
     @property
@@ -117,7 +132,8 @@ class Sensor(Equipment):
 
     @property
     def merged_sensor_id(self) -> str:
+        merged_sensor_id = f'sensor{self.identifier}'
         if self.is_child and self.parent.category == 'sensor':
-            return f'sensor{self.parent.identifier}'
-        else:
-            return f'sensor{self.identifier}'
+            merged_sensor_id = f'sensor{self.parent.identifier}'
+
+        return merged_sensor_id

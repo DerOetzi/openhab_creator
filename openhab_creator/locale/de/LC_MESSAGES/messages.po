@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openHAB Creator\n"
-"POT-Creation-Date: 2021-03-21 21:45+0100\n"
-"PO-Revision-Date: 2021-03-21 21:47+0100\n"
+"POT-Creation-Date: 2021-04-02 21:52+0200\n"
+"PO-Revision-Date: 2021-04-02 21:54+0200\n"
 "Last-Translator: Johannes Ott <info@johannes-ott.net>\n"
 "Language-Team: Johannes Ott\n"
 "Language: de\n"
@@ -97,37 +97,37 @@ msgstr "Leuchte"
 msgid "Motiondetector"
 msgstr "Bewegungsmelder"
 
-#: openhab_creator/models/configuration/equipment/types/sensor.py:13
+#: openhab_creator/models/configuration/equipment/types/sensor.py:45
 msgid "Temperature"
 msgstr "Temperatur"
 
-#: openhab_creator/models/configuration/equipment/types/sensor.py:13
+#: openhab_creator/models/configuration/equipment/types/sensor.py:45
 #: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:37
 msgid "Temperatures"
 msgstr "Temperaturen"
 
-#: openhab_creator/models/configuration/equipment/types/sensor.py:18
+#: openhab_creator/models/configuration/equipment/types/sensor.py:54
 msgid "Humidity"
 msgstr "Luftfeuchtigkeit"
 
-#: openhab_creator/models/configuration/equipment/types/sensor.py:23
+#: openhab_creator/models/configuration/equipment/types/sensor.py:62
 msgid "Pressure"
 msgstr "Luftdruck"
 
-#: openhab_creator/models/configuration/equipment/types/sensor.py:28
+#: openhab_creator/models/configuration/equipment/types/sensor.py:67
 msgid "CO2 concentration"
 msgstr "CO2-Gehalt"
 
-#: openhab_creator/models/configuration/equipment/types/sensor.py:33
+#: openhab_creator/models/configuration/equipment/types/sensor.py:72
 msgid "Soil moisture"
 msgstr "Bodenfeuchtigkeit"
 
-#: openhab_creator/models/configuration/equipment/types/sensor.py:38
+#: openhab_creator/models/configuration/equipment/types/sensor.py:80
 msgid "Noise"
 msgstr "Geräuschpegel"
 
-#: openhab_creator/models/configuration/equipment/types/sensor.py:69
-#: openhab_creator/output/items/creators/sensoritemscreator.py:51
+#: openhab_creator/models/configuration/equipment/types/sensor.py:114
+#: openhab_creator/output/items/creators/sensoritemscreator.py:52
 msgid "Sensor"
 msgstr "Sensor"
 
@@ -159,15 +159,15 @@ msgstr "Jahr"
 msgid "Unknown"
 msgstr "Unbekannt"
 
-#: openhab_creator/output/items/creators/batteryitemscreator.py:29
+#: openhab_creator/output/items/creators/batteryitemscreator.py:27
 msgid "Battery"
 msgstr "Batterie"
 
-#: openhab_creator/output/items/creators/batteryitemscreator.py:36
+#: openhab_creator/output/items/creators/batteryitemscreator.py:34
 msgid "Battery low"
 msgstr "Batteriestand niedrig"
 
-#: openhab_creator/output/items/creators/batteryitemscreator.py:46
+#: openhab_creator/output/items/creators/batteryitemscreator.py:44
 msgid "Battery level"
 msgstr "Batteriestand"
 
@@ -374,13 +374,29 @@ msgstr "Zeitsteuerung"
 msgid "Scene"
 msgstr "Szene"
 
-#: openhab_creator/output/items/creators/sensoritemscreator.py:55
+#: openhab_creator/output/items/creators/sensoritemscreator.py:56
 msgid "Sensor {blankname}"
 msgstr "Sensor {blankname}"
 
-#: openhab_creator/output/items/creators/sensoritemscreator.py:109
+#: openhab_creator/output/items/creators/sensoritemscreator.py:105
 msgid "Trend {label}"
-msgstr ""
+msgstr "Trend {label}"
+
+#: openhab_creator/output/items/creators/sensoritemscreator.py:117
+msgid "Last watering reminder"
+msgstr "Letzte Gießerinnerung"
+
+#: openhab_creator/output/items/creators/sensoritemscreator.py:123
+msgid "The plant {plant} needs to be watered!"
+msgstr "Die Pflanze {plant} braucht Wasser!"
+
+#: openhab_creator/output/items/creators/sensoritemscreator.py:128
+msgid "Last watered"
+msgstr "Gegossen am"
+
+#: openhab_creator/output/items/creators/sensoritemscreator.py:135
+msgid "The plant {plant} says thank you for watering!"
+msgstr "Die Pflanze {plant} sagt Danke, dass du mich gegossen hast!"
 
 #: openhab_creator/output/items/creators/wallswitchitemscreator.py:19
 msgid "Wallswitch assignment items"
