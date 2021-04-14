@@ -1,10 +1,6 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 
-import os
-from pathlib import Path
-import shutil
-
 from openhab_creator.output.content.basecontentcreator import BaseContentCreator
 
 if TYPE_CHECKING:
@@ -13,10 +9,10 @@ if TYPE_CHECKING:
 
 class BasicConfigCreator(BaseContentCreator):
     def build(self, configuration: Configuration) -> None:
-
         self._copy_file_with_secrets(
             self._srcdir, 'services/mapdb.cfg', configuration.secrets)
         self._copy_file_with_secrets(
             self._srcdir, 'services/influxdb.cfg', configuration.secrets)
         self._copy_all_files_from_subdir('services')
         self._copy_all_files_from_subdir('persistence')
+        self._copy_all_files_from_subdir('transform')

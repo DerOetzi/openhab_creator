@@ -32,7 +32,10 @@ class IndoorSensorsSitemapCreator(BaseSitemapCreator):
 
     def build_sensorpage(self, configuration: Configuration,
                          sensortype: SensorType, sensors: List[Sensor]) -> Page:
-        page = Page(f'{sensortype}Indoor')
+
+        prefix = 'gui' if sensortype.labels.has_gui_factor else ''
+
+        page = Page(f'{prefix}{sensortype}Indoor')
         locations = []
 
         if sensortype.colors.has_indoor:
@@ -46,7 +49,7 @@ class IndoorSensorsSitemapCreator(BaseSitemapCreator):
                 frame = page.frame(
                     location.identifier, location.name)
 
-                sensor_text = Text(f'{sensortype}{sensor.sensor_id}')\
+                sensor_text = Text(f'{prefix}{sensortype}{sensor.sensor_id}')\
                     .label(sensor.name)
 
                 if sensortype.colors.has_indoor:

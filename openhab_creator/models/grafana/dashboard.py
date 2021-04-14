@@ -57,14 +57,20 @@ class Dashboard(object):
 
     def __init_panels(self) -> None:
         for row in self.online['panels']:
-            for panel in row['panels']:
-                if 'title' in panel and panel['title'] != '':
-                    self.panels[panel['title']] = {
-                        'id': panel['id'],
-                        'height': panel['gridPos']['h'] * 35
-                    }
-                    logger.debug('%s: %s', panel['title'],
-                                 self.panels[panel['title']])
+            if 'panels' in row:
+                for panel in row['panels']:
+                    self.__init_panel(panel)
+            else:
+                self.__init_panel(row)
+
+    def __init_panel(self, panel) -> None:
+        if 'title' in panel and panel['title'] != '':
+            self.panels[panel['title']] = {
+                'id': panel['id'],
+                'height': panel['gridPos']['h'] * 35
+            }
+            logger.debug('%s: %s', panel['title'],
+                         self.panels[panel['title']])
 
     def _save_dashboard_to_configdir(self, configdir: str) -> None:
         with open(f'{configdir}/grafana_dashboard.json', 'w') as fp:

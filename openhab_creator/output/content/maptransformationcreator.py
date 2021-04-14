@@ -1,13 +1,11 @@
 from __future__ import annotations
 
-from typing import Dict
-
-from openhab_creator import _, logger
+from openhab_creator import _
 from openhab_creator.models.common import MapTransformation
 from openhab_creator.output.basecreator import BaseCreator
 
 
-class TransformationCreator(BaseCreator):
+class MapTransformationCreator(BaseCreator):
     def __init__(self, outputdir: str):
         super().__init__('map', outputdir, 'transform')
 

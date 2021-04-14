@@ -7,7 +7,8 @@ from openhab_creator.models.common import MapTransformation
 from openhab_creator.models.configuration.equipment.types.sensor import (
     Sensor, SensorType)
 from openhab_creator.models.items import (DateTime, Group, GroupType, Number,
-                                          PointType, PropertyType, String)
+                                          PointType, ProfileType, PropertyType,
+                                          String)
 from openhab_creator.output.items import ItemsCreatorPipeline
 from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
 
@@ -72,6 +73,14 @@ class SensorItemsCreator(BaseItemsCreator):
                         .icon(f'{sensortype}{area.lower()}')\
                         .append_to(self)
 
+                    if sensortype.labels.has_gui_factor:
+                        Group(f'gui{sensortype}{area}')\
+                            .typed(GroupType.NUMBER_AVG)\
+                            .label(sensortype.labels.item)\
+                            .transform_js(f'gui{sensortype}')\
+                            .icon(f'{sensortype}{area.lower()}')\
+                            .append_to(self)
+
                 self.build_sensortype_location(sensortype, sensor)
 
     def build_sensortype_location(self, sensortype: SensorType, sensor: Sensor) -> None:
@@ -89,6 +98,17 @@ class SensorItemsCreator(BaseItemsCreator):
                 .location(location)\
                 .semantic(PointType.MEASUREMENT, sensortype.typed.property)\
                 .append_to(self)
+
+            if sensortype.labels.has_gui_factor:
+                Group(f'gui{sensortype}{location}')\
+                    .typed(GroupType.NUMBER_AVG)\
+                    .label(sensortype.labels.item)\
+                    .transform_js(f'gui{sensortype}')\
+                    .icon(f'{sensortype}{area.lower()}')\
+                    .groups(f'gui{sensortype}{area}')\
+                    .location(location)\
+                    .semantic(PointType.MEASUREMENT, sensortype.typed.property)\
+                    .append_to(self)
 
         Number(f'{sensortype}{sensor.sensor_id}')\
             .typed(sensortype.typed.number)\
@@ -108,6 +128,17 @@ class SensorItemsCreator(BaseItemsCreator):
             .semantic(PointType.STATUS)\
             .sensor(f'trend{sensortype.point}', sensor.influxdb_tags)\
             .append_to(self)
+
+        if sensortype.labels.has_gui_factor:
+            String(f'gui{sensortype}{sensor.sensor_id}')\
+                .label(sensortype.labels.item)\
+                .transform_js(f'gui{sensortype}')\
+                .icon(f'{sensortype}{area.lower()}')\
+                .groups(sensor.merged_sensor_id, f'gui{sensortype}{location}')\
+                .semantic(PointType.MEASUREMENT, sensortype.typed.property)\
+                .channel(sensor.channel(sensortype.point),
+                         ProfileType.JS, f'togui{sensortype.labels.gui_factor}.js')\
+                .append_to(self)
 
         if sensortype.point == 'moisture':
             self.moisture_items(sensor)

@@ -57,7 +57,11 @@ class PropertyType(CreatorEnum):
     VIBRATION = 'Vibration'
 
 
-class BaseItem(object):
+class ProfileType(CreatorEnum):
+    JS = 'transform:JS'
+
+
+class BaseItem():
     def __init__(self, name: str):
         self._name: str = name
         self._label: str = ''
@@ -77,6 +81,9 @@ class BaseItem(object):
 
     def map(self, mapname: MapTransformation) -> BaseItem:
         return self.format(mapname.formatstr)
+
+    def transform_js(self, js_file: str) -> BaseItem:
+        return self.format(f'JS({js_file}.js): %s')
 
     def format(self, format_string: str) -> BaseItem:
         self._format = format_string
@@ -121,7 +128,8 @@ class BaseItem(object):
         self._metadata['scripting'] = {'properties': config}
         return self
 
-    def semantic(self, *semantic_tags: List[Union[str, BaseObject, PointType, PropertyType]]) -> BaseItem:
+    def semantic(self,
+                 *semantic_tags: List[Union[str, BaseObject, PointType, PropertyType]]) -> BaseItem:
         for tag in semantic_tags:
             if isinstance(tag, str):
                 self._tags.append(tag)
@@ -136,8 +144,15 @@ class BaseItem(object):
         self._tags.extend(tags)
         return self
 
-    def channel(self, channel: str) -> BaseItem:
+    def channel(self, channel: str,
+                profile_type: Optional[ProfileType] = None,
+                profile_function: Optional[str] = None) -> BaseItem:
         self._metadata['channel'] = {'value': channel}
+        if not (profile_type is None or profile_function is None):
+            self._metadata['channel']['properties'] = {
+                'profile': profile_type,
+                'function': profile_function
+            }
         return self
 
     def append_to(self, itemscreator: BaseItemsCreator) -> None:

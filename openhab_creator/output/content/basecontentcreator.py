@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from openhab_creator.models.configuration import SecretsStorage
 
 
-class BaseContentCreator(object):
+class BaseContentCreator():
     def __init__(self, outputdir: str):
         self._outputdir: str = outputdir
 
@@ -53,8 +53,8 @@ class BaseContentCreator(object):
             output_file = input_file
 
         if os.path.exists(srcfile):
-            with open(srcfile, 'r') as f:
-                content = f.read()
+            with open(srcfile, 'r') as fobj:
+                content = fobj.read()
                 content = self.__replace_secrets(content, secrets)
 
                 if secrets.handle_missing():
@@ -71,6 +71,6 @@ class BaseContentCreator(object):
         return content
 
     def __write_configuration(self, output_file: str, content: str) -> None:
-        with open(f'{self._outputdir}/{output_file}', 'w') as f:
-            logger.info(f'Write {self._outputdir}/{output_file}')
-            f.write(content)
+        with open(f'{self._outputdir}/{output_file}', 'w') as fobj:
+            logger.info('Write %s/%s', self._outputdir, output_file)
+            fobj.write(content)

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 
 from openhab_creator import CreatorEnum, _
 from openhab_creator.models.configuration.equipment import (Equipment,
@@ -15,6 +15,11 @@ class SensorLabel:
     page: str
     item: str
     format_str: str
+    gui_factor: Optional[int] = None
+
+    @property
+    def has_gui_factor(self) -> bool:
+        return self.gui_factor is not None
 
 
 @dataclass
@@ -64,9 +69,12 @@ class SensorType(CreatorEnum):
                SensorColors([])
 
     CO2 = 'co2',\
-        SensorLabel(_('CO2 concentration'), _('CO2 concentration'), '%,d ppm'),\
+        SensorLabel(_('CO2 concentration'), _('CO2 concentration'), '%,d ppm', 100),\
         SensorTyped(PropertyType.CO2, NumberType.DIMENSIONLESS),\
-        SensorColors([])
+        SensorColors([
+            (2000, Color.RED), (1200, Color.ORANGE), (800, Color.YELLOW),
+            (0, Color.GREEN)
+        ])
 
     MOISTURE = 'moisture',\
                SensorLabel(_('Soil moisture'), _('Soil moisture'), '%,.0f %%'),\

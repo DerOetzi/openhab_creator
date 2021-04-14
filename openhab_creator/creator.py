@@ -1,19 +1,17 @@
 from __future__ import annotations
 
-import json
-from typing import TYPE_CHECKING, Dict, Final
 
 from openhab_creator import __version__, logger
 from openhab_creator.models.configuration import Configuration
 from openhab_creator.output.content import (AutomationCreator,
                                             BasicConfigCreator, IconsCreator,
-                                            TransformationCreator)
+                                            MapTransformationCreator)
 from openhab_creator.output.items import ItemsCreator
 from openhab_creator.output.sitemap import SitemapCreator
 from openhab_creator.output.things import ThingsCreator
 
 
-class Creator(object):
+class Creator():
     def __init__(self, name: str,
                  configdir: str, outputdir: str,
                  anonym: bool, check_only: bool,
@@ -27,8 +25,8 @@ class Creator(object):
         self.icons: bool = icons
 
     def run(self) -> None:
-        logger.info(f"openHAB Configuration Creator ({__version__})")
-        logger.info(f"Output directory: {self.outputdir}")
+        logger.info("openHAB Configuration Creator (%s)", __version__)
+        logger.info("Output directory: %s", self.outputdir)
 
         configuration = Configuration(self.name, self.configdir, self.anonym)
 
@@ -41,7 +39,7 @@ class Creator(object):
         ItemsCreator(self.outputdir).build(configuration)
         SitemapCreator(self.outputdir).build(configuration)
 
-        TransformationCreator(self.outputdir).build()
+        MapTransformationCreator(self.outputdir).build()
         AutomationCreator(self.outputdir).build(self.configdir, configuration)
 
         if self.icons:
