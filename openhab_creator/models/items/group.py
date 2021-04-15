@@ -1,5 +1,4 @@
 from __future__ import annotations
-from typing import Optional
 
 from openhab_creator.models.items.baseitem import BaseItem
 from openhab_creator import CreatorEnum
