@@ -24,6 +24,9 @@ class SensorItemsCreator(BaseItemsCreator):
         self.sensors = {}
 
     def build(self, configuration: Configuration) -> None:
+        Group('Trend')\
+            .append_to(self)
+
         for sensor in configuration.equipment('sensor'):
             location = sensor.location
             area = location.area
@@ -110,23 +113,33 @@ class SensorItemsCreator(BaseItemsCreator):
                     .semantic(PointType.MEASUREMENT, sensortype.typed.property)\
                     .append_to(self)
 
-        Number(f'{sensortype}{sensor.sensor_id}')\
+        sensor_item = Number(f'{sensortype}{sensor.sensor_id}')\
             .typed(sensortype.typed.number)\
             .label(sensortype.labels.item)\
             .format(sensortype.labels.format_str)\
             .icon(f'{sensortype}{area.lower()}')\
-            .groups(sensor.merged_sensor_id, f'{sensortype}{location}')\
+            .groups(sensor.merged_sensor_id, f'{sensortype}{location}', 'Trend')\
             .semantic(PointType.MEASUREMENT, sensortype.typed.property)\
             .channel(sensor.channel(sensortype.point))\
             .sensor(sensortype.point, sensor.influxdb_tags)\
-            .append_to(self)
+            .aisensor()
+
+        if sensortype.point == 'moisture':
+            sensor_item.scripting({
+                'reminder_item': sensor.moisturelastreminder_id,
+                'watered_item': sensor.moisturelastwatered_id
+            })
+
+            self.moisture_items(sensor)
+
+        sensor_item.append_to(self)
 
         String(f'trend{sensortype}{sensor.sensor_id}')\
             .label(_('Trend {label}').format(label=sensortype.labels.item))\
             .map(MapTransformation.TREND)\
             .groups(sensor.merged_sensor_id)\
             .semantic(PointType.STATUS)\
-            .sensor(f'trend{sensortype.point}', sensor.influxdb_tags)\
+            .aisensor()\
             .append_to(self)
 
         if sensortype.labels.has_gui_factor:
@@ -139,9 +152,6 @@ class SensorItemsCreator(BaseItemsCreator):
                 .channel(sensor.channel(sensortype.point),
                          ProfileType.JS, f'togui{sensortype.labels.gui_factor}.js')\
                 .append_to(self)
-
-        if sensortype.point == 'moisture':
-            self.moisture_items(sensor)
 
     def moisture_items(self, sensor: Sensor) -> None:
         DateTime(sensor.moisturelastreminder_id)\
