@@ -47,6 +47,9 @@ class TemperatureSitemapCreator(BaseSitemapCreator):
                         .valuecolor(*TemperatureSitemapCreator.valuecolor(f'temperature{sensor.sensor_id}'))\
                         .append_to(subpage)
 
+            self._add_grafana(configuration.dashboard, page,
+                              self.toplevel_locations.keys(), _('Temperatures') + ' ')
+
     def subpage(self, page: Page, sensor: Sensor, heatings: Dict) -> Page:
         location = sensor.location
         if location in self.locations:
