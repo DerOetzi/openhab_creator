@@ -115,6 +115,9 @@ class BaseItem():
 
         return self
 
+    def aisensor(self) -> BaseItem:
+        return self.groups('AISensor')
+
     def expire(self, duration: str, state: Optional[str] = None) -> BaseItem:
         value = f'{duration},'
 

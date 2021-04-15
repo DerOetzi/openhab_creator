@@ -24,6 +24,10 @@ class GeneralItemsCreator(BaseItemsCreator):
             .label(_('Sensor items'))\
             .append_to(self)
 
+        Group('AISensor')\
+            .label(_('Sensor item for AI calculations'))\
+            .append_to(self)
+
         Group('Auto')\
             .label(_('Scene controlled configuration items'))\
             .config()\
