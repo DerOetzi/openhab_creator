@@ -14,11 +14,12 @@ class SignalMessenger():
     def notification(person, message):
         SignalMessenger.log.info(u'Signal message to %s' % person)
         command = u"/openhab/conf/scripts/signal_user.sh"
-        SignalMessenger.log.debug(command)
+        SignalMessenger.log.debug(
+            '%s %s %s', command, PERSONS[person], message)
         result = Exec.executeCommandLine(
             Duration.ofSeconds(10), command, PERSONS[person], message)
-        SignalMessenger.log.debug(result)
+        SignalMessenger.log.debug('Result %s', result)
 
     @staticmethod
     def broadcast(message):
-        SignalMessenger.notification("broadcast", message)
+        SignalMessenger.notification('broadcast', message)
