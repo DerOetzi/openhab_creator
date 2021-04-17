@@ -1,6 +1,6 @@
+# pylint: skip-file
 from core.rules import rule
 from core.triggers import when
-from core.actions import PersistenceExtensions
 from core.log import logging, LOG_PREFIX
 
 from personal.dateutils import DateUtils
