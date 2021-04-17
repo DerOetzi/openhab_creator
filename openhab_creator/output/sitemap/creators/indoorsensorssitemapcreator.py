@@ -24,7 +24,7 @@ class IndoorSensorsSitemapCreator(BaseSitemapCreator):
 
             sensors = configuration.equipment(sensortype.point, False)
             sensors = list(filter(
-                lambda x: x.location.area == 'Indoor', sensors))
+                lambda x: x.location.area in ['Indoor', 'Building'], sensors))
 
             if len(sensors) > 0:
                 sitemap.element(self.build_sensorpage(

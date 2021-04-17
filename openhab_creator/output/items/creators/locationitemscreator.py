@@ -23,6 +23,9 @@ class LocationItemsCreator(BaseItemsCreator):
             for room in floor.rooms:
                 self._create_room(room)
 
+        for building in configuration.buildings:
+            self._create_building(building)
+
         for location in configuration.timecontrolled_locations.values():
             self._create_automation(location)
 
@@ -41,6 +44,13 @@ class LocationItemsCreator(BaseItemsCreator):
             .icon(room.category)\
             .groups(room.parent.identifier)\
             .semantic(room)\
+            .append_to(self)
+
+    def _create_building(self, building: Indoor) -> None:
+        Group(building.identifier)\
+            .label(building.name)\
+            .icon(building.category)\
+            .semantic(building)\
             .append_to(self)
 
     def _create_automation(self, location: Location) -> None:

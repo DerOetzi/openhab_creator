@@ -27,7 +27,7 @@ class TemperatureSitemapCreator(BaseSitemapCreator):
         return configuration.has_equipment('temperature')
 
     def build_mainpage(self, sitemap: Sitemap, configuration: Configuration) -> None:
-        sensors = list(filter(lambda x: 'Indoor' in x.categories,
+        sensors = list(filter(lambda x: x.location.area in ['Indoor', 'Building'],
                               configuration.equipment('temperature', False)))
         heatings = dict((x.location, x)
                         for x in configuration.equipment('heating'))

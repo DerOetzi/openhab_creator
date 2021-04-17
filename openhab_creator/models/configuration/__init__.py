@@ -33,7 +33,7 @@ class SecretsStorage(object):
             for row in reader:
                 key = row['key'].lower()
                 if row['value'].strip() == '':
-                    logger.warning(f"Empty secret: {key}")
+                    logger.warning("Empty secret: %s", key)
                     self.storage[key] = '__%s__' % (
                         key.upper())
                 else:
@@ -114,6 +114,7 @@ class Configuration(object):
         self.locations: Dict[str, List[Location]] = {}
 
         self._init_floors(configdir)
+        self._init_buildings(configdir)
 
     def _init_floors(self, configdir: str) -> None:
         self.locations['floors'] = []
@@ -125,7 +126,21 @@ class Configuration(object):
             self.locations['floors'].append(LocationFactory.new(
                 configuration=self, **floors[floor_key]))
 
-    def read_jsons_from_dir(self, configdir: str, subdir: str) -> Dict[str, Dict]:
+    def _init_buildings(self, configdir: str) -> None:
+        self.locations['buildings'] = []
+
+        srcfile = os.path.join(configdir, 'locations/indoor/buildings.json')
+
+        if os.path.exists(srcfile):
+            with open(srcfile) as json_file:
+                buildings = json.load(json_file)
+
+                for building in buildings:
+                    self.locations['buildings'].append(
+                        LocationFactory.new(configuration=self, **building))
+
+    @staticmethod
+    def read_jsons_from_dir(configdir: str, subdir: str) -> Dict[str, Dict]:
         results = {}
 
         srcdir = os.path.join(configdir, subdir)
@@ -158,6 +173,10 @@ class Configuration(object):
     @property
     def floors(self) -> List[Location]:
         return self.locations['floors']
+
+    @property
+    def buildings(self) -> List[Location]:
+        return self.locations['buildings']
 
     def add_equipment(self, equipment: Equipment):
         for category in equipment.categories:

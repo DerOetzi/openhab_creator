@@ -89,6 +89,8 @@ class LocationFactory(object):
                 'openhab_creator.models.configuration.location.indoor.floors')
             import_module(
                 'openhab_creator.models.configuration.location.indoor.rooms')
+            import_module(
+                'openhab_creator.models.configuration.location.indoor.buildings')
 
             cls.initialized = True
 
