@@ -8,6 +8,7 @@ from openhab_creator.models.items.baseitem import BaseItem
 
 class NumberType(CreatorEnum):
     DIMENSIONLESS = ':Dimensionless'
+    LENGTH = ':Length'
     PRESSURE = ':Pressure'
     TEMPERATURE = ':Temperature'
     TIME = ''  # TODO Number:Time See openhab-webui#765

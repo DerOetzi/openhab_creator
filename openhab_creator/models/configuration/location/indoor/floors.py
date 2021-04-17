@@ -13,11 +13,9 @@ if TYPE_CHECKING:
 class Floor(Indoor):
     def __init__(self,
                  configuration: Configuration,
-                 name: str,
                  rooms: Optional[List[Dict]] = None,
-                 identifier: Optional[str] = None,
-                 equipment: Optional[List[Dict]] = None):
-        super().__init__(configuration, name, identifier, equipment)
+                 **location_configuration):
+        super().__init__(configuration, **location_configuration)
 
         self._init_rooms(configuration, [] if rooms is None else rooms)
 

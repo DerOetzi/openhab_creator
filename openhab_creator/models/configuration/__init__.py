@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from openhab_creator.models.configuration.equipment import Equipment
 
 
-class SecretsStorage(object):
+class SecretsStorage():
     def __init__(self, configdir: str, anonym: bool):
         self.storage: Dict[str, str] = {}
         self.anonym: bool = anonym
@@ -115,6 +115,7 @@ class Configuration(object):
 
         self._init_floors(configdir)
         self._init_buildings(configdir)
+        self._init_outdoors(configdir)
 
     def _init_floors(self, configdir: str) -> None:
         self.locations['floors'] = []
@@ -129,15 +130,34 @@ class Configuration(object):
     def _init_buildings(self, configdir: str) -> None:
         self.locations['buildings'] = []
 
-        srcfile = os.path.join(configdir, 'locations/indoor/buildings.json')
+        buildings = self.read_json_from_file(
+            configdir, 'locations/indoor/buildings.json')
+
+        for building in buildings:
+            self.locations['buildings'].append(
+                LocationFactory.new(configuration=self, **building))
+
+    def _init_outdoors(self, configdir: str) -> None:
+        self.locations['outdoors'] = []
+
+        outdoors = self.read_json_from_file(
+            configdir, 'locations/outdoors.json')
+
+        for outdoor in outdoors:
+            self.locations['outdoors'].append(
+                LocationFactory.new(configuration=self, **outdoor))
+
+    @staticmethod
+    def read_json_from_file(configdir: str, filename: str) -> List[Dict]:
+        results = []
+
+        srcfile = os.path.join(configdir, filename)
 
         if os.path.exists(srcfile):
             with open(srcfile) as json_file:
-                buildings = json.load(json_file)
+                results = json.load(json_file)
 
-                for building in buildings:
-                    self.locations['buildings'].append(
-                        LocationFactory.new(configuration=self, **building))
+        return results
 
     @staticmethod
     def read_jsons_from_dir(configdir: str, subdir: str) -> Dict[str, Dict]:
@@ -177,6 +197,10 @@ class Configuration(object):
     @property
     def buildings(self) -> List[Location]:
         return self.locations['buildings']
+
+    @property
+    def outdoors(self) -> List[Location]:
+        return self.locations['outdoors']
 
     def add_equipment(self, equipment: Equipment):
         for category in equipment.categories:

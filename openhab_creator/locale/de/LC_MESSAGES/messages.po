@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openHAB Creator\n"
-"POT-Creation-Date: 2021-04-15 22:25+0200\n"
-"PO-Revision-Date: 2021-04-15 22:27+0200\n"
+"POT-Creation-Date: 2021-04-18 00:03+0200\n"
+"PO-Revision-Date: 2021-04-18 00:04+0200\n"
 "Last-Translator: Johannes Ott <info@johannes-ott.net>\n"
 "Language-Team: Johannes Ott\n"
 "Language: de\n"
@@ -103,7 +103,7 @@ msgstr "Temperatur"
 
 #: openhab_creator/models/configuration/equipment/types/sensor.py:50
 #: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:37
-#: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:51
+#: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:52
 msgid "Temperatures"
 msgstr "Temperaturen"
 
@@ -127,7 +127,15 @@ msgstr "Bodenfeuchtigkeit"
 msgid "Noise"
 msgstr "Geräuschpegel"
 
-#: openhab_creator/models/configuration/equipment/types/sensor.py:122
+#: openhab_creator/models/configuration/equipment/types/sensor.py:93
+msgid "Felt temperature (Humidex)"
+msgstr "Gefühlte Temperatur (Humidex)"
+
+#: openhab_creator/models/configuration/equipment/types/sensor.py:93
+msgid "Felt temperatures (Humidex)"
+msgstr "Gefühlte Temperaturen (Humidex)"
+
+#: openhab_creator/models/configuration/equipment/types/sensor.py:127
 #: openhab_creator/output/items/creators/sensoritemscreator.py:56
 msgid "Sensor"
 msgstr "Sensor"
@@ -336,18 +344,18 @@ msgstr "Schaltzyklen {name}"
 msgid "Reset"
 msgstr "Zurücksetzen"
 
-#: openhab_creator/output/items/creators/locationitemscreator.py:48
+#: openhab_creator/output/items/creators/locationitemscreator.py:69
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:41
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:68
-#: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:94
+#: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:95
 msgid "Automation"
 msgstr "Automatik"
 
-#: openhab_creator/output/items/creators/locationitemscreator.py:56
+#: openhab_creator/output/items/creators/locationitemscreator.py:77
 msgid "On weekend"
 msgstr "Am Wochenende"
 
-#: openhab_creator/output/items/creators/locationitemscreator.py:63
+#: openhab_creator/output/items/creators/locationitemscreator.py:84
 #: openhab_creator/output/items/creators/sceneitemscreator.py:32
 msgid "Guest stayed"
 msgstr "Gast zu Besuch"
@@ -521,19 +529,19 @@ msgstr "Werktage"
 msgid "Weekend and holidays"
 msgstr "Wochenende und freie Tage"
 
-#: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:76
+#: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:77
 msgid "Comfort"
 msgstr "Komfort"
 
-#: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:77
+#: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:78
 msgid "ECO"
 msgstr "Absenk"
 
-#: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:78
+#: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:79
 msgid "Closed"
 msgstr "Geschlossen"
 
-#: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:89
+#: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:90
 msgid "Boost"
 msgstr "Boost"
 

@@ -75,7 +75,7 @@ class Location(BaseObject):
         return self.identifier
 
 
-class LocationFactory(object):
+class LocationFactory():
     registry: Dict[str, Type['Location']] = {}
 
     initialized: bool = False
@@ -91,6 +91,8 @@ class LocationFactory(object):
                 'openhab_creator.models.configuration.location.indoor.rooms')
             import_module(
                 'openhab_creator.models.configuration.location.indoor.buildings')
+            import_module(
+                'openhab_creator.models.configuration.location.outdoors')
 
             cls.initialized = True
 
