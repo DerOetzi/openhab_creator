@@ -25,7 +25,7 @@ class GeneralItemsCreator(BaseItemsCreator):
             .append_to(self)
 
         Group('AISensor')\
-            .label(_('Sensor item for AI calculations'))\
+            .label(_('Sensor items for AI calculations'))\
             .append_to(self)
 
         Group('Auto')\

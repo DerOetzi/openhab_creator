@@ -44,7 +44,8 @@ class TemperatureSitemapCreator(BaseSitemapCreator):
                 if sensor.has_point('temperature'):
                     Text(f'temperature{sensor.sensor_id}')\
                         .label(sensor.name)\
-                        .valuecolor(*TemperatureSitemapCreator.valuecolor(f'temperature{sensor.sensor_id}'))\
+                        .valuecolor(*TemperatureSitemapCreator
+                                    .valuecolor(f'temperature{sensor.sensor_id}'))\
                         .append_to(subpage)
 
             self._add_grafana(configuration.dashboard, page,

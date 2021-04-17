@@ -1,9 +1,8 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING, List
 
 from openhab_creator import _
-from openhab_creator.exception import BuildException
 from openhab_creator.models.items import (Color, Dimmer, Group, GroupType,
                                           Number, NumberType, PointType,
                                           PropertyType, String, Switch)
@@ -151,10 +150,10 @@ class LightbulbItemsCreator(BaseItemsCreator):
             .semantic(PointType.SETPOINT, PropertyType.DURATION)\
             .append_to(self)
 
-        if (lightbulb.nightmode):
+        if lightbulb.nightmode:
             String(lightbulb.nightmode_id)\
                 .label(_('Nightmode configuration'))\
-                .icon('nightmode')\
+                .icon('configuration')\
                 .groups('Nightmode', lightbulb.lightbulb_id)\
                 .semantic(PointType.SETPOINT)\
                 .append_to(self)
@@ -279,7 +278,9 @@ class LightbulbItemsCreator(BaseItemsCreator):
 
             rgb.append_to(self)
 
-    def __build_buttons_assignment(self, lightbulb: Lightbulb, wallswitches: List[WallSwitch]) -> None:
+    def __build_buttons_assignment(self,
+                                   lightbulb: Lightbulb,
+                                   wallswitches: List[WallSwitch]) -> None:
         for wallswitch in wallswitches:
             for button_key in range(0, wallswitch.buttons_count):
                 String(wallswitch.buttonassignment_id(button_key, lightbulb))\
@@ -288,7 +289,9 @@ class LightbulbItemsCreator(BaseItemsCreator):
                     .groups(wallswitch.buttonassignment_id(button_key))\
                     .append_to(self)
 
-    def __build_motion_assignment(self, lightbulb: Lightbulb, motiondetectors: List[MotionDetector]) -> None:
+    def __build_motion_assignment(self,
+                                  lightbulb: Lightbulb,
+                                  motiondetectors: List[MotionDetector]) -> None:
         for motiondetector in motiondetectors:
             Switch(motiondetector.assignment_id(lightbulb))\
                 .label(motiondetector.name)\

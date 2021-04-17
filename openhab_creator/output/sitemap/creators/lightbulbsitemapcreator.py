@@ -85,6 +85,15 @@ class LightbulbSitemapCreator(BaseSitemapCreator):
             self._create_motiondetector_page(
                 lightbulb, configuration, lightpage)
 
+            if lightbulb.nightmode:
+                mappings = [('RANDOM', _('Random'))]
+                for subequipment in lightbulb.subequipment:
+                    mappings.append(
+                        (subequipment.lightbulb_id, subequipment.blankname))
+
+                Selection(lightbulb.nightmode_id, mappings)\
+                    .append_to(lightpage)
+
     def _create_wallswitches_page(self,
                                   lightbulb: Lightbulb,
                                   configuration: Configuration,
