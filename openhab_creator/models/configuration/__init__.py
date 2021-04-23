@@ -8,6 +8,8 @@ from typing import TYPE_CHECKING, Dict, List, Optional
 
 from openhab_creator import logger
 from openhab_creator.exception import ConfigurationException
+from openhab_creator.models.configuration.person import Person
+from openhab_creator.models.configuration.equipment import EquipmentFactory
 from openhab_creator.models.configuration.equipment.bridge import Bridge
 from openhab_creator.models.configuration.location import (Location,
                                                            LocationFactory)
@@ -95,6 +97,9 @@ class Configuration(object):
 
         self._init_bridges(configdir)
         self._init_templates(configdir)
+
+        self._init_persons(configdir)
+
         self._init_locations(configdir)
 
     def _init_bridges(self, configdir: str) -> None:
@@ -105,6 +110,15 @@ class Configuration(object):
         for bridge_key, bridge_configuration in bridges.items():
             self.bridges[bridge_key] = Bridge(
                 configuration=self, **bridge_configuration)
+
+    def _init_persons(self, configdir: str) -> None:
+        self.persons: List[Person] = []
+        with open(f'{configdir}/persons.json') as json_file:
+            persons = json.load(json_file)
+            key = 0
+            for person_equipment in persons:
+                self.persons.append(Person(self, key, person_equipment))
+                key += 1
 
     def _init_templates(self, configdir: str) -> None:
         self.templates: Dict[str, Dict] = self.read_jsons_from_dir(

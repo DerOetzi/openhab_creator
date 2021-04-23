@@ -12,6 +12,7 @@ from openhab_creator.models.configuration.equipment.thing import Thing
 
 if TYPE_CHECKING:
     from openhab_creator.models.configuration.location import Location
+    from openhab_creator.models.configuration.person import Person
     from openhab_creator.models.configuration import Configuration
 
 
@@ -20,6 +21,7 @@ class Equipment(BaseObject):
     def __init__(self,
                  configuration: Configuration,
                  location: Optional[Location] = None,
+                 person: Optional[Person] = None,
                  name: Optional[str] = '',
                  identifier: Optional[str] = None,
                  thing: Optional[Dict] = None,
@@ -31,6 +33,7 @@ class Equipment(BaseObject):
         self.blankname: str = name
 
         self.location: Optional[Location] = location
+        self.person: Optional[Person] = person
 
         super().__init__(*self._name_and_identifier(identifier))
 
@@ -60,6 +63,11 @@ class Equipment(BaseObject):
 
             if identifier is None:
                 identifier = f'{self.location.identifier}{self.blankname}'
+        elif self.person is not None:
+            name = f'{self.person.name} {self.blankname}'.strip()
+
+            if identifier is None:
+                identifier = f'{self.person.identifier}{self.blankname}'
         else:
             name = self.blankname
 

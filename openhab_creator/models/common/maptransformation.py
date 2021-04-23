@@ -4,6 +4,7 @@ from typing import Dict
 
 from openhab_creator import _, CreatorEnum
 from openhab_creator.models.common.scene import Scene
+from openhab_creator.models.common.presence import Presence
 
 
 class MapTransformation(CreatorEnum):
@@ -15,6 +16,8 @@ class MapTransformation(CreatorEnum):
         '0': _('Ok'), '1': _('Low'),
         'OFF': _('Ok'), 'ON': _('Low')
     }
+
+    PRESENCE = "presence", Presence.mappings
 
     SCENE = "scene", Scene.mappings
 

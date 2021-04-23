@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, Dict, Final, List, Optional
+from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
 from openhab_creator import logger
 
@@ -87,7 +87,7 @@ class Thing(object):
             self.bridge.add_thing(self)
 
     def _init_nameprefix(self, nameprefix: str) -> None:
-        if self.has_bridge:
+        if self.has_bridge and self.bridge.is_thing:
             nameprefix = f'{self.bridge.thing.nameprefix} {nameprefix}'
 
         self.nameprefix: str = nameprefix
@@ -115,7 +115,7 @@ class Thing(object):
             self.secrets[secret_key] = configuration.secrets.secret(
                 *prefixes, secret_key)
 
-        logger.debug(f'secrets: {self.secrets}')
+        logger.debug('secrets: %s', self.secrets)
 
     def _init_channelprefix(self) -> None:
         prefixes = [
@@ -123,7 +123,7 @@ class Thing(object):
             self.typed
         ]
 
-        if self.has_bridge:
+        if self.has_bridge and self.bridge.is_thing:
             prefixes.append(self.bridge.thing.uid)
 
         prefixes.append(self.uid)
@@ -137,10 +137,10 @@ class Thing(object):
             self.channels.append(
                 Channel(self.secrets, channel_key, **channel_definition))
 
-        logger.debug(f'channels: {self.channels}')
+        logger.debug('channels: %s', self.channels)
 
-    def replace_secrets(self, input: str) -> str:
-        return input.format_map(self.secrets)
+    def replace_secrets(self, input_str: str) -> str:
+        return input_str.format_map(self.secrets)
 
     @property
     def name(self) -> str:

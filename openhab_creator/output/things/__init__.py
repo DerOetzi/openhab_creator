@@ -20,26 +20,31 @@ class ThingsCreator(BaseCreator):
         for bridge_key, bridge_obj in configuration.bridges.items():
             self._append_bridge(bridge_obj)
 
-            self.append('}')
+            if bridge_obj.is_thing:
+                self.append('}')
             self.write_file(bridge_key)
 
     def _append_bridge(self, bridge: Bridge) -> None:
-        bridgething = bridge.thing
+        if bridge.is_thing:
+            bridgething = bridge.thing
 
-        bridgestring = f'Bridge {bridge.binding}:{bridgething.typed}:{bridgething.uid} '
-        bridgestring += f'"{bridgething.nameprefix} {bridge.name} ({bridge.identifier})" '
-        if bridgething.has_properties:
-            bridgestring += f'{Formatter.key_value_pairs(bridgething.properties, "[", "]")} '
+            bridgestring = f'Bridge {bridge.binding}:{bridgething.typed}:{bridgething.uid} '
+            bridgestring += f'"{bridgething.nameprefix} {bridge.name} ({bridge.identifier})" '
+            if bridgething.has_properties:
+                bridgestring += f'{Formatter.key_value_pairs(bridgething.properties, "[", "]")} '
 
-        bridgestring += '{'
+            bridgestring += '{'
 
-        self.append(bridgestring)
+            self.append(bridgestring)
 
         self._append_things(bridge)
 
     def _append_things(self, bridge: Bridge) -> None:
         for thing in bridge.things:
-            thingstring = f'  Thing {thing.typed} {thing.uid} '
+            if bridge.is_thing:
+                thingstring = f'  Thing {thing.typed} {thing.uid} '
+            else:
+                thingstring = f'Thing {bridge.binding}:{thing.typed}:{thing.uid} '
             thingstring += f'"{thing.nameprefix} {thing.name} ({thing.identifier})" '
             thingstring += f'@ "{thing.category}" '
 

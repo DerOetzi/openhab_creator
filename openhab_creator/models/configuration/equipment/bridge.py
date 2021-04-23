@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Dict, Final, List, Optional
+from typing import TYPE_CHECKING, Dict, List, Optional
 
 from openhab_creator.models.configuration.equipment import Equipment
 
@@ -14,7 +14,7 @@ class Bridge(Equipment):
                  configuration: Configuration,
                  name: str,
                  binding: str,
-                 thing: Dict,
+                 thing: Optional[Dict] = None,
                  secrets: Optional[List[str]] = None):
 
         self.binding: str = binding
