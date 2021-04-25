@@ -115,12 +115,20 @@ class Equipment(BaseObject):
         return self._subequipment
 
     @property
+    def has_location(self) -> bool:
+        return self.location is not None
+
+    @property
     def toplevel_location(self) -> Location:
         location = self.location
         while location.has_parent:
             location = location.parent
 
         return location
+
+    @property
+    def has_person(self) -> bool:
+        return self.person is not None
 
     def has_point(self, point: str) -> bool:
         return point in self.points
@@ -182,7 +190,13 @@ class Equipment(BaseObject):
             'label': self.name_with_type
         }
 
-        return {**tags, **self.location.location_tags}
+        if self.has_location:
+            tags = {**tags, **self.location.location_tags}
+
+        if self.has_person:
+            tags = {**tags, **self.person.person_tags}
+
+        return tags
 
 
 class EquipmentFactory(object):

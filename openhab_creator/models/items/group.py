@@ -7,9 +7,11 @@ from openhab_creator import CreatorEnum
 class GroupType(CreatorEnum):
     COLOR = ':Color:OR(ON,OFF)'
     DIMMER_AVG = ':Dimmer:AVG'
+    NUMBER = ':Number'
     NUMBER_AVG = ':Number:AVG'
     NUMBER_MAX = ':Number:MAX'
     ONOFF = ':Switch:OR(ON,OFF)'
+    LOCATION = 'Location'
 
 
 class Group(BaseItem):

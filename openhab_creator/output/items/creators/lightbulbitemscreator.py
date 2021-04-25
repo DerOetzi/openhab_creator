@@ -95,7 +95,8 @@ class LightbulbItemsCreator(BaseItemsCreator):
         String(lightbulb.lightcontrol_id)\
             .label(_('Lightcontrol'))\
             .icon('lightcontrol')\
-            .groups(lightbulb.lightbulb_id, 'Lightcontrol')\
+            .equipment(lightbulb)\
+            .groups('Lightcontrol')\
             .semantic(PointType.CONTROL)\
             .append_to(self)
 
@@ -103,41 +104,45 @@ class LightbulbItemsCreator(BaseItemsCreator):
             .label(_('Hide on lights page'))\
             .icon('hide')\
             .config()\
-            .groups(lightbulb.lightbulb_id)\
+            .equipment(lightbulb)\
             .semantic(PointType.CONTROL)\
             .append_to(self)
 
         Switch(lightbulb.auto_id)\
             .label(_('Scene controlled'))\
             .icon('auto')\
-            .groups('AutoLight', lightbulb.lightbulb_id)\
+            .equipment(lightbulb)\
+            .groups('AutoLight')\
             .semantic(PointType.CONTROL)\
             .append_to(self)
 
         Switch(lightbulb.autodisplay_id)\
             .label(_('Display scene controlled'))\
-            .groups(lightbulb.lightbulb_id)\
+            .equipment(lightbulb)\
             .semantic(PointType.STATUS)\
             .append_to(self)
 
         Number(lightbulb.autoreactivation_id)\
             .label(_('Reactivate scene controlled'))\
             .icon('reactivation')\
-            .groups('AutoReactivationLight', lightbulb.lightbulb_id)\
+            .equipment(lightbulb)\
+            .groups('AutoReactivationLight')\
             .semantic(PointType.SETPOINT)\
             .append_to(self)
 
         Switch(lightbulb.autodarkness_id)\
             .label(_('In the dark'))\
             .icon('darkness')\
-            .groups('AutoDarkness', lightbulb.lightbulb_id)\
+            .equipment(lightbulb)\
+            .groups('AutoDarkness')\
             .semantic(PointType.SETPOINT)\
             .append_to(self)
 
         Switch(lightbulb.autoabsence_id)\
             .label(_('Even in absence'))\
             .icon('absence')\
-            .groups('AutoAbsenceLight', lightbulb.lightbulb_id)\
+            .equipment(lightbulb)\
+            .groups('AutoAbsenceLight')\
             .semantic(PointType.SETPOINT)\
             .append_to(self)
 
@@ -146,7 +151,8 @@ class LightbulbItemsCreator(BaseItemsCreator):
             .label(_('Motiondetector period'))\
             .format('%d s')\
             .icon('timeout')\
-            .groups('MotionDetectorPeriod', lightbulb.lightbulb_id)\
+            .equipment(lightbulb)\
+            .groups('MotionDetectorPeriod')\
             .semantic(PointType.SETPOINT, PropertyType.DURATION)\
             .append_to(self)
 
@@ -154,7 +160,8 @@ class LightbulbItemsCreator(BaseItemsCreator):
             String(lightbulb.nightmode_id)\
                 .label(_('Nightmode configuration'))\
                 .icon('configuration')\
-                .groups('Nightmode', lightbulb.lightbulb_id)\
+                .equipment(lightbulb)\
+                .groups('Nightmode')\
                 .semantic(PointType.SETPOINT)\
                 .append_to(self)
 
@@ -165,7 +172,7 @@ class LightbulbItemsCreator(BaseItemsCreator):
                     .typed(GroupType.DIMMER_AVG)\
                     .label(_('Brightness'))\
                     .icon('light')\
-                    .groups(parent_lightbulb.lightbulb_id)\
+                    .equipment(parent_lightbulb)\
                     .semantic(PointType.CONTROL, PropertyType.LIGHT)\
                     .append_to(self)
 
@@ -174,7 +181,7 @@ class LightbulbItemsCreator(BaseItemsCreator):
                     .typed(GroupType.NUMBER_AVG)\
                     .label(_('Colortemperature'))\
                     .icon('light')\
-                    .groups(parent_lightbulb.lightbulb_id)\
+                    .equipment(parent_lightbulb)\
                     .semantic(PointType.CONTROL, PropertyType.COLORTEMPERATURE)\
                     .append_to(self)
 
@@ -182,7 +189,7 @@ class LightbulbItemsCreator(BaseItemsCreator):
                 Group(parent_lightbulb.onoff_id)\
                     .typed(GroupType.ONOFF)\
                     .label(_('On/Off'))\
-                    .groups(parent_lightbulb.lightbulb_id)\
+                    .equipment(parent_lightbulb)\
                     .semantic(PointType.SWITCH, PropertyType.LIGHT)\
                     .append_to(self)
 
@@ -190,7 +197,7 @@ class LightbulbItemsCreator(BaseItemsCreator):
                 Group(parent_lightbulb.rgb_id)\
                     .typed(GroupType.COLOR)\
                     .label(_('RGB Color'))\
-                    .groups(parent_lightbulb.lightbulb_id)\
+                    .equipment(parent_lightbulb)\
                     .semantic(PointType.CONTROL)\
                     .append_to(self)
 
@@ -204,7 +211,7 @@ class LightbulbItemsCreator(BaseItemsCreator):
             Group(lightbulb.lightbulb_id)\
                 .label(_('Lightbulb {name}').format(name=lightbulb.name))\
                 .icon('light')\
-                .groups(lightbulb.parent.lightbulb_id)\
+                .equipment(lightbulb.parent)\
                 .semantic(lightbulb)\
                 .append_to(self)
 
@@ -214,14 +221,16 @@ class LightbulbItemsCreator(BaseItemsCreator):
             .format('%d')\
             .icon('switchingcycles')\
             .sensor('switchingcycle', lightbulb.influxdb_tags)\
-            .groups('SwitchingCycles', lightbulb.lightbulb_id)\
+            .equipment(lightbulb)\
+            .groups('SwitchingCycles')\
             .semantic(PointType.MEASUREMENT)\
             .append_to(self)
 
         Switch(lightbulb.switchingcyclesreset_id)\
             .label(_('Reset'))\
             .icon('configuration')\
-            .groups('SwitchingCyclesReset', lightbulb.lightbulb_id)\
+            .equipment(lightbulb)\
+            .groups('SwitchingCyclesReset')\
             .semantic(PointType.CONTROL)\
             .expire('10s', state='OFF')\
             .append_to(self)
@@ -230,7 +239,7 @@ class LightbulbItemsCreator(BaseItemsCreator):
             brightness = Dimmer(lightbulb.brightness_id)\
                 .label(_('Brightness'))\
                 .icon('light')\
-                .groups(lightbulb.lightbulb_id)\
+                .equipment(lightbulb)\
                 .semantic(PointType.CONTROL, PropertyType.LIGHT)\
                 .channel(lightbulb.channel('brightness'))
 
@@ -243,7 +252,7 @@ class LightbulbItemsCreator(BaseItemsCreator):
             colortemperature = Number(lightbulb.colortemperature_id)\
                 .label(_('Colortemperature'))\
                 .icon('light')\
-                .groups(lightbulb.lightbulb_id)\
+                .equipment(lightbulb)\
                 .semantic(PointType.CONTROL, PropertyType.COLORTEMPERATURE)\
                 .channel(lightbulb.channel('colortemperature'))
 
@@ -256,7 +265,7 @@ class LightbulbItemsCreator(BaseItemsCreator):
             onoff = Switch(lightbulb.onoff_id)\
                 .label(_('On/Off'))\
                 .icon('light')\
-                .groups(lightbulb.lightbulb_id)\
+                .equipment(lightbulb)\
                 .semantic(PointType.CONTROL, PropertyType.LIGHT)\
                 .channel(lightbulb.channel('onoff'))
 
@@ -269,7 +278,7 @@ class LightbulbItemsCreator(BaseItemsCreator):
             rgb = Color(lightbulb.rgb_id)\
                 .label(_('RGB Color'))\
                 .icon('light')\
-                .groups(lightbulb.lightbulb_id)\
+                .equipment(lightbulb)\
                 .semantic(PointType.CONTROL)\
                 .channel(lightbulb.channel('rgb'))
 

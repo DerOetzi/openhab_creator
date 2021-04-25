@@ -28,3 +28,15 @@ class Person(BaseObject):
             self.equipment.append(EquipmentFactory.new(configuration=configuration,
                                                        person=self,
                                                        ** equipment_definition))
+
+    @property
+    def presence_id(self) -> str:
+        return f'presence{self.identifier}'
+
+    @property
+    def person_tags(self) -> Dict[str, str]:
+        tags = {
+            'person': self.name
+        }
+
+        return tags

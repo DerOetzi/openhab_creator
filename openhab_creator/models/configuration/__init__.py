@@ -94,6 +94,7 @@ class Configuration(object):
         }
         self.dashboard: Dashboard = Dashboard(self)
         self.timecontrolled_locations: Dict[str, Location] = {}
+        self.macs = []
 
         self._init_bridges(configdir)
         self._init_templates(configdir)
@@ -101,6 +102,10 @@ class Configuration(object):
         self._init_persons(configdir)
 
         self._init_locations(configdir)
+
+        if len(self.macs) > 0:
+            for lan in self.equipment('lan', False):
+                lan.macs(self.macs)
 
     def _init_bridges(self, configdir: str) -> None:
         self.bridges: Dict[str, Bridge] = {}
@@ -255,3 +260,8 @@ class Configuration(object):
             equipment = equipment_registry[self.WITH_CHILDS]
 
         return equipment
+
+    def register_mac(self, category: str, identifier: str) -> str:
+        mac = self.secrets.secret('tr064', 'lan', 'mac', category, identifier)
+        self.macs.append(mac)
+        return mac

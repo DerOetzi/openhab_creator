@@ -54,7 +54,7 @@ class SensorItemsCreator(BaseItemsCreator):
         if sensor.sensor_is_subequipment:
             sensor_equipment\
                 .label(_('Sensor'))\
-                .groups(sensor.equipment_id)
+                .equipment(sensor)
         else:
             sensor_equipment\
                 .label(_('Sensor {blankname}').format(blankname=sensor.blankname))\

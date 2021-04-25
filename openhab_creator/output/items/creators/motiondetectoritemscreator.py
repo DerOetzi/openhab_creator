@@ -35,12 +35,13 @@ class MotionDetectorItemsCreator(BaseItemsCreator):
         Switch(motiondetector.presence_id)\
             .label(_('Presence'))\
             .icon(motiondetector.category)\
-            .groups(motiondetector.motiondetector_id)\
+            .equipment(motiondetector)\
             .semantic(PointType.STATUS, PropertyType.PRESENCE)\
             .channel(motiondetector.channel('presence'))\
             .append_to(self)
 
         Group(motiondetector.assignment_id())\
             .label(_('Motiondetector assignment'))\
-            .groups(motiondetector.motiondetector_id, 'MotionDetectorAssignment')\
+            .equipment(motiondetector)\
+            .groups('MotionDetectorAssignment')\
             .append_to(self)

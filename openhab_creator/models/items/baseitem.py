@@ -11,6 +11,7 @@ from openhab_creator.output.formatter import Formatter
 if TYPE_CHECKING:
     from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
     from openhab_creator.models.configuration.location import Location
+    from openhab_creator.models.configuration.equipment import Equipment
 
 
 class PointType(CreatorEnum):
@@ -105,6 +106,9 @@ class BaseItem():
 
     def location(self, location: Location) -> BaseItem:
         return self.groups(location.identifier)
+
+    def equipment(self, equipment: Equipment) -> BaseItem:
+        return self.groups(equipment.equipment_id)
 
     def sensor(self, measurement: str, series_tags: Dict[str, str]) -> BaseItem:
         self.groups('Sensor')

@@ -34,14 +34,15 @@ class WallSwitchItemsCreator(BaseItemsCreator):
 
         Number(wallswitch.button_id)\
             .label(_('Button state'))\
-            .groups(wallswitch.wallswitch_id)\
+            .equipment(wallswitch)\
             .semantic(PointType.STATUS)\
             .channel(wallswitch.channel('button'))\
             .append_to(self)
 
         Group(wallswitch.wallswitchassignment_id)\
             .label(_('Wallswitch assignment'))\
-            .groups('WallswitchesAssignment', wallswitch.wallswitch_id)\
+            .equipment(wallswitch)\
+            .groups('WallswitchesAssignment')\
             .append_to(self)
 
         for button_key in range(0, wallswitch.buttons_count):

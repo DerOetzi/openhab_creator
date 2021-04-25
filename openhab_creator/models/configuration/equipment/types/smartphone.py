@@ -18,13 +18,14 @@ class Smartphone(Equipment):
             'smartphone': 'smartphone',
             'geofence': 'geofence',
             'distance': 'distance',
-            'location': 'location',
+            'accuracy': 'accuracy',
+            'position': 'position',
             'lastseen': 'lastSeen'
         }
 
     @property
     def conditional_points(self) -> List[str]:
-        return ['distance']
+        return ['distance', 'accuracy', 'position', 'lastseen']
 
     @property
     def categories(self) -> List[str]:

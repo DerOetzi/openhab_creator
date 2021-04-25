@@ -30,7 +30,12 @@ class Properties(object):
 
 
 class Channel(object):
-    def __init__(self, secrets: Dict[str, str], identifier: str, typed: str, name: str, properties: Dict[str, Any]):
+    def __init__(self,
+                 secrets: Dict[str, str],
+                 identifier: str,
+                 typed: str,
+                 name: str,
+                 properties: Dict[str, Any]):
         self.identifier: str = identifier
         self.typed: str = typed
         self.name: str = name
@@ -51,7 +56,8 @@ class Thing(object):
                  nameprefix: Optional[str] = '',
                  properties: Optional[Dict[str, Any]] = None,
                  channels: Optional[Dict[str, Any]] = None,
-                 bridge: Optional[str] = None):
+                 bridge: Optional[str] = None,
+                 mac: Optional[bool] = False):
 
         self.equipment_node: Equipment = equipment_node
 
@@ -75,6 +81,10 @@ class Thing(object):
             self.secrets, {} if properties is None else properties)
 
         self._init_channels({} if channels is None else channels)
+
+        if mac:
+            configuration.register_mac(
+                self.equipment_node.category, self.equipment_node.identifier)
 
     def _init_bridge(self,
                      configuration: Optional[Configuration] = None,
