@@ -82,9 +82,8 @@ class Thing(object):
 
         self._init_channels({} if channels is None else channels)
 
-        if mac:
-            configuration.register_mac(
-                self.equipment_node.category, self.equipment_node.identifier)
+        self.mac: Optional[str] = configuration.register_mac(
+            self.equipment_node) if mac else None
 
     def _init_bridge(self,
                      configuration: Optional[Configuration] = None,

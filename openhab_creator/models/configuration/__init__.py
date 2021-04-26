@@ -17,6 +17,7 @@ from openhab_creator.models.grafana.dashboard import Dashboard
 
 if TYPE_CHECKING:
     from openhab_creator.models.configuration.equipment import Equipment
+    from openhab_creator.models.configuration.equipment.types.networkappliance import NetworkAppliance
 
 
 class SecretsStorage():
@@ -62,7 +63,8 @@ class SecretsStorage():
 
         return value
 
-    def secret_key(self, *args: List[str]) -> str:
+    @staticmethod
+    def secret_key(*args: List[str]) -> str:
         return '_'.join(args).lower()
 
     @property
@@ -94,7 +96,7 @@ class Configuration(object):
         }
         self.dashboard: Dashboard = Dashboard(self)
         self.timecontrolled_locations: Dict[str, Location] = {}
-        self.macs = []
+        self.macs: Dict[str, Equipment] = {}
 
         self._init_bridges(configdir)
         self._init_templates(configdir)
@@ -105,7 +107,7 @@ class Configuration(object):
 
         if len(self.macs) > 0:
             for lan in self.equipment('lan', False):
-                lan.macs(self.macs)
+                lan.register_macs(self.macs)
 
     def _init_bridges(self, configdir: str) -> None:
         self.bridges: Dict[str, Bridge] = {}
@@ -261,7 +263,9 @@ class Configuration(object):
 
         return equipment
 
-    def register_mac(self, category: str, identifier: str) -> str:
-        mac = self.secrets.secret('tr064', 'lan', 'mac', category, identifier)
-        self.macs.append(mac)
+    def register_mac(self, equipment: Equipment) -> str:
+        mac = self.secrets.secret(
+            'tr064', 'lan', 'mac', equipment.semantic, equipment.identifier)
+
+        self.macs[mac] = equipment
         return mac

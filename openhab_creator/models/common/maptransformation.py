@@ -17,6 +17,8 @@ class MapTransformation(CreatorEnum):
         'OFF': _('Ok'), 'ON': _('Low')
     }
 
+    ONLINE = "online", {'ON': _('Online'), 'OFF': _('Offline')}
+
     PRESENCE = "presence", Presence.mappings
 
     SCENE = "scene", Scene.mappings
@@ -31,6 +33,6 @@ class MapTransformation(CreatorEnum):
         self.filename: str = filename
         self.mappings: Dict[str, str] = mappings
 
-    @property
+    @ property
     def formatstr(self) -> str:
         return f'MAP({self.filename}.map):%s'

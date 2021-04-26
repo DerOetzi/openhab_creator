@@ -185,6 +185,10 @@ class Equipment(BaseObject):
         return f'batteryLevel{self.semantic}{self.identifier}'
 
     @property
+    def maconline_id(self) -> str:
+        return f'maconline{self.semantic}{self.identifier}'
+
+    @property
     def influxdb_tags(self) -> Dict[str, str]:
         tags = {
             'label': self.name_with_type

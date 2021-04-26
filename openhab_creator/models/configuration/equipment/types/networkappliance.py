@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Dict, List, Optional
 
 from openhab_creator import _
+from openhab_creator.exception import BuildException
 from openhab_creator.models.configuration.equipment import (Equipment,
                                                             EquipmentType)
 
@@ -15,6 +16,7 @@ class NetworkAppliance(Equipment):
         super().__init__(**equipment_configuration)
 
         self.tr064: Optional[str] = tr064
+        self.macs: Optional[Dict[str, Equipment]] = {}
 
     @property
     def item_identifiers(self) -> Dict[str, str]:
@@ -40,5 +42,15 @@ class NetworkAppliance(Equipment):
         typed = _("NetworkAppliance")
         return f'{self.name} ({typed})'
 
-    def macs(self, macs: List[str]) -> None:
-        self.thing.properties['macOnline'] = '","'.join(macs)
+    def register_macs(self, macs: Dict[str, Equipment]) -> None:
+        self.macs = macs
+        self.thing.properties['macOnline'] = '","'.join(macs.keys())
+
+    def maconline_channel(self, mac: str) -> str:
+        if not (self.is_thing and mac in self.macs):
+            raise BuildException(
+                f'Cannot create channel for mac address "{mac}" for equipment {self.identifier}')
+
+        mac = mac.replace(':', '_3A')
+
+        return f'{self.thing.channelprefix}:macOnline_{mac}'
