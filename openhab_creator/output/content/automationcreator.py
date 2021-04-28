@@ -20,16 +20,16 @@ class AutomationCreator(BaseContentCreator):
         self._copy_all_files_from_subdir('scripts')
 
         self._copy_all_files_from_subdir(
-            f'{self.BASESRCPATH}lib/python/core', '/automation/lib/python/core')
+            f'{self.BASESRCPATH}lib/python/core', 'automation/lib/python/core')
 
         self._copy_all_files_from_subdir(
-            f'{self.BASESRCPATH}jsr223/python/core', '/automation/jsr223/core')
+            f'{self.BASESRCPATH}jsr223/python/core', 'automation/jsr223/core')
 
         self._copy_all_files_from_subdir(
-            '/automation/libraries', '/automation/lib/python/personal')
+            'automation/libraries', 'automation/lib/python/personal')
 
         self._copy_all_files_from_subdir(
-            '/automation/rules', '/automation/jsr223/personal')
+            'automation/rules', 'automation/jsr223/personal')
 
         self.__prepare_and_copy_configuration(configdir, configuration.secrets)
 

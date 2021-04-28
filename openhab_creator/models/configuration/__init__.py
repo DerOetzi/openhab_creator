@@ -120,7 +120,7 @@ class Configuration(object):
 
     def _init_persons(self, configdir: str) -> None:
         self.persons: List[Person] = []
-        with open(f'{configdir}/persons.json') as json_file:
+        with open(f'{configdir}/persons.json', encoding='utf-8') as json_file:
             persons = json.load(json_file)
             key = 0
             for person_equipment in persons:
@@ -175,7 +175,7 @@ class Configuration(object):
         srcfile = os.path.join(configdir, filename)
 
         if os.path.exists(srcfile):
-            with open(srcfile) as json_file:
+            with open(srcfile, encoding='utf-8') as json_file:
                 results = json.load(json_file)
 
         return results
@@ -190,7 +190,7 @@ class Configuration(object):
             for dir_entry in os.scandir(srcdir):
                 name = os.path.basename(dir_entry)
                 if name.endswith('.json'):
-                    with open(dir_entry) as json_file:
+                    with open(dir_entry, encoding='utf-8') as json_file:
                         results[name[:-5].lower()] = json.load(json_file)
 
         return results

@@ -43,7 +43,7 @@ class Dashboard(object):
         if self.host is not None:
             try:
                 response = requests.get(
-                    f'{self.host}/api/dashboards/uid/openhab3')
+                    f'{self.host}/api/dashboards/uid/openhab3', timeout=2)
                 if response.status_code == 200:
                     self.online = response.json()['dashboard']
                     success = True

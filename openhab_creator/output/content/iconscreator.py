@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from cairosvg import svg2png
@@ -16,7 +17,7 @@ if TYPE_CHECKING:
 class IconsCreator(BaseContentCreator):
     def build(self):
         self._create_outputdir_if_not_exists('icons/classic')
-        src_dir = f'{self._srcdir}/icons'
+        src_dir = Path(self._srcdir) / 'icons'
 
         for category in os.scandir(src_dir):
             icon_basename = category.name
@@ -50,11 +51,11 @@ class IconsCreator(BaseContentCreator):
         return content
 
     def __write_svg(self, icon_basename: str, content: str) -> None:
-        destination = f'{self._outputdir}/icons/classic/{icon_basename}.svg'
+        destination = self._outputdir / f'icons/classic/{icon_basename}.svg'
         with open(destination, 'w') as f:
             f.write(content)
 
     def __convert_write_png(self, icon_basename, content: str) -> None:
-        destination = f'{self._outputdir}/icons/classic/{icon_basename}.png'
-        svg2png(bytestring=content, write_to=destination,
+        destination = self._outputdir / f'icons/classic/{icon_basename}.png'
+        svg2png(bytestring=content, write_to=str(destination),
                 output_height=32, output_width=32)

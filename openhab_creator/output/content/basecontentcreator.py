@@ -17,10 +17,10 @@ if TYPE_CHECKING:
 
 class BaseContentCreator():
     def __init__(self, outputdir: str):
-        self._outputdir: str = outputdir
+        self._outputdir: Path = Path(outputdir)
 
         pwd = Path(__file__).resolve().parent.parent.parent
-        self._srcdir: str = f'{pwd}/content/'
+        self._srcdir: str = pwd / 'content'
 
     def _copy_all_files_from_subdir(self, subdir: str, destination: Optional[str] = None) -> None:
         if destination is None:
@@ -30,14 +30,14 @@ class BaseContentCreator():
 
         distutils.log.set_verbosity(distutils.log.DEBUG)
         distutils.dir_util.copy_tree(
-            f'{self._srcdir}{subdir}',
-            dest_dir,
+            str(self._srcdir / subdir),
+            str(dest_dir),
             update=1,
             verbose=1,
         )
 
-    def _create_outputdir_if_not_exists(self, subdir: str) -> str:
-        destination = f'{self._outputdir}/{subdir}/'
+    def _create_outputdir_if_not_exists(self, subdir: str) -> Path:
+        destination = self._outputdir / subdir
         if not os.path.exists(destination):
             os.makedirs(destination)
 
@@ -48,12 +48,12 @@ class BaseContentCreator():
                                 input_file: str,
                                 secrets: SecretsStorage,
                                 output_file: Optional[str] = None) -> None:
-        srcfile = f'{configdir}/{input_file}'
+        srcfile = Path(configdir) / input_file
         if output_file is None:
             output_file = input_file
 
         if os.path.exists(srcfile):
-            with open(srcfile, 'r') as fobj:
+            with open(srcfile, 'r', encoding='utf-8') as fobj:
                 content = fobj.read()
                 content = self.__replace_secrets(content, secrets)
 
@@ -71,6 +71,10 @@ class BaseContentCreator():
         return content
 
     def __write_configuration(self, output_file: str, content: str) -> None:
-        with open(f'{self._outputdir}/{output_file}', 'w') as fobj:
+        destfile = self._outputdir / output_file
+
+        os.makedirs(os.path.dirname(os.path.abspath(destfile)), exist_ok=True)
+
+        with open(destfile, 'w') as fobj:
             logger.info('Write %s/%s', self._outputdir, output_file)
             fobj.write(content)
