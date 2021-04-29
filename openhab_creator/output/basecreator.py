@@ -24,7 +24,7 @@ class BaseCreator(object):
     def write_file(self, filename: str) -> None:
         self._create_outputdir_if_not_exists()
 
-        with open(self.outputdir / self.subdir / f'{filename}.{self.typed}', 'w') as f:
+        with open(self.outputdir / self.subdir / f'{filename}.{self.typed}', 'w', encoding='utf-8') as f:
             f.writelines("\n".join(self.lines))
 
         logger.info(f'File {self.subdir}/{filename}.{self.typed} written')
