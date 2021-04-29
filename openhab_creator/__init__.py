@@ -5,10 +5,15 @@ import logging
 import sys
 import locale
 import os
+from enum import Enum
+
+try:
+    import ctypes
+except ImportError:
+    ctypes = None
 
 from ._version import get_versions
 
-from enum import Enum
 
 __version__ = get_versions()['version']
 del get_versions
@@ -18,20 +23,18 @@ logger = logging.getLogger(__name__)
 
 def prepare_language_for_windows():
     if sys.platform == 'win32':
-        try:
-            import ctypes
-        except ImportError:
-            return [locale.getdefaultlocale()[0]]
-
-        lcid_user = ctypes.windll.kernel32.GetUserDefaultLCID()
-        lcid_system = ctypes.windll.kernel32.GetSystemDefaultLCID()
-        if lcid_user != lcid_system:
-            lcids = [lcid_user, lcid_system]
+        if ctypes is None:
+            languages = [locale.getdefaultlocale()[0]]
         else:
-            lcids = [lcid_user]
+            lcid_user = ctypes.windll.kernel32.GetUserDefaultLCID()
+            lcid_system = ctypes.windll.kernel32.GetSystemDefaultLCID()
+            if lcid_user != lcid_system:
+                lcids = [lcid_user, lcid_system]
+            else:
+                lcids = [lcid_user]
 
-        languages = list(filter(None, [locale.windows_locale.get(i)
-                                       for i in lcids])) or None
+            languages = list(filter(None, [locale.windows_locale.get(i)
+                                           for i in lcids])) or None
 
         if languages:
             os.environ['LANGUAGE'] = ':'.join(languages)
@@ -58,7 +61,8 @@ class CreatorEnum(Enum):
         return str(self.value)
 
 
-class classproperty(object):
+class classproperty():
+    #pylint: disable=invalid-name
     def __init__(self, method=None):
         self.fget = method
 
