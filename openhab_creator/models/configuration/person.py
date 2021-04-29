@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING, Dict, List, Optional
 
 from openhab_creator.models.configuration.baseobject import BaseObject
 from openhab_creator.models.configuration.equipment import EquipmentFactory
+from openhab_creator.models.configuration.equipment.types.smartphone import Smartphone
 
 if TYPE_CHECKING:
     from openhab_creator.models.configuration import Configuration
@@ -18,6 +19,8 @@ class Person(BaseObject):
         name = configuration.secrets.secret(f'person{key}')
         super().__init__(name)
 
+        self.has_presence: bool = False
+
         self._init_equipment(
             configuration, [] if equipment is None else equipment)
 
@@ -25,9 +28,14 @@ class Person(BaseObject):
         self.equipment: List[Equipment] = []
 
         for equipment_definition in equipment:
-            self.equipment.append(EquipmentFactory.new(configuration=configuration,
-                                                       person=self,
-                                                       ** equipment_definition))
+            equipment = EquipmentFactory.new(configuration=configuration,
+                                             person=self,
+                                             ** equipment_definition)
+
+            self.equipment.append(equipment)
+
+            self.has_presence = self.has_presence \
+                or isinstance(equipment, Smartphone)
 
     @property
     def presence_id(self) -> str:

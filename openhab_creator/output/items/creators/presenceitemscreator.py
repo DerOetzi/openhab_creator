@@ -41,22 +41,23 @@ class PresenceItemsCreator(BaseItemsCreator):
 
     def build_persons(self, persons: List[Person]) -> None:
         for person in persons:
-            Group(person.presence_id)\
-                .typed(GroupType.NUMBER_MAX)\
-                .label(_('Presence {person}').format(person=person.name))\
-                .map(MapTransformation.PRESENCE)\
-                .groups('Presences')\
-                .append_to(self)
-
-            for smartphone in list(filter(
-                    lambda x: x.category == 'smartphone', person.equipment)):
-                Group(smartphone.smartphone_id)\
-                    .label(_('Smartphone {name}').format(name=smartphone.name))\
-                    .semantic(smartphone)\
+            if person.has_presence:
+                Group(person.presence_id)\
+                    .typed(GroupType.NUMBER_MAX)\
+                    .label(_('Presence {person}').format(person=person.name))\
+                    .map(MapTransformation.PRESENCE)\
+                    .groups('Presences')\
                     .append_to(self)
 
-                if smartphone.has_distance:
-                    self.build_smartphone_geofence(smartphone)
+                for smartphone in list(filter(
+                        lambda x: x.category == 'smartphone', person.equipment)):
+                    Group(smartphone.smartphone_id)\
+                        .label(_('Smartphone {name}').format(name=smartphone.name))\
+                        .semantic(smartphone)\
+                        .append_to(self)
+
+                    if smartphone.has_distance:
+                        self.build_smartphone_geofence(smartphone)
 
     def build_smartphone_geofence(self, smartphone: Smartphone) -> None:
         Switch(smartphone.geofence_id)\

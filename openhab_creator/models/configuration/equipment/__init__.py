@@ -185,6 +185,10 @@ class Equipment(BaseObject):
         return f'batteryLevel{self.semantic}{self.identifier}'
 
     @property
+    def has_mac(self) -> bool:
+        return self.thing.has_mac
+
+    @property
     def maconline_id(self) -> str:
         return f'maconline{self.semantic}{self.identifier}'
 

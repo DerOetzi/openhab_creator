@@ -69,8 +69,7 @@ class Thing(object):
 
         self._init_binding()
 
-        self._init_secrets(
-            configuration, [] if secrets_config is None else secrets_config)
+        self._init_secrets(configuration, secrets_config or [])
 
         self.uid: str = equipment_node.identifier if thinguid is None else self.replace_secrets(
             thinguid)
@@ -78,9 +77,9 @@ class Thing(object):
         self._init_channelprefix()
 
         self._properties: Properties = Properties(
-            self.secrets, {} if properties is None else properties)
+            self.secrets, properties or {})
 
-        self._init_channels({} if channels is None else channels)
+        self._init_channels(channels or {})
 
         self.mac: Optional[str] = configuration.register_mac(
             self.equipment_node) if mac else None
@@ -178,3 +177,7 @@ class Thing(object):
     @property
     def has_channels(self) -> bool:
         return len(self.channels) > 0
+
+    @property
+    def has_mac(self) -> bool:
+        return self.mac is not None
