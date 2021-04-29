@@ -40,6 +40,7 @@ class NetworkItemsCreator(BaseItemsCreator):
             if equipment.has_person:
                 online.groups(equipment.person.presence_id)\
                     .map(MapTransformation.PRESENCE)\
+                    .icon('presence')\
                     .semantic(PropertyType.PRESENCE)
             else:
                 online.groups('Networkstatus')\

@@ -22,6 +22,13 @@ class PresenceItemsCreator(BaseItemsCreator):
     def build(self, configuration: Configuration) -> None:
         self.build_general_groups()
 
+        Switch('wayhome')\
+            .label(_('Way home'))\
+            .icon('wayhome')\
+            .config()\
+            .expire('30m', 'OFF')\
+            .append_to(self)
+
         self.build_persons(configuration.persons)
 
         self.write_file('presences')
@@ -31,6 +38,7 @@ class PresenceItemsCreator(BaseItemsCreator):
             .typed(GroupType.NUMBER_MAX)\
             .label(_('Presences'))\
             .map(MapTransformation.PRESENCE)\
+            .icon('presence')\
             .append_to(self)
 
         Group('Distances')\
@@ -46,6 +54,7 @@ class PresenceItemsCreator(BaseItemsCreator):
                     .typed(GroupType.NUMBER_MAX)\
                     .label(_('Presence {person}').format(person=person.name))\
                     .map(MapTransformation.PRESENCE)\
+                    .icon('presence')\
                     .groups('Presences')\
                     .append_to(self)
 
@@ -63,6 +72,7 @@ class PresenceItemsCreator(BaseItemsCreator):
         Switch(smartphone.geofence_id)\
             .label(_('Geofence'))\
             .map(MapTransformation.PRESENCE)\
+            .icon('presence')\
             .semantic(PointType.STATUS)\
             .equipment(smartphone)\
             .groups(smartphone.person.presence_id)\
@@ -72,18 +82,24 @@ class PresenceItemsCreator(BaseItemsCreator):
             .typed(NumberType.LENGTH)\
             .label(_('Distance'))\
             .format('%,.3f km')\
+            .icon('distance')\
             .semantic(PointType.STATUS)\
             .equipment(smartphone)\
             .groups('Distances')\
             .channel(smartphone.channel('distance'))\
             .sensor('distance', {'typed': 'distance', **smartphone.influxdb_tags})\
+            .scripting({
+                'person': smartphone.person.name,
+                'geofence': smartphone.geofence_id
+            })\
             .append_to(self)
 
         if smartphone.has_accuracy:
             Number(smartphone.accuracy_id)\
                 .typed(NumberType.LENGTH)\
                 .label(_('Accuracy'))\
-                .format('%,d m')\
+                .format('±%,d m')\
+                .icon('accuracy')\
                 .semantic(PointType.STATUS)\
                 .equipment(smartphone)\
                 .channel(smartphone.channel('accuracy'))\
@@ -93,6 +109,7 @@ class PresenceItemsCreator(BaseItemsCreator):
         if smartphone.has_position:
             Location(smartphone.position_id)\
                 .label(_('Position'))\
+                .icon('gps')\
                 .semantic(PointType.STATUS)\
                 .equipment(smartphone)\
                 .channel(smartphone.channel('position'))\
@@ -102,6 +119,7 @@ class PresenceItemsCreator(BaseItemsCreator):
             DateTime(smartphone.lastseen_id)\
                 .label(_('Last updated'))\
                 .datetime()\
+                .icon('update')\
                 .semantic(PointType.STATUS, PropertyType.TIMESTAMP)\
                 .equipment(smartphone)\
                 .channel(smartphone.channel('lastseen'))\
