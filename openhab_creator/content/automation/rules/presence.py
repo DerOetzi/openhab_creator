@@ -12,9 +12,9 @@ logger = logging.getLogger('{}.Presence'.format(LOG_PREFIX))
 @rule('Smartphone distance')
 @when('Member of Distances changed')
 def smartphone_distances(event):
-    distance_item = Item(event.itemName)
+    distance_item = Item.from_event(event)
     actual_distance = distance_item.get_value(-0.1, event)
-    geofence_item = Item(distance_item.scripting('geofence'))
+    geofence_item = distance_item.from_scripting('geofence')
 
     if actual_distance <= 0.020 and actual_distance >= 0:
         geofence_item.post_update(ON)

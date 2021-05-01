@@ -1,3 +1,4 @@
+# pylint: skip-file
 from core.actions import ScriptExecution
 from core.log import logging, LOG_PREFIX
 

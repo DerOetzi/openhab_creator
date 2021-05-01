@@ -31,14 +31,14 @@ def trends(event):
 @rule('Soil moisture notification')
 @when('Descendent of moistureIndoor changed')
 def moisture_notification(event):
-    moisture_item = Item(event.itemName)
+    moisture_item = Item.from_event(event)
     percentage = moisture_item.get_value(-1, event)
 
     if percentage == -1:
         return
 
     if percentage < 40:
-        reminder_item = Item(moisture_item.scripting('reminder_item'))
+        reminder_item = moisture_item.from_scripting('reminder_item')
         reminder_time = reminder_item.get_value(
             DateUtils.now().minusHours(25))
 
@@ -46,6 +46,6 @@ def moisture_notification(event):
             SignalMessenger.broadcast(reminder_item.scripting('message'))
             reminder_item.post_update(DateUtils.set_now())
     elif moisture_item.delta_since(DateUtils.now().minusMinutes(1)) > 10.0:
-        watered_item = Item(moisture_item.scripting('watered_item'))
+        watered_item = moisture_item.from_scripting('watered_item')
         watered_item.post_update(DateUtils.set_now())
         SignalMessenger.broadcast(watered_item.scripting('message'))

@@ -1,3 +1,4 @@
+# pylint: skip-file
 from core.date import format_date
 from java.time import ZonedDateTime
 

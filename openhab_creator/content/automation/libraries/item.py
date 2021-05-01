@@ -19,6 +19,13 @@ class Item(object):
         metadata = get_metadata(self.name, 'scripting')
         self.metadata = {} if metadata is None else metadata.configuration
 
+    @classmethod
+    def from_event(cls, event):
+        return cls(event.itemName)
+
+    def from_scripting(self, name):
+        return self.__class__(self.scripting(name))
+
     def get_value(self, default_value=None, event=None, update_empty=False):
         if event is not None and hasattr(event, 'itemName') and event.itemName == self.name:
             new_state = event.itemCommand if hasattr(
