@@ -1,36 +1,37 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Dict, List, Optional
+from typing import TYPE_CHECKING, List
 
-from openhab_creator.models.configuration.equipment import Equipment
+from openhab_creator.models.configuration.equipment import (
+    Equipment, EquipmentItemIdentifiers)
 
 if TYPE_CHECKING:
     from openhab_creator.models.configuration import Configuration
     from openhab_creator.models.configuration.equipment.thing import Thing
 
 
+class BridgeItemIdentifiers(EquipmentItemIdentifiers):
+    @property
+    def equipment_id(self) -> str:
+        return self._identifier('bridge')
+
+
 class Bridge(Equipment):
     def __init__(self,
-                 configuration: Configuration,
-                 name: str,
                  binding: str,
-                 thing: Optional[Dict] = None,
-                 secrets: Optional[List[str]] = None):
+                 **equipment_configuration):
 
         self.binding: str = binding
 
-        super().__init__(configuration=configuration,
-                         name=name, thing=thing, secrets=secrets)
+        super().__init__(**equipment_configuration)
+
+        self._item_ids = BridgeItemIdentifiers(self)
 
         self.things: List[Thing] = []
 
     @property
-    def item_identifiers(self) -> Dict[str, str]:
-        return {}
-
-    @property
-    def conditional_points(self) -> List[str]:
-        return []
+    def item_ids(self) -> BridgeItemIdentifiers:
+        return self._item_ids
 
     def add_thing(self, thing: Thing) -> None:
         self.things.append(thing)

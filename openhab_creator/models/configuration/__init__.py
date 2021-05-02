@@ -3,21 +3,21 @@ from __future__ import annotations
 import csv
 import json
 import os
-from copy import deepcopy
 from typing import TYPE_CHECKING, Dict, List, Optional
 
 from openhab_creator import logger
 from openhab_creator.exception import ConfigurationException
-from openhab_creator.models.configuration.person import Person
-from openhab_creator.models.configuration.equipment import EquipmentFactory
+from openhab_creator.models.configuration.equipment import EquipmentType
 from openhab_creator.models.configuration.equipment.bridge import Bridge
 from openhab_creator.models.configuration.location import (Location,
                                                            LocationFactory)
+from openhab_creator.models.configuration.person import Person
 from openhab_creator.models.grafana.dashboard import Dashboard
 
 if TYPE_CHECKING:
     from openhab_creator.models.configuration.equipment import Equipment
-    from openhab_creator.models.configuration.equipment.types.networkappliance import NetworkAppliance
+    from openhab_creator.models.configuration.equipment.types.networkappliance import \
+        NetworkAppliance
 
 
 class SecretsStorage():
@@ -80,7 +80,7 @@ class SecretsStorage():
         return self.has_missing
 
 
-class Configuration(object):
+class Configuration():
     WITHOUT_CHILDS = 'without_childs'
     WITH_CHILDS = 'with_childs'
 
@@ -112,7 +112,7 @@ class Configuration(object):
     def _init_bridges(self, configdir: str) -> None:
         self.bridges: Dict[str, Bridge] = {}
 
-        bridges = self.read_jsons_from_dir(configdir, 'bridges')
+        bridges = self._read_jsons_from_dir(configdir, 'bridges')
 
         for bridge_key, bridge_configuration in bridges.items():
             self.bridges[bridge_key] = Bridge(
@@ -128,8 +128,8 @@ class Configuration(object):
                 key += 1
 
     def _init_templates(self, configdir: str) -> None:
-        self.templates: Dict[str, Dict] = self.read_jsons_from_dir(
-            configdir, 'templates')
+        EquipmentType.init(self._read_jsons_from_dir(
+            configdir, 'templates'))
 
     def _init_locations(self, configdir: str) -> None:
         self.locations: Dict[str, List[Location]] = {}
@@ -141,7 +141,7 @@ class Configuration(object):
     def _init_floors(self, configdir: str) -> None:
         self.locations['floors'] = []
 
-        floors = self.read_jsons_from_dir(
+        floors = self._read_jsons_from_dir(
             configdir, 'locations/indoor/floors')
 
         for floor_key in sorted(floors.keys()):
@@ -151,7 +151,7 @@ class Configuration(object):
     def _init_buildings(self, configdir: str) -> None:
         self.locations['buildings'] = []
 
-        buildings = self.read_json_from_file(
+        buildings = self._read_json_from_file(
             configdir, 'locations/indoor/buildings.json')
 
         for building in buildings:
@@ -161,7 +161,7 @@ class Configuration(object):
     def _init_outdoors(self, configdir: str) -> None:
         self.locations['outdoors'] = []
 
-        outdoors = self.read_json_from_file(
+        outdoors = self._read_json_from_file(
             configdir, 'locations/outdoors.json')
 
         for outdoor in outdoors:
@@ -169,7 +169,7 @@ class Configuration(object):
                 LocationFactory.new(configuration=self, **outdoor))
 
     @staticmethod
-    def read_json_from_file(configdir: str, filename: str) -> List[Dict]:
+    def _read_json_from_file(configdir: str, filename: str) -> List[Dict]:
         results = []
 
         srcfile = os.path.join(configdir, filename)
@@ -181,7 +181,7 @@ class Configuration(object):
         return results
 
     @staticmethod
-    def read_jsons_from_dir(configdir: str, subdir: str) -> Dict[str, Dict]:
+    def _read_jsons_from_dir(configdir: str, subdir: str) -> Dict[str, Dict]:
         results = {}
 
         srcdir = os.path.join(configdir, subdir)
@@ -202,14 +202,6 @@ class Configuration(object):
                 f'No bridge "{bridge_key}" in configuration')
 
         return self.bridges[bridge_key]
-
-    def template(self, template_key: str) -> Dict:
-        template_key = template_key.lower()
-        if template_key not in self.templates:
-            raise ConfigurationException(
-                f'No template "{template_key}" in configuration')
-
-        return deepcopy(self.templates[template_key])
 
     @property
     def floors(self) -> List[Location]:

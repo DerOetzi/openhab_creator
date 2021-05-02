@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Dict, Final, List, Optional, Type
 
 from openhab_creator.exception import RegistryException
 from openhab_creator.models.configuration.baseobject import BaseObject
-from openhab_creator.models.configuration.equipment import EquipmentFactory
+from openhab_creator.models.configuration.equipment import EquipmentType
 
 if TYPE_CHECKING:
     from openhab_creator.models.configuration import Configuration
@@ -31,9 +31,9 @@ class Location(BaseObject):
         self.equipment: List[Equipment] = []
 
         for equipment_definition in equipment:
-            self.equipment.append(EquipmentFactory.new(configuration=configuration,
-                                                       location=self,
-                                                       **equipment_definition))
+            self.equipment.append(EquipmentType.new(configuration=configuration,
+                                                    location=self,
+                                                    **equipment_definition))
 
     @abstractproperty
     def area(self) -> str:

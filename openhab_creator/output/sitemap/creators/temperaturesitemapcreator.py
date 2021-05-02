@@ -41,11 +41,11 @@ class TemperatureSitemapCreator(BaseSitemapCreator):
             for sensor in sensors:
                 subpage = self.subpage(page, sensor, heatings)
 
-                if sensor.has_point('temperature'):
-                    Text(f'temperature{sensor.sensor_id}')\
+                if sensor.points.has_temperature:
+                    Text(f'temperature{sensor.item_ids.sensor}')\
                         .label(sensor.name)\
                         .valuecolor(*TemperatureSitemapCreator
-                                    .valuecolor(f'temperature{sensor.sensor_id}'))\
+                                    .valuecolor(f'temperature{sensor.item_ids.sensor}'))\
                         .append_to(subpage)
 
             self._add_grafana(configuration.dashboard, page,
@@ -80,27 +80,27 @@ class TemperatureSitemapCreator(BaseSitemapCreator):
             ]
 
             page.labelcolor(
-                (f'{heating.heatcontrol_id}=="BOOST"', Color.RED),
-                (f'{heating.heatcontrol_id}=="COMFORT"', Color.YELLOW),
-                (f'{heating.heatcontrol_id}=="ECO"', Color.GREEN),
-                (f'{heating.heatcontrol_id}=="CLOSED"', Color.LIGHTGREY)
+                (f'{heating.item_ids.heatcontrol}=="BOOST"', Color.RED),
+                (f'{heating.item_ids.heatcontrol}=="COMFORT"', Color.YELLOW),
+                (f'{heating.item_ids.heatcontrol}=="ECO"', Color.GREEN),
+                (f'{heating.item_ids.heatcontrol}=="CLOSED"', Color.LIGHTGREY)
             )
 
             if heating.boost:
                 mappings.insert(0, ('"BOOST"', _('Boost')))
 
-            Switch(heating.heatcontrol_id, mappings)\
+            Switch(heating.item_ids.heatcontrol, mappings)\
                 .append_to(page)
 
-            Switch(heating.auto_id, [('ON', _('Automation'))])\
-                .visibility((heating.auto_id, '!=', 'ON'))\
+            Switch(heating.item_ids.auto, [('ON', _('Automation'))])\
+                .visibility((heating.item_ids.auto, '!=', 'ON'))\
                 .append_to(page)
 
-            Text(heating.heatsetpoint_id)\
-                .valuecolor(*TemperatureSitemapCreator.valuecolor(heating.heatsetpoint_id))\
+            Text(heating.item_ids.heatsetpoint)\
+                .valuecolor(*TemperatureSitemapCreator.valuecolor(heating.item_ids.heatsetpoint))\
                 .visibility(
-                    (heating.heatcontrol_id, '==', 'COMFORT'),
-                    (heating.heatcontrol_id, '==', 'ECO'))\
+                    (heating.item_ids.heatcontrol, '==', 'COMFORT'),
+                    (heating.item_ids.heatcontrol, '==', 'ECO'))\
                 .append_to(page)
 
     @ staticmethod

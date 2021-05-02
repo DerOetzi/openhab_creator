@@ -35,19 +35,19 @@ class BatterySitemapCreator(BaseSitemapCreator):
             locations.append(location.identifier)
             frame = page.frame(location.identifier, location.name)
 
-            if battery.has_battery_level:
-                level = Text(battery.levelbattery_id, battery.name_with_type)\
+            if battery.points.has_battery_level:
+                level = Text(battery.item_ids.levelbattery, battery.name_with_type)\
                     .valuecolor(*self._valuecolors_level)\
                     .append_to(frame)
 
-            if battery.has_battery_low:
-                low = Text(battery.lowbattery_id, battery.name_with_type)\
+            if battery.points.has_battery_low:
+                low = Text(battery.item_ids.lowbattery, battery.name_with_type)\
                     .valuecolor(*self._valuecolors_low)\
                     .append_to(frame)
 
-            if battery.has_battery_level and battery.has_battery_low:
-                level.visibility((battery.lowbattery_id, '==', 'OFF'))
-                low.visibility((battery.lowbattery_id, '!=', 'OFF'))
+            if battery.points.has_battery_level and battery.points.has_battery_low:
+                level.visibility((battery.item_ids.lowbattery, '==', 'OFF'))
+                low.visibility((battery.item_ids.lowbattery, '!=', 'OFF'))
 
         self._add_grafana(configuration.dashboard, page,
                           list(dict.fromkeys(locations)),

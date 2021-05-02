@@ -26,27 +26,27 @@ class WallSwitchItemsCreator(BaseItemsCreator):
         self.write_file('wallswitch')
 
     def _create_wallswitch_groups(self, wallswitch: WallSwitch):
-        Group(wallswitch.wallswitch_id)\
+        Group(wallswitch.item_ids.wallswitch)\
             .label(_('Wallswitch {name}').format(name=wallswitch.name))\
             .location(wallswitch.location)\
             .semantic(wallswitch)\
             .append_to(self)
 
-        Number(wallswitch.button_id)\
+        Number(wallswitch.item_ids.button)\
             .label(_('Button state'))\
             .equipment(wallswitch)\
             .semantic(PointType.STATUS)\
-            .channel(wallswitch.channel('button'))\
+            .channel(wallswitch.points.channel('button'))\
             .append_to(self)
 
-        Group(wallswitch.wallswitchassignment_id)\
+        Group(wallswitch.item_ids.wallswitchassignment)\
             .label(_('Wallswitch assignment'))\
             .equipment(wallswitch)\
             .groups('WallswitchesAssignment')\
             .append_to(self)
 
         for button_key in range(0, wallswitch.buttons_count):
-            Group(wallswitch.buttonassignment_id(button_key))\
+            Group(wallswitch.item_ids.buttonassignment(button_key))\
                 .label(wallswitch.buttonassignment_name(button_key))\
-                .groups(wallswitch.wallswitchassignment_id)\
+                .groups(wallswitch.item_ids.wallswitchassignment)\
                 .append_to(self)

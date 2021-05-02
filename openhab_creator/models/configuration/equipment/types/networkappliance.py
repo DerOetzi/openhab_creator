@@ -4,8 +4,18 @@ from typing import Dict, List, Optional
 
 from openhab_creator import _
 from openhab_creator.exception import BuildException
-from openhab_creator.models.configuration.equipment import (Equipment,
-                                                            EquipmentType)
+from openhab_creator.models.configuration.equipment import (
+    Equipment, EquipmentItemIdentifiers, EquipmentType)
+
+
+class NetworkApplianceItemIdentifiers(EquipmentItemIdentifiers):
+    @property
+    def equipment_id(self) -> str:
+        return self.networkappliance
+
+    @property
+    def networkappliance(self) -> str:
+        return self._identifier('networkappliance')
 
 
 @EquipmentType()
@@ -15,14 +25,14 @@ class NetworkAppliance(Equipment):
                  **equipment_configuration: Dict):
         super().__init__(**equipment_configuration)
 
+        self._item_ids = NetworkApplianceItemIdentifiers(self)
+
         self.tr064: Optional[str] = tr064
         self.macs: Optional[Dict[str, Equipment]] = {}
 
     @property
-    def item_identifiers(self) -> Dict[str, str]:
-        return {
-            'networkappliance': 'networkappliance'
-        }
+    def item_ids(self) -> NetworkApplianceItemIdentifiers:
+        return self._item_ids
 
     @property
     def conditional_points(self) -> List[str]:

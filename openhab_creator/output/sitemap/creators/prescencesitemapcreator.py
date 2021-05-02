@@ -48,27 +48,27 @@ class PresenceSitemapCreator(BaseSitemapCreator):
                     self.build_smartphone(subpage, equipment)
 
     def build_smartphone(self, personpage: Page, smartphone: Smartphone) -> None:
-        if smartphone.has_mac:
-            Text(smartphone.maconline_id)\
+        if smartphone.points.has_mac:
+            Text(smartphone.item_ids.maconline)\
                 .append_to(personpage)
 
-        if smartphone.has_distance:
-            Text(smartphone.geofence_id)\
+        if smartphone.points.has_distance:
+            Text(smartphone.item_ids.geofence)\
                 .append_to(personpage)
 
-            Text(smartphone.position_id)\
+            Text(smartphone.item_ids.position)\
                 .append_to(personpage)
 
-            Text(smartphone.accuracy_id)\
+            Text(smartphone.item_ids.accuracy)\
                 .append_to(personpage)
 
-            Text(smartphone.distance_id)\
+            Text(smartphone.item_ids.distance)\
                 .append_to(personpage)
 
-            Text(smartphone.lastseen_id)\
+            Text(smartphone.item_ids.lastseen)\
                 .append_to(personpage)
 
-            Mapview(smartphone.position_id, 10)\
+            Mapview(smartphone.item_ids.position, 10)\
                 .append_to(personpage)
 
     def build_configpage(self, configpage: Page, configuration: Configuration) -> None:

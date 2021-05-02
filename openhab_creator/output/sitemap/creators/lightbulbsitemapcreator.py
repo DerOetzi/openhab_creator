@@ -32,14 +32,14 @@ class LightbulbSitemapCreator(BaseSitemapCreator):
             location = lightbulb.toplevel_location
             frame = page.frame(location.identifier, location.name)
 
-            Switch(lightbulb.lightcontrol_id, self._create_lightcontrol_mappings(
+            Switch(lightbulb.item_ids.lightcontrol, self._create_lightcontrol_mappings(
                 lightbulb))\
                 .label(lightbulb.name)\
-                .visibility((lightbulb.hide_id, '!=', 'ON'))\
+                .visibility((lightbulb.item_ids.hide, '!=', 'ON'))\
                 .append_to(frame)
 
-            Switch(lightbulb.auto_id, [('ON', _('Automation'))])\
-                .visibility((lightbulb.autodisplay_id, '==', 'ON'))\
+            Switch(lightbulb.item_ids.auto, [('ON', _('Automation'))])\
+                .visibility((lightbulb.item_ids.autodisplay, '==', 'ON'))\
                 .append_to(frame)
 
     def build_statuspage(self, statuspage: Page, configuration: Configuration) -> None:
@@ -58,25 +58,25 @@ class LightbulbSitemapCreator(BaseSitemapCreator):
                 .icon('configuration')\
                 .append_to(frame)
 
-            Switch(lightbulb.lightcontrol_id, self._create_lightcontrol_mappings(
+            Switch(lightbulb.item_ids.lightcontrol, self._create_lightcontrol_mappings(
                 lightbulb))\
                 .append_to(lightpage)
 
-            Switch(lightbulb.hide_id, [('OFF', _('Display')), ('ON', _('Hide'))])\
+            Switch(lightbulb.item_ids.hide, [('OFF', _('Display')), ('ON', _('Hide'))])\
                 .append_to(lightpage)
 
-            Switch(lightbulb.auto_id, [('OFF', _('Off')), ('ON', _('Automation'))])\
+            Switch(lightbulb.item_ids.auto, [('OFF', _('Off')), ('ON', _('Automation'))])\
                 .append_to(lightpage)
 
-            Switch(lightbulb.autoreactivation_id, [
+            Switch(lightbulb.item_ids.autoreactivation, [
                    ('0', _('Off')), ('30', '30 M'), ('60', '1 H')])\
                 .append_to(lightpage)
 
-            Switch(lightbulb.autoabsence_id, [
+            Switch(lightbulb.item_ids.autoabsence, [
                    ('OFF', _('Off')), ('ON', _('On'))])\
                 .append_to(lightpage)
 
-            Switch(lightbulb.autodarkness_id, [
+            Switch(lightbulb.item_ids.autodarkness, [
                    ('OFF', _('Always')), ('ON', _('Only'))])\
                 .append_to(lightpage)
 
@@ -89,9 +89,9 @@ class LightbulbSitemapCreator(BaseSitemapCreator):
                 mappings = [('RANDOM', _('Random'))]
                 for subequipment in lightbulb.subequipment:
                     mappings.append(
-                        (subequipment.lightbulb_id, subequipment.blankname))
+                        (subequipment.item_ids.lightbulb, subequipment.blankname))
 
-                Selection(lightbulb.nightmode_id, mappings)\
+                Selection(lightbulb.item_ids.nightmode, mappings)\
                     .append_to(lightpage)
 
     def _create_wallswitches_page(self,
@@ -126,7 +126,7 @@ class LightbulbSitemapCreator(BaseSitemapCreator):
             .append_to(frame)
 
         for button_key in range(0, wallswitch.buttons_count):
-            Selection(wallswitch.buttonassignment_id(
+            Selection(wallswitch.item_ids.buttonassignment(
                 button_key, lightbulb), mappings)\
                 .append_to(subpage)
 
@@ -159,13 +159,13 @@ class LightbulbSitemapCreator(BaseSitemapCreator):
                 .icon('motiondetector')\
                 .append_to(lightpage)
 
-            Setpoint(lightbulb.motiondetectorperiod_id, 10, 300, 10)\
+            Setpoint(lightbulb.item_ids.motiondetectorperiod, 10, 300, 10)\
                 .append_to(page)
 
             for motiondetector in configuration.equipment('motiondetector'):
                 location = motiondetector.toplevel_location
                 frame = page.frame(location.identifier, location.name)
 
-                Switch(motiondetector.assignment_id(lightbulb),
+                Switch(motiondetector.item_ids.assignment(lightbulb),
                        [('OFF', _('Off')), ('ON', _('On'))])\
                     .append_to(frame)

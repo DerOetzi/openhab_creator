@@ -48,7 +48,7 @@ class SensorItemsCreator(BaseItemsCreator):
         self.write_file('sensors')
 
     def build_sensor(self, sensor: Sensor) -> None:
-        sensor_equipment = Group(sensor.sensor_id)\
+        sensor_equipment = Group(sensor.item_ids.sensor)\
             .semantic('Sensor')
 
         if sensor.sensor_is_subequipment:
@@ -113,52 +113,52 @@ class SensorItemsCreator(BaseItemsCreator):
                     .semantic(PointType.MEASUREMENT, sensortype.typed.property)\
                     .append_to(self)
 
-        sensor_item = Number(f'{sensortype}{sensor.sensor_id}')\
+        sensor_item = Number(f'{sensortype}{sensor.item_ids.sensor}')\
             .typed(sensortype.typed.number)\
             .label(sensortype.labels.item)\
             .format(sensortype.labels.format_str)\
             .icon(f'{sensortype}{area.lower()}')\
-            .groups(sensor.merged_sensor_id, f'{sensortype}{location}', 'Trend')\
+            .groups(sensor.item_ids.merged_sensor, f'{sensortype}{location}', 'Trend')\
             .semantic(PointType.MEASUREMENT, sensortype.typed.property)\
-            .channel(sensor.channel(sensortype.point))\
+            .channel(sensor.points.channel(sensortype.point))\
             .sensor(sensortype.point, sensor.influxdb_tags)\
             .aisensor()
 
         if sensortype.point == 'moisture':
             sensor_item.scripting({
-                'reminder_item': sensor.moisturelastreminder_id,
-                'watered_item': sensor.moisturelastwatered_id
+                'reminder_item': sensor.item_ids.moisturelastreminder,
+                'watered_item': sensor.item_ids.moisturelastwatered
             })
 
             self.moisture_items(sensor)
 
         sensor_item.append_to(self)
 
-        String(f'trend{sensortype}{sensor.sensor_id}')\
+        String(f'trend{sensortype}{sensor.item_ids.sensor}')\
             .label(_('Trend {label}').format(label=sensortype.labels.item))\
             .map(MapTransformation.TREND)\
-            .groups(sensor.merged_sensor_id)\
+            .groups(sensor.item_ids.merged_sensor)\
             .semantic(PointType.STATUS)\
             .aisensor()\
             .append_to(self)
 
         if sensortype.labels.has_gui_factor:
-            String(f'gui{sensortype}{sensor.sensor_id}')\
+            String(f'gui{sensortype}{sensor.item_ids.sensor}')\
                 .label(sensortype.labels.item)\
                 .transform_js(f'gui{sensortype}')\
                 .icon(f'{sensortype}{area.lower()}')\
-                .groups(sensor.merged_sensor_id, f'gui{sensortype}{location}')\
+                .groups(sensor.item_ids.merged_sensor, f'gui{sensortype}{location}')\
                 .semantic(PointType.MEASUREMENT, sensortype.typed.property)\
-                .channel(sensor.channel(sensortype.point),
+                .channel(sensor.points.channel(sensortype.point),
                          ProfileType.JS, f'togui{sensortype.labels.gui_factor}.js')\
                 .append_to(self)
 
     def moisture_items(self, sensor: Sensor) -> None:
-        DateTime(sensor.moisturelastreminder_id)\
+        DateTime(sensor.item_ids.moisturelastreminder)\
             .label(_('Last watering reminder'))\
             .datetime()\
             .config()\
-            .groups(sensor.merged_sensor_id)\
+            .groups(sensor.item_ids.merged_sensor)\
             .semantic(PointType.STATUS, PropertyType.TIMESTAMP)\
             .scripting({
                 'message': _('The plant {plant} needs to be watered!')
@@ -166,12 +166,12 @@ class SensorItemsCreator(BaseItemsCreator):
             })\
             .append_to(self)
 
-        DateTime(sensor.moisturelastwatered_id)\
+        DateTime(sensor.item_ids.moisturelastwatered)\
             .label(_('Last watered'))\
             .dateonly_weekday()\
             .icon('wateringcan')\
             .config()\
-            .groups(sensor.merged_sensor_id)\
+            .groups(sensor.item_ids.merged_sensor)\
             .semantic(PointType.STATUS, PropertyType.TIMESTAMP)\
             .scripting({
                 'message': _('The plant {plant} says thank you for watering!')

@@ -31,7 +31,7 @@ class NetworkItemsCreator(BaseItemsCreator):
 
     def build_equipment(self, lan: NetworkAppliance) -> None:
         for mac, equipment in lan.macs.items():
-            online = Switch(equipment.maconline_id)\
+            online = Switch(equipment.item_ids.maconline)\
                 .label(_('Network status'))\
                 .equipment(equipment)\
                 .channel(lan.maconline_channel(mac))\

@@ -43,18 +43,18 @@ class IndoorSensorsSitemapCreator(BaseSitemapCreator):
                 *sensortype.colors.indoor_colors(f'{sensortype}Indoor'))
 
         for sensor in sensors:
-            if sensor.has_point(sensortype.point):
+            if sensor.points.has(sensortype.point):
                 location = sensor.toplevel_location
                 locations.append(location)
                 frame = page.frame(
                     location.identifier, location.name)
 
-                sensor_text = Text(f'{prefix}{sensortype}{sensor.sensor_id}')\
+                sensor_text = Text(f'{prefix}{sensortype}{sensor.item_ids.sensor}')\
                     .label(sensor.name)
 
                 if sensortype.colors.has_indoor:
                     sensor_text.valuecolor(*sensortype.colors.indoor_colors(
-                        f'{sensortype}{sensor.sensor_id}'))
+                        f'{sensortype}{sensor.item_ids.sensor}'))
 
                 sensor_text.append_to(frame)
 
@@ -68,7 +68,7 @@ class IndoorSensorsSitemapCreator(BaseSitemapCreator):
         return page
 
     def build_moisture(self, frame: Frame, sensor: Sensor) -> None:
-        Text(sensor.moisturelastwatered_id)\
+        Text(sensor.item_ids.moisturelastwatered)\
             .append_to(frame)
 
     def build_statuspage(self, statuspage: Page, configuration: Configuration) -> None:

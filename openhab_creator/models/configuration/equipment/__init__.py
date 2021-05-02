@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from abc import abstractproperty
+from abc import ABC, abstractproperty
+from copy import deepcopy
 from importlib import import_module
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Type
 
@@ -11,13 +12,80 @@ from openhab_creator.models.configuration.baseobject import BaseObject
 from openhab_creator.models.configuration.equipment.thing import Thing
 
 if TYPE_CHECKING:
+    from openhab_creator.models.configuration import Configuration
     from openhab_creator.models.configuration.location import Location
     from openhab_creator.models.configuration.person import Person
-    from openhab_creator.models.configuration import Configuration
+
+
+class EquipmentItemIdentifiers(ABC):
+    def __init__(self, equipment: Equipment):
+        self.equipment: Equipment = equipment
+
+    @abstractproperty
+    def equipment_id(self) -> str:
+        pass
+
+    @property
+    def battery(self) -> str:
+        return self._identifier(f'battery{self.equipment.semantic}')
+
+    @property
+    def lowbattery(self) -> str:
+        return self._identifier(f'batteryLow{self.equipment.semantic}')
+
+    @property
+    def levelbattery(self) -> str:
+        return self._identifier(f'batteryLevel{self.equipment.semantic}')
+
+    @property
+    def maconline(self) -> str:
+        return self._identifier(f'maconline{self.equipment.semantic}')
+
+    def _identifier(self, prefix: str) -> str:
+        return f'{prefix}{self.equipment.identifier}'
+
+
+class EquipmentPoints():
+    def __init__(self, points: Dict[str, str], equipment: Equipment):
+        self.points: Dict[str, str] = points
+        self.equipment: Equipment = equipment
+
+    @property
+    def has_battery(self) -> bool:
+        return self.has_battery_level or self.has_battery_low
+
+    @property
+    def has_battery_level(self) -> bool:
+        return self.has('battery_level')
+
+    @property
+    def has_battery_low(self) -> bool:
+        return self.has('battery_low')
+
+    @property
+    def has_mac(self) -> bool:
+        return self.equipment.thing.has_mac
+
+    def has(self, point: str, recursive: Optional[bool] = False) -> bool:
+        has_point = point in self.points
+
+        if recursive:
+            for subequipment in self.equipment.subequipment:
+                has_point = has_point or subequipment.points.has(
+                    point, recursive)
+
+        return has_point
+
+    def channel(self, point: str) -> str:
+        if not (self.equipment.is_thing and self.has(point)):
+            raise BuildException(
+                f'Cannot create channel for point "{point}" '
+                'for equipment {self.equipment.identifier}')
+
+        return f'{self.equipment.thing.channelprefix}:{self.points[point]}'
 
 
 class Equipment(BaseObject):
-
     def __init__(self,
                  configuration: Configuration,
                  location: Optional[Location] = None,
@@ -42,19 +110,10 @@ class Equipment(BaseObject):
 
         self.parent: Optional[Equipment] = parent
 
-        self.points: Dict[str, str] = {} if points is None else points
-
         self._init_subequipment(
             configuration, [] if subequipment is None else subequipment)
 
-        for key, value in self.item_identifiers.items():
-            self.__dict__[f'{key}_id'] = f'{value}{self.identifier}'
-
-            if 'equipment_id' not in self.__dict__:
-                self.__dict__['equipment_id'] = self.__dict__[f'{key}_id']
-
-        for point in self.conditional_points:
-            self.__dict__[f'has_{point}'] = self.has_point_recursive(point)
+        self._points: EquipmentPoints = EquipmentPoints(points or {}, self)
 
     def _name_and_identifier(self, identifier: Optional[str] = None) -> Tuple[str, Optional[str]]:
 
@@ -74,25 +133,25 @@ class Equipment(BaseObject):
         return name, identifier
 
     def _init_subequipment(self, configuration: Configuration, subequipment: List[Dict]) -> None:
-        self._subequipment: List[Equipment] = []
+        self.subequipment: List[Equipment] = []
 
         for subequipment_definition in subequipment:
             name = f'{self.blankname} {subequipment_definition["name"]}'
             subequipment_definition['name'] = name.strip()
-            self.subequipment.append(EquipmentFactory.new(configuration=configuration,
-                                                          location=self.location,
-                                                          parent=self,
-                                                          **subequipment_definition))
+            self.subequipment.append(EquipmentType.new(configuration=configuration,
+                                                       location=self.location,
+                                                       parent=self,
+                                                       **subequipment_definition))
 
         logger.debug(self.subequipment)
 
     @abstractproperty
-    def item_identifiers(self) -> Dict[str, str]:
+    def item_ids(self) -> EquipmentItemIdentifiers:
         pass
 
-    @abstractproperty
-    def conditional_points(self) -> List[str]:
-        pass
+    @property
+    def points(self) -> EquipmentPoints:
+        return self._points
 
     @abstractproperty
     def name_with_type(self) -> str:
@@ -111,10 +170,6 @@ class Equipment(BaseObject):
         return len(self.subequipment) > 0
 
     @property
-    def subequipment(self) -> List[Equipment]:
-        return self._subequipment
-
-    @property
     def has_location(self) -> bool:
         return self.location is not None
 
@@ -130,28 +185,10 @@ class Equipment(BaseObject):
     def has_person(self) -> bool:
         return self.person is not None
 
-    def has_point(self, point: str) -> bool:
-        return point in self.points
-
-    def has_point_recursive(self, point: str) -> bool:
-        has_point = self.has_point(point)
-
-        for subequipment in self.subequipment:
-            has_point = has_point or subequipment.has_point_recursive(point)
-
-        return has_point
-
-    def channel(self, point: str) -> str:
-        if not (self.is_thing and self.has_point(point)):
-            raise BuildException(
-                f'Cannot create channel for point "{point}" for equipment {self.identifier}')
-
-        return f'{self.thing.channelprefix}:{self.points[point]}'
-
     @property
     def categories(self) -> List['str']:
         categories = []
-        if self.has_battery:
+        if self.points.has_battery:
             categories.append('battery')
 
         return categories
@@ -159,38 +196,6 @@ class Equipment(BaseObject):
     @property
     def is_timecontrolled(self) -> bool:
         return False
-
-    @property
-    def has_battery(self) -> bool:
-        return self.has_battery_level or self.has_battery_low
-
-    @property
-    def has_battery_level(self) -> bool:
-        return 'battery_level' in self.points
-
-    @property
-    def has_battery_low(self) -> bool:
-        return 'battery_low' in self.points
-
-    @property
-    def battery_id(self) -> str:
-        return f'battery{self.semantic}{self.identifier}'
-
-    @property
-    def lowbattery_id(self) -> str:
-        return f'batteryLow{self.semantic}{self.identifier}'
-
-    @property
-    def levelbattery_id(self) -> str:
-        return f'batteryLevel{self.semantic}{self.identifier}'
-
-    @property
-    def has_mac(self) -> bool:
-        return self.thing.has_mac
-
-    @property
-    def maconline_id(self) -> str:
-        return f'maconline{self.semantic}{self.identifier}'
 
     @property
     def influxdb_tags(self) -> Dict[str, str]:
@@ -207,31 +212,29 @@ class Equipment(BaseObject):
         return tags
 
 
-class EquipmentFactory(object):
+class EquipmentType():
     registry: Dict[str, Type['Equipment']] = {}
-
-    initialized: bool = False
-
-    @classmethod
-    def _init(cls):
-        if not cls.initialized:
-            import_module(
-                'openhab_creator.models.configuration.equipment.types')
-
-            cls.initialized = True
+    templates: Dict[str, Dict] = {}
 
     @classmethod
-    def register(cls, equipment_cls: Type[Equipment]) -> None:
+    def init(cls, templates: Dict[str, Dict]):
+        import_module('openhab_creator.models.configuration.equipment.types')
+        cls.templates = templates
+
+    def __call__(self, equipment_cls: Type[Equipment]):
+        EquipmentType._register(equipment_cls)
+        return equipment_cls
+
+    @classmethod
+    def _register(cls, equipment_cls: Type[Equipment]) -> None:
         cls.registry[equipment_cls.__name__.lower()] = equipment_cls
 
     @classmethod
     def new(cls,
             configuration: Configuration,
             **equipment_configuration: Dict) -> Equipment:
-        cls._init()
 
-        equipment_configuration = cls._merge_template(
-            configuration, equipment_configuration)
+        equipment_configuration = cls._merge_template(equipment_configuration)
 
         equipment_type = equipment_configuration.pop('typed').lower()
 
@@ -247,16 +250,19 @@ class EquipmentFactory(object):
         return equipment
 
     @classmethod
-    def _merge_template(cls, configuration: Configuration, equipment_configuration: Dict) -> Dict:
+    def _merge_template(cls, equipment_configuration: Dict) -> Dict:
         template = equipment_configuration.pop('template', None)
         if template is not None:
             equipment_configuration = {
-                **configuration.template(template), **equipment_configuration}
+                **cls._template(template), **equipment_configuration}
 
         return equipment_configuration
 
+    @classmethod
+    def _template(cls, template_key: str) -> Dict:
+        template_key = template_key.lower()
+        if template_key not in cls.templates:
+            raise ConfigurationException(
+                f'No template "{template_key}" in configuration')
 
-class EquipmentType(object):
-    def __call__(self, equipment_cls: Type[Equipment]):
-        EquipmentFactory.register(equipment_cls)
-        return equipment_cls
+        return deepcopy(cls.templates[template_key])

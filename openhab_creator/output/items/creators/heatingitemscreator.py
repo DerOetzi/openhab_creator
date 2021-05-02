@@ -44,14 +44,14 @@ class HeatingItemsCreator(BaseItemsCreator):
             .append_to(self)
 
     def __build_parent(self, heating: Heating) -> None:
-        Group(heating.heating_id)\
+        Group(heating.item_ids.heating)\
             .label(_('Heating {blankname}').format(blankname=heating.blankname))\
             .icon('heating')\
             .location(heating.location)\
             .semantic(heating)\
             .append_to(self)
 
-        String(heating.heatcontrol_id)\
+        String(heating.item_ids.heatcontrol)\
             .label(_('Heatcontrol'))\
             .icon('heatcontrol')\
             .equipment(heating)\
@@ -59,21 +59,21 @@ class HeatingItemsCreator(BaseItemsCreator):
             .semantic(PointType.CONTROL)\
             .append_to(self)
 
-        Switch(heating.auto_id)\
+        Switch(heating.item_ids.auto)\
             .label(_('Scene controlled'))\
             .icon('auto')\
             .equipment(heating)\
-            .groups('AutoHeating', heating.heating_id)\
+            .groups('AutoHeating')\
             .semantic(PointType.CONTROL)\
             .append_to(self)
 
-        Switch(heating.autodisplay_id)\
+        Switch(heating.item_ids.autodisplay)\
             .label(_('Display scene controlled'))\
             .equipment(heating)\
             .semantic(PointType.STATUS)\
             .append_to(self)
 
-        Number(heating.autoreactivation_id)\
+        Number(heating.item_ids.autoreactivation)\
             .label(_('Reactivate scene controlled'))\
             .icon('reactivation')\
             .equipment(heating)\
@@ -81,7 +81,7 @@ class HeatingItemsCreator(BaseItemsCreator):
             .semantic(PointType.SETPOINT)\
             .append_to(self)
 
-        Number(heating.ecotemperature_id)\
+        Number(heating.item_ids.ecotemperature)\
             .label(_('ECO temperature'))\
             .temperature()\
             .icon('temperature')\
@@ -90,7 +90,7 @@ class HeatingItemsCreator(BaseItemsCreator):
             .auto()\
             .append_to(self)
 
-        Number(heating.comforttemperature_id)\
+        Number(heating.item_ids.comforttemperature)\
             .label(_('Comfort temperature'))\
             .temperature()\
             .icon('temperature')\
@@ -101,7 +101,7 @@ class HeatingItemsCreator(BaseItemsCreator):
 
     def __build_subequipment(self, parent_heating: Heating) -> bool:
         if parent_heating.has_subequipment:
-            Group(parent_heating.heatsetpoint_id)\
+            Group(parent_heating.item_ids.heatsetpoint)\
                 .typed(GroupType.NUMBER_AVG)\
                 .label(_('Target temperature'))\
                 .format('%.1f °C')\
@@ -117,14 +117,14 @@ class HeatingItemsCreator(BaseItemsCreator):
 
     def __build_thing(self, heating: Heating) -> None:
         if heating.is_child:
-            Group(heating.heating_id)\
+            Group(heating.item_ids.heating)\
                 .label(_('Heating {name}').format(name=heating.name))\
                 .icon('heating')\
                 .equipment(heating.parent)\
                 .semantic(heating)\
                 .append_to(self)
 
-        heatsetpoint = Number(heating.heatsetpoint_id)\
+        heatsetpoint = Number(heating.item_ids.heatsetpoint)\
             .label(_('Target temperature'))\
             .temperature()\
             .icon('heating')\
@@ -134,9 +134,9 @@ class HeatingItemsCreator(BaseItemsCreator):
                 'off_temp': heating.off_temp,
                 'boost_temp': heating.boost_temp
             })\
-            .channel(heating.channel('heatsetpoint'))
+            .channel(heating.points.channel('heatsetpoint'))
 
         if heating.is_child:
-            heatsetpoint.groups(heating.parent.heatsetpoint_id)
+            heatsetpoint.groups(heating.parent.item_ids.heatsetpoint)
 
         heatsetpoint.append_to(self)

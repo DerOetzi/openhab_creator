@@ -26,21 +26,21 @@ class MotionDetectorItemsCreator(BaseItemsCreator):
         self.write_file('motiondetector')
 
     def _create_motiondetector_groups(self, motiondetector: MotionDetector):
-        Group(motiondetector.motiondetector_id)\
+        Group(motiondetector.item_ids.motiondetector)\
             .label(_('Motiondetector {name}').format(name=motiondetector.name))\
             .location(motiondetector.location)\
             .semantic(motiondetector)\
             .append_to(self)
 
-        Switch(motiondetector.presence_id)\
+        Switch(motiondetector.item_ids.presence)\
             .label(_('Presence'))\
             .icon(motiondetector.category)\
             .equipment(motiondetector)\
             .semantic(PointType.STATUS, PropertyType.PRESENCE)\
-            .channel(motiondetector.channel('presence'))\
+            .channel(motiondetector.points.channel('presence'))\
             .append_to(self)
 
-        Group(motiondetector.assignment_id())\
+        Group(motiondetector.item_ids.assignment())\
             .label(_('Motiondetector assignment'))\
             .equipment(motiondetector)\
             .groups('MotionDetectorAssignment')\

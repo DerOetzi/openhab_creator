@@ -108,7 +108,7 @@ class BaseItem():
         return self.groups(location.identifier)
 
     def equipment(self, equipment: Equipment) -> BaseItem:
-        return self.groups(equipment.equipment_id)
+        return self.groups(equipment.item_ids.equipment_id)
 
     def sensor(self, measurement: str, series_tags: Dict[str, str]) -> BaseItem:
         self.groups('Sensor')

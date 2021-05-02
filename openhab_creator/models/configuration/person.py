@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Dict, List, Optional
 
 from openhab_creator.models.configuration.baseobject import BaseObject
-from openhab_creator.models.configuration.equipment import EquipmentFactory
+from openhab_creator.models.configuration.equipment import EquipmentType
 from openhab_creator.models.configuration.equipment.types.smartphone import Smartphone
 
 if TYPE_CHECKING:
@@ -28,7 +28,7 @@ class Person(BaseObject):
         self.equipment: List[Equipment] = []
 
         for equipment_definition in equipment:
-            equipment = EquipmentFactory.new(configuration=configuration,
+            equipment = EquipmentType.new(configuration=configuration,
                                              person=self,
                                              ** equipment_definition)
 

@@ -85,14 +85,14 @@ class LightbulbItemsCreator(BaseItemsCreator):
             .append_to(self)
 
     def __build_parent(self, lightbulb: Lightbulb) -> None:
-        Group(lightbulb.lightbulb_id)\
+        Group(lightbulb.item_ids.lightbulb)\
             .label(_('Lightbulb {blankname}').format(blankname=lightbulb.blankname))\
             .icon('light')\
             .location(lightbulb.location)\
             .semantic(lightbulb)\
             .append_to(self)
 
-        String(lightbulb.lightcontrol_id)\
+        String(lightbulb.item_ids.lightcontrol)\
             .label(_('Lightcontrol'))\
             .icon('lightcontrol')\
             .equipment(lightbulb)\
@@ -100,7 +100,7 @@ class LightbulbItemsCreator(BaseItemsCreator):
             .semantic(PointType.CONTROL)\
             .append_to(self)
 
-        Switch(lightbulb.hide_id)\
+        Switch(lightbulb.item_ids.hide)\
             .label(_('Hide on lights page'))\
             .icon('hide')\
             .config()\
@@ -108,7 +108,7 @@ class LightbulbItemsCreator(BaseItemsCreator):
             .semantic(PointType.CONTROL)\
             .append_to(self)
 
-        Switch(lightbulb.auto_id)\
+        Switch(lightbulb.item_ids.auto)\
             .label(_('Scene controlled'))\
             .icon('auto')\
             .equipment(lightbulb)\
@@ -116,13 +116,13 @@ class LightbulbItemsCreator(BaseItemsCreator):
             .semantic(PointType.CONTROL)\
             .append_to(self)
 
-        Switch(lightbulb.autodisplay_id)\
+        Switch(lightbulb.item_ids.autodisplay)\
             .label(_('Display scene controlled'))\
             .equipment(lightbulb)\
             .semantic(PointType.STATUS)\
             .append_to(self)
 
-        Number(lightbulb.autoreactivation_id)\
+        Number(lightbulb.item_ids.autoreactivation)\
             .label(_('Reactivate scene controlled'))\
             .icon('reactivation')\
             .equipment(lightbulb)\
@@ -130,7 +130,7 @@ class LightbulbItemsCreator(BaseItemsCreator):
             .semantic(PointType.SETPOINT)\
             .append_to(self)
 
-        Switch(lightbulb.autodarkness_id)\
+        Switch(lightbulb.item_ids.autodarkness)\
             .label(_('In the dark'))\
             .icon('darkness')\
             .equipment(lightbulb)\
@@ -138,7 +138,7 @@ class LightbulbItemsCreator(BaseItemsCreator):
             .semantic(PointType.SETPOINT)\
             .append_to(self)
 
-        Switch(lightbulb.autoabsence_id)\
+        Switch(lightbulb.item_ids.autoabsence)\
             .label(_('Even in absence'))\
             .icon('absence')\
             .equipment(lightbulb)\
@@ -146,7 +146,7 @@ class LightbulbItemsCreator(BaseItemsCreator):
             .semantic(PointType.SETPOINT)\
             .append_to(self)
 
-        Number(lightbulb.motiondetectorperiod_id)\
+        Number(lightbulb.item_ids.motiondetectorperiod)\
             .typed(NumberType.TIME)\
             .label(_('Motiondetector period'))\
             .format('%d s')\
@@ -157,7 +157,7 @@ class LightbulbItemsCreator(BaseItemsCreator):
             .append_to(self)
 
         if lightbulb.nightmode:
-            String(lightbulb.nightmode_id)\
+            String(lightbulb.item_ids.nightmode)\
                 .label(_('Nightmode configuration'))\
                 .icon('configuration')\
                 .equipment(lightbulb)\
@@ -167,8 +167,8 @@ class LightbulbItemsCreator(BaseItemsCreator):
 
     def __build_subequipment(self, parent_lightbulb: Lightbulb) -> bool:
         if parent_lightbulb.has_subequipment:
-            if parent_lightbulb.has_brightness:
-                Group(parent_lightbulb.brightness_id)\
+            if parent_lightbulb.points.has_brightness:
+                Group(parent_lightbulb.item_ids.brightness)\
                     .typed(GroupType.DIMMER_AVG)\
                     .label(_('Brightness'))\
                     .icon('light')\
@@ -176,8 +176,8 @@ class LightbulbItemsCreator(BaseItemsCreator):
                     .semantic(PointType.CONTROL, PropertyType.LIGHT)\
                     .append_to(self)
 
-            if parent_lightbulb.has_colortemperature:
-                Group(parent_lightbulb.colortemperature_id)\
+            if parent_lightbulb.points.has_colortemperature:
+                Group(parent_lightbulb.item_ids.colortemperature)\
                     .typed(GroupType.NUMBER_AVG)\
                     .label(_('Colortemperature'))\
                     .icon('light')\
@@ -185,16 +185,16 @@ class LightbulbItemsCreator(BaseItemsCreator):
                     .semantic(PointType.CONTROL, PropertyType.COLORTEMPERATURE)\
                     .append_to(self)
 
-            if parent_lightbulb.has_onoff:
-                Group(parent_lightbulb.onoff_id)\
+            if parent_lightbulb.points.has_onoff:
+                Group(parent_lightbulb.item_ids.onoff)\
                     .typed(GroupType.ONOFF)\
                     .label(_('On/Off'))\
                     .equipment(parent_lightbulb)\
                     .semantic(PointType.SWITCH, PropertyType.LIGHT)\
                     .append_to(self)
 
-            if parent_lightbulb.has_rgb:
-                Group(parent_lightbulb.rgb_id)\
+            if parent_lightbulb.points.has_rgb:
+                Group(parent_lightbulb.item_ids.rgb)\
                     .typed(GroupType.COLOR)\
                     .label(_('RGB Color'))\
                     .equipment(parent_lightbulb)\
@@ -208,14 +208,14 @@ class LightbulbItemsCreator(BaseItemsCreator):
 
     def __build_thing(self, lightbulb: Lightbulb) -> None:
         if lightbulb.is_child:
-            Group(lightbulb.lightbulb_id)\
+            Group(lightbulb.item_ids.lightbulb)\
                 .label(_('Lightbulb {name}').format(name=lightbulb.name))\
                 .icon('light')\
                 .equipment(lightbulb.parent)\
                 .semantic(lightbulb)\
                 .append_to(self)
 
-        Number(lightbulb.switchingcycles_id)\
+        Number(lightbulb.item_ids.switchingcycles)\
             .typed(NumberType.DIMENSIONLESS)\
             .label(_('Switching cycles {name}').format(name=lightbulb.name))\
             .format('%d')\
@@ -226,7 +226,7 @@ class LightbulbItemsCreator(BaseItemsCreator):
             .semantic(PointType.MEASUREMENT)\
             .append_to(self)
 
-        Switch(lightbulb.switchingcyclesreset_id)\
+        Switch(lightbulb.item_ids.switchingcyclesreset)\
             .label(_('Reset'))\
             .icon('configuration')\
             .equipment(lightbulb)\
@@ -235,55 +235,56 @@ class LightbulbItemsCreator(BaseItemsCreator):
             .expire('10s', state='OFF')\
             .append_to(self)
 
-        if lightbulb.has_brightness:
-            brightness = Dimmer(lightbulb.brightness_id)\
+        if lightbulb.points.has_brightness:
+            brightness = Dimmer(lightbulb.item_ids.brightness)\
                 .label(_('Brightness'))\
                 .icon('light')\
                 .equipment(lightbulb)\
                 .semantic(PointType.CONTROL, PropertyType.LIGHT)\
-                .channel(lightbulb.channel('brightness'))
+                .channel(lightbulb.points.channel('brightness'))
 
             if lightbulb.is_child:
-                brightness.groups(lightbulb.parent.brightness_id)
+                brightness.groups(lightbulb.parent.item_ids.brightness)
 
             brightness.append_to(self)
 
-        if lightbulb.has_colortemperature:
-            colortemperature = Number(lightbulb.colortemperature_id)\
+        if lightbulb.points.has_colortemperature:
+            colortemperature = Number(lightbulb.item_ids.colortemperature)\
                 .label(_('Colortemperature'))\
                 .icon('light')\
                 .equipment(lightbulb)\
                 .semantic(PointType.CONTROL, PropertyType.COLORTEMPERATURE)\
-                .channel(lightbulb.channel('colortemperature'))
+                .channel(lightbulb.points.channel('colortemperature'))
 
             if lightbulb.is_child:
-                colortemperature.groups(lightbulb.parent.colortemperature_id)
+                colortemperature.groups(
+                    lightbulb.parent.item_ids.colortemperature)
 
             colortemperature.append_to(self)
 
-        if lightbulb.has_onoff:
-            onoff = Switch(lightbulb.onoff_id)\
+        if lightbulb.points.has_onoff:
+            onoff = Switch(lightbulb.item_ids.onoff)\
                 .label(_('On/Off'))\
                 .icon('light')\
                 .equipment(lightbulb)\
                 .semantic(PointType.CONTROL, PropertyType.LIGHT)\
-                .channel(lightbulb.channel('onoff'))
+                .channel(lightbulb.points.channel('onoff'))
 
             if lightbulb.is_child:
-                onoff.groups(lightbulb.parent.onoff_id)
+                onoff.groups(lightbulb.parent.item_ids.onoff)
 
             onoff.append_to(self)
 
-        if lightbulb.has_rgb:
-            rgb = Color(lightbulb.rgb_id)\
+        if lightbulb.points.has_rgb:
+            rgb = Color(lightbulb.item_ids.rgb)\
                 .label(_('RGB Color'))\
                 .icon('light')\
                 .equipment(lightbulb)\
                 .semantic(PointType.CONTROL)\
-                .channel(lightbulb.channel('rgb'))
+                .channel(lightbulb.points.channel('rgb'))
 
             if lightbulb.is_child:
-                rgb.groups(lightbulb.parent.rgb_id)
+                rgb.groups(lightbulb.parent.item_ids.rgb)
 
             rgb.append_to(self)
 
@@ -292,18 +293,18 @@ class LightbulbItemsCreator(BaseItemsCreator):
                                    wallswitches: List[WallSwitch]) -> None:
         for wallswitch in wallswitches:
             for button_key in range(0, wallswitch.buttons_count):
-                String(wallswitch.buttonassignment_id(button_key, lightbulb))\
+                String(wallswitch.item_ids.buttonassignment(button_key, lightbulb))\
                     .label(wallswitch.buttonassignment_name(button_key))\
                     .icon('configuration')\
-                    .groups(wallswitch.buttonassignment_id(button_key))\
+                    .groups(wallswitch.item_ids.buttonassignment(button_key))\
                     .append_to(self)
 
     def __build_motion_assignment(self,
                                   lightbulb: Lightbulb,
                                   motiondetectors: List[MotionDetector]) -> None:
         for motiondetector in motiondetectors:
-            Switch(motiondetector.assignment_id(lightbulb))\
+            Switch(motiondetector.item_ids.assignment(lightbulb))\
                 .label(motiondetector.name)\
                 .icon('motiondetector')\
-                .groups(motiondetector.assignment_id())\
+                .groups(motiondetector.item_ids.assignment())\
                 .append_to(self)

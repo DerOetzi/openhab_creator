@@ -19,34 +19,34 @@ class BatteryItemsCreator(BaseItemsCreator):
         if configuration.has_equipment('battery', False):
             for equipment in configuration.equipment('battery', False):
                 if equipment.category == 'sensor':
-                    equipment_id = equipment.merged_sensor_id
+                    equipment_id = equipment.item_ids.merged_sensor
                 else:
-                    equipment_id = equipment.equipment_id
+                    equipment_id = equipment.item_ids.equipment_id
 
-                Group(equipment.battery_id)\
+                Group(equipment.item_ids.battery)\
                     .label(_('Battery'))\
                     .groups(equipment_id)\
                     .tags('Battery')\
                     .append_to(self)
 
-                if equipment.has_battery_low:
-                    Switch(equipment.lowbattery_id)\
+                if equipment.points.has_battery_low:
+                    Switch(equipment.item_ids.lowbattery)\
                         .label(_('Battery low'))\
                         .map(MapTransformation.LOWBATTERY)\
                         .icon('lowbattery')\
-                        .groups('LowBattery', equipment.battery_id)\
-                        .channel(equipment.channel('battery_low'))\
+                        .groups('LowBattery', equipment.item_ids.battery)\
+                        .channel(equipment.points.channel('battery_low'))\
                         .semantic(PointType.LOWBATTERY)\
                         .append_to(self)
 
-                if equipment.has_battery_level:
-                    Number(equipment.levelbattery_id)\
+                if equipment.points.has_battery_level:
+                    Number(equipment.item_ids.levelbattery)\
                         .label(_('Battery level'))\
                         .percentage()\
                         .icon('battery')\
-                        .groups(equipment.battery_id)\
+                        .groups(equipment.item_ids.battery)\
                         .sensor('batteries', equipment.influxdb_tags)\
-                        .channel(equipment.channel('battery_level'))\
+                        .channel(equipment.points.channel('battery_level'))\
                         .semantic(PointType.MEASUREMENT, PropertyType.LEVEL)\
                         .append_to(self)
 

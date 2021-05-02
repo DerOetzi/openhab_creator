@@ -60,16 +60,16 @@ class PresenceItemsCreator(BaseItemsCreator):
 
                 for smartphone in list(filter(
                         lambda x: x.category == 'smartphone', person.equipment)):
-                    Group(smartphone.smartphone_id)\
+                    Group(smartphone.item_ids.smartphone)\
                         .label(_('Smartphone {name}').format(name=smartphone.name))\
                         .semantic(smartphone)\
                         .append_to(self)
 
-                    if smartphone.has_distance:
+                    if smartphone.points.has_distance:
                         self.build_smartphone_geofence(smartphone)
 
     def build_smartphone_geofence(self, smartphone: Smartphone) -> None:
-        Switch(smartphone.geofence_id)\
+        Switch(smartphone.item_ids.geofence)\
             .label(_('Geofence'))\
             .map(MapTransformation.PRESENCE)\
             .icon('presence')\
@@ -78,7 +78,7 @@ class PresenceItemsCreator(BaseItemsCreator):
             .groups(smartphone.person.presence_id)\
             .append_to(self)
 
-        Number(smartphone.distance_id)\
+        Number(smartphone.item_ids.distance)\
             .typed(NumberType.LENGTH)\
             .label(_('Distance'))\
             .format('%,.3f km')\
@@ -86,41 +86,41 @@ class PresenceItemsCreator(BaseItemsCreator):
             .semantic(PointType.STATUS)\
             .equipment(smartphone)\
             .groups('Distances')\
-            .channel(smartphone.channel('distance'))\
+            .channel(smartphone.points.channel('distance'))\
             .sensor('distance', {'typed': 'distance', **smartphone.influxdb_tags})\
             .scripting({
                 'person': smartphone.person.name,
-                'geofence': smartphone.geofence_id
+                'geofence': smartphone.item_ids.geofence
             })\
             .append_to(self)
 
-        if smartphone.has_accuracy:
-            Number(smartphone.accuracy_id)\
+        if smartphone.points.has_accuracy:
+            Number(smartphone.item_ids.accuracy)\
                 .typed(NumberType.LENGTH)\
                 .label(_('Accuracy'))\
                 .format('±%,d m')\
                 .icon('accuracy')\
                 .semantic(PointType.STATUS)\
                 .equipment(smartphone)\
-                .channel(smartphone.channel('accuracy'))\
+                .channel(smartphone.points.channel('accuracy'))\
                 .sensor('distance', {'typed': 'accuracy', **smartphone.influxdb_tags})\
                 .append_to(self)
 
-        if smartphone.has_position:
-            Location(smartphone.position_id)\
+        if smartphone.points.has_position:
+            Location(smartphone.item_ids.position)\
                 .label(_('Position'))\
                 .icon('gps')\
                 .semantic(PointType.STATUS)\
                 .equipment(smartphone)\
-                .channel(smartphone.channel('position'))\
+                .channel(smartphone.points.channel('position'))\
                 .append_to(self)
 
-        if smartphone.has_lastseen:
-            DateTime(smartphone.lastseen_id)\
+        if smartphone.points.has_lastseen:
+            DateTime(smartphone.item_ids.lastseen)\
                 .label(_('Last updated'))\
                 .datetime()\
                 .icon('update')\
                 .semantic(PointType.STATUS, PropertyType.TIMESTAMP)\
                 .equipment(smartphone)\
-                .channel(smartphone.channel('lastseen'))\
+                .channel(smartphone.points.channel('lastseen'))\
                 .append_to(self)

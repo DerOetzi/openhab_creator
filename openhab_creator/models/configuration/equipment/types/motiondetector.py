@@ -4,36 +4,50 @@ from typing import TYPE_CHECKING, Dict, Optional, List
 
 from openhab_creator import _
 from openhab_creator.models.configuration.equipment import (Equipment,
-                                                            EquipmentType)
+                                                            EquipmentType, EquipmentItemIdentifiers)
 
 if TYPE_CHECKING:
     from openhab_creator.models.configuration.equipment.types.lightbulb import Lightbulb
 
 
-@EquipmentType()
-class MotionDetector(Equipment):
+class MotionDetectorItemIdentifiers(EquipmentItemIdentifiers):
     @property
-    def item_identifiers(self) -> Dict[str, str]:
-        return {
-            'motiondetector': 'motionDetector',
-            'presence': 'motionDetectorPresence'
-        }
+    def equipment_id(self) -> str:
+        return self.motiondetector
 
     @property
-    def conditional_points(self) -> List[str]:
-        return []
+    def motiondetector(self) -> str:
+        return self._identifier('motionDetector')
+
+    @property
+    def presence(self) -> str:
+        return self._identifier('presence')
+
+    def assignment(self, lightbulb: Optional[Lightbulb] = None) -> str:
+        assignment = self._identifier('MotionDetectorAssignment')
+        if lightbulb is not None:
+            assignment += f'_{lightbulb.identifier}'
+
+        return assignment
+
+
+@EquipmentType()
+class MotionDetector(Equipment):
+    def __init__(self, **equipment_configuration: Dict):
+        super().__init__(**equipment_configuration)
+
+        self._item_ids: MotionDetectorItemIdentifiers = MotionDetectorItemIdentifiers(
+            self)
+
+    @property
+    def item_ids(self) -> MotionDetectorItemIdentifiers:
+        return self._item_ids
 
     @property
     def categories(self) -> List[str]:
         categories = super().categories
         categories.append('motiondetector')
         return categories
-
-    def assignment_id(self, lightbulb: Optional[Lightbulb] = None) -> str:
-        if lightbulb is None:
-            return f'MotionDetectorAssignment{self.identifier}'
-        else:
-            return f'MotionDetectorAssignment{self.identifier}_{lightbulb.identifier}'
 
     @property
     def name_with_type(self) -> str:
