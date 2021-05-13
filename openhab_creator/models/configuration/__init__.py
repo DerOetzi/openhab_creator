@@ -80,120 +80,31 @@ class SecretsStorage():
         return self.has_missing
 
 
-class Configuration():
+class EquipmentRegistry():
     WITHOUT_CHILDS = 'without_childs'
     WITH_CHILDS = 'with_childs'
 
-    def __init__(self, name: str, configdir: str, anonym: bool):
-        self.configdir: str = configdir
-        self.name: str = name
-        self.secrets: SecretsStorage = SecretsStorage(configdir, anonym)
-        self.equipment_registry: Dict[str, Dict[str, List[Equipment]]] = {
+    def __init__(self, configuration: Configuration):
+        self.configuration: Configuration = configuration
+
+        self.registry: Dict[str, Dict[str, List[Equipment]]] = {
             'battery': {
                 self.WITHOUT_CHILDS: [],
                 self.WITH_CHILDS: []
             }
         }
-        self.dashboard: Dashboard = Dashboard(self)
-        self.timecontrolled_locations: Dict[str, Location] = {}
+
+        self._init_bridges(configuration.configdir)
         self.macs: Dict[str, Equipment] = {}
-
-        self._init_bridges(configdir)
-        self._init_templates(configdir)
-
-        self._init_persons(configdir)
-
-        self._init_locations(configdir)
-
-        if len(self.macs) > 0:
-            for lan in self.equipment('lan', False):
-                lan.register_macs(self.macs)
 
     def _init_bridges(self, configdir: str) -> None:
         self.bridges: Dict[str, Bridge] = {}
 
-        bridges = self._read_jsons_from_dir(configdir, 'bridges')
+        bridges = Configuration.read_jsons_from_dir(configdir, 'bridges')
 
         for bridge_key, bridge_configuration in bridges.items():
             self.bridges[bridge_key] = Bridge(
-                configuration=self, **bridge_configuration)
-
-    def _init_persons(self, configdir: str) -> None:
-        self.persons: List[Person] = []
-        with open(f'{configdir}/persons.json', encoding='utf-8') as json_file:
-            persons = json.load(json_file)
-            key = 0
-            for person_equipment in persons:
-                self.persons.append(Person(self, key, person_equipment))
-                key += 1
-
-    def _init_templates(self, configdir: str) -> None:
-        EquipmentType.init(self._read_jsons_from_dir(
-            configdir, 'templates'))
-
-    def _init_locations(self, configdir: str) -> None:
-        self.locations: Dict[str, List[Location]] = {}
-
-        self._init_floors(configdir)
-        self._init_buildings(configdir)
-        self._init_outdoors(configdir)
-
-    def _init_floors(self, configdir: str) -> None:
-        self.locations['floors'] = []
-
-        floors = self._read_jsons_from_dir(
-            configdir, 'locations/indoor/floors')
-
-        for floor_key in sorted(floors.keys()):
-            self.locations['floors'].append(LocationFactory.new(
-                configuration=self, **floors[floor_key]))
-
-    def _init_buildings(self, configdir: str) -> None:
-        self.locations['buildings'] = []
-
-        buildings = self._read_json_from_file(
-            configdir, 'locations/indoor/buildings.json')
-
-        for building in buildings:
-            self.locations['buildings'].append(
-                LocationFactory.new(configuration=self, **building))
-
-    def _init_outdoors(self, configdir: str) -> None:
-        self.locations['outdoors'] = []
-
-        outdoors = self._read_json_from_file(
-            configdir, 'locations/outdoors.json')
-
-        for outdoor in outdoors:
-            self.locations['outdoors'].append(
-                LocationFactory.new(configuration=self, **outdoor))
-
-    @staticmethod
-    def _read_json_from_file(configdir: str, filename: str) -> List[Dict]:
-        results = []
-
-        srcfile = os.path.join(configdir, filename)
-
-        if os.path.exists(srcfile):
-            with open(srcfile, encoding='utf-8') as json_file:
-                results = json.load(json_file)
-
-        return results
-
-    @staticmethod
-    def _read_jsons_from_dir(configdir: str, subdir: str) -> Dict[str, Dict]:
-        results = {}
-
-        srcdir = os.path.join(configdir, subdir)
-
-        if os.path.exists(srcdir):
-            for dir_entry in os.scandir(srcdir):
-                name = os.path.basename(dir_entry)
-                if name.endswith('.json'):
-                    with open(dir_entry, encoding='utf-8') as json_file:
-                        results[name[:-5].lower()] = json.load(json_file)
-
-        return results
+                configuration=self.configuration, **bridge_configuration)
 
     def bridge(self, bridge_key: str) -> Bridge:
         bridge_key = bridge_key.lower()
@@ -203,45 +114,29 @@ class Configuration():
 
         return self.bridges[bridge_key]
 
-    @property
-    def floors(self) -> List[Location]:
-        return self.locations['floors']
-
-    @property
-    def buildings(self) -> List[Location]:
-        return self.locations['buildings']
-
-    @property
-    def outdoors(self) -> List[Location]:
-        return self.locations['outdoors']
-
-    def add_equipment(self, equipment: Equipment):
+    def add(self, equipment: Equipment):
         for category in equipment.categories:
-            if category not in self.equipment_registry:
-                self.equipment_registry[category] = {
+            if category not in self.registry:
+                self.registry[category] = {
                     self.WITHOUT_CHILDS: [],
                     self.WITH_CHILDS: []
                 }
 
-            self.equipment_registry[category][self.WITH_CHILDS].append(
+            self.registry[category][self.WITH_CHILDS].append(
                 equipment)
 
             if not equipment.is_child:
-                self.equipment_registry[category][self.WITHOUT_CHILDS].append(
+                self.registry[category][self.WITHOUT_CHILDS].append(
                     equipment)
 
-        if equipment.is_timecontrolled:
-            location = equipment.location
-            self.timecontrolled_locations[location.identifier] = location
-
-    def has_equipment(self, category: str,
-                      filter_childs: Optional[bool] = True) -> bool:
+    def has(self, category: str,
+            filter_childs: Optional[bool] = True) -> bool:
         return len(self.equipment(category, filter_childs)) > 0
 
     def equipment(self, category: str,
                   filter_childs: Optional[bool] = True) -> List[Equipment]:
-        if category in self.equipment_registry:
-            equipment_registry = self.equipment_registry[category]
+        if category in self.registry:
+            equipment_registry = self.registry[category]
         else:
             equipment_registry = {
                 self.WITHOUT_CHILDS: [],
@@ -256,8 +151,133 @@ class Configuration():
         return equipment
 
     def register_mac(self, equipment: Equipment) -> str:
-        mac = self.secrets.secret(
+        mac = self.configuration.secrets.secret(
             'tr064', 'lan', 'mac', equipment.semantic, equipment.identifier)
 
         self.macs[mac] = equipment
         return mac
+
+    def init_lan(self) -> None:
+        if len(self.macs) > 0:
+            for lan in self.equipment('lan', False):
+                lan.register_macs(self.macs)
+
+
+class LocationRegistry():
+    def __init__(self, configuration: Configuration):
+        self.configuration: Configuration = configuration
+        self.registry: Dict[str, List[Location]] = {}
+        self.timecontrolled: Dict[str, Location] = {}
+
+    def read_configuration(self) -> None:
+        self._init_floors(self.configuration.configdir)
+        self._init_buildings(self.configuration.configdir)
+        self._init_outdoors(self.configuration.configdir)
+
+    def _init_floors(self, configdir: str) -> None:
+        floors = Configuration.read_jsons_from_dir(
+            configdir, 'locations/indoor/floors')
+
+        self._init_locations('floors', [floors[key]
+                                        for key in sorted(floors.keys())])
+
+        for floor in self.floors:
+            for room in floor.rooms:
+                if room.is_timecontrolled:
+                    self.timecontrolled[room.identifier] = room
+
+    def _init_buildings(self, configdir: str) -> None:
+        buildings = Configuration.read_json_from_file(
+            configdir, 'locations/indoor/buildings.json')
+
+        self._init_locations('buildings', buildings)
+
+    def _init_outdoors(self, configdir: str) -> None:
+        outdoors = Configuration.read_json_from_file(
+            configdir, 'locations/outdoors.json')
+
+        self._init_locations('outdoors', outdoors)
+
+    def _init_locations(self, location_key: str, locations: List[Dict]) -> None:
+        self.registry[location_key] = []
+
+        for location_definition in locations:
+            location = LocationFactory.new(configuration=self.configuration,
+                                           **location_definition)
+
+            if location.is_timecontrolled:
+                self.timecontrolled[location.identifier] = locations
+
+            self.registry[location_key].append(location)
+
+    @property
+    def floors(self) -> List[Location]:
+        return self.registry['floors']
+
+    @property
+    def buildings(self) -> List[Location]:
+        return self.registry['buildings']
+
+    @property
+    def outdoors(self) -> List[Location]:
+        return self.registry['outdoors']
+
+
+class Configuration():
+    def __init__(self, name: str, configdir: str, anonym: bool):
+        self.configdir: str = configdir
+        self.name: str = name
+        self.secrets: SecretsStorage = SecretsStorage(configdir, anonym)
+
+        self.dashboard: Dashboard = Dashboard(self)
+
+        self._init_templates(configdir)
+
+        self.equipment: EquipmentRegistry = EquipmentRegistry(self)
+        self.locations: LocationRegistry = LocationRegistry(self)
+
+        self.locations.read_configuration()
+
+        self._init_persons(configdir)
+
+        self.equipment.init_lan()
+
+    def _init_persons(self, configdir: str) -> None:
+        self.persons: List[Person] = []
+        with open(f'{configdir}/persons.json', encoding='utf-8') as json_file:
+            persons = json.load(json_file)
+            key = 0
+            for person_equipment in persons:
+                self.persons.append(Person(self, key, person_equipment))
+                key += 1
+
+    def _init_templates(self, configdir: str) -> None:
+        EquipmentType.init(self.read_jsons_from_dir(
+            configdir, 'templates'))
+
+    @staticmethod
+    def read_json_from_file(configdir: str, filename: str) -> List[Dict]:
+        results = []
+
+        srcfile = os.path.join(configdir, filename)
+
+        if os.path.exists(srcfile):
+            with open(srcfile, encoding='utf-8') as json_file:
+                results = json.load(json_file)
+
+        return results
+
+    @staticmethod
+    def read_jsons_from_dir(configdir: str, subdir: str) -> Dict[str, Dict]:
+        results = {}
+
+        srcdir = os.path.join(configdir, subdir)
+
+        if os.path.exists(srcdir):
+            for dir_entry in os.scandir(srcdir):
+                name = os.path.basename(dir_entry)
+                if name.endswith('.json'):
+                    with open(dir_entry, encoding='utf-8') as json_file:
+                        results[name[:-5].lower()] = json.load(json_file)
+
+        return results

@@ -22,6 +22,8 @@ class Location(BaseObject):
                  equipment: Optional[List[Dict]] = None):
         super().__init__(name, identifier)
 
+        self.is_timecontrolled: bool = False
+
         self._init_equipment(
             configuration, [] if equipment is None else equipment)
 
@@ -31,9 +33,12 @@ class Location(BaseObject):
         self.equipment: List[Equipment] = []
 
         for equipment_definition in equipment:
-            self.equipment.append(EquipmentType.new(configuration=configuration,
-                                                    location=self,
-                                                    **equipment_definition))
+            equipment = EquipmentType.new(configuration=configuration,
+                                          location=self,
+                                          **equipment_definition)
+            self.is_timecontrolled = self.is_timecontrolled or equipment.is_timecontrolled
+
+            self.equipment.append(equipment)
 
     @abstractproperty
     def area(self) -> str:
@@ -46,6 +51,14 @@ class Location(BaseObject):
     @property
     def has_parent(self) -> bool:
         return self.parent is not None
+
+    @property
+    def toplevel(self) -> Location:
+        location = self
+        while location.has_parent:
+            location = location.parent
+
+        return location
 
     @property
     def location_tags(self) -> Dict[str, str]:
@@ -111,7 +124,7 @@ class LocationFactory():
         raise RegistryException(f'No class for location type: {location_type}')
 
 
-class LocationType(object):
+class LocationType():
     def __init__(self, *args):
         self.args = args
 

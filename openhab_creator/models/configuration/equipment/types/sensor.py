@@ -230,7 +230,10 @@ class Sensor(Equipment):
     def categories(self) -> List[str]:
         categories = super().categories
         categories.append('sensor')
-        categories.append(self.location.area)
+        if self.has_location:
+            categories.append(self.location.area)
+        elif self.has_person:
+            categories.append(self.person.name)
 
         for sensortype in SensorType:
             if self.points.has(sensortype.point):

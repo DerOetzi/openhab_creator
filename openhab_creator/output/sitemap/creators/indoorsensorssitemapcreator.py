@@ -22,7 +22,8 @@ class IndoorSensorsSitemapCreator(BaseSitemapCreator):
             if sensortype.point == "temperature":
                 continue
 
-            sensors = configuration.equipment(sensortype.point, False)
+            sensors = configuration.equipment.equipment(
+                sensortype.point, False)
             sensors = list(filter(
                 lambda x: x.location.area in ['Indoor', 'Building'], sensors))
 
@@ -44,7 +45,7 @@ class IndoorSensorsSitemapCreator(BaseSitemapCreator):
 
         for sensor in sensors:
             if sensor.points.has(sensortype.point):
-                location = sensor.toplevel_location
+                location = sensor.location.toplevel
                 locations.append(location)
                 frame = page.frame(
                     location.identifier, location.name)

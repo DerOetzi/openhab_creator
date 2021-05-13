@@ -10,16 +10,17 @@ class BaseObject(ABC):
                  name: str,
                  identifier: Optional[str] = None):
         self.name: str = name
-        self.identifier = name if identifier is None else identifier
+        self.identifier = identifier or name
 
     @property
     def identifier(self) -> str:
         return self._identifier
 
     @identifier.setter
-    def identifier(self, identifier: str):
+    def identifier(self, identifier: str) -> BaseObject:
         identifier = Formatter.format_id(identifier)
         self._identifier: str = Formatter.ucfirst(identifier)
+        return self
 
     @property
     def semantic(self) -> str:

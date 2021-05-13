@@ -20,7 +20,7 @@ class WallSwitchItemsCreator(BaseItemsCreator):
             .config()\
             .append_to(self)
 
-        for wallswitch in configuration.equipment('wallswitch'):
+        for wallswitch in configuration.equipment.equipment('wallswitch'):
             self._create_wallswitch_groups(wallswitch)
 
         self.write_file('wallswitch')

@@ -21,19 +21,19 @@ class LightbulbItemsCreator(BaseItemsCreator):
     def build(self, configuration: Configuration) -> None:
         self.__build_general_groups()
 
-        for lightbulb in configuration.equipment('lightbulb'):
+        for lightbulb in configuration.equipment.equipment('lightbulb'):
             self.__build_parent(lightbulb)
 
             if not self.__build_subequipment(lightbulb):
                 self.__build_thing(lightbulb)
 
-            if configuration.has_equipment('wallswitch'):
+            if configuration.equipment.has('wallswitch'):
                 self.__build_buttons_assignment(
-                    lightbulb, configuration.equipment('wallswitch'))
+                    lightbulb, configuration.equipment.equipment('wallswitch'))
 
-            if configuration.has_equipment('motiondetector'):
+            if configuration.equipment.has('motiondetector'):
                 self.__build_motion_assignment(
-                    lightbulb, configuration.equipment('motiondetector'))
+                    lightbulb, configuration.equipment.equipment('motiondetector'))
 
         self.write_file('lightbulb')
 

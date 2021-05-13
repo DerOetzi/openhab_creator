@@ -16,8 +16,8 @@ if TYPE_CHECKING:
 @ItemsCreatorPipeline(10)
 class BatteryItemsCreator(BaseItemsCreator):
     def build(self, configuration: Configuration) -> None:
-        if configuration.has_equipment('battery', False):
-            for equipment in configuration.equipment('battery', False):
+        if configuration.equipment.has('battery', False):
+            for equipment in configuration.equipment.equipment('battery', False):
                 if equipment.category == 'sensor':
                     equipment_id = equipment.item_ids.merged_sensor
                 else:

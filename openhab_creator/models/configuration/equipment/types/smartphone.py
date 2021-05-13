@@ -44,19 +44,19 @@ class SmartphoneItemIdentifiers(EquipmentItemIdentifiers):
 class SmartphonePoints(EquipmentPoints):
     @property
     def has_distance(self) -> bool:
-        self.has('distance', True)
+        return self.has('distance', True)
 
     @property
     def has_accuracy(self) -> bool:
-        self.has('accuracy', True)
+        return self.has('accuracy', True)
 
     @property
     def has_position(self) -> bool:
-        self.has('accuracy', True)
+        return self.has('accuracy', True)
 
     @property
     def has_lastseen(self) -> bool:
-        self.has('lastseen', True)
+        return self.has('lastseen', True)
 
 
 @EquipmentType()

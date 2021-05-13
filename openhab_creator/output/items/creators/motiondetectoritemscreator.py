@@ -20,7 +20,7 @@ class MotionDetectorItemsCreator(BaseItemsCreator):
             .config()\
             .append_to(self)
 
-        for motiondetector in configuration.equipment('motiondetector'):
+        for motiondetector in configuration.equipment.equipment('motiondetector'):
             self._create_motiondetector_groups(motiondetector)
 
         self.write_file('motiondetector')

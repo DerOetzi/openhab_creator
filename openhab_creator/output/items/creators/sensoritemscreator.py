@@ -27,7 +27,7 @@ class SensorItemsCreator(BaseItemsCreator):
         Group('Trend')\
             .append_to(self)
 
-        for sensor in configuration.equipment('sensor'):
+        for sensor in configuration.equipment.equipment('sensor'):
             location = sensor.location
             area = location.area
 

@@ -19,18 +19,18 @@ if TYPE_CHECKING:
 @ItemsCreatorPipeline(2)
 class LocationItemsCreator(BaseItemsCreator):
     def build(self, configuration: Configuration):
-        for floor in configuration.floors:
+        for floor in configuration.locations.floors:
             self._create_floor(floor)
             for room in floor.rooms:
                 self._create_room(room)
 
-        for building in configuration.buildings:
+        for building in configuration.locations.buildings:
             self._create_building(building)
 
-        for outdoor in configuration.outdoors:
+        for outdoor in configuration.locations.outdoors:
             self._create_outdoor(outdoor)
 
-        for location in configuration.timecontrolled_locations.values():
+        for location in configuration.locations.timecontrolled.values():
             self._create_automation(location)
 
         self.write_file('locations')

@@ -17,7 +17,7 @@ class ThingsCreator(BaseCreator):
         super().__init__('things', outputdir)
 
     def build(self, configuration: Configuration) -> None:
-        for bridge_key, bridge_obj in configuration.bridges.items():
+        for bridge_key, bridge_obj in configuration.equipment.bridges.items():
             self._append_bridge(bridge_obj)
 
             if bridge_obj.is_thing:

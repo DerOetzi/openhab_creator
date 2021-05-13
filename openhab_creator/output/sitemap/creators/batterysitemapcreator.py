@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 class BatterySitemapCreator(BaseSitemapCreator):
     @classmethod
     def has_needed_equipment(cls, configuration: Configuration) -> bool:
-        return configuration.has_equipment('battery', False)
+        return configuration.equipment.has('battery', False)
 
     def build_mainpage(self, sitemap: Sitemap, configuration: Configuration) -> None:
         """No mainpage for batteries"""
@@ -30,8 +30,8 @@ class BatterySitemapCreator(BaseSitemapCreator):
 
         locations = []
 
-        for battery in configuration.equipment('battery', False):
-            location = battery.toplevel_location
+        for battery in configuration.equipment.equipment('battery', False):
+            location = battery.location.toplevel
             locations.append(location.identifier)
             frame = page.frame(location.identifier, location.name)
 

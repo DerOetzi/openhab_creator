@@ -86,51 +86,37 @@ class EquipmentPoints():
 
 
 class Equipment(BaseObject):
+    #pylint: disable=too-many-instance-attributes
+
     def __init__(self,
                  configuration: Configuration,
-                 location: Optional[Location] = None,
-                 person: Optional[Person] = None,
                  name: Optional[str] = '',
                  identifier: Optional[str] = None,
+                 location: Optional[Location] = None,
+                 person: Optional[Person] = None,
                  thing: Optional[Dict] = None,
                  subequipment: Optional[List[Dict]] = None,
-                 parent: Optional[Equipment] = None,
                  secrets: Optional[List[str]] = None,
+                 parent: Optional[Equipment] = None,
                  points: Optional[Dict[str, str]] = None):
+        #pylint: disable=too-many-arguments
 
+        super().__init__(name, identifier)
         self.blankname: str = name
+        self.__identifier: Optional[str] = identifier
 
-        self.location: Optional[Location] = location
-        self.person: Optional[Person] = person
+        self.location = location
+        self.person = person
+        self.parent = parent
 
-        super().__init__(*self._name_and_identifier(identifier))
-
-        self.thing: Optional[Thing] = None if thing is None else Thing(
-            equipment_node=self, configuration=configuration, secrets_config=secrets, **thing)
-
-        self.parent: Optional[Equipment] = parent
+        self.thing: Optional[Thing] = Thing(equipment_node=self,
+                                            configuration=configuration,
+                                            secrets_config=secrets, **thing) if thing else None
 
         self._init_subequipment(
-            configuration, [] if subequipment is None else subequipment)
+            configuration, subequipment or [])
 
-        self._points: EquipmentPoints = EquipmentPoints(points or {}, self)
-
-    def _name_and_identifier(self, identifier: Optional[str] = None) -> Tuple[str, Optional[str]]:
-
-        if self.location is not None:
-            name = f'{self.location.name} {self.blankname}'.strip()
-
-            if identifier is None:
-                identifier = f'{self.location.identifier}{self.blankname}'
-        elif self.person is not None:
-            name = f'{self.person.name} {self.blankname}'.strip()
-
-            if identifier is None:
-                identifier = f'{self.person.identifier}{self.blankname}'
-        else:
-            name = self.blankname
-
-        return name, identifier
+        self._points = EquipmentPoints(points or {}, self)
 
     def _init_subequipment(self, configuration: Configuration, subequipment: List[Dict]) -> None:
         self.subequipment: List[Equipment] = []
@@ -138,10 +124,12 @@ class Equipment(BaseObject):
         for subequipment_definition in subequipment:
             name = f'{self.blankname} {subequipment_definition["name"]}'
             subequipment_definition['name'] = name.strip()
-            self.subequipment.append(EquipmentType.new(configuration=configuration,
-                                                       location=self.location,
-                                                       parent=self,
-                                                       **subequipment_definition))
+            equipment = EquipmentType.new(configuration=configuration,
+                                          parent=self,
+                                          location=self.location,
+                                          person=self.person,
+                                          **subequipment_definition)
+            self.subequipment.append(equipment)
 
         logger.debug(self.subequipment)
 
@@ -170,16 +158,38 @@ class Equipment(BaseObject):
         return len(self.subequipment) > 0
 
     @property
-    def has_location(self) -> bool:
-        return self.location is not None
+    def location(self) -> Optional[Location]:
+        return self._location
+
+    @location.setter
+    def location(self, location: Location) -> Equipment:
+        self._location: Optional[Location] = location
+        if location:
+            self.person = None
+            self.name = f'{location.name} {self.blankname}'.strip()
+            if not self.__identifier:
+                self.identifier = f'{location.identifier}{self.blankname}'
+
+        return self
 
     @property
-    def toplevel_location(self) -> Location:
-        location = self.location
-        while location.has_parent:
-            location = location.parent
+    def person(self) -> Optional[Person]:
+        return self._person
 
-        return location
+    @person.setter
+    def person(self, person: Person) -> Equipment:
+        self._person: Optional[Person] = person
+        if person:
+            self.location = None
+            self.name = f'{person.name} {self.blankname}'.strip()
+            if not self.__identifier:
+                self.identifier = f'{person.identifier}{self.blankname}'
+
+        return self
+
+    @property
+    def has_location(self) -> bool:
+        return self.location is not None
 
     @property
     def has_person(self) -> bool:
@@ -245,7 +255,7 @@ class EquipmentType():
         equipment = cls.registry[equipment_type.lower()](configuration=configuration,
                                                          **equipment_configuration)
 
-        configuration.add_equipment(equipment)
+        configuration.equipment.add(equipment)
 
         return equipment
 

@@ -21,15 +21,15 @@ if TYPE_CHECKING:
 class LightbulbSitemapCreator(BaseSitemapCreator):
     @classmethod
     def has_needed_equipment(cls, configuration: Configuration) -> bool:
-        return configuration.has_equipment('lightbulb')
+        return configuration.equipment.has('lightbulb')
 
     def build_mainpage(self, sitemap: Sitemap, configuration: Configuration) -> None:
         page = Page(label=_('Lights'))\
             .icon('light')\
             .append_to(sitemap)
 
-        for lightbulb in configuration.equipment('lightbulb'):
-            location = lightbulb.toplevel_location
+        for lightbulb in configuration.equipment.equipment('lightbulb'):
+            location = lightbulb.location.toplevel
             frame = page.frame(location.identifier, location.name)
 
             Switch(lightbulb.item_ids.lightcontrol, self._create_lightcontrol_mappings(
@@ -50,8 +50,8 @@ class LightbulbSitemapCreator(BaseSitemapCreator):
             .icon('light')\
             .append_to(configpage)
 
-        for lightbulb in configuration.equipment('lightbulb'):
-            location = lightbulb.toplevel_location
+        for lightbulb in configuration.equipment.equipment('lightbulb'):
+            location = lightbulb.location.toplevel
 
             frame = page.frame(location.identifier, location.name)
             lightpage = Page(label=lightbulb.name)\
@@ -98,7 +98,7 @@ class LightbulbSitemapCreator(BaseSitemapCreator):
                                   lightbulb: Lightbulb,
                                   configuration: Configuration,
                                   lightpage: Page) -> None:
-        if configuration.has_equipment('wallswitch'):
+        if configuration.equipment.has('wallswitch'):
             page = Page(label=_('Wallswitch assignments {lightbulb}').format(
                 lightbulb=lightbulb.name))\
                 .icon('configuration')\
@@ -107,16 +107,16 @@ class LightbulbSitemapCreator(BaseSitemapCreator):
             mappings = self._create_lightcontrol_mappings(lightbulb)
             mappings.insert(0, ('NULL', _('No assignment')))
 
-            for wallswitch in configuration.equipment('wallswitch'):
+            for wallswitch in configuration.equipment.equipment('wallswitch'):
                 self._create_wallswitch_page(
                     page, lightbulb, wallswitch, mappings)
 
-    def _create_wallswitch_page(self,
-                                page: Page,
+    @staticmethod
+    def _create_wallswitch_page(page: Page,
                                 lightbulb: Lightbulb,
                                 wallswitch: WallSwitch,
                                 mappings: List[Tuple[str, str]]) -> None:
-        location = wallswitch.toplevel_location
+        location = wallswitch.location.toplevel
         frame = page.frame(location.identifier, location.name)
 
         subpage = Page(
@@ -130,7 +130,8 @@ class LightbulbSitemapCreator(BaseSitemapCreator):
                 button_key, lightbulb), mappings)\
                 .append_to(subpage)
 
-    def _create_lightcontrol_mappings(self, lightbulb: Lightbulb) -> List[Tuple[str, str]]:
+    @staticmethod
+    def _create_lightcontrol_mappings(lightbulb: Lightbulb) -> List[Tuple[str, str]]:
         mappings = [
             ('"OFF"', _('Off'))
         ]
@@ -149,11 +150,11 @@ class LightbulbSitemapCreator(BaseSitemapCreator):
 
         return mappings
 
-    def _create_motiondetector_page(self,
-                                    lightbulb: Lightbulb,
+    @staticmethod
+    def _create_motiondetector_page(lightbulb: Lightbulb,
                                     configuration: Configuration,
                                     lightpage: Page) -> None:
-        if configuration.has_equipment('motiondetector'):
+        if configuration.equipment.has('motiondetector'):
             page = Page(label=_('Motiondetector {lightbulb}').format(
                 lightbulb=lightbulb.name))\
                 .icon('motiondetector')\
@@ -162,8 +163,8 @@ class LightbulbSitemapCreator(BaseSitemapCreator):
             Setpoint(lightbulb.item_ids.motiondetectorperiod, 10, 300, 10)\
                 .append_to(page)
 
-            for motiondetector in configuration.equipment('motiondetector'):
-                location = motiondetector.toplevel_location
+            for motiondetector in configuration.equipment.equipment('motiondetector'):
+                location = motiondetector.location.toplevel
                 frame = page.frame(location.identifier, location.name)
 
                 Switch(motiondetector.item_ids.assignment(lightbulb),

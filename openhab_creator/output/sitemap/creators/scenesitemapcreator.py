@@ -66,10 +66,10 @@ class SceneSitemapCreator(BaseSitemapCreator):
                          scene.begin, scene.end)\
                     .append_to(weekend)
 
-    def _build_locationassignment(self,
-                                  page: Page,
+    @staticmethod
+    def _build_locationassignment(page: Page,
                                   configuration: Configuration) -> None:
-        for location in configuration.timecontrolled_locations.values():
+        for location in configuration.locations.timecontrolled.values():
             toplevel = location
             while toplevel.has_parent:
                 toplevel = toplevel.parent

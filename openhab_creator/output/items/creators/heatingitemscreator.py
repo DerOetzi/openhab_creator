@@ -19,7 +19,7 @@ class HeatingItemsCreator(BaseItemsCreator):
     def build(self, configuration: Configuration) -> None:
         self.__build_general_groups()
 
-        for heating in configuration.equipment('heating'):
+        for heating in configuration.equipment.equipment('heating'):
             self.__build_parent(heating)
 
             if not self.__build_subequipment(heating):

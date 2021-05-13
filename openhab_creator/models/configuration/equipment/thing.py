@@ -81,7 +81,7 @@ class Thing(object):
 
         self._init_channels(channels or {})
 
-        self.mac: Optional[str] = configuration.register_mac(
+        self.mac: Optional[str] = configuration.equipment.register_mac(
             self.equipment_node) if mac else None
 
     def _init_bridge(self,
@@ -91,7 +91,7 @@ class Thing(object):
         self.bridge: Optional[Bridge] = None
 
         if not (configuration is None or bridge_key is None):
-            self.bridge = configuration.bridge(bridge_key)
+            self.bridge = configuration.equipment.bridge(bridge_key)
             self.bridge.add_thing(self)
 
     def _init_nameprefix(self, nameprefix: str) -> None:

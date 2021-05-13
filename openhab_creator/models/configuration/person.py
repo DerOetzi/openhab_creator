@@ -21,16 +21,15 @@ class Person(BaseObject):
 
         self.has_presence: bool = False
 
-        self._init_equipment(
-            configuration, [] if equipment is None else equipment)
+        self._init_equipment(configuration, equipment or [])
 
     def _init_equipment(self, configuration: Configuration, equipment: List[Dict]) -> None:
         self.equipment: List[Equipment] = []
 
         for equipment_definition in equipment:
             equipment = EquipmentType.new(configuration=configuration,
-                                             person=self,
-                                             ** equipment_definition)
+                                          person=self,
+                                          **equipment_definition)
 
             self.equipment.append(equipment)
 

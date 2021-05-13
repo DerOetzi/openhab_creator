@@ -24,13 +24,13 @@ class TemperatureSitemapCreator(BaseSitemapCreator):
 
     @classmethod
     def has_needed_equipment(cls, configuration: Configuration) -> bool:
-        return configuration.has_equipment('temperature')
+        return configuration.equipment.has('temperature')
 
     def build_mainpage(self, sitemap: Sitemap, configuration: Configuration) -> None:
         sensors = list(filter(lambda x: x.location.area in ['Indoor', 'Building'],
-                              configuration.equipment('temperature', False)))
+                              configuration.equipment.equipment('temperature', False)))
         heatings = dict((x.location, x)
-                        for x in configuration.equipment('heating'))
+                        for x in configuration.equipment.equipment('heating'))
 
         if len(sensors) > 0:
             page = Page('temperatureIndoor')\
@@ -56,7 +56,7 @@ class TemperatureSitemapCreator(BaseSitemapCreator):
         if location in self.locations:
             subpage = self.locations[location]
         else:
-            toplevel_location = sensor.toplevel_location
+            toplevel_location = sensor.location.toplevel
             self.toplevel_locations[toplevel_location.identifier] = toplevel_location
             frame = page.frame(
                 toplevel_location.identifier, toplevel_location.name)

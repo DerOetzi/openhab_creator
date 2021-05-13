@@ -24,7 +24,7 @@ class NetworkItemsCreator(BaseItemsCreator):
             .map(MapTransformation.ONLINE)\
             .append_to(self)
 
-        for lan in configuration.equipment('lan', False):
+        for lan in configuration.equipment.equipment('lan', False):
             self.build_equipment(lan)
 
         self.write_file('network')
