@@ -14,18 +14,18 @@ class TimerManager:
     def activate(self, key, timer, date_time):
         if DateUtils.now().isAfter(date_time):
             self.log.warn(
-                "{} nicht aktiviert weil {} in der Vergangenheit liegt!".format(key, date_time))
+                "{} not activated, because {} has been already past.".format(key, date_time))
             return
 
         if not self.reschedule(key, date_time):
             self.log.info(
-                u"Aktiviere neuen Timer {} am {}".format(key, date_time))
+                u"Activate new timer {} at {}".format(key, date_time))
             self.timers[key] = ScriptExecution.createTimer(date_time, timer)
 
     def reschedule(self, key, date_time):
         if self.is_active(key):
             self.log.info(
-                u"Aktualisiere vorhandenen Timer {} auf {}".format(key, date_time))
+                u"Updated existing timer {} to {}".format(key, date_time))
             self.timers[key].reschedule(date_time)
             return True
 
@@ -36,7 +36,7 @@ class TimerManager:
 
     def cancel(self, key):
         if key in self.timers:
-            self.log.info(u"Entferne Timer {}".format(key))
+            self.log.info(u"Remove timer {}".format(key))
             self.timers[key].cancel()
 
     def cancel_all(self):

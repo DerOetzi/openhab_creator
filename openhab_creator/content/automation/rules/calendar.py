@@ -1,10 +1,11 @@
 # pylint: skip-file
-from core.triggers import when
-from core.rules import rule
 from core.log import LOG_PREFIX, logging
-from personal.item import Item
-from personal.ephemerisutils import EphemerisUtils
+from core.rules import rule
+from core.triggers import when
 from personal.dateutils import DateUtils
+from personal.ephemerisutils import EphemerisUtils
+from personal.item import Item
+from personal.signalmessenger import SignalMessenger
 from personal.timermanager import TimerManager
 
 timers = TimerManager('calendar')
@@ -89,10 +90,9 @@ def birthdays(event):
         next_until = next_birthday['until']
 
         append_for_timer = i == 0
-        birthdays = next_name.split(',')
         date = DateUtils.set_time(DateUtils.now().plusDays(next_until), 8)
 
-        for birthday in birthdays:
+        for birthday in next_name.split(','):
             if index < 10:
                 birthday = birthday.strip()
                 birthday = DateUtils.replace_year_by_age(birthday, date)
@@ -116,7 +116,7 @@ def birthday_notification(birthdays):
     item = Item('todaySpecialDay')
     message = item.scripting('birthday') if len(
         geburtstage) == 1 else item.scripting('birthdays')
-    broadcast(message.format(", ".join(birthdays)))
+    SignalMessenger.broadcast(message.format(", ".join(birthdays)))
 
 
 def scriptUnloaded():
