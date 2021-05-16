@@ -1,6 +1,6 @@
 # pylint: skip-file
 from core.jsr223.scope import itemRegistry, NULL, UNDEF, StringType, events
-from core.date import to_java_zoneddatetime
+from core.date import to_java_zoneddatetime, format_date
 from core.actions import PersistenceExtensions
 from core.metadata import get_metadata
 
@@ -79,11 +79,20 @@ class Item(object):
     def scripting(self, key):
         return self.metadata[key]
 
+    def set_label(self, label):
+        self._item.setLabel(u'{}'.format(label))
+
     def post_update(self, value):
-        events.postUpdate(self._item, value)
+        if isinstance(value, ZonedDateTime):
+            events.postUpdate(self._item, format_date(value))
+        else:
+            events.postUpdate(self._item, value)
 
     def send_command(self, value):
-        events.sendCommand(self._item, value)
+        if isinstance(value, ZonedDateTime):
+            events.sendCommand(self._item, format_date(value))
+        else:
+            events.sendCommand(self._item, value)
 
     def delta_since(self, since):
         delta_since = PersistenceExtensions.deltaSince(

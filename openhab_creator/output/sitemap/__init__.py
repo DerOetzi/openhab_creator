@@ -19,7 +19,7 @@ class SitemapCreator(BaseCreator):
     def build(self, configuration: Configuration) -> None:
         sitemap = Sitemap('default', configuration.name)
 
-        second_frame = sitemap.frame('second', _('State and configuration'))\
+        second_frame = sitemap.second_frame
 
         SitemapCreatorPipeline.build_mainpage(sitemap, configuration)
 

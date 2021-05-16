@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 @SitemapCreatorPipeline(mainpage=0, configpage=0)
 class SceneSitemapCreator(BaseSitemapCreator):
     def build_mainpage(self, sitemap: Sitemap, configuration: Configuration) -> None:
-        frame = sitemap.frame('second')
+        frame = sitemap.second_frame
         page = Page(Scene.sceneactive_id)\
             .label(_('Scene'))\
             .map(MapTransformation.SCENE)\

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Dict, Optional
 
+from openhab_creator import _
 from openhab_creator.models.sitemap.baseelement import BaseElement
 from openhab_creator.models.sitemap.text import Text
 
@@ -58,6 +59,10 @@ class Sitemap(Page):
     def __init__(self, name: str, label: str):
         self.name = name
         super().__init__(label=label)
+
+    @property
+    def second_frame(self) -> Frame:
+        return self.frame('second', _('State and configuration'))
 
     @property
     def elementtype(self) -> str:

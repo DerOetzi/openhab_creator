@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openHAB Creator\n"
-"POT-Creation-Date: 2021-04-29 21:25+0200\n"
-"PO-Revision-Date: 2021-04-29 21:26+0200\n"
+"POT-Creation-Date: 2021-05-16 23:25+0200\n"
+"PO-Revision-Date: 2021-05-16 23:26+0200\n"
 "Last-Translator: Johannes Ott <info@johannes-ott.net>\n"
 "Language-Team: Johannes Ott\n"
 "Language: de\n"
@@ -65,7 +65,7 @@ msgid "Not at home"
 msgstr "Nicht zu Hause"
 
 #: openhab_creator/models/common/scene.py:9
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:148
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:149
 msgid "Night"
 msgstr "Nacht"
 
@@ -101,19 +101,19 @@ msgstr "Abwesenheit"
 msgid "Party"
 msgstr "Party"
 
-#: openhab_creator/models/configuration/equipment/types/heating.py:61
+#: openhab_creator/models/configuration/equipment/types/heating.py:89
 msgid "Heating"
 msgstr "Heizung"
 
-#: openhab_creator/models/configuration/equipment/types/lightbulb.py:63
+#: openhab_creator/models/configuration/equipment/types/lightbulb.py:149
 msgid "Lightbulb"
 msgstr "Leuchte"
 
-#: openhab_creator/models/configuration/equipment/types/motiondetector.py:40
+#: openhab_creator/models/configuration/equipment/types/motiondetector.py:54
 msgid "Motiondetector"
 msgstr "Bewegungsmelder"
 
-#: openhab_creator/models/configuration/equipment/types/networkappliance.py:42
+#: openhab_creator/models/configuration/equipment/types/networkappliance.py:52
 msgid "NetworkAppliance"
 msgstr "Netzwerkanwendung"
 
@@ -159,20 +159,20 @@ msgstr "Gefühlte Temperaturen (Humidex)"
 msgid "Rain gauge"
 msgstr "Regenmesser"
 
-#: openhab_creator/models/configuration/equipment/types/sensor.py:132
+#: openhab_creator/models/configuration/equipment/types/sensor.py:226
 #: openhab_creator/output/items/creators/sensoritemscreator.py:56
 msgid "Sensor"
 msgstr "Sensor"
 
-#: openhab_creator/models/configuration/equipment/types/smartphone.py:38
+#: openhab_creator/models/configuration/equipment/types/smartphone.py:89
 msgid "Smartphone"
 msgstr "Smartphone"
 
-#: openhab_creator/models/configuration/equipment/types/wallswitch.py:43
+#: openhab_creator/models/configuration/equipment/types/wallswitch.py:66
 msgid "Wallswitch"
 msgstr "Schalter"
 
-#: openhab_creator/models/configuration/equipment/types/wallswitch.py:57
+#: openhab_creator/models/configuration/equipment/types/wallswitch.py:74
 msgid "Button {count} ({name})"
 msgstr "Taste {count} ({name})"
 
@@ -192,6 +192,10 @@ msgstr "Monat"
 msgid "Year"
 msgstr "Jahr"
 
+#: openhab_creator/models/sitemap/page.py:65
+msgid "State and configuration"
+msgstr "Status und Konfiguration"
+
 #: openhab_creator/output/content/maptransformationcreator.py:20
 msgid "Unknown"
 msgstr "Unbekannt"
@@ -207,6 +211,23 @@ msgstr "Batteriestand niedrig"
 #: openhab_creator/output/items/creators/batteryitemscreator.py:44
 msgid "Battery level"
 msgstr "Batteriestand"
+
+#: openhab_creator/output/items/creators/calendaritemscreator.py:25
+#: openhab_creator/output/items/creators/calendaritemscreator.py:31
+msgid "Holiday"
+msgstr "Feiertag"
+
+#: openhab_creator/output/items/creators/calendaritemscreator.py:44
+msgid "Special today"
+msgstr "Besonders heute"
+
+#: openhab_creator/output/items/creators/calendaritemscreator.py:47
+msgid "Birthday: {}"
+msgstr "Geburtstag: {}"
+
+#: openhab_creator/output/items/creators/calendaritemscreator.py:47
+msgid "Birthdays: {}"
+msgstr "Geburtstage: {}"
 
 #: openhab_creator/output/items/creators/generalitemscreator.py:20
 msgid "Configuration items"
@@ -351,12 +372,12 @@ msgid "Colortemperature"
 msgstr "Farbtemperatur"
 
 #: openhab_creator/output/items/creators/lightbulbitemscreator.py:191
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:266
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:267
 msgid "On/Off"
 msgstr "An/Aus"
 
 #: openhab_creator/output/items/creators/lightbulbitemscreator.py:199
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:279
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:280
 msgid "RGB Color"
 msgstr "RGB Farbe"
 
@@ -500,15 +521,12 @@ msgstr "Tastenstatus"
 msgid "Wallswitch assignment"
 msgstr "Schalterzuordnung"
 
-#: openhab_creator/output/sitemap/__init__.py:22
-msgid "State and configuration"
-msgstr "Status und Konfiguration"
-
 #: openhab_creator/output/sitemap/__init__.py:26
 msgid "State"
 msgstr "Status"
 
 #: openhab_creator/output/sitemap/__init__.py:29
+#: openhab_creator/output/sitemap/creators/calendarsitemapcreator.py:37
 #: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:88
 msgid "Configuration"
 msgstr "Konfiguration"
@@ -516,6 +534,14 @@ msgstr "Konfiguration"
 #: openhab_creator/output/sitemap/basesitemapcreator.py:51
 msgid "Course"
 msgstr "Verlauf"
+
+#: openhab_creator/output/sitemap/creators/calendarsitemapcreator.py:22
+msgid "Calendar"
+msgstr "Kalender"
+
+#: openhab_creator/output/sitemap/creators/calendarsitemapcreator.py:30
+msgid "Next 10 upcoming birthdays"
+msgstr "Nächsten 10 Geburtstage"
 
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:27
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:49
@@ -533,16 +559,16 @@ msgstr "Ausblenden"
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:68
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:72
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:76
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:135
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:170
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:136
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:171
 #: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:85
 #: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:91
 msgid "Off"
 msgstr "Aus"
 
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:76
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:145
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:170
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:146
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:171
 #: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:85
 #: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:91
 msgid "On"
@@ -574,11 +600,11 @@ msgstr "Keine Zuordnung"
 msgid "Assignment {wallswitch} to {lightbulb}"
 msgstr "Zuordnung {wallswitch} zu {lightbulb}"
 
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:139
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:140
 msgid "All"
 msgstr "Alle"
 
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:157
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:158
 msgid "Motiondetector {lightbulb}"
 msgstr "Bewegungsmelder {lightbulb}"
 

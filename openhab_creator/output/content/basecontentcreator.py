@@ -22,15 +22,19 @@ class BaseContentCreator():
         pwd = Path(__file__).resolve().parent.parent.parent
         self._srcdir: str = pwd / 'content'
 
-    def _copy_all_files_from_subdir(self, subdir: str, destination: Optional[str] = None) -> None:
+    def _copy_all_files_from_subdir(self,
+                                    subdir: str, destination: Optional[str] = None,
+                                    configdir: Optional[str] = None) -> None:
         if destination is None:
             dest_dir = self._create_outputdir_if_not_exists(subdir)
         else:
             dest_dir = self._create_outputdir_if_not_exists(destination)
 
+        srcdir = Path(configdir or self._srcdir)
+
         distutils.log.set_verbosity(distutils.log.DEBUG)
         distutils.dir_util.copy_tree(
-            str(self._srcdir / subdir),
+            str(srcdir / subdir),
             str(dest_dir),
             update=1,
             verbose=1,
