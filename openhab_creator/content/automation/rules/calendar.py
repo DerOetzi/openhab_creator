@@ -119,6 +119,31 @@ def birthday_notification(birthdays):
     SignalMessenger.broadcast(message.format(", ".join(birthdays)))
 
 
+@rule('Garbage cans system start')
+@when('System started')
+def garbage_cans(event):
+    for item in ir.getItem('garbagecan').members:
+        garbage_can(Item(item))
+
+
+@rule('Garbage can event changed')
+@when('Member of garbagecan changed')
+def garbage_can_changed(event):
+    garbagecan_item = Item.from_event(event)
+    garbage_can_reminder(garbagecan_item, event)
+
+
+def garbage_can(garbagecan_item, event=None):
+    def timer(): return SignalMessenger.broadcast(
+        garbagecan_item.scripting('message'))
+
+    timer_date = garbagecan_item.get_value(DateUtils.now(), event)
+    timer_date = timer_date.minusDays(1)
+    timer_date = DateUtils.set_time(timer_date, 18)
+
+    timers.activate(garbagecan_item.scripting('identifier'), timer, timer_date)
+
+
 def scriptUnloaded():
     # pylint: disable=S1542
     timers.cancel_all()

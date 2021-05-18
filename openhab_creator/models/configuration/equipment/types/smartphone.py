@@ -1,14 +1,10 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Dict, List, Optional
+from typing import Dict, List, Optional
 
 from openhab_creator import _
 from openhab_creator.models.configuration.equipment import (
     Equipment, EquipmentItemIdentifiers, EquipmentPoints, EquipmentType)
-
-if TYPE_CHECKING:
-    from openhab_creator.models.configuration.equipment.types.lightbulb import \
-        Lightbulb
 
 
 class SmartphoneItemIdentifiers(EquipmentItemIdentifiers):

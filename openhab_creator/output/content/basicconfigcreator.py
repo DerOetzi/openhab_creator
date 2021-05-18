@@ -18,3 +18,5 @@ class BasicConfigCreator(BaseContentCreator):
         self._copy_all_files_from_subdir('transform')
         self._copy_all_files_from_subdir(
             'ephemeris', configdir=configuration.configdir)
+        self._copy_all_files_from_subdir(
+            'html', configdir=configuration.configdir)

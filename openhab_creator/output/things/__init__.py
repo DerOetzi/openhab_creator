@@ -29,7 +29,9 @@ class ThingsCreator(BaseCreator):
             bridgething = bridge.thing
 
             bridgestring = f'Bridge {bridge.binding}:{bridgething.typed}:{bridgething.uid} '
-            bridgestring += f'"{bridgething.nameprefix} {bridge.name} ({bridge.identifier})" '
+            bridgelabel = f'{bridgething.nameprefix} {bridge.name}({bridge.identifier})'.strip(
+            )
+            bridgestring += f'"{bridgelabel}" '
             if bridgething.has_properties:
                 bridgestring += f'{Formatter.key_value_pairs(bridgething.properties, "[", "]")} '
 
@@ -45,7 +47,11 @@ class ThingsCreator(BaseCreator):
                 thingstring = f'  Thing {thing.typed} {thing.uid} '
             else:
                 thingstring = f'Thing {bridge.binding}:{thing.typed}:{thing.uid} '
-            thingstring += f'"{thing.nameprefix} {thing.name} ({thing.identifier})" '
+
+            thinglabel = f'{thing.nameprefix} {thing.name} ({thing.identifier})'.strip(
+            )
+
+            thingstring += f'"{thinglabel}" '
             thingstring += f'@ "{thing.category}" '
 
             if thing.has_properties:

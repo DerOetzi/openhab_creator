@@ -24,16 +24,18 @@ class CalendarSitemapCreator(BaseSitemapCreator):
             .append_to(sitemap.second_frame)
 
         self.build_birthdays(page)
-        self.build_configitems(page)
+        self.build_configitems(page, configuration)
 
-    def build_birthdays(self, page: Page) -> None:
+    @staticmethod
+    def build_birthdays(page: Page) -> None:
         frame = page.frame('birthdays', _('Next 10 upcoming birthdays'))
         for i in range(0, 10):
             Text(f'nextBirthday{i}')\
                 .visibility((f'nextBirthday{i}', '!=', 'NULL'))\
                 .append_to(frame)
 
-    def build_configitems(self, page: Page) -> None:
+    @staticmethod
+    def build_configitems(page: Page, configuration: Configuration) -> None:
         frame = page.frame('config', _('Configuration'))
 
         Text('nextSpecialDay')\
@@ -47,6 +49,12 @@ class CalendarSitemapCreator(BaseSitemapCreator):
         Text('holiday')\
             .visibility(('holiday', '==', 'OFF'))\
             .append_to(frame)
+
+        if configuration.equipment.has('garbagecan'):
+            for garbagecan in configuration.equipment.equipment('garbagecan'):
+                Text(garbagecan.item_ids.begin)\
+                    .visibility((garbagecan.item_ids.begin, '!=', 'NULL'))\
+                    .append_to(frame)
 
     def build_statuspage(self, statuspage: Page, configuration: Configuration) -> None:
         """No statuspage for calendar"""
