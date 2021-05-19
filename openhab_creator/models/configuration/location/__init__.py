@@ -106,6 +106,8 @@ class LocationFactory():
                 'openhab_creator.models.configuration.location.indoor.buildings')
             import_module(
                 'openhab_creator.models.configuration.location.outdoors')
+            import_module(
+                'openhab_creator.models.configuration.location.external')
 
             cls.initialized = True
 

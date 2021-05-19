@@ -173,6 +173,7 @@ class LocationRegistry():
         self._init_floors(self.configuration.configdir)
         self._init_buildings(self.configuration.configdir)
         self._init_outdoors(self.configuration.configdir)
+        self._init_external(self.configuration.configdir)
 
     def _init_floors(self, configdir: str) -> None:
         floors = Configuration.read_jsons_from_dir(
@@ -198,6 +199,12 @@ class LocationRegistry():
 
         self._init_locations('outdoors', outdoors)
 
+    def _init_external(self, configdir: str) -> None:
+        external = Configuration.read_json_from_file(
+            configdir, 'locations/external.json')
+
+        self._init_locations('external', external)
+
     def _init_locations(self, location_key: str, locations: List[Dict]) -> None:
         self.registry[location_key] = []
 
@@ -221,6 +228,10 @@ class LocationRegistry():
     @property
     def outdoors(self) -> List[Location]:
         return self.registry['outdoors']
+
+    @property
+    def external(self) -> List[Location]:
+        return self.registry['external']
 
 
 class Configuration():
