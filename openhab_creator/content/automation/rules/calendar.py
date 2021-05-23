@@ -115,7 +115,7 @@ def birthdays(event):
 def birthday_notification(birthdays):
     item = Item('todaySpecialDay')
     message = item.scripting('birthday') if len(
-        geburtstage) == 1 else item.scripting('birthdays')
+        birthdays) == 1 else item.scripting('birthdays')
     SignalMessenger.broadcast(message.format(", ".join(birthdays)))
 
 
@@ -144,6 +144,5 @@ def garbage_can(garbagecan_item, event=None):
     timers.activate(garbagecan_item.scripting('identifier'), timer, timer_date)
 
 
-def scriptUnloaded():
-    # pylint: disable=S1542
+def scriptUnloaded():  # NOSONAR
     timers.cancel_all()
