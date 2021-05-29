@@ -94,11 +94,6 @@ class SensorType(CreatorEnum):
         SensorTyped(PropertyType.TEMPERATURE, NumberType.TEMPERATURE),\
         SensorColors([])
 
-    RAIN_GAUGE = 'rain_gauge',\
-        SensorLabel(_('Rain gauge'), _('Rain gauge'), '%.1f mm'),\
-        SensorTyped(PropertyType.RAIN, NumberType.LENGTH),\
-        SensorColors([])
-
     def __init__(self, point: str, labels: SensorLabel,
                  typed: SensorTyped, colors: SensorColors):
         self.point: str = point
@@ -161,10 +156,6 @@ class SensorItemIdentifiers(EquipmentItemIdentifiers):
     def humidex(self) -> str:
         return self._identifier('humidex')
 
-    @property
-    def rain_gauge(self) -> str:
-        return self._identifier('rain_gauge')
-
 
 class SensorPoints(EquipmentPoints):
     @property
@@ -194,10 +185,6 @@ class SensorPoints(EquipmentPoints):
     @property
     def has_humidex(self) -> str:
         return self.has('humidex', True)
-
-    @property
-    def has_rain_gauge(self) -> str:
-        return self.has('rain_gauge', True)
 
 
 @EquipmentType()

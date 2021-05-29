@@ -5,6 +5,7 @@ from typing import Dict
 from openhab_creator import _, CreatorEnum
 from openhab_creator.models.common.scene import Scene
 from openhab_creator.models.common.presence import Presence
+from openhab_creator.models.common.weathercondition import WeatherCondition
 
 
 class MapTransformation(CreatorEnum):
@@ -28,6 +29,8 @@ class MapTransformation(CreatorEnum):
         'consistent': _('Consistent'),
         'rising': _('Rising')
     }
+
+    WEATHERCONDITION = "weathercondition", WeatherCondition.mappings
 
     def __init__(self, filename: str, mappings: Dict[str, str]):
         self.filename: str = filename

@@ -60,6 +60,7 @@ class PropertyType(CreatorEnum):
 
 class ProfileType(CreatorEnum):
     JS = 'transform:JS'
+    SCALE = 'transform:SCALE'
 
 
 class BaseItem():

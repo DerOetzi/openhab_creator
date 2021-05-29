@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openHAB Creator\n"
-"POT-Creation-Date: 2021-05-16 23:25+0200\n"
-"PO-Revision-Date: 2021-05-16 23:26+0200\n"
+"POT-Creation-Date: 2021-05-29 23:21+0200\n"
+"PO-Revision-Date: 2021-05-29 23:23+0200\n"
 "Last-Translator: Johannes Ott <info@johannes-ott.net>\n"
 "Language-Team: Johannes Ott\n"
 "Language: de\n"
@@ -18,41 +18,41 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
-#: openhab_creator/models/common/maptransformation.py:12
+#: openhab_creator/models/common/maptransformation.py:13
 msgid "Active"
 msgstr "Aktiv"
 
-#: openhab_creator/models/common/maptransformation.py:12
+#: openhab_creator/models/common/maptransformation.py:13
 msgid "Inactive"
 msgstr "Inaktiv"
 
-#: openhab_creator/models/common/maptransformation.py:16
 #: openhab_creator/models/common/maptransformation.py:17
+#: openhab_creator/models/common/maptransformation.py:18
 msgid "Low"
 msgstr "Niedrig"
 
-#: openhab_creator/models/common/maptransformation.py:16
 #: openhab_creator/models/common/maptransformation.py:17
+#: openhab_creator/models/common/maptransformation.py:18
 msgid "Ok"
 msgstr "Ok"
 
-#: openhab_creator/models/common/maptransformation.py:20
+#: openhab_creator/models/common/maptransformation.py:21
 msgid "Offline"
 msgstr "Offline"
 
-#: openhab_creator/models/common/maptransformation.py:20
+#: openhab_creator/models/common/maptransformation.py:21
 msgid "Online"
 msgstr "Online"
 
-#: openhab_creator/models/common/maptransformation.py:27
+#: openhab_creator/models/common/maptransformation.py:28
 msgid "Falling"
 msgstr "Fallend"
 
-#: openhab_creator/models/common/maptransformation.py:28
+#: openhab_creator/models/common/maptransformation.py:29
 msgid "Consistent"
 msgstr "Gleichbleibend"
 
-#: openhab_creator/models/common/maptransformation.py:29
+#: openhab_creator/models/common/maptransformation.py:30
 msgid "Rising"
 msgstr "Steigend"
 
@@ -100,6 +100,202 @@ msgstr "Abwesenheit"
 #: openhab_creator/models/common/scene.py:18
 msgid "Party"
 msgstr "Party"
+
+#: openhab_creator/models/common/weathercondition.py:9
+msgid "Thunderstorm with light rain"
+msgstr "Gewitter mit leichtem Regen"
+
+#: openhab_creator/models/common/weathercondition.py:11
+msgid "Thunderstorm with rain"
+msgstr "Gewitter mit Regen"
+
+#: openhab_creator/models/common/weathercondition.py:13
+msgid "Thunderstorm with heavy rain"
+msgstr "Gewitter mit starkem Regen"
+
+#: openhab_creator/models/common/weathercondition.py:15
+msgid "Light thunderstorm"
+msgstr "Leichtes Gewitter"
+
+#: openhab_creator/models/common/weathercondition.py:16
+msgid "Thunderstorm"
+msgstr "Gewitter"
+
+#: openhab_creator/models/common/weathercondition.py:17
+msgid "Heavy thunderstorm"
+msgstr "Starkes Gewitter"
+
+#: openhab_creator/models/common/weathercondition.py:18
+msgid "Rough thunderstorm"
+msgstr "Raues Gewitter"
+
+#: openhab_creator/models/common/weathercondition.py:19
+msgid "Thunderstorm with light drizzle"
+msgstr "Gewitter mit leichtem Nieselregen"
+
+#: openhab_creator/models/common/weathercondition.py:21
+msgid "Thunderstorm with drizzle"
+msgstr "Gewitter mit Nieselregen"
+
+#: openhab_creator/models/common/weathercondition.py:23
+msgid "Thunderstorm with heavy drizzle"
+msgstr "Gewitter mit starkem Nieselregen"
+
+#: openhab_creator/models/common/weathercondition.py:26
+#: openhab_creator/models/common/weathercondition.py:30
+msgid "Light drizzle"
+msgstr "Leichtes Nieseln"
+
+#: openhab_creator/models/common/weathercondition.py:27
+#: openhab_creator/models/common/weathercondition.py:31
+#: openhab_creator/models/common/weathercondition.py:38
+msgid "Drizzle"
+msgstr "Nieselregen"
+
+#: openhab_creator/models/common/weathercondition.py:28
+#: openhab_creator/models/common/weathercondition.py:32
+msgid "Heavy drizzle"
+msgstr "Starker Nieselregen"
+
+#: openhab_creator/models/common/weathercondition.py:35
+#: openhab_creator/models/common/weathercondition.py:37
+msgid "Rain showers and drizzle"
+msgstr "Regenschauer und Nieselregen"
+
+#: openhab_creator/models/common/weathercondition.py:40
+msgid "Light rain"
+msgstr "Leichter Regen"
+
+#: openhab_creator/models/common/weathercondition.py:41
+msgid "Moderate rain"
+msgstr "Mäßiger Regen"
+
+#: openhab_creator/models/common/weathercondition.py:42
+msgid "Heavy rain"
+msgstr "Starker Regen"
+
+#: openhab_creator/models/common/weathercondition.py:43
+msgid "Very heavy rain"
+msgstr "Sehr schwerer Regen"
+
+#: openhab_creator/models/common/weathercondition.py:44
+msgid "Extreme rain"
+msgstr "Extremer Regen"
+
+#: openhab_creator/models/common/weathercondition.py:46
+msgid "Freezing rain"
+msgstr "Gefrierender Regen"
+
+#: openhab_creator/models/common/weathercondition.py:48
+msgid "Light rain shower"
+msgstr "Leichter Regenschauer"
+
+#: openhab_creator/models/common/weathercondition.py:49
+msgid "Rain shower"
+msgstr "Regenschauer"
+
+#: openhab_creator/models/common/weathercondition.py:50
+msgid "Heavy rain shower"
+msgstr "Starker Regenschauer"
+
+#: openhab_creator/models/common/weathercondition.py:51
+msgid "Very heavy rain shower"
+msgstr "Sehr starker Regenschauer"
+
+#: openhab_creator/models/common/weathercondition.py:54
+msgid "Moderate snow"
+msgstr "Mäßiger Schnee"
+
+#: openhab_creator/models/common/weathercondition.py:55
+msgid "Snowfall"
+msgstr "Schneefall"
+
+#: openhab_creator/models/common/weathercondition.py:56
+msgid "Heavy snowfall"
+msgstr "Starker Schneefall"
+
+#: openhab_creator/models/common/weathercondition.py:57
+#: openhab_creator/models/common/weathercondition.py:58
+msgid "Sleet"
+msgstr "Schneeregen"
+
+#: openhab_creator/models/common/weathercondition.py:60
+msgid "Light rain and snow"
+msgstr "Leichter Regen und Schnee"
+
+#: openhab_creator/models/common/weathercondition.py:61
+msgid "Rain and snow"
+msgstr "Regen und Schnee"
+
+#: openhab_creator/models/common/weathercondition.py:62
+msgid "Light snow shower"
+msgstr "Leichter Schneeschauer"
+
+#: openhab_creator/models/common/weathercondition.py:63
+msgid "Snow shower"
+msgstr "Schneeschauer"
+
+#: openhab_creator/models/common/weathercondition.py:64
+msgid "Heavy snow shower"
+msgstr "Starker Schneeschauer"
+
+#: openhab_creator/models/common/weathercondition.py:66
+msgid "Gloomy"
+msgstr "Trüb"
+
+#: openhab_creator/models/common/weathercondition.py:67
+msgid "Smoke"
+msgstr "Rauch"
+
+#: openhab_creator/models/common/weathercondition.py:68
+msgid "Haze"
+msgstr "Dunst"
+
+#: openhab_creator/models/common/weathercondition.py:69
+#: openhab_creator/models/common/weathercondition.py:71
+msgid "Sand"
+msgstr "Sand"
+
+#: openhab_creator/models/common/weathercondition.py:70
+msgid "Fog"
+msgstr "Nebel"
+
+#: openhab_creator/models/common/weathercondition.py:72
+msgid "Dust"
+msgstr "Staub"
+
+#: openhab_creator/models/common/weathercondition.py:73
+msgid "Volcanic ash"
+msgstr "Vulkanasche"
+
+#: openhab_creator/models/common/weathercondition.py:74
+msgid "Storm"
+msgstr "Sturm"
+
+#: openhab_creator/models/common/weathercondition.py:75
+msgid "Tornado"
+msgstr "Tornado"
+
+#: openhab_creator/models/common/weathercondition.py:77
+msgid "Clear sky"
+msgstr "Klarer Himmel"
+
+#: openhab_creator/models/common/weathercondition.py:79
+msgid "A couple of clouds"
+msgstr "Ein paar Wolken"
+
+#: openhab_creator/models/common/weathercondition.py:80
+#: openhab_creator/models/common/weathercondition.py:81
+msgid "Mostly cloudy"
+msgstr "Überwiegend bewölkt"
+
+#: openhab_creator/models/common/weathercondition.py:82
+msgid "Cloudy"
+msgstr "Bewölkt"
+
+#: openhab_creator/models/configuration/equipment/types/garbagecan.py:55
+msgid "Garbage can"
+msgstr "Mülltonne"
 
 #: openhab_creator/models/configuration/equipment/types/heating.py:89
 msgid "Heating"
@@ -155,16 +351,12 @@ msgstr "Gefühlte Temperatur (Humidex)"
 msgid "Felt temperatures (Humidex)"
 msgstr "Gefühlte Temperaturen (Humidex)"
 
-#: openhab_creator/models/configuration/equipment/types/sensor.py:98
-msgid "Rain gauge"
-msgstr "Regenmesser"
-
-#: openhab_creator/models/configuration/equipment/types/sensor.py:226
+#: openhab_creator/models/configuration/equipment/types/sensor.py:213
 #: openhab_creator/output/items/creators/sensoritemscreator.py:56
 msgid "Sensor"
 msgstr "Sensor"
 
-#: openhab_creator/models/configuration/equipment/types/smartphone.py:89
+#: openhab_creator/models/configuration/equipment/types/smartphone.py:85
 msgid "Smartphone"
 msgstr "Smartphone"
 
@@ -175,6 +367,14 @@ msgstr "Schalter"
 #: openhab_creator/models/configuration/equipment/types/wallswitch.py:74
 msgid "Button {count} ({name})"
 msgstr "Taste {count} ({name})"
+
+#: openhab_creator/models/configuration/equipment/types/weatherstation.py:14
+msgid "Rain gauge"
+msgstr "Regenmesser"
+
+#: openhab_creator/models/configuration/equipment/types/weatherstation.py:86
+msgid "Weatherstation"
+msgstr "Wetterstation"
 
 #: openhab_creator/models/grafana/dashboard.py:20
 msgid "Day"
@@ -212,22 +412,30 @@ msgstr "Batteriestand niedrig"
 msgid "Battery level"
 msgstr "Batteriestand"
 
-#: openhab_creator/output/items/creators/calendaritemscreator.py:25
-#: openhab_creator/output/items/creators/calendaritemscreator.py:31
+#: openhab_creator/output/items/creators/calendaritemscreator.py:27
+#: openhab_creator/output/items/creators/calendaritemscreator.py:33
 msgid "Holiday"
 msgstr "Feiertag"
 
-#: openhab_creator/output/items/creators/calendaritemscreator.py:44
+#: openhab_creator/output/items/creators/calendaritemscreator.py:46
 msgid "Special today"
 msgstr "Besonders heute"
 
-#: openhab_creator/output/items/creators/calendaritemscreator.py:47
+#: openhab_creator/output/items/creators/calendaritemscreator.py:49
 msgid "Birthday: {}"
 msgstr "Geburtstag: {}"
 
-#: openhab_creator/output/items/creators/calendaritemscreator.py:47
+#: openhab_creator/output/items/creators/calendaritemscreator.py:49
 msgid "Birthdays: {}"
 msgstr "Geburtstage: {}"
+
+#: openhab_creator/output/items/creators/calendaritemscreator.py:62
+msgid "Garbage cans events"
+msgstr "Mülltonnentermin"
+
+#: openhab_creator/output/items/creators/calendaritemscreator.py:75
+msgid "Event title"
+msgstr "Termintitel"
 
 #: openhab_creator/output/items/creators/generalitemscreator.py:20
 msgid "Configuration items"
@@ -481,10 +689,6 @@ msgstr "Zeitsteuerung"
 msgid "Scene"
 msgstr "Szene"
 
-#: openhab_creator/output/items/creators/sensoritemscreator.py:60
-msgid "Sensor {blankname}"
-msgstr "Sensor {blankname}"
-
 #: openhab_creator/output/items/creators/sensoritemscreator.py:138
 msgid "Trend {label}"
 msgstr "Trend {label}"
@@ -521,12 +725,16 @@ msgstr "Tastenstatus"
 msgid "Wallswitch assignment"
 msgstr "Schalterzuordnung"
 
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:30
+msgid "Weather condition"
+msgstr "Wetterlage"
+
 #: openhab_creator/output/sitemap/__init__.py:26
 msgid "State"
 msgstr "Status"
 
 #: openhab_creator/output/sitemap/__init__.py:29
-#: openhab_creator/output/sitemap/creators/calendarsitemapcreator.py:37
+#: openhab_creator/output/sitemap/creators/calendarsitemapcreator.py:39
 #: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:88
 msgid "Configuration"
 msgstr "Konfiguration"
@@ -539,7 +747,7 @@ msgstr "Verlauf"
 msgid "Calendar"
 msgstr "Kalender"
 
-#: openhab_creator/output/sitemap/creators/calendarsitemapcreator.py:30
+#: openhab_creator/output/sitemap/creators/calendarsitemapcreator.py:31
 msgid "Next 10 upcoming birthdays"
 msgstr "Nächsten 10 Geburtstage"
 
@@ -651,6 +859,9 @@ msgstr "Geschlossen"
 #: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:90
 msgid "Boost"
 msgstr "Boost"
+
+#~ msgid "Sensor {blankname}"
+#~ msgstr "Sensor {blankname}"
 
 #~ msgid "Temperature sensor"
 #~ msgstr "Temperatursensor"

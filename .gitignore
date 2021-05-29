@@ -1,6 +1,9 @@
 output/*
 tmp/*
 
+# Buy license for icons TODO make own items
+openhab_creator/content/icons/weather/*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

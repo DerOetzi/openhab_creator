@@ -14,7 +14,6 @@ if TYPE_CHECKING:
     from openhab_creator.models.configuration.location.indoor.floors import Floor
     from openhab_creator.models.configuration.location.indoor import Indoor
     from openhab_creator.models.configuration.location.outdoors import Outdoor
-    from openhab_creator.models.configuration.location.external import External
 
 
 @ItemsCreatorPipeline(2)
@@ -30,9 +29,6 @@ class LocationItemsCreator(BaseItemsCreator):
 
         for outdoor in configuration.locations.outdoors:
             self._create_outdoor(outdoor)
-
-        for external in configuration.locations.external:
-            self._create_external(external)
 
         for location in configuration.locations.timecontrolled.values():
             self._create_automation(location)
@@ -66,13 +62,6 @@ class LocationItemsCreator(BaseItemsCreator):
             .label(outdoor.name)\
             .icon(outdoor.category)\
             .semantic(outdoor)\
-            .append_to(self)
-
-    def _create_external(self, external: External) -> None:
-        Group(external.identifier)\
-            .label(external.name)\
-            .icon(external.category)\
-            .semantic(external)\
             .append_to(self)
 
     def _create_automation(self, location: Location) -> None:

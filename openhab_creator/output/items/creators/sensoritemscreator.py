@@ -57,7 +57,7 @@ class SensorItemsCreator(BaseItemsCreator):
                 .equipment(sensor)
         else:
             sensor_equipment\
-                .label(_('Sensor {blankname}').format(blankname=sensor.blankname))\
+                .label(sensor.name_with_type)\
                 .location(sensor.location)
 
         sensor_equipment.append_to(self)
