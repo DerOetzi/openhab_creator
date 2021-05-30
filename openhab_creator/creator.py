@@ -43,4 +43,4 @@ class Creator():
         AutomationCreator(self.outputdir).build(self.configdir, configuration)
 
         if self.icons:
-            IconsCreator(self.outputdir).build()
+            IconsCreator(self.outputdir).build(self.configdir)
