@@ -21,9 +21,9 @@ def trends(event):
         trend_item = Item('trend{}'.format(item.name))
 
         if delta < 0.0:
-            trend_item.post_update('rising')
-        elif delta > 0.0:
             trend_item.post_update('falling')
+        elif delta > 0.0:
+            trend_item.post_update('rising')
         else:
             trend_item.post_update('consistent')
 
