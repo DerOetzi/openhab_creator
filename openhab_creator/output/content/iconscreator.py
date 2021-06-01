@@ -42,9 +42,9 @@ class IconsCreator(BaseContentCreator):
         self._convert_write_png(icon_name, content)
 
     @staticmethod
-    def generate_output_icons(srcfile: DirEntry) -> str:
-        with open(srcfile, 'r') as f:
-            content = f.read()
+    def generate_output_icons(srcpath: DirEntry) -> str:
+        with open(srcpath, 'r') as srcfile:
+            content = srcfile.read()
             for color in Color:
                 content = content.replace(f'__{color.name}__', str(color))
 
@@ -52,8 +52,8 @@ class IconsCreator(BaseContentCreator):
 
     def _write_svg(self, icon_basename: str, content: str) -> None:
         destination = self._outputdir / f'icons/classic/{icon_basename}.svg'
-        with open(destination, 'w') as f:
-            f.write(content)
+        with open(destination, 'w') as destfile:
+            destfile.write(content)
 
     def _convert_write_png(self, icon_basename, content: str) -> None:
         destination = self._outputdir / f'icons/classic/{icon_basename}.png'
