@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openHAB Creator\n"
-"POT-Creation-Date: 2021-05-29 23:21+0200\n"
-"PO-Revision-Date: 2021-05-29 23:23+0200\n"
+"POT-Creation-Date: 2021-06-01 21:51+0200\n"
+"PO-Revision-Date: 2021-06-01 21:53+0200\n"
 "Last-Translator: Johannes Ott <info@johannes-ott.net>\n"
 "Language-Team: Johannes Ott\n"
 "Language: de\n"
@@ -320,6 +320,8 @@ msgstr "Temperatur"
 #: openhab_creator/models/configuration/equipment/types/sensor.py:50
 #: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:37
 #: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:52
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:40
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:56
 msgid "Temperatures"
 msgstr "Temperaturen"
 
@@ -370,9 +372,9 @@ msgstr "Taste {count} ({name})"
 
 #: openhab_creator/models/configuration/equipment/types/weatherstation.py:14
 msgid "Rain gauge"
-msgstr "Regenmesser"
+msgstr "Niederschlag"
 
-#: openhab_creator/models/configuration/equipment/types/weatherstation.py:86
+#: openhab_creator/models/configuration/equipment/types/weatherstation.py:94
 msgid "Weatherstation"
 msgstr "Wetterstation"
 
@@ -725,7 +727,11 @@ msgstr "Tastenstatus"
 msgid "Wallswitch assignment"
 msgstr "Schalterzuordnung"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:30
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:28
+msgid "Weather station"
+msgstr "Wetterstation"
+
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:42
 msgid "Weather condition"
 msgstr "Wetterlage"
 
