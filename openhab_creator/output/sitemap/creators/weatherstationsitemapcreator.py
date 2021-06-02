@@ -1,9 +1,10 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Callable, List
+from typing import TYPE_CHECKING, Callable, List, Tuple
 
 from openhab_creator import _
 from openhab_creator.models.sitemap import Page, Text, Sitemap
+from openhab_creator.output.color import Color
 from openhab_creator.output.sitemap import SitemapCreatorPipeline
 from openhab_creator.output.sitemap.basesitemapcreator import \
     BaseSitemapCreator
@@ -11,6 +12,7 @@ from openhab_creator.output.sitemap.basesitemapcreator import \
 if TYPE_CHECKING:
     from openhab_creator.models.configuration import Configuration
     from openhab_creator.models.configuration.equipment import Equipment
+    from openhab_creator.models.configuration.equipment.types.weatherstation import WeatherStation
     from openhab_creator.models.grafana import Dashboard
 
 
@@ -28,8 +30,40 @@ class WeatherStationSitemapCreator(BaseSitemapCreator):
             Text(condition.item_ids.condition)\
                 .append_to(weatherstation)
 
+        self._build_warnings(weatherstation, configuration)
         self._build_temperatures(weatherstation, configuration)
         self._build_rain_gauge(weatherstation, configuration)
+
+    def _build_warnings(self, weatherstation_page: Page, configuration: Configuration) -> None:
+        warnings = self.filter_stations(
+            lambda x: x.points.has_warning_active, configuration)
+
+        if len(warnings) > 0:
+            for station in warnings:
+                Text(station.item_ids.warning_event_mapped)\
+                    .visibility((station.item_ids.warning_active, '!=', 'ON'))\
+                    .valuecolor(*self.warning_severity_valuecolors(station))\
+                    .append_to(weatherstation_page)
+
+                page = Page(station.item_ids.warning_event_mapped)\
+                    .visibility((station.item_ids.warning_active, '==', 'ON'))\
+                    .valuecolor(*self.warning_severity_valuecolors(station))\
+                    .append_to(weatherstation_page)
+
+                Text(station.item_ids.warning_event_mapped)\
+                    .valuecolor(*self.warning_severity_valuecolors(station))\
+                    .append_to(page)
+
+    @staticmethod
+    def warning_severity_valuecolors(station: WeatherStation) -> List[Tuple[str, Color]]:
+        item = station.item_ids.warning_severity
+        return [
+            (f'{item}==Extreme', Color.VIOLETT),
+            (f'{item}==Severe', Color.RED),
+            (f'{item}==Moderate', Color.ORANGE),
+            (f'{item}==Minor', Color.YELLOW),
+            (f'{item}==NULL', Color.GREEN),
+        ]
 
     def _build_temperatures(self, weatherstation_page: Page, configuration: Configuration) -> None:
         temperatures = self.filter_stations(lambda x: x.points.has_temperature,

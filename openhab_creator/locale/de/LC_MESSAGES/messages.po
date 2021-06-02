@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openHAB Creator\n"
-"POT-Creation-Date: 2021-06-01 21:51+0200\n"
-"PO-Revision-Date: 2021-06-01 21:53+0200\n"
+"POT-Creation-Date: 2021-06-02 19:51+0200\n"
+"PO-Revision-Date: 2021-06-02 19:53+0200\n"
 "Last-Translator: Johannes Ott <info@johannes-ott.net>\n"
 "Language-Team: Johannes Ott\n"
 "Language: de\n"
@@ -18,41 +18,41 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
-#: openhab_creator/models/common/maptransformation.py:13
+#: openhab_creator/models/common/maptransformation.py:14
 msgid "Active"
 msgstr "Aktiv"
 
-#: openhab_creator/models/common/maptransformation.py:13
+#: openhab_creator/models/common/maptransformation.py:14
 msgid "Inactive"
 msgstr "Inaktiv"
 
-#: openhab_creator/models/common/maptransformation.py:17
 #: openhab_creator/models/common/maptransformation.py:18
+#: openhab_creator/models/common/maptransformation.py:19
 msgid "Low"
 msgstr "Niedrig"
 
-#: openhab_creator/models/common/maptransformation.py:17
 #: openhab_creator/models/common/maptransformation.py:18
+#: openhab_creator/models/common/maptransformation.py:19
 msgid "Ok"
 msgstr "Ok"
 
-#: openhab_creator/models/common/maptransformation.py:21
+#: openhab_creator/models/common/maptransformation.py:22
 msgid "Offline"
 msgstr "Offline"
 
-#: openhab_creator/models/common/maptransformation.py:21
+#: openhab_creator/models/common/maptransformation.py:22
 msgid "Online"
 msgstr "Online"
 
-#: openhab_creator/models/common/maptransformation.py:28
+#: openhab_creator/models/common/maptransformation.py:29
 msgid "Falling"
 msgstr "Fallend"
 
-#: openhab_creator/models/common/maptransformation.py:29
+#: openhab_creator/models/common/maptransformation.py:30
 msgid "Consistent"
 msgstr "Gleichbleibend"
 
-#: openhab_creator/models/common/maptransformation.py:30
+#: openhab_creator/models/common/maptransformation.py:31
 msgid "Rising"
 msgstr "Steigend"
 
@@ -101,197 +101,218 @@ msgstr "Abwesenheit"
 msgid "Party"
 msgstr "Party"
 
-#: openhab_creator/models/common/weathercondition.py:9
+#: openhab_creator/models/common/weatherstation.py:9
 msgid "Thunderstorm with light rain"
 msgstr "Gewitter mit leichtem Regen"
 
-#: openhab_creator/models/common/weathercondition.py:11
+#: openhab_creator/models/common/weatherstation.py:11
 msgid "Thunderstorm with rain"
 msgstr "Gewitter mit Regen"
 
-#: openhab_creator/models/common/weathercondition.py:13
+#: openhab_creator/models/common/weatherstation.py:13
 msgid "Thunderstorm with heavy rain"
 msgstr "Gewitter mit starkem Regen"
 
-#: openhab_creator/models/common/weathercondition.py:15
+#: openhab_creator/models/common/weatherstation.py:15
 msgid "Light thunderstorm"
 msgstr "Leichtes Gewitter"
 
-#: openhab_creator/models/common/weathercondition.py:16
+#: openhab_creator/models/common/weatherstation.py:16
 msgid "Thunderstorm"
 msgstr "Gewitter"
 
-#: openhab_creator/models/common/weathercondition.py:17
+#: openhab_creator/models/common/weatherstation.py:17
 msgid "Heavy thunderstorm"
 msgstr "Starkes Gewitter"
 
-#: openhab_creator/models/common/weathercondition.py:18
+#: openhab_creator/models/common/weatherstation.py:18
 msgid "Rough thunderstorm"
 msgstr "Raues Gewitter"
 
-#: openhab_creator/models/common/weathercondition.py:19
+#: openhab_creator/models/common/weatherstation.py:19
 msgid "Thunderstorm with light drizzle"
 msgstr "Gewitter mit leichtem Nieselregen"
 
-#: openhab_creator/models/common/weathercondition.py:21
+#: openhab_creator/models/common/weatherstation.py:21
 msgid "Thunderstorm with drizzle"
 msgstr "Gewitter mit Nieselregen"
 
-#: openhab_creator/models/common/weathercondition.py:23
+#: openhab_creator/models/common/weatherstation.py:23
 msgid "Thunderstorm with heavy drizzle"
 msgstr "Gewitter mit starkem Nieselregen"
 
-#: openhab_creator/models/common/weathercondition.py:26
-#: openhab_creator/models/common/weathercondition.py:30
+#: openhab_creator/models/common/weatherstation.py:26
+#: openhab_creator/models/common/weatherstation.py:30
 msgid "Light drizzle"
 msgstr "Leichtes Nieseln"
 
-#: openhab_creator/models/common/weathercondition.py:27
-#: openhab_creator/models/common/weathercondition.py:31
-#: openhab_creator/models/common/weathercondition.py:38
+#: openhab_creator/models/common/weatherstation.py:27
+#: openhab_creator/models/common/weatherstation.py:31
+#: openhab_creator/models/common/weatherstation.py:38
 msgid "Drizzle"
 msgstr "Nieselregen"
 
-#: openhab_creator/models/common/weathercondition.py:28
-#: openhab_creator/models/common/weathercondition.py:32
+#: openhab_creator/models/common/weatherstation.py:28
+#: openhab_creator/models/common/weatherstation.py:32
 msgid "Heavy drizzle"
 msgstr "Starker Nieselregen"
 
-#: openhab_creator/models/common/weathercondition.py:35
-#: openhab_creator/models/common/weathercondition.py:37
+#: openhab_creator/models/common/weatherstation.py:35
+#: openhab_creator/models/common/weatherstation.py:37
 msgid "Rain showers and drizzle"
 msgstr "Regenschauer und Nieselregen"
 
-#: openhab_creator/models/common/weathercondition.py:40
+#: openhab_creator/models/common/weatherstation.py:40
 msgid "Light rain"
 msgstr "Leichter Regen"
 
-#: openhab_creator/models/common/weathercondition.py:41
+#: openhab_creator/models/common/weatherstation.py:41
 msgid "Moderate rain"
 msgstr "Mäßiger Regen"
 
-#: openhab_creator/models/common/weathercondition.py:42
+#: openhab_creator/models/common/weatherstation.py:42
 msgid "Heavy rain"
 msgstr "Starker Regen"
 
-#: openhab_creator/models/common/weathercondition.py:43
+#: openhab_creator/models/common/weatherstation.py:43
 msgid "Very heavy rain"
 msgstr "Sehr schwerer Regen"
 
-#: openhab_creator/models/common/weathercondition.py:44
+#: openhab_creator/models/common/weatherstation.py:44
 msgid "Extreme rain"
 msgstr "Extremer Regen"
 
-#: openhab_creator/models/common/weathercondition.py:46
+#: openhab_creator/models/common/weatherstation.py:46
 msgid "Freezing rain"
 msgstr "Gefrierender Regen"
 
-#: openhab_creator/models/common/weathercondition.py:48
+#: openhab_creator/models/common/weatherstation.py:48
 msgid "Light rain shower"
 msgstr "Leichter Regenschauer"
 
-#: openhab_creator/models/common/weathercondition.py:49
+#: openhab_creator/models/common/weatherstation.py:49
 msgid "Rain shower"
 msgstr "Regenschauer"
 
-#: openhab_creator/models/common/weathercondition.py:50
+#: openhab_creator/models/common/weatherstation.py:50
 msgid "Heavy rain shower"
 msgstr "Starker Regenschauer"
 
-#: openhab_creator/models/common/weathercondition.py:51
+#: openhab_creator/models/common/weatherstation.py:51
 msgid "Very heavy rain shower"
 msgstr "Sehr starker Regenschauer"
 
-#: openhab_creator/models/common/weathercondition.py:54
+#: openhab_creator/models/common/weatherstation.py:54
 msgid "Moderate snow"
 msgstr "Mäßiger Schnee"
 
-#: openhab_creator/models/common/weathercondition.py:55
+#: openhab_creator/models/common/weatherstation.py:55
 msgid "Snowfall"
 msgstr "Schneefall"
 
-#: openhab_creator/models/common/weathercondition.py:56
+#: openhab_creator/models/common/weatherstation.py:56
 msgid "Heavy snowfall"
 msgstr "Starker Schneefall"
 
-#: openhab_creator/models/common/weathercondition.py:57
-#: openhab_creator/models/common/weathercondition.py:58
+#: openhab_creator/models/common/weatherstation.py:57
+#: openhab_creator/models/common/weatherstation.py:58
 msgid "Sleet"
 msgstr "Schneeregen"
 
-#: openhab_creator/models/common/weathercondition.py:60
+#: openhab_creator/models/common/weatherstation.py:60
 msgid "Light rain and snow"
 msgstr "Leichter Regen und Schnee"
 
-#: openhab_creator/models/common/weathercondition.py:61
+#: openhab_creator/models/common/weatherstation.py:61
 msgid "Rain and snow"
 msgstr "Regen und Schnee"
 
-#: openhab_creator/models/common/weathercondition.py:62
+#: openhab_creator/models/common/weatherstation.py:62
 msgid "Light snow shower"
 msgstr "Leichter Schneeschauer"
 
-#: openhab_creator/models/common/weathercondition.py:63
+#: openhab_creator/models/common/weatherstation.py:63
 msgid "Snow shower"
 msgstr "Schneeschauer"
 
-#: openhab_creator/models/common/weathercondition.py:64
+#: openhab_creator/models/common/weatherstation.py:64
 msgid "Heavy snow shower"
 msgstr "Starker Schneeschauer"
 
-#: openhab_creator/models/common/weathercondition.py:66
+#: openhab_creator/models/common/weatherstation.py:66
 msgid "Gloomy"
 msgstr "Trüb"
 
-#: openhab_creator/models/common/weathercondition.py:67
+#: openhab_creator/models/common/weatherstation.py:67
 msgid "Smoke"
 msgstr "Rauch"
 
-#: openhab_creator/models/common/weathercondition.py:68
+#: openhab_creator/models/common/weatherstation.py:68
 msgid "Haze"
 msgstr "Dunst"
 
-#: openhab_creator/models/common/weathercondition.py:69
-#: openhab_creator/models/common/weathercondition.py:71
+#: openhab_creator/models/common/weatherstation.py:69
+#: openhab_creator/models/common/weatherstation.py:71
 msgid "Sand"
 msgstr "Sand"
 
-#: openhab_creator/models/common/weathercondition.py:70
+#: openhab_creator/models/common/weatherstation.py:70
 msgid "Fog"
 msgstr "Nebel"
 
-#: openhab_creator/models/common/weathercondition.py:72
+#: openhab_creator/models/common/weatherstation.py:72
 msgid "Dust"
 msgstr "Staub"
 
-#: openhab_creator/models/common/weathercondition.py:73
+#: openhab_creator/models/common/weatherstation.py:73
 msgid "Volcanic ash"
 msgstr "Vulkanasche"
 
-#: openhab_creator/models/common/weathercondition.py:74
+#: openhab_creator/models/common/weatherstation.py:74
 msgid "Storm"
 msgstr "Sturm"
 
-#: openhab_creator/models/common/weathercondition.py:75
+#: openhab_creator/models/common/weatherstation.py:75
 msgid "Tornado"
 msgstr "Tornado"
 
-#: openhab_creator/models/common/weathercondition.py:77
+#: openhab_creator/models/common/weatherstation.py:77
 msgid "Clear sky"
 msgstr "Klarer Himmel"
 
-#: openhab_creator/models/common/weathercondition.py:79
+#: openhab_creator/models/common/weatherstation.py:79
 msgid "A couple of clouds"
 msgstr "Ein paar Wolken"
 
-#: openhab_creator/models/common/weathercondition.py:80
-#: openhab_creator/models/common/weathercondition.py:81
+#: openhab_creator/models/common/weatherstation.py:80
+#: openhab_creator/models/common/weatherstation.py:81
 msgid "Mostly cloudy"
 msgstr "Überwiegend bewölkt"
 
-#: openhab_creator/models/common/weathercondition.py:82
+#: openhab_creator/models/common/weatherstation.py:82
 msgid "Cloudy"
 msgstr "Bewölkt"
+
+#: openhab_creator/models/common/weatherstation.py:95
+msgid "Minor weather warning"
+msgstr "Wetterwarnung (Stufe 1)"
+
+#: openhab_creator/models/common/weatherstation.py:96
+msgid "Moderate weather warning"
+msgstr "Warnung vor markantem Wetter (Stufe 2)"
+
+#: openhab_creator/models/common/weatherstation.py:97
+msgid "Severe weather warning"
+msgstr "Unwetterwarnung (Stufe 3)"
+
+#: openhab_creator/models/common/weatherstation.py:98
+msgid "Extreme weather warning"
+msgstr "Warnung vor extremen Unwetter (Stufe 4)"
+
+#: openhab_creator/models/common/weatherstation.py:99
+#: openhab_creator/models/common/weatherstation.py:100
+msgid "Weather warning"
+msgstr "Wetterwarnung"
 
 #: openhab_creator/models/configuration/equipment/types/garbagecan.py:55
 msgid "Garbage can"
@@ -371,10 +392,11 @@ msgid "Button {count} ({name})"
 msgstr "Taste {count} ({name})"
 
 #: openhab_creator/models/configuration/equipment/types/weatherstation.py:14
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:75
 msgid "Rain gauge"
 msgstr "Niederschlag"
 
-#: openhab_creator/models/configuration/equipment/types/weatherstation.py:94
+#: openhab_creator/models/configuration/equipment/types/weatherstation.py:137
 msgid "Weatherstation"
 msgstr "Wetterstation"
 
@@ -731,9 +753,13 @@ msgstr "Schalterzuordnung"
 msgid "Weather station"
 msgstr "Wetterstation"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:42
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:45
 msgid "Weather condition"
 msgstr "Wetterlage"
+
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:80
+msgid "Warning"
+msgstr "Warnung"
 
 #: openhab_creator/output/sitemap/__init__.py:26
 msgid "State"
@@ -871,9 +897,6 @@ msgstr "Boost"
 
 #~ msgid "Temperature sensor"
 #~ msgstr "Temperatursensor"
-
-#~ msgid "Morning"
-#~ msgstr "Morgens"
 
 #~ msgid "Only guest present"
 #~ msgstr "Gast zu Besuch"

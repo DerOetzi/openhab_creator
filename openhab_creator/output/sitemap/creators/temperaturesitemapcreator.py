@@ -103,7 +103,7 @@ class TemperatureSitemapCreator(BaseSitemapCreator):
                     (heating.item_ids.heatcontrol, '==', 'ECO'))\
                 .append_to(page)
 
-    @ staticmethod
+    @staticmethod
     def valuecolor(item: str) -> List[Tuple[str, Color]]:
         return [
             (f'{item}>=28', Color.RED),

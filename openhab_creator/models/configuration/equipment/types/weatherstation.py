@@ -40,6 +40,30 @@ class WeatherStationItemIdentifiers(SensorItemIdentifiers):
     def rain_gauge(self) -> str:
         return self._identifier('rain_gauge')
 
+    @property
+    def warning_active(self) -> str:
+        return self._identifier('warningActive')
+
+    @property
+    def warning_severity(self) -> str:
+        return self._identifier('warningSeverity')
+
+    @property
+    def warning_headline(self) -> str:
+        return self._identifier('warningHeadline')
+
+    @property
+    def warning_event(self) -> str:
+        return self._identifier('warningEvent')
+
+    @property
+    def warning_event_mapped(self) -> str:
+        return self._identifier('warningEventMapped')
+
+    @property
+    def warning_urgency(self) -> str:
+        return self._identifier('warningUrgency')
+
 
 class WeatherStationPoints(SensorPoints):
     @property
@@ -51,8 +75,48 @@ class WeatherStationPoints(SensorPoints):
         return self.has('condition_id')
 
     @property
-    def has_rain_gauge(self) -> str:
+    def has_rain_gauge(self) -> bool:
         return self.has('rain_gauge', True)
+
+    @property
+    def has_warning_active(self) -> bool:
+        return self.has('warning_active')
+
+    @property
+    def has_warning_severity(self) -> bool:
+        return self.has('warning_severity')
+
+    @property
+    def has_warning_urgency(self) -> bool:
+        return self.has('warning_urgency')
+
+    @property
+    def has_warning_description(self) -> bool:
+        return self.has('warning_description')
+
+    @property
+    def has_warning_event(self) -> bool:
+        return self.has('warning_event')
+
+    @property
+    def has_warning_headline(self) -> bool:
+        return self.has('warning_headline')
+
+    @property
+    def has_warning_instruction(self) -> bool:
+        return self.has('warning_instruction')
+
+    @property
+    def has_warning_from(self) -> bool:
+        return self.has('warning_from')
+
+    @property
+    def has_warning_to(self) -> bool:
+        return self.has('warning_to')
+
+    @property
+    def has_warning_updated(self) -> bool:
+        return self.has('warning_updated')
 
 
 @EquipmentType()
@@ -82,6 +146,9 @@ class WeatherStation(Sensor):
 
         if self.points.has_condition_id:
             categories.append('condition_id')
+
+        if self.points.has_warning_active:
+            categories.append('warning')
 
         for weathertype in WeatherStationType:
             if self.points.has(weathertype.point):

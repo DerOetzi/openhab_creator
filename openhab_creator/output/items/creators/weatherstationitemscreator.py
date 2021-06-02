@@ -7,7 +7,7 @@ from openhab_creator.models.common import MapTransformation
 from openhab_creator.models.configuration.equipment.types.weatherstation import \
     WeatherStationType
 from openhab_creator.models.items import (Group, GroupType, Number, PointType,
-                                          ProfileType, String)
+                                          ProfileType, String, Switch)
 from openhab_creator.output.items import ItemsCreatorPipeline
 from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
 
@@ -31,8 +31,14 @@ class WeatherStationItemsCreator(BaseItemsCreator):
         Group('WeatherCondition')\
             .append_to(self)
 
+        Group('WeatherWarning')\
+            .append_to(self)
+
         for station in configuration.equipment.equipment('weatherstation'):
             self._build_station(station)
+
+            if station.points.has_warning_active:
+                self._build_warning(station)
 
         self.write_file('weather')
 
@@ -71,3 +77,71 @@ class WeatherStationItemsCreator(BaseItemsCreator):
                     .sensor(weathertype.point, station.influxdb_tags)\
                     .aisensor()\
                     .append_to(self)
+
+    def _build_warning(self, station: WeatherStation) -> None:
+        weatheritems = {}
+
+        String(station.item_ids.warning_severity)\
+            .label(_('Warning severity'))\
+            .map(MapTransformation.DWDSEVERITY)\
+            .channel(station.points.channel('warning_severity'))\
+            .equipment(station)\
+            .semantic(PointType.STATUS)\
+            .aisensor()\
+            .append_to(self)
+
+        weatheritems['severity'] = station.item_ids.warning_severity
+
+        if station.points.has_warning_headline:
+            String(station.item_ids.warning_headline)\
+                .label(_('Headline'))\
+                .format('%s')\
+                .channel(station.points.channel('warning_headline'))\
+                .equipment(station)\
+                .semantic(PointType.STATUS)\
+                .aisensor()\
+                .append_to(self)
+
+            weatheritems['headline'] = station.item_ids.warning_headline
+
+        String(station.item_ids.warning_urgency)\
+            .label(_('Urgency'))\
+            .format('%s')\
+            .channel(station.points.channel('warning_urgency'))\
+            .equipment(station)\
+            .semantic(PointType.STATUS)\
+            .aisensor()\
+            .append_to(self)
+
+        weatheritems['urgency'] = station.item_ids.warning_urgency
+
+        String(station.item_ids.warning_event)\
+            .label(_('Event'))\
+            .format('%s')\
+            .channel(station.points.channel('warning_event'))\
+            .equipment(station)\
+            .semantic(PointType.STATUS)\
+            .append_to(self)
+
+        String(station.item_ids.warning_event_mapped)\
+            .label(_('Warning for'))\
+            .map(MapTransformation.DWDEVENT)\
+            .icon('dwdevent')\
+            .equipment(station)\
+            .semantic(PointType.STATUS)\
+            .aisensor()\
+            .append_to(self)
+
+        weatheritems['event'] = station.item_ids.warning_event
+        weatheritems['event_mapped'] = station.item_ids.warning_event_mapped
+
+        Switch(station.item_ids.warning_active)\
+            .label(_('Warning'))\
+            .map(MapTransformation.ACTIVE)\
+            .channel(station.points.channel('warning_active'))\
+            .equipment(station)\
+            .groups('WeatherWarning')\
+            .semantic(PointType.ALARM)\
+            .aisensor()\
+            .scripting(weatheritems)\
+            .append_to(self)

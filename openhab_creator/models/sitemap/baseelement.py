@@ -16,7 +16,7 @@ class BaseElement(object):
     def __init__(self, item: Optional[str] = None, label: Optional[str] = ''):
         self.attributes: Dict[str, str] = {}
 
-        self._format: Optional[str] = None
+        self._format_str: Optional[str] = None
         self.label(label)
 
         self.attribute('item', item)
@@ -31,14 +31,14 @@ class BaseElement(object):
 
     def label(self, label: Optional[str] = '') -> BaseElement:
         self._label = label
-        return self.attribute('label', Formatter.label(self._label, self._format), '"', '"')
+        return self.attribute('label', Formatter.label(self._label, self._format_str), '"', '"')
 
     def map(self, mapname: MapTransformation) -> BaseElement:
         return self.format(mapname.formatstr)
 
-    def format(self, format: Optional[str] = None) -> BaseElement:
-        self._format = format
-        return self.attribute('label', Formatter.label(self._label, self._format), '"', '"')
+    def format(self, format_str: Optional[str] = None) -> BaseElement:
+        self._format_str = format_str
+        return self.attribute('label', Formatter.label(self._label, self._format_str), '"', '"')
 
     def icon(self, icon: str) -> BaseElement:
         return self.attribute('icon', icon, '"', '"')

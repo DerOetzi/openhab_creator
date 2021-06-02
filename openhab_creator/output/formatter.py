@@ -74,9 +74,9 @@ class Formatter(object):
         return value
 
     @staticmethod
-    def label(label: Optional[str] = '', format: Optional[str] = None) -> Optional[str]:
-        if format is not None:
-            label += f' [{format}]'
+    def label(label: Optional[str] = '', format_str: Optional[str] = None) -> Optional[str]:
+        if format_str is not None:
+            label += f' [{format_str}]'
 
         label = label.strip()
 

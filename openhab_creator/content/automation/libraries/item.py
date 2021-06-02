@@ -1,7 +1,7 @@
 # pylint: skip-file
 from core.jsr223.scope import itemRegistry, NULL, UNDEF, StringType, events
 from core.date import to_java_zoneddatetime, format_date
-from core.actions import PersistenceExtensions
+from core.actions import PersistenceExtensions, Transformation
 from core.metadata import get_metadata
 
 from java.time import ZonedDateTime
@@ -102,3 +102,7 @@ class Item(object):
             delta_since = delta_since.floatValue()
 
         return delta_since
+
+    @staticmethod
+    def transform_map(map_name, value):
+        return Transformation.transform("MAP", map_name + ".map", u"{}".format(value))
