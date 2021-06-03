@@ -122,23 +122,23 @@ class SensorItemIdentifiers(EquipmentItemIdentifiers):
 
     @property
     def temperature(self) -> str:
-        return self._identifier('temperature')
+        return f'temperature{self.sensor}'
 
     @property
     def humidity(self) -> str:
-        return self._identifier('humidity')
+        return f'humidity{self.sensor}'
 
     @property
     def pressure(self) -> str:
-        return self._identifier('pressure')
+        return f'pressure{self.sensor}'
 
     @property
     def co2(self) -> str:
-        return self._identifier('co2')
+        return f'co2{self.sensor}'
 
     @property
     def moisture(self) -> str:
-        return self._identifier('moisture')
+        return f'moisture{self.sensor}'
 
     @property
     def moisturelastwatered(self) -> str:
@@ -150,11 +150,11 @@ class SensorItemIdentifiers(EquipmentItemIdentifiers):
 
     @property
     def noise(self) -> str:
-        return self._identifier('noise')
+        return f'noise{self.sensor}'
 
     @property
     def humidex(self) -> str:
-        return self._identifier('humidex')
+        return f'humidex{self.sensor}'
 
 
 class SensorPoints(EquipmentPoints):

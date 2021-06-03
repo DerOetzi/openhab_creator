@@ -26,12 +26,34 @@ class WeatherStationItemsCreator(BaseItemsCreator):
     def build(self, configuration: Configuration) -> None:
         String('weatherstation')\
             .label(_('Weather station'))\
+            .format('%s')\
+            .scripting({
+                'label': _('Weather station')
+            })\
             .append_to(self)
 
         Group('WeatherCondition')\
             .append_to(self)
 
         Group('WeatherWarning')\
+            .append_to(self)
+
+        Group('WeatherWarningSeverity')\
+            .append_to(self)
+
+        Group('WeatherWarningUrgency')\
+            .append_to(self)
+
+        Group('WeatherWarningEvent')\
+            .append_to(self)
+
+        Group('WeatherWarningEventMapped')\
+            .append_to(self)
+
+        Group('WeatherWarningFrom')\
+            .append_to(self)
+
+        Group('WeatherWarningTo')\
             .append_to(self)
 
         for station in configuration.equipment.equipment('weatherstation'):
@@ -86,6 +108,7 @@ class WeatherStationItemsCreator(BaseItemsCreator):
             .map(MapTransformation.DWDSEVERITY)\
             .channel(station.points.channel('warning_severity'))\
             .equipment(station)\
+            .groups('WeatherWarningSeverity')\
             .semantic(PointType.STATUS)\
             .aisensor()\
             .append_to(self)
@@ -109,6 +132,7 @@ class WeatherStationItemsCreator(BaseItemsCreator):
             .format('%s')\
             .channel(station.points.channel('warning_urgency'))\
             .equipment(station)\
+            .groups('WeatherWarningUrgency')\
             .semantic(PointType.STATUS)\
             .aisensor()\
             .append_to(self)
@@ -120,6 +144,7 @@ class WeatherStationItemsCreator(BaseItemsCreator):
             .format('%s')\
             .channel(station.points.channel('warning_event'))\
             .equipment(station)\
+            .groups('WeatherWarningEvent')\
             .semantic(PointType.STATUS)\
             .append_to(self)
 
@@ -128,6 +153,7 @@ class WeatherStationItemsCreator(BaseItemsCreator):
             .map(MapTransformation.DWDEVENT)\
             .icon('dwdevent')\
             .equipment(station)\
+            .groups('WeatherWarningEventMapped')\
             .semantic(PointType.STATUS)\
             .aisensor()\
             .append_to(self)

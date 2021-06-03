@@ -2,10 +2,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-import os
-import re
-import shutil
-
 from openhab_creator.output.content.basecontentcreator import \
     BaseContentCreator
 
@@ -29,13 +25,13 @@ class AutomationCreator(BaseContentCreator):
             'automation/libraries', 'automation/lib/python/personal')
 
         self._copy_all_files_from_subdir(
-            'automation/rules', 'automation/jsr223/personal')
+            'automation/rules', 'automation/jsr223/personal', update=False)
 
-        self.__prepare_and_copy_configuration(configdir, configuration.secrets)
+        self.prepare_and_copy_configuration(configdir, configuration.secrets)
 
-    def __prepare_and_copy_configuration(self,
-                                         configdir: str,
-                                         secrets: SecretsStorage) -> None:
+    def prepare_and_copy_configuration(self,
+                                       configdir: str,
+                                       secrets: SecretsStorage) -> None:
         self._copy_file_with_secrets(
             configdir, 'configuration.py',
             secrets, 'automation/lib/python/configuration.py')

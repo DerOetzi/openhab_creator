@@ -23,6 +23,10 @@ class Item(object):
     def from_event(cls, event):
         return cls(event.itemName)
 
+    @classmethod
+    def from_members_first(cls, group_name):
+        return cls([item for item in itemRegistry.getItem(group_name).members][0])
+
     def from_scripting(self, name):
         return self.__class__(self.scripting(name))
 
@@ -81,6 +85,9 @@ class Item(object):
 
     def set_label(self, label):
         self._item.setLabel(u'{}'.format(label))
+
+    def set_icon(self, icon):
+        self._item.setCategory(u'{}'.format(icon))
 
     def post_update(self, value):
         if isinstance(value, ZonedDateTime):

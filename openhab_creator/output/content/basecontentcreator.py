@@ -24,7 +24,8 @@ class BaseContentCreator():
 
     def _copy_all_files_from_subdir(self,
                                     subdir: str, destination: Optional[str] = None,
-                                    configdir: Optional[str] = None) -> None:
+                                    configdir: Optional[str] = None,
+                                    update: Optional[bool] = True) -> None:
         if destination is None:
             dest_dir = self._create_outputdir_if_not_exists(subdir)
         else:
@@ -36,7 +37,7 @@ class BaseContentCreator():
         distutils.dir_util.copy_tree(
             str(srcdir / subdir),
             str(dest_dir),
-            update=1,
+            update=update,
             verbose=1,
         )
 
