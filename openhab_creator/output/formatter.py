@@ -5,7 +5,7 @@ from typing import Any, Dict, Optional, List, Tuple
 from openhab_creator import CreatorEnum
 
 
-class Formatter(object):
+class Formatter():
     @staticmethod
     def ucfirst(raw: str) -> str:
         if len(raw) > 1:

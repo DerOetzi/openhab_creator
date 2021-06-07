@@ -4,10 +4,14 @@ from typing import TYPE_CHECKING
 
 from openhab_creator import _
 from openhab_creator.models.common import MapTransformation
+from openhab_creator.models.common.weatherstation import (DWDEvent,
+                                                          WeatherCondition)
 from openhab_creator.models.configuration.equipment.types.weatherstation import \
     WeatherStationType
-from openhab_creator.models.items import (Group, GroupType, Number, PointType,
-                                          ProfileType, String, Switch)
+from openhab_creator.models.items import (DateTime, Group, GroupType, Number,
+                                          PointType, ProfileType, String,
+                                          Switch)
+from openhab_creator.output.formatter import Formatter
 from openhab_creator.output.items import ItemsCreatorPipeline
 from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
 
@@ -74,6 +78,9 @@ class WeatherStationItemsCreator(BaseItemsCreator):
                 .semantic(PointType.STATUS)\
                 .channel(station.points.channel('condition_id'),
                          ProfileType.SCALE, 'weathercondition.scale')\
+                .scripting({
+                    'icon': Formatter.key_value_tuples(WeatherCondition.mapping_icons, separator=',')
+                })\
                 .append_to(self)
 
         for weathertype in WeatherStationType:
@@ -160,6 +167,41 @@ class WeatherStationItemsCreator(BaseItemsCreator):
 
         weatheritems['event'] = station.item_ids.warning_event
         weatheritems['event_mapped'] = station.item_ids.warning_event_mapped
+
+        String(station.item_ids.warning_instruction)\
+            .label(_('Instruction'))\
+            .format('%s')\
+            .channel(station.points.channel('warning_instruction'))\
+            .equipment(station)\
+            .semantic(PointType.STATUS)\
+            .append_to(self)
+
+        weatheritems['instruction'] = station.item_ids.warning_instruction
+
+        DateTime(station.item_ids.warning_from)\
+            .label(_('Valid from'))\
+            .datetime()\
+            .icon('clock')\
+            .channel(station.points.channel('warning_from'))\
+            .equipment(station)\
+            .semantic(PointType.STATUS)\
+            .append_to(self)
+
+        weatheritems['from'] = station.item_ids.warning_from
+
+        DateTime(station.item_ids.warning_to)\
+            .label(_('Valid to'))\
+            .datetime()\
+            .icon('clock')\
+            .channel(station.points.channel('warning_to'))\
+            .equipment(station)\
+            .semantic(PointType.STATUS)\
+            .append_to(self)
+
+        weatheritems['to'] = station.item_ids.warning_to
+
+        weatheritems['icons'] = Formatter.key_value_tuples(
+            DWDEvent.mapping_icons, separator=',')
 
         Switch(station.item_ids.warning_active)\
             .label(_('Warning'))\

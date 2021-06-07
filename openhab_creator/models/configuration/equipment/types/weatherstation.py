@@ -64,6 +64,18 @@ class WeatherStationItemIdentifiers(SensorItemIdentifiers):
     def warning_urgency(self) -> str:
         return self._identifier('warningUrgency')
 
+    @property
+    def warning_instruction(self) -> str:
+        return self._identifier('warningInstruction')
+
+    @property
+    def warning_from(self) -> str:
+        return self._identifier('warningFrom')
+
+    @property
+    def warning_to(self) -> str:
+        return self._identifier('warningTo')
+
 
 class WeatherStationPoints(SensorPoints):
     @property

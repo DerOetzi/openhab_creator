@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from openhab_creator import _
-from openhab_creator.models.common import MapTransformation, Scene
+from openhab_creator.models.common import Scene
 from openhab_creator.models.items import (Group, GroupType, Number, NumberType, String,
                                           Switch)
 from openhab_creator.output.items import ItemsCreatorPipeline

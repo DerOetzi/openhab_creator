@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openHAB Creator\n"
-"POT-Creation-Date: 2021-06-02 19:51+0200\n"
-"PO-Revision-Date: 2021-06-02 19:53+0200\n"
+"POT-Creation-Date: 2021-06-07 21:26+0200\n"
+"PO-Revision-Date: 2021-06-07 21:28+0200\n"
 "Last-Translator: Johannes Ott <info@johannes-ott.net>\n"
 "Language-Team: Johannes Ott\n"
 "Language: de\n"
@@ -18,41 +18,41 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
-#: openhab_creator/models/common/maptransformation.py:14
+#: openhab_creator/models/common/maptransformation.py:15
 msgid "Active"
 msgstr "Aktiv"
 
-#: openhab_creator/models/common/maptransformation.py:14
+#: openhab_creator/models/common/maptransformation.py:15
 msgid "Inactive"
 msgstr "Inaktiv"
 
-#: openhab_creator/models/common/maptransformation.py:18
 #: openhab_creator/models/common/maptransformation.py:19
+#: openhab_creator/models/common/maptransformation.py:20
 msgid "Low"
 msgstr "Niedrig"
 
-#: openhab_creator/models/common/maptransformation.py:18
 #: openhab_creator/models/common/maptransformation.py:19
+#: openhab_creator/models/common/maptransformation.py:20
 msgid "Ok"
 msgstr "Ok"
 
-#: openhab_creator/models/common/maptransformation.py:22
+#: openhab_creator/models/common/maptransformation.py:23
 msgid "Offline"
 msgstr "Offline"
 
-#: openhab_creator/models/common/maptransformation.py:22
+#: openhab_creator/models/common/maptransformation.py:23
 msgid "Online"
 msgstr "Online"
 
-#: openhab_creator/models/common/maptransformation.py:29
+#: openhab_creator/models/common/maptransformation.py:30
 msgid "Falling"
 msgstr "Fallend"
 
-#: openhab_creator/models/common/maptransformation.py:30
+#: openhab_creator/models/common/maptransformation.py:31
 msgid "Consistent"
 msgstr "Gleichbleibend"
 
-#: openhab_creator/models/common/maptransformation.py:31
+#: openhab_creator/models/common/maptransformation.py:32
 msgid "Rising"
 msgstr "Steigend"
 
@@ -293,26 +293,30 @@ msgstr "Überwiegend bewölkt"
 msgid "Cloudy"
 msgstr "Bewölkt"
 
-#: openhab_creator/models/common/weatherstation.py:95
+#: openhab_creator/models/common/weatherstation.py:104
 msgid "Minor weather warning"
 msgstr "Wetterwarnung (Stufe 1)"
 
-#: openhab_creator/models/common/weatherstation.py:96
+#: openhab_creator/models/common/weatherstation.py:105
 msgid "Moderate weather warning"
 msgstr "Warnung vor markantem Wetter (Stufe 2)"
 
-#: openhab_creator/models/common/weatherstation.py:97
+#: openhab_creator/models/common/weatherstation.py:106
 msgid "Severe weather warning"
 msgstr "Unwetterwarnung (Stufe 3)"
 
-#: openhab_creator/models/common/weatherstation.py:98
+#: openhab_creator/models/common/weatherstation.py:107
 msgid "Extreme weather warning"
 msgstr "Warnung vor extremen Unwetter (Stufe 4)"
 
-#: openhab_creator/models/common/weatherstation.py:99
-#: openhab_creator/models/common/weatherstation.py:100
+#: openhab_creator/models/common/weatherstation.py:108
+#: openhab_creator/models/common/weatherstation.py:109
 msgid "Weather warning"
 msgstr "Wetterwarnung"
+
+#: openhab_creator/models/configuration/equipment/types/astro.py:67
+msgid "Astro"
+msgstr "Astro"
 
 #: openhab_creator/models/configuration/equipment/types/garbagecan.py:55
 msgid "Garbage can"
@@ -341,8 +345,8 @@ msgstr "Temperatur"
 #: openhab_creator/models/configuration/equipment/types/sensor.py:50
 #: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:37
 #: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:52
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:40
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:56
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:85
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:104
 msgid "Temperatures"
 msgstr "Temperaturen"
 
@@ -392,11 +396,11 @@ msgid "Button {count} ({name})"
 msgstr "Taste {count} ({name})"
 
 #: openhab_creator/models/configuration/equipment/types/weatherstation.py:14
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:75
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:132
 msgid "Rain gauge"
 msgstr "Niederschlag"
 
-#: openhab_creator/models/configuration/equipment/types/weatherstation.py:137
+#: openhab_creator/models/configuration/equipment/types/weatherstation.py:173
 msgid "Weatherstation"
 msgstr "Wetterstation"
 
@@ -749,15 +753,48 @@ msgstr "Tastenstatus"
 msgid "Wallswitch assignment"
 msgstr "Schalterzuordnung"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:28
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:32
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:35
 msgid "Weather station"
 msgstr "Wetterstation"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:45
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:74
 msgid "Weather condition"
 msgstr "Wetterlage"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:80
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:114
+msgid "Warning severity"
+msgstr "Warnstufe"
+
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:127
+msgid "Headline"
+msgstr "Überschrift"
+
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:138
+msgid "Urgency"
+msgstr "Aktualität"
+
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:150
+msgid "Event"
+msgstr "Event"
+
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:159
+msgid "Warning for"
+msgstr "Warnung vor"
+
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:172
+msgid "Instruction"
+msgstr "Hinweis"
+
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:182
+msgid "Valid from"
+msgstr "Gültig ab"
+
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:193
+msgid "Valid to"
+msgstr "Gültig bis"
+
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:207
 msgid "Warning"
 msgstr "Warnung"
 

@@ -73,7 +73,8 @@ def gui_weatherstation(event):
         else:
             weatherstation_item.set_label(u'{}'.format(severity_str))
 
-        weatherstation_item.set_icon('dwdevent{}'.format(event_id))
+        weatherstation_icon(weatherstation_item,
+                            warning_item, event_id, 'dwdevent')
         weatherstation_item.post_update(event_str)
     else:
         condition_item = Item.from_members_first('WeatherCondition')
@@ -84,6 +85,19 @@ def gui_weatherstation(event):
         temperature = StringUtils.format_number(temperature, 1)
 
         weatherstation_item.set_label(weatherstation_item.scripting('label'))
-        weatherstation_item.set_icon('weather{}'.format(condition_id))
+        weatherstation_icon(weatherstation_item,
+                            condition_item, condition_id, 'weather')
         weatherstation_item.post_update(
             u'{} ({} °C)'.format(condition_str, temperature))
+
+
+def weatherstation_icon(weatherstation_item, mapping_item, identifier, prefix):
+    icon_mappings = mapping_item.scripting('icons').split(',')
+    icon_mappings = dict(map(lambda x: x.split('='), icon_mappings))
+    icon_key = u'{}'.format(identifier)
+
+    if icon_key in icon_mappings:
+        weatherstation_item.set_icon(
+            '{}{}'.format(prefix, icon_mappings[icon_key]))
+    else:
+        weatherstation_item.set_icon('{}{}'.format(prefix, identifier))

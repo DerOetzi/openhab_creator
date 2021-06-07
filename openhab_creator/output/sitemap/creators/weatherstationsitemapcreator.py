@@ -58,6 +58,13 @@ class WeatherStationSitemapCreator(BaseSitemapCreator):
                     .valuecolor(*self.warning_severity_valuecolors(station))\
                     .append_to(page)
 
+                Text(station.item_ids.warning_from)\
+                    .append_to(page)
+
+                Text(station.item_ids.warning_to)\
+                    .visibility((station.item_ids.warning_to, '!=', 'NULL'))\
+                    .append_to(page)
+
     @staticmethod
     def warning_severity_valuecolors(station: WeatherStation) -> List[Tuple[str, Color]]:
         item = station.item_ids.warning_severity

@@ -52,12 +52,14 @@ class Scene(CreatorEnum):
         return f'sceneTimeWeekend{self.identifier}'
 
     @classproperty
-    def sceneactive_id(self) -> str:
+    def sceneactive_id(cls) -> str:
+        #pylint: disable=no-self-argument,no-self-use
         return 'autoSceneActive'
 
     @classproperty
-    def mappings(self) -> Dict[str, str]:
-        return dict(map(lambda scene: (scene.identifier, scene.label), Scene))
+    def mappings(cls) -> Dict[str, str]:
+        #pylint: disable=no-self-argument
+        return dict(map(lambda scene: (scene.identifier, scene.label), cls))
 
     @classmethod
     def switch_mappings(cls, category: str) -> List[Tuple[str, str]]:
