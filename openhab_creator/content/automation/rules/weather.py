@@ -32,18 +32,11 @@ def weather_warning(event):
         event_mapped = Item.transform_map('dwdeventkeyword', event_str)
 
         event_str = Item.transform_map('dwdevent', event_mapped)
-        urgency_item = warning_item.from_scripting('urgency')
-        future = urgency_item.get_value('') == 'Future'
         severity_item = warning_item.from_scripting('severity')
         severity_str = Item.transform_map(
             'dwdseverity', severity_item.get_value(''))
 
-        if future:
-            event_mapped_item.set_label(
-                u"{} - Vorabinformation".format(severity_str))
-        else:
-            event_mapped_item.set_label(u"{}".format(severity_str))
-
+        event_mapped_item.set_label(u"{}".format(severity_str))
         event_mapped_item.send_command(event_mapped)
 
 
@@ -65,13 +58,7 @@ def gui_weatherstation(event):
         event_id = event_mapped_item.get_value(0, event)
         event_str = Item.transform_map('dwdevent', event_id)
 
-        urgency_item = warning_item.from_scripting('urgency')
-
-        if urgency_item.get_value('') == 'Future':
-            weatherstation_item.set_label(
-                u'{} - Vorabinformation'.format(severity_str))
-        else:
-            weatherstation_item.set_label(u'{}'.format(severity_str))
+        weatherstation_item.set_label(u'{}'.format(severity_str))
 
         weatherstation_icon(weatherstation_item,
                             warning_item, event_id, 'dwdevent')

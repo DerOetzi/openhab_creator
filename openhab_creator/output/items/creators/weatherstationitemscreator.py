@@ -79,7 +79,7 @@ class WeatherStationItemsCreator(BaseItemsCreator):
                 .channel(station.points.channel('condition_id'),
                          ProfileType.SCALE, 'weathercondition.scale')\
                 .scripting({
-                    'icon': Formatter.key_value_tuples(WeatherCondition.mapping_icons, separator=',')
+                    'icons': Formatter.key_value_tuples(WeatherCondition.mapping_icons, separator=',')
                 })\
                 .append_to(self)
 
