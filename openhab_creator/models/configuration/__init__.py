@@ -206,7 +206,7 @@ class LocationRegistry():
                                            **location_definition)
 
             if location.is_timecontrolled:
-                self.timecontrolled[location.identifier] = locations
+                self.timecontrolled[location.identifier] = location
 
             self.registry[location_key].append(location)
 
