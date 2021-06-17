@@ -80,15 +80,15 @@ class AstroPoints(EquipmentPoints):
 
     @property
     def has_zodiac(self) -> bool:
-        return self.has('zodiac')
+        return self.equipment.is_sun and self.has('zodiac')
 
     @property
     def has_full(self) -> bool:
-        return self.has('full')
+        return self.equipment.is_moon and self.has('full')
 
     @property
     def has_phase(self) -> bool:
-        return self.has('phase')
+        return self.equipment.is_moon and self.has('phase')
 
 
 @EquipmentType()
@@ -113,18 +113,23 @@ class Astro(Equipment):
 
     @property
     def is_sun(self) -> bool:
-        return self.thing.uid == 'sun'
+        return self.thing.typed == 'sun'
 
     @property
     def is_moon(self) -> bool:
-        return self.thing.uid == 'moon'
+        return self.thing.typed == 'moon'
 
     @property
     def categories(self) -> List[str]:
         categories = super().categories
+        categories.append('astro')
         if self.is_thing:
-            categories.append(self.thing.uid)
+            categories.append(self.thing.typed)
         return categories
+
+    @property
+    def semantic(self) -> str:
+        return 'Equipment'
 
     @property
     def name_with_type(self) -> str:

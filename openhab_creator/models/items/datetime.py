@@ -17,6 +17,10 @@ class DateTime(BaseItem):
         self.format('%1$td.%1$tm.%1$tY %1$tH:%1$tM')
         return self
 
+    def timeonly(self) -> DateTime:
+        self.format('%1$tH:%1$tM')
+        return self
+
     @property
     def itemtype(self) -> str:
         return 'DateTime'

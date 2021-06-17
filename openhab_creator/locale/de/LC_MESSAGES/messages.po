@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openHAB Creator\n"
-"POT-Creation-Date: 2021-06-07 21:26+0200\n"
-"PO-Revision-Date: 2021-06-07 21:28+0200\n"
+"POT-Creation-Date: 2021-06-17 10:59+0200\n"
+"PO-Revision-Date: 2021-06-17 11:00+0200\n"
 "Last-Translator: Johannes Ott <info@johannes-ott.net>\n"
 "Language-Team: Johannes Ott\n"
 "Language: de\n"
@@ -314,7 +314,7 @@ msgstr "Warnung vor extremen Unwetter (Stufe 4)"
 msgid "Weather warning"
 msgstr "Wetterwarnung"
 
-#: openhab_creator/models/configuration/equipment/types/astro.py:67
+#: openhab_creator/models/configuration/equipment/types/astro.py:136
 msgid "Astro"
 msgstr "Astro"
 
@@ -427,6 +427,30 @@ msgstr "Status und Konfiguration"
 #: openhab_creator/output/content/maptransformationcreator.py:20
 msgid "Unknown"
 msgstr "Unbekannt"
+
+#: openhab_creator/output/items/creators/astroitemscreator.py:42
+msgid "Azimuth"
+msgstr "Azimut"
+
+#: openhab_creator/output/items/creators/astroitemscreator.py:55
+msgid "Elevation"
+msgstr "Höhenwinkel"
+
+#: openhab_creator/output/items/creators/astroitemscreator.py:69
+msgid "Rise"
+msgstr "Aufgang"
+
+#: openhab_creator/output/items/creators/astroitemscreator.py:78
+msgid "Set"
+msgstr "Untergang"
+
+#: openhab_creator/output/items/creators/astroitemscreator.py:88
+msgid "Total eclipse"
+msgstr "Totale Finsternis"
+
+#: openhab_creator/output/items/creators/astroitemscreator.py:97
+msgid "Partial eclipse"
+msgstr "Partielle Finsternis"
 
 #: openhab_creator/output/items/creators/batteryitemscreator.py:27
 msgid "Battery"
