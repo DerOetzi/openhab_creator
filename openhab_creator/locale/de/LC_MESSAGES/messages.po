@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openHAB Creator\n"
-"POT-Creation-Date: 2021-06-17 10:59+0200\n"
-"PO-Revision-Date: 2021-06-17 11:00+0200\n"
+"POT-Creation-Date: 2021-06-18 21:40+0200\n"
+"PO-Revision-Date: 2021-06-18 21:47+0200\n"
 "Last-Translator: Johannes Ott <info@johannes-ott.net>\n"
 "Language-Team: Johannes Ott\n"
 "Language: de\n"
@@ -315,6 +315,7 @@ msgid "Weather warning"
 msgstr "Wetterwarnung"
 
 #: openhab_creator/models/configuration/equipment/types/astro.py:136
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:148
 msgid "Astro"
 msgstr "Astro"
 
@@ -345,8 +346,8 @@ msgstr "Temperatur"
 #: openhab_creator/models/configuration/equipment/types/sensor.py:50
 #: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:37
 #: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:52
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:85
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:104
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:90
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:109
 msgid "Temperatures"
 msgstr "Temperaturen"
 
@@ -396,7 +397,7 @@ msgid "Button {count} ({name})"
 msgstr "Taste {count} ({name})"
 
 #: openhab_creator/models/configuration/equipment/types/weatherstation.py:14
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:132
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:137
 msgid "Rain gauge"
 msgstr "Niederschlag"
 
@@ -451,6 +452,14 @@ msgstr "Totale Finsternis"
 #: openhab_creator/output/items/creators/astroitemscreator.py:97
 msgid "Partial eclipse"
 msgstr "Partielle Finsternis"
+
+#: openhab_creator/output/items/creators/astroitemscreator.py:107
+msgid "Full moon"
+msgstr "Vollmond"
+
+#: openhab_creator/output/items/creators/astroitemscreator.py:116
+msgid "Moon phase"
+msgstr "Mondphase"
 
 #: openhab_creator/output/items/creators/batteryitemscreator.py:27
 msgid "Battery"
@@ -952,6 +961,22 @@ msgstr "Geschlossen"
 #: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:90
 msgid "Boost"
 msgstr "Boost"
+
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:162
+msgid "Sun rise"
+msgstr "Sonnenaufgang"
+
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:167
+msgid "Sun set"
+msgstr "Sonnenuntergang"
+
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:191
+msgid "Moon rise"
+msgstr "Mondaufgang"
+
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:196
+msgid "Moon set"
+msgstr "Monduntergang"
 
 #~ msgid "Sensor {blankname}"
 #~ msgstr "Sensor {blankname}"

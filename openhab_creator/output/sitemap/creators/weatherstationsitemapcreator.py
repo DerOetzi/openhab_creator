@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Callable, List, Tuple
 
 from openhab_creator import _
-from openhab_creator.models.sitemap import Page, Text, Sitemap
+from openhab_creator.models.sitemap import Page, Sitemap, Text
 from openhab_creator.output.color import Color
 from openhab_creator.output.sitemap import SitemapCreatorPipeline
 from openhab_creator.output.sitemap.basesitemapcreator import \
@@ -12,7 +12,10 @@ from openhab_creator.output.sitemap.basesitemapcreator import \
 if TYPE_CHECKING:
     from openhab_creator.models.configuration import Configuration
     from openhab_creator.models.configuration.equipment import Equipment
-    from openhab_creator.models.configuration.equipment.types.weatherstation import WeatherStation
+    from openhab_creator.models.configuration.equipment.types.astro import \
+        Astro
+    from openhab_creator.models.configuration.equipment.types.weatherstation import \
+        WeatherStation
     from openhab_creator.models.grafana import Dashboard
 
 
@@ -32,6 +35,8 @@ class WeatherStationSitemapCreator(BaseSitemapCreator):
         self._build_warnings(weatherstation, configuration)
         self._build_temperatures(weatherstation, configuration)
         self._build_rain_gauge(weatherstation, configuration)
+
+        self._build_astropage(weatherstation, configuration)
 
         weatherstation.append_to(sitemap)
 
@@ -134,6 +139,89 @@ class WeatherStationSitemapCreator(BaseSitemapCreator):
     @staticmethod
     def filter_stations(filter_func: Callable, configuration: Configuration) -> List[Equipment]:
         return list(filter(filter_func, configuration.equipment.equipment('weatherstation')))
+
+    def _build_astropage(self, weatherstation_page: Page, configuration: Configuration) -> None:
+        suns = configuration.equipment.equipment('sun')
+        moons = configuration.equipment.equipment('moon')
+
+        if len(suns) > 0 or len(moons) > 0:
+            page = Page(_('Astro'))\
+                .icon('astroposition')\
+                .append_to(weatherstation_page)
+
+            for sun in suns:
+                self._build_sun(sun, page)
+
+            for moon in moons:
+                self._build_moon(moon, page)
+
+    @staticmethod
+    def _build_sun(sun: Astro, page: Page) -> None:
+        frame = page.frame(sun.blankname)
+
+        if sun.points.has_rise:
+            Text(sun.item_ids.rise)\
+                .label(_('Sun rise'))\
+                .append_to(frame)
+
+        if sun.points.has_set:
+            Text(sun.item_ids.set)\
+                .label(_('Sun set'))\
+                .append_to(frame)
+
+        if sun.points.has_azimuth:
+            Text(sun.item_ids.azimuth)\
+                .append_to(frame)
+
+        if sun.points.has_elevation:
+            Text(sun.item_ids.elevation)\
+                .append_to(frame)
+
+        if sun.points.has_eclipse_partial:
+            Text(sun.item_ids.eclipse_partial)\
+                .append_to(frame)
+
+        if sun.points.has_eclipse_total:
+            Text(sun.item_ids.eclipse_total)\
+                .append_to(frame)
+
+    @staticmethod
+    def _build_moon(moon: Astro, page: Page) -> None:
+        frame = page.frame(moon.blankname)
+
+        if moon.points.has_rise:
+            Text(moon.item_ids.rise)\
+                .label(_('Moon rise'))\
+                .append_to(frame)
+
+        if moon.points.has_set:
+            Text(moon.item_ids.set)\
+                .label(_('Moon set'))\
+                .append_to(frame)
+
+        if moon.points.has_phase:
+            Text(moon.item_ids.phase)\
+                .append_to(frame)
+
+        if moon.points.has_full:
+            Text(moon.item_ids.full)\
+                .append_to(frame)
+
+        if moon.points.has_azimuth:
+            Text(moon.item_ids.azimuth)\
+                .append_to(frame)
+
+        if moon.points.has_elevation:
+            Text(moon.item_ids.elevation)\
+                .append_to(frame)
+
+        if moon.points.has_eclipse_partial:
+            Text(moon.item_ids.eclipse_partial)\
+                .append_to(frame)
+
+        if moon.points.has_eclipse_total:
+            Text(moon.item_ids.eclipse_total)\
+                .append_to(frame)
 
     def build_statuspage(self, statuspage: Page, configuration: Configuration) -> None:
         """No status page for weatherstation"""

@@ -3,9 +3,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from openhab_creator import _
-from openhab_creator.models.common import MapTransformation
 from openhab_creator.models.items import (Group, Number, NumberType, PointType,
-                                          PropertyType, Switch, DateTime)
+                                          PropertyType, String, DateTime)
 from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
 from openhab_creator.output.items import ItemsCreatorPipeline
 
@@ -33,6 +32,7 @@ class AstroItemsCreator(BaseItemsCreator):
             self.build_position(astro)
             self.build_rise_and_set(astro)
             self.build_eclipse(astro)
+            self.build_moonphases(astro)
 
         self.write_file('astro')
 
@@ -42,6 +42,7 @@ class AstroItemsCreator(BaseItemsCreator):
                 .label(_('Azimuth'))\
                 .format('%.1f °')\
                 .typed(NumberType.ANGLE)\
+                .icon('astroposition')\
                 .equipment(astro)\
                 .groups(f'{astro.thing.typed}position')\
                 .semantic(PointType.STATUS)\
@@ -55,6 +56,7 @@ class AstroItemsCreator(BaseItemsCreator):
                 .label(_('Elevation'))\
                 .format('%.1f °')\
                 .typed(NumberType.ANGLE)\
+                .icon('astroposition')\
                 .equipment(astro)\
                 .groups(f'{astro.thing.typed}position')\
                 .semantic(PointType.STATUS)\
@@ -68,6 +70,7 @@ class AstroItemsCreator(BaseItemsCreator):
             DateTime(astro.item_ids.rise)\
                 .label(_('Rise'))\
                 .timeonly()\
+                .icon(f'{astro.thing.typed}rise')\
                 .equipment(astro)\
                 .semantic(PointType.STATUS, PropertyType.TIMESTAMP)\
                 .channel(astro.points.channel('rise'))\
@@ -77,6 +80,7 @@ class AstroItemsCreator(BaseItemsCreator):
             DateTime(astro.item_ids.set)\
                 .label(_('Set'))\
                 .timeonly()\
+                .icon(f'{astro.thing.typed}set')\
                 .equipment(astro)\
                 .semantic(PointType.STATUS, PropertyType.TIMESTAMP)\
                 .channel(astro.points.channel('set'))\
@@ -87,6 +91,7 @@ class AstroItemsCreator(BaseItemsCreator):
             DateTime(astro.item_ids.eclipse_total)\
                 .label(_('Total eclipse'))\
                 .datetime()\
+                .icon('eclipse')\
                 .equipment(astro)\
                 .semantic(PointType.STATUS, PropertyType.TIMESTAMP)\
                 .channel(astro.points.channel('eclipse_total'))\
@@ -96,7 +101,28 @@ class AstroItemsCreator(BaseItemsCreator):
             DateTime(astro.item_ids.eclipse_partial)\
                 .label(_('Partial eclipse'))\
                 .datetime()\
+                .icon('eclipse')\
                 .equipment(astro)\
                 .semantic(PointType.STATUS, PropertyType.TIMESTAMP)\
                 .channel(astro.points.channel('eclipse_partial'))\
+                .append_to(self)
+
+    def build_moonphases(self, astro: Astro) -> None:
+        if astro.points.has_full:
+            DateTime(astro.item_ids.full)\
+                .label(_('Full moon'))\
+                .dateonly_weekday()\
+                .icon('moonfull')\
+                .equipment(astro)\
+                .semantic(PointType.STATUS, PropertyType.TIMESTAMP)\
+                .channel(astro.points.channel('full'))\
+                .append_to(self)
+
+        if astro.points.has_phase:
+            String(astro.item_ids.phase)\
+                .label(_('Moon phase'))\
+                .icon('moon')\
+                .equipment(astro)\
+                .semantic(PointType.STATUS)\
+                .channel(astro.points.channel('phase'))\
                 .append_to(self)
