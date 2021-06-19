@@ -64,6 +64,8 @@ class ProfileType(CreatorEnum):
 
 
 class BaseItem():
+    influxdb_series = {}
+
     def __init__(self, name: str):
         self._name: str = name
         self._label: str = ''
@@ -116,6 +118,13 @@ class BaseItem():
         self._metadata['influxdb'] = {
             'value': measurement,
             'properties': series_tags
+        }
+
+        series_tags['item'] = self._name
+
+        BaseItem.influxdb_series[self._name] = {
+            'measurement': measurement,
+            'tags': series_tags
         }
 
         return self
