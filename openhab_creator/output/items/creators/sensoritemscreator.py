@@ -24,8 +24,7 @@ class SensorItemsCreator(BaseItemsCreator):
         self.sensors = {}
 
     def build(self, configuration: Configuration) -> None:
-        Group('Trend')\
-            .append_to(self)
+        self._build_groups()
 
         for sensor in configuration.equipment.equipment('sensor'):
             location = sensor.location
@@ -46,6 +45,29 @@ class SensorItemsCreator(BaseItemsCreator):
                 self.build_sensortype_area(sensor)
 
         self.write_file('sensors')
+
+    def _build_groups(self) -> None:
+        Group('Trend')\
+            .append_to(self)
+
+        Group('PressureSealevel')\
+            .append_to(self)
+
+        for sensortype in SensorType:
+            Group(f'{sensortype}All')\
+                .typed(GroupType.NUMBER_AVG)\
+                .label(sensortype.labels.page)\
+                .format(sensortype.labels.format_str)\
+                .icon(f'{sensortype}')\
+                .append_to(self)
+
+            if sensortype.labels.has_gui_factor:
+                Group(f'gui{sensortype}All')\
+                    .typed(GroupType.NUMBER_AVG)\
+                    .label(sensortype.labels.item)\
+                    .transform_js(f'gui{sensortype}')\
+                    .icon(f'{sensortype}')\
+                    .append_to(self)
 
     def build_sensor(self, sensor: Sensor) -> None:
         sensor_equipment = Group(sensor.item_ids.sensor)\
@@ -74,6 +96,7 @@ class SensorItemsCreator(BaseItemsCreator):
                         .label(sensortype.labels.item)\
                         .format(sensortype.labels.format_str)\
                         .icon(f'{sensortype}{area.lower()}')\
+                        .groups(f'{sensortype}All')\
                         .append_to(self)
 
                     if sensortype.labels.has_gui_factor:
@@ -82,6 +105,7 @@ class SensorItemsCreator(BaseItemsCreator):
                             .label(sensortype.labels.item)\
                             .transform_js(f'gui{sensortype}')\
                             .icon(f'{sensortype}{area.lower()}')\
+                            .groups(f'gui{sensortype}All')\
                             .append_to(self)
 
                 self.build_sensortype_location(sensortype, sensor)
@@ -113,34 +137,62 @@ class SensorItemsCreator(BaseItemsCreator):
                     .semantic(PointType.MEASUREMENT, sensortype.typed.property)\
                     .append_to(self)
 
-        sensor_item = Number(f'{sensortype}{sensor.item_ids.sensor}')\
+        sensor_item = Number(f'{sensortype}{sensor.item_ids.merged_sensor}')\
             .typed(sensortype.typed.number)\
             .label(sensortype.labels.item)\
             .format(sensortype.labels.format_str)\
             .icon(f'{sensortype}{area.lower()}')\
-            .groups(sensor.item_ids.merged_sensor, f'{sensortype}{location}', 'Trend')\
+            .groups(sensor.item_ids.merged_sensor)\
             .semantic(PointType.MEASUREMENT, sensortype.typed.property)\
             .channel(sensor.points.channel(sensortype.point))\
-            .sensor(sensortype.point, sensor.influxdb_tags)\
             .aisensor()
 
-        if sensortype.point == 'moisture':
-            sensor_item.scripting({
-                'reminder_item': sensor.item_ids.moisturelastreminder,
-                'watered_item': sensor.item_ids.moisturelastwatered
-            })
+        if sensortype == SensorType.MOISTURE:
+            sensor_item\
+                .scripting({
+                    'reminder_item': sensor.item_ids.moisturelastreminder,
+                    'watered_item': sensor.item_ids.moisturelastwatered
+                })\
+                .sensor(sensortype.point, sensor.influxdb_tags)\
+                .groups(f'{sensortype}{location}')
 
             self.moisture_items(sensor)
 
-        sensor_item.append_to(self)
+        elif sensortype == SensorType.PRESSURE and sensor.has_altitude:
+            sensor_item\
+                .scripting({
+                    'pressure_sealevel_item': sensor.item_ids.pressure_sealevel,
+                    'altitude': sensor.altitude
+                })\
+                .groups('PressureSealevel')
 
-        String(f'trend{sensortype}{sensor.item_ids.sensor}')\
-            .label(_('Trend {label}').format(label=sensortype.labels.item))\
-            .map(MapTransformation.TREND)\
-            .groups(sensor.item_ids.merged_sensor)\
-            .semantic(PointType.STATUS)\
-            .aisensor()\
-            .append_to(self)
+            Number(f'pressureSeaLevel{sensor.item_ids.merged_sensor}')\
+                .typed(sensortype.typed.number)\
+                .label(sensortype.labels.item)\
+                .format(sensortype.labels.format_str)\
+                .icon(f'{sensortype}{area.lower()}')\
+                .groups(sensor.item_ids.merged_sensor, f'{sensortype}{location}')\
+                .semantic(PointType.MEASUREMENT, sensortype.typed.property)\
+                .sensor(sensortype.point, sensor.influxdb_tags)\
+                .append_to(self)
+        else:
+            sensor_item\
+                .sensor(sensortype.point, sensor.influxdb_tags)\
+                .groups(f'{sensortype}{location}')
+
+        if sensor.location.area == 'Outdoor' or sensortype == SensorType.PRESSURE:
+            String(f'trend{sensortype}{sensor.item_ids.merged_sensor}')\
+                .label(_('Trend {label}').format(label=sensortype.labels.item))\
+                .map(MapTransformation.TREND)\
+                .icon(f'trend{sensortype}')\
+                .groups(sensor.item_ids.merged_sensor)\
+                .semantic(PointType.STATUS)\
+                .aisensor()\
+                .append_to(self)
+
+            sensor_item.groups('Trend')
+
+        sensor_item.append_to(self)
 
         if sensortype.labels.has_gui_factor:
             String(f'gui{sensortype}{sensor.item_ids.sensor}')\

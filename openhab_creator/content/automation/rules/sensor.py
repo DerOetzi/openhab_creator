@@ -28,6 +28,36 @@ def trends(event):
             trend_item.post_update('consistent')
 
 
+@rule('Pressure sea level')
+@when('System started')
+@when('Member of PressureSealevel changed')
+def pressure_sealevel(event_or_itemname):
+    if event_or_itemname is None:
+        for item in ir.getItem('PressureSealevel').members:
+            pressure_sealevel(item.name)
+        return
+    elif isinstance(event_or_itemname, basestring):
+        pressure_item = Item(event_or_itemname)
+    else:
+        pressure_item = Item.from_event(event_or_itemname)
+
+    new_state = pressure_item.get_value(event=event_or_itemname)
+    if new_state in [NULL, UNDEF]:
+        return
+
+    value = new_state.floatValue()
+    temperature_item = Item('temperatureOutdoor')
+    temperature = temperature_item.get_value(15.0) + 273.15
+
+    altitude = pressure_item.scripting('altitude').intValue()
+
+    sealevel_value = value * \
+        pow(temperature / (temperature + 0.0065 * altitude), -5.255)
+
+    pressure_item.from_scripting(
+        'pressure_sealevel_item').post_update(sealevel_value)
+
+
 @rule('Soil moisture notification')
 @when('Descendent of moistureIndoor changed')
 def moisture_notification(event):

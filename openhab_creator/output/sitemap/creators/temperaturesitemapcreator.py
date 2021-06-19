@@ -41,8 +41,8 @@ class TemperatureSitemapCreator(BaseSitemapCreator):
             for sensor in sensors:
                 subpage = self.subpage(page, sensor, heatings)
 
-                if sensor.points.has_temperature:
-                    Text(f'temperature{sensor.item_ids.sensor}')\
+                if sensor.points.has('temperature'):
+                    Text(f'temperature{sensor.item_ids.merged_sensor}')\
                         .label(sensor.name)\
                         .valuecolor(*TemperatureSitemapCreator
                                     .valuecolor(f'temperature{sensor.item_ids.sensor}'))\

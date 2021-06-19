@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 class IndoorSensorsSitemapCreator(BaseSitemapCreator):
     def build_mainpage(self, sitemap: Sitemap, configuration: Configuration) -> None:
         for sensortype in SensorType:
-            if sensortype.point == "temperature":
+            if sensortype in (SensorType.TEMPERATURE, SensorType.PRESSURE):
                 continue
 
             sensors = configuration.equipment.equipment(
@@ -50,7 +50,7 @@ class IndoorSensorsSitemapCreator(BaseSitemapCreator):
                 frame = page.frame(
                     location.identifier, location.name)
 
-                sensor_text = Text(f'{prefix}{sensortype}{sensor.item_ids.sensor}')\
+                sensor_text = Text(f'{prefix}{sensortype}{sensor.item_ids.merged_sensor}')\
                     .label(sensor.name)
 
                 if sensortype.colors.has_indoor:

@@ -35,6 +35,8 @@ class WeatherStationSitemapCreator(BaseSitemapCreator):
         self._build_warnings(weatherstation, configuration)
         self._build_temperatures(weatherstation, configuration)
         self._build_rain_gauge(weatherstation, configuration)
+        self._build_pressure(weatherstation, configuration)
+        self._build_humidity(weatherstation, configuration)
 
         self._build_astropage(weatherstation, configuration)
 
@@ -44,31 +46,30 @@ class WeatherStationSitemapCreator(BaseSitemapCreator):
         warnings = self.filter_stations(
             lambda x: x.points.has_warning_active, configuration)
 
-        if len(warnings) > 0:
-            for station in warnings:
-                Text(station.item_ids.warning_event_mapped)\
-                    .visibility((station.item_ids.warning_active, '!=', 'ON'))\
-                    .valuecolor(*self.warning_severity_valuecolors(station))\
-                    .append_to(weatherstation_page)
+        for station in warnings:
+            Text(station.item_ids.warning_event_mapped)\
+                .visibility((station.item_ids.warning_active, '!=', 'ON'))\
+                .valuecolor(*self.warning_severity_valuecolors(station))\
+                .append_to(weatherstation_page)
 
-                weatherstation_page.valuecolor(
-                    *self.warning_severity_valuecolors(station))
+            weatherstation_page.valuecolor(
+                *self.warning_severity_valuecolors(station))
 
-                page = Page(station.item_ids.warning_event_mapped)\
-                    .visibility((station.item_ids.warning_active, '==', 'ON'))\
-                    .valuecolor(*self.warning_severity_valuecolors(station))\
-                    .append_to(weatherstation_page)
+            page = Page(station.item_ids.warning_event_mapped)\
+                .visibility((station.item_ids.warning_active, '==', 'ON'))\
+                .valuecolor(*self.warning_severity_valuecolors(station))\
+                .append_to(weatherstation_page)
 
-                Text(station.item_ids.warning_event_mapped)\
-                    .valuecolor(*self.warning_severity_valuecolors(station))\
-                    .append_to(page)
+            Text(station.item_ids.warning_event_mapped)\
+                .valuecolor(*self.warning_severity_valuecolors(station))\
+                .append_to(page)
 
-                Text(station.item_ids.warning_from)\
-                    .append_to(page)
+            Text(station.item_ids.warning_from)\
+                .append_to(page)
 
-                Text(station.item_ids.warning_to)\
-                    .visibility((station.item_ids.warning_to, '!=', 'NULL'))\
-                    .append_to(page)
+            Text(station.item_ids.warning_to)\
+                .visibility((station.item_ids.warning_to, '!=', 'NULL'))\
+                .append_to(page)
 
     @staticmethod
     def warning_severity_valuecolors(station: WeatherStation) -> List[Tuple[str, Color]]:
@@ -85,25 +86,28 @@ class WeatherStationSitemapCreator(BaseSitemapCreator):
         temperatures = self.filter_stations(lambda x: x.points.has_temperature,
                                             configuration)
 
-        if len(temperatures) > 0:
-            page = Page('temperatureOutdoor')\
-                .label(_('Temperatures'))\
-                .valuecolor(*self.temperature_valuecolors('temperatureOutdoor'))\
-                .append_to(weatherstation_page)
+        page = Page('temperatureOutdoor')\
+            .label(_('Temperatures'))\
+            .valuecolor(*self.temperature_valuecolors('temperatureOutdoor'))\
+            .append_to(weatherstation_page)
 
-            locations = []
+        locations = []
 
-            for temperature in temperatures:
-                locations.append(temperature.location.toplevel)
-                Text(temperature.item_ids.temperature)\
-                    .valuecolor(*self.temperature_valuecolors(temperature.item_ids.temperature))\
+        for temperature in temperatures:
+            locations.append(temperature.location.toplevel)
+            Text(temperature.item_ids.temperature)\
+                .valuecolor(*self.temperature_valuecolors(temperature.item_ids.temperature))\
+                .append_to(page)
+
+            Text(f'trend{temperature.item_ids.temperature}')\
+                .append_to(page)
+
+            if temperature.points.has_humidex:
+                Text(temperature.item_ids.humidex)\
+                    .valuecolor(*self.temperature_valuecolors(temperature.item_ids.humidex))\
                     .append_to(page)
 
-                if temperature.points.has_humidex:
-                    Text(temperature.item_ids.humidex)\
-                        .valuecolor(*self.temperature_valuecolors(temperature.item_ids.humidex))\
-                        .append_to(page)
-
+        if len(locations) > 0:
             self._add_grafana(configuration.dashboard, page,
                               list(dict.fromkeys(locations)),
                               _('Temperatures') + ' ')
@@ -121,20 +125,76 @@ class WeatherStationSitemapCreator(BaseSitemapCreator):
         rain_gauges = self.filter_stations(
             lambda x: x.points.has_rain_gauge, configuration)
 
-        if len(rain_gauges) > 0:
-            page = Page('rain_gaugeWeatherStation')\
-                .append_to(weatherstation_page)
+        page = Page('rain_gaugeWeatherStation')\
+            .append_to(weatherstation_page)
 
-            locations = []
+        locations = []
 
-            for rain_gauge in rain_gauges:
-                locations.append(rain_gauge.location.toplevel)
-                Text(rain_gauge.item_ids.rain_gauge)\
-                    .append_to(page)
+        for rain_gauge in rain_gauges:
+            locations.append(rain_gauge.location.toplevel)
+            Text(rain_gauge.item_ids.rain_gauge)\
+                .append_to(page)
 
+        if len(locations) > 0:
             self._add_grafana(configuration.dashboard, page,
                               list(dict.fromkeys(locations)),
                               _('Rain gauge') + ' ')
+
+    def _build_pressure(self, weatherstation_page: Page, configuration: Configuration) -> None:
+        pressures = configuration.equipment.equipment('pressure')
+
+        page = Page('pressureAll')\
+            .append_to(weatherstation_page)
+
+        locations = []
+
+        for pressure in pressures:
+            location = pressure.location.toplevel
+            locations.append(location)
+            frame = page.frame(
+                location.identifier, location.name)
+            if pressure.has_altitude:
+                Text(pressure.item_ids.pressure_sealevel)\
+                    .label(pressure.name)\
+                    .append_to(frame)
+            else:
+                Text(pressure.item_ids.pressure)\
+                    .label(pressure.name)\
+                    .append_to(frame)
+
+            Text(f'trend{pressure.item_ids.pressure}')\
+                .label(_('Trend'))\
+                .append_to(frame)
+
+        if len(locations) > 0:
+            self._add_grafana(configuration.dashboard, page,
+                              list(dict.fromkeys(locations)),
+                              _('Pressure') + ' ')
+
+    def _build_humidity(self, weatherstation_page: Page, configuration: Configuration) -> None:
+        humidities = self.filter_stations(lambda x: x.points.has_humidity,
+                                          configuration)
+
+        page = Page('humidityOutdoor')\
+            .label(_('Humidity'))\
+            .append_to(weatherstation_page)
+
+        locations = []
+
+        for humidity in humidities:
+            locations.append(humidity.location.toplevel)
+            Text(humidity.item_ids.humidity)\
+                .label(humidity.name)\
+                .append_to(page)
+
+            Text(f'trend{humidity.item_ids.humidity}')\
+                .label(_('Trend'))\
+                .append_to(page)
+
+        if len(locations) > 0:
+            self._add_grafana(configuration.dashboard, page,
+                              list(dict.fromkeys(locations)),
+                              _('Humidity') + ' ')
 
     @staticmethod
     def filter_stations(filter_func: Callable, configuration: Configuration) -> List[Equipment]:
@@ -145,7 +205,7 @@ class WeatherStationSitemapCreator(BaseSitemapCreator):
         moons = configuration.equipment.equipment('moon')
 
         if len(suns) > 0 or len(moons) > 0:
-            page = Page(_('Astro'))\
+            page = Page(label=_('Astro'))\
                 .icon('astroposition')\
                 .append_to(weatherstation_page)
 

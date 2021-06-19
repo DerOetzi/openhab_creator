@@ -122,23 +122,27 @@ class SensorItemIdentifiers(EquipmentItemIdentifiers):
 
     @property
     def temperature(self) -> str:
-        return f'temperature{self.sensor}'
+        return f'temperature{self.merged_sensor}'
 
     @property
     def humidity(self) -> str:
-        return f'humidity{self.sensor}'
+        return f'humidity{self.merged_sensor}'
 
     @property
     def pressure(self) -> str:
-        return f'pressure{self.sensor}'
+        return f'pressure{self.merged_sensor}'
+
+    @property
+    def pressure_sealevel(self) -> str:
+        return f'pressureSeaLevel{self.merged_sensor}'
 
     @property
     def co2(self) -> str:
-        return f'co2{self.sensor}'
+        return f'co2{self.merged_sensor}'
 
     @property
     def moisture(self) -> str:
-        return f'moisture{self.sensor}'
+        return f'moisture{self.merged_sensor}'
 
     @property
     def moisturelastwatered(self) -> str:
@@ -150,11 +154,11 @@ class SensorItemIdentifiers(EquipmentItemIdentifiers):
 
     @property
     def noise(self) -> str:
-        return f'noise{self.sensor}'
+        return f'noise{self.merged_sensor}'
 
     @property
     def humidex(self) -> str:
-        return f'humidex{self.sensor}'
+        return f'humidex{self.merged_sensor}'
 
 
 class SensorPoints(EquipmentPoints):
@@ -190,9 +194,12 @@ class SensorPoints(EquipmentPoints):
 @EquipmentType()
 class Sensor(Equipment):
     def __init__(self,
+                 altitude: Optional[int] = None,
                  points: Optional[Dict[str, str]] = None,
                  **equipment_configuration: Dict):
         super().__init__(**equipment_configuration)
+
+        self.altitude: Optional[int] = altitude
 
         if self.is_child and self.parent.category == 'sensor':
             self.name = self.parent.name
@@ -223,10 +230,19 @@ class Sensor(Equipment):
             categories.append(self.person.name)
 
         for sensortype in SensorType:
-            if self.points.has(sensortype.point):
+            if self.points.has(sensortype.point, True):
                 categories.append(sensortype.point)
 
         return categories
+
+    @property
+    def has_altitude(self) -> bool:
+        has_altitude = self.altitude is not None
+
+        for subequipment in self.subequipment:
+            has_altitude = has_altitude or subequipment.has_altitude
+
+        return has_altitude
 
     @property
     def sensor_is_subequipment(self) -> bool:
