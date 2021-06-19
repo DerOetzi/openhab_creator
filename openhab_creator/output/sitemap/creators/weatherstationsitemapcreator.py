@@ -182,14 +182,16 @@ class WeatherStationSitemapCreator(BaseSitemapCreator):
         locations = []
 
         for humidity in humidities:
-            locations.append(humidity.location.toplevel)
+            location = humidity.location.toplevel
+            locations.append(location)
+            frame = page.frame(location.identifier, location.name)
             Text(humidity.item_ids.humidity)\
                 .label(humidity.name)\
-                .append_to(page)
+                .append_to(frame)
 
             Text(f'trend{humidity.item_ids.humidity}')\
                 .label(_('Trend'))\
-                .append_to(page)
+                .append_to(frame)
 
         if len(locations) > 0:
             self._add_grafana(configuration.dashboard, page,
