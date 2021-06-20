@@ -8,6 +8,7 @@ from openhab_creator.output.color import Color
 from openhab_creator.output.sitemap import SitemapCreatorPipeline
 from openhab_creator.output.sitemap.basesitemapcreator import \
     BaseSitemapCreator
+from openhab_creator.models.configuration.equipment.types.weatherstation import WeatherStationType
 
 if TYPE_CHECKING:
     from openhab_creator.models.configuration import Configuration
@@ -37,6 +38,8 @@ class WeatherStationSitemapCreator(BaseSitemapCreator):
         self._build_rain_gauge(weatherstation, configuration)
         self._build_pressure(weatherstation, configuration)
         self._build_humidity(weatherstation, configuration)
+        self._build_uvindex(weatherstation, configuration)
+        self._build_ozone(weatherstation, configuration)
 
         self._build_astropage(weatherstation, configuration)
 
@@ -197,6 +200,59 @@ class WeatherStationSitemapCreator(BaseSitemapCreator):
             self._add_grafana(configuration.dashboard, page,
                               list(dict.fromkeys(locations)),
                               _('Humidity') + ' ')
+
+    def _build_uvindex(self, weatherstation_page: Page, configuration: Configuration) -> None:
+        uvindexs = self.filter_stations(lambda x: x.points.has_uvindex,
+                                        configuration)
+
+        colors = WeatherStationType.UVINDEX.colors.outdoor_colors(  # pylint: disable=no-member
+            'uvindexWeatherStation')
+
+        page = Page('uvindexWeatherStation')\
+            .label(_('UV index'))\
+            .valuecolor(*colors)\
+            .append_to(weatherstation_page)
+
+        for uvindex in uvindexs:
+            colors = WeatherStationType.UVINDEX.colors.outdoor_colors(  # pylint: disable=no-member
+                uvindex.item_ids.uvindex)
+            Text(uvindex.item_ids.uvindex)\
+                .label(uvindex.name)\
+                .valuecolor(*colors)\
+                .append_to(page)
+
+            if uvindex.points.has('safeexposure1'):
+                frame = page\
+                    .frame(uvindex.identifier,
+                           _('Self-protection time (below 3 hours) - {name}')
+                           .format(name=uvindex.name))\
+                    .visibility((uvindex.item_ids.safeexposure(1), '<=', 180))
+
+                for index in range(1, 7):
+                    if uvindex.points.has(f'safeexposure{index}'):
+                        Text(uvindex.item_ids.safeexposure(index))\
+                            .visibility((uvindex.item_ids.safeexposure(index), '<=', 180))\
+                            .append_to(frame)
+
+    def _build_ozone(self, weatherstation_page: Page, configuration: Configuration) -> None:
+        ozones = self.filter_stations(lambda x: x.points.has_ozone,
+                                      configuration)
+
+        colors = WeatherStationType.OZONE.colors.outdoor_colors(  # pylint: disable=no-member
+            'ozoneWeatherStation')
+
+        page = Page('guiozoneWeatherStation')\
+            .label(_('Ozone'))\
+            .valuecolor(*colors)\
+            .append_to(weatherstation_page)
+
+        for ozone in ozones:
+            colors = WeatherStationType.OZONE.colors.outdoor_colors(  # pylint: disable=no-member
+                ozone.item_ids.ozone)
+            Text(ozone.item_ids.gui_ozone)\
+                .label(ozone.name)\
+                .valuecolor(*colors)\
+                .append_to(page)
 
     @staticmethod
     def filter_stations(filter_func: Callable, configuration: Configuration) -> List[Equipment]:

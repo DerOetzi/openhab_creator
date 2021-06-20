@@ -88,56 +88,61 @@ class WeatherStationItemsCreator(BaseItemsCreator):
                 .channel(station.points.channel('condition_id'),
                          ProfileType.SCALE, 'weathercondition.scale')\
                 .scripting({
-                    'icons': Formatter.key_value_tuples(WeatherCondition.mapping_icons, separator=',')
+                    'icons': Formatter.key_value_tuples(WeatherCondition.mapping_icons,
+                                                        separator=',')
                 })\
                 .append_to(self)
 
         for weathertype in WeatherStationType:
             if station.points.has(weathertype.point):
-                if weathertype not in self.groups:
-                    Group(f'{weathertype}WeatherStation')\
-                        .typed(GroupType.NUMBER_AVG)\
-                        .label(weathertype.labels.page)\
-                        .format(weathertype.labels.format_str)\
-                        .icon(f'{weathertype}')\
-                        .append_to(self)
-
-                    if weathertype.labels.has_gui_factor:
-                        Group(f'gui{weathertype}WeatherStation')\
-                            .typed(GroupType.NUMBER_AVG)\
-                            .label(weathertype.labels.page)\
-                            .transform_js(f'gui{weathertype}')\
-                            .icon(f'{weathertype}')\
-                            .append_to(self)
-
-                    self.groups[weathertype] = True
-
-                Number(f'{weathertype}{station.identifier}')\
-                    .typed(weathertype.typed.number)\
-                    .label(weathertype.labels.item)\
-                    .format(weathertype.labels.format_str)\
-                    .icon(f'{weathertype}')\
-                    .groups(station.item_ids.merged_sensor, f'{weathertype}WeatherStation')\
-                    .semantic(PointType.MEASUREMENT, weathertype.typed.property)\
-                    .channel(station.points.channel(weathertype.point))\
-                    .sensor(weathertype.point, station.influxdb_tags)\
-                    .aisensor()\
-                    .append_to(self)
-
-                if weathertype.labels.has_gui_factor:
-
-                    String(f'gui{weathertype}{station.identifier}')\
-                        .label(weathertype.labels.item)\
-                        .transform_js(f'gui{weathertype}')\
-                        .icon(f'{weathertype}')\
-                        .groups(station.item_ids.merged_sensor, f'gui{weathertype}WeatherStation')\
-                        .semantic(PointType.MEASUREMENT, weathertype.typed.property)\
-                        .channel(station.points.channel(weathertype.point),
-                                 ProfileType.JS, f'togui{weathertype.labels.gui_factor}.js')\
-                        .append_to(self)
+                self._build_station_weathertype(weathertype, station)
 
                 if weathertype == WeatherStationType.UVINDEX:
                     self._build_uvindex(station)
+
+    def _build_station_weathertype(self,
+                                   weathertype: WeatherStationType,
+                                   station: WeatherStation) -> None:
+        if weathertype not in self.groups:
+            Group(f'{weathertype}WeatherStation')\
+                .typed(GroupType.NUMBER_AVG)\
+                .label(weathertype.labels.page)\
+                .format(weathertype.labels.format_str)\
+                .icon(f'{weathertype}')\
+                .append_to(self)
+
+            if weathertype.labels.has_gui_factor:
+                Group(f'gui{weathertype}WeatherStation')\
+                    .typed(GroupType.NUMBER_AVG)\
+                    .label(weathertype.labels.page)\
+                    .transform_js(f'gui{weathertype}')\
+                    .icon(f'{weathertype}')\
+                    .append_to(self)
+
+            self.groups[weathertype] = True
+
+        Number(f'{weathertype}{station.identifier}')\
+            .typed(weathertype.typed.number)\
+            .label(weathertype.labels.item)\
+            .format(weathertype.labels.format_str)\
+            .icon(f'{weathertype}')\
+            .groups(station.item_ids.merged_sensor, f'{weathertype}WeatherStation')\
+            .semantic(PointType.MEASUREMENT, weathertype.typed.property)\
+            .channel(station.points.channel(weathertype.point))\
+            .sensor(weathertype.point, station.influxdb_tags)\
+            .aisensor()\
+            .append_to(self)
+
+        if weathertype.labels.has_gui_factor:
+            String(f'gui{weathertype}{station.identifier}')\
+                .label(weathertype.labels.item)\
+                .transform_js(f'gui{weathertype}')\
+                .icon(f'{weathertype}')\
+                .groups(station.item_ids.merged_sensor, f'gui{weathertype}WeatherStation')\
+                .semantic(PointType.MEASUREMENT, weathertype.typed.property)\
+                .channel(station.points.channel(weathertype.point),
+                         ProfileType.JS, f'togui{weathertype.labels.gui_factor}.js')\
+                .append_to(self)
 
     def _build_uvindex(self, station: WeatherStation) -> None:
         for index in range(1, 7):

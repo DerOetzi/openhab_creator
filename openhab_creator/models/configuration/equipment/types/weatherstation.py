@@ -19,7 +19,7 @@ class WeatherStationType(CreatorEnum):
     UVINDEX = 'uvindex',\
         SensorLabel(_('UV index'), _('UV index'), '%.3f'),\
         SensorTyped(PropertyType.ULTRAVIOLET, NumberType.NONE),\
-        SensorColors([
+        SensorColors(outdoor=[
             (11, Color.VIOLETT), (8, Color.RED), (6, Color.ORANGE),
             (3, Color.YELLOW), (0, Color.GREEN)
         ])
@@ -27,7 +27,11 @@ class WeatherStationType(CreatorEnum):
     OZONE = 'ozone',\
         SensorLabel(_('Ozone'), _('Ozone'), '%.1f DU', 10),\
         SensorTyped(PropertyType.OZONE, NumberType.AREAL_DENSITY),\
-        SensorColors([])
+        SensorColors(outdoor=[
+            (450, Color.DARKRED), (420, Color.RED), (400, Color.ORANGE),
+            (370, Color.YELLOW), (300, Color.GREEN), (200, Color.BLUE),
+            (0, Color.VIOLETT)
+        ])
 
     def __init__(self, point: str, labels: SensorLabel,
                  typed: SensorTyped, colors: SensorColors):
@@ -162,6 +166,14 @@ class WeatherStationPoints(SensorPoints):
     @property
     def has_warning_updated(self) -> bool:
         return self.has('warning_updated')
+
+    @property
+    def has_uvindex(self) -> bool:
+        return self.has('uvindex')
+
+    @property
+    def has_ozone(self) -> bool:
+        return self.has('ozone')
 
 
 @EquipmentType()

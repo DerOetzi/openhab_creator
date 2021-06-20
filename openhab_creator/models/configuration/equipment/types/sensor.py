@@ -29,8 +29,11 @@ class SensorTyped:
 
 
 class SensorColors:
-    def __init__(self, indoor: List[Tuple[int, Color]]):
+    def __init__(self,
+                 indoor: Optional[List[Tuple[int, Color]]] = None,
+                 outdoor: Optional[List[Tuple[int, Color]]] = None):
         self.indoor: List[Tuple[int, Color]] = indoor
+        self.outdoor: List[Tuple[int, Color]] = outdoor
 
     @property
     def has_indoor(self) -> bool:
@@ -40,6 +43,18 @@ class SensorColors:
         valuecolors = []
 
         for valuecolor in self.indoor:
+            valuecolors.append((f'{item}>={valuecolor[0]}', valuecolor[1]))
+
+        return valuecolors
+
+    @property
+    def has_outdoor(self) -> bool:
+        return len(self.outdoor) > 0
+
+    def outdoor_colors(self, item: str) -> List[Tuple[str, Color]]:
+        valuecolors = []
+
+        for valuecolor in self.outdoor:
             valuecolors.append((f'{item}>={valuecolor[0]}', valuecolor[1]))
 
         return valuecolors
