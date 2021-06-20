@@ -9,8 +9,8 @@ from openhab_creator.models.common.weatherstation import (DWDEvent,
 from openhab_creator.models.configuration.equipment.types.weatherstation import \
     WeatherStationType
 from openhab_creator.models.items import (DateTime, Group, GroupType, Number,
-                                          PointType, ProfileType, String,
-                                          Switch)
+                                          NumberType, PointType, ProfileType,
+                                          String, Switch)
 from openhab_creator.output.formatter import Formatter
 from openhab_creator.output.items import ItemsCreatorPipeline
 from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
@@ -23,6 +23,15 @@ if TYPE_CHECKING:
 
 @ItemsCreatorPipeline(7)
 class WeatherStationItemsCreator(BaseItemsCreator):
+    FITZPATRICK_LABELS = [
+        _('Fitzpatrick skin type I'),
+        _('Fitzpatrick skin type II'),
+        _('Fitzpatrick skin type III'),
+        _('Fitzpatrick skin type IV'),
+        _('Fitzpatrick skin type V'),
+        _('Fitzpatrick skin type VI')
+    ]
+
     def __init__(self, outputdir: str):
         super().__init__(outputdir)
         self.groups = {}
@@ -93,6 +102,14 @@ class WeatherStationItemsCreator(BaseItemsCreator):
                         .icon(f'{weathertype}')\
                         .append_to(self)
 
+                    if weathertype.labels.has_gui_factor:
+                        Group(f'gui{weathertype}WeatherStation')\
+                            .typed(GroupType.NUMBER_AVG)\
+                            .label(weathertype.labels.page)\
+                            .transform_js(f'gui{weathertype}')\
+                            .icon(f'{weathertype}')\
+                            .append_to(self)
+
                     self.groups[weathertype] = True
 
                 Number(f'{weathertype}{station.identifier}')\
@@ -105,6 +122,34 @@ class WeatherStationItemsCreator(BaseItemsCreator):
                     .channel(station.points.channel(weathertype.point))\
                     .sensor(weathertype.point, station.influxdb_tags)\
                     .aisensor()\
+                    .append_to(self)
+
+                if weathertype.labels.has_gui_factor:
+
+                    String(f'gui{weathertype}{station.identifier}')\
+                        .label(weathertype.labels.item)\
+                        .transform_js(f'gui{weathertype}')\
+                        .icon(f'{weathertype}')\
+                        .groups(station.item_ids.merged_sensor, f'gui{weathertype}WeatherStation')\
+                        .semantic(PointType.MEASUREMENT, weathertype.typed.property)\
+                        .channel(station.points.channel(weathertype.point),
+                                 ProfileType.JS, f'togui{weathertype.labels.gui_factor}.js')\
+                        .append_to(self)
+
+                if weathertype == WeatherStationType.UVINDEX:
+                    self._build_uvindex(station)
+
+    def _build_uvindex(self, station: WeatherStation) -> None:
+        for index in range(1, 7):
+            if station.points.has(f'safeexposure{index}'):
+                Number(station.item_ids.safeexposure(index))\
+                    .typed(NumberType.TIME)\
+                    .label(self.FITZPATRICK_LABELS[index-1])\
+                    .format('%d min')\
+                    .icon('safeexposure')\
+                    .groups(station.item_ids.merged_sensor)\
+                    .semantic(PointType.MEASUREMENT)\
+                    .channel(station.points.channel(f'safeexposure{index}'))\
                     .append_to(self)
 
     def _build_warning(self, station: WeatherStation) -> None:

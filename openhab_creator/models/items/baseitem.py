@@ -53,6 +53,7 @@ class PropertyType(CreatorEnum):
     DURATION = 'Duration'
     LEVEL = 'Level'
     OPENING = 'Opening'
+    OZONE = 'Ozone'
     TIMESTAMP = 'Timestamp'
     ULTRAVIOLET = 'Ultraviolet'
     VIBRATION = 'Vibration'

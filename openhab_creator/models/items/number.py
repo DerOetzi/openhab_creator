@@ -7,7 +7,9 @@ from openhab_creator.models.items.baseitem import BaseItem
 
 
 class NumberType(CreatorEnum):
+    NONE = ''
     ANGLE = ':Angle'
+    AREAL_DENSITY = ':ArealDensity'
     DIMENSIONLESS = ':Dimensionless'
     LENGTH = ':Length'
     PRESSURE = ':Pressure'

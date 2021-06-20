@@ -7,12 +7,26 @@ from openhab_creator.models.configuration.equipment import EquipmentType
 from openhab_creator.models.configuration.equipment.types.sensor import (
     Sensor, SensorColors, SensorItemIdentifiers, SensorLabel, SensorPoints, SensorTyped)
 from openhab_creator.models.items import NumberType, PropertyType
+from openhab_creator.output.color import Color
 
 
 class WeatherStationType(CreatorEnum):
     RAIN_GAUGE = 'rain_gauge',\
         SensorLabel(_('Rain gauge'), _('Rain gauge'), '%.1f mm'),\
         SensorTyped(PropertyType.RAIN, NumberType.LENGTH),\
+        SensorColors([])
+
+    UVINDEX = 'uvindex',\
+        SensorLabel(_('UV index'), _('UV index'), '%.3f'),\
+        SensorTyped(PropertyType.ULTRAVIOLET, NumberType.NONE),\
+        SensorColors([
+            (11, Color.VIOLETT), (8, Color.RED), (6, Color.ORANGE),
+            (3, Color.YELLOW), (0, Color.GREEN)
+        ])
+
+    OZONE = 'ozone',\
+        SensorLabel(_('Ozone'), _('Ozone'), '%.1f DU', 10),\
+        SensorTyped(PropertyType.OZONE, NumberType.AREAL_DENSITY),\
         SensorColors([])
 
     def __init__(self, point: str, labels: SensorLabel,
@@ -75,6 +89,25 @@ class WeatherStationItemIdentifiers(SensorItemIdentifiers):
     @property
     def warning_to(self) -> str:
         return self._identifier('warningTo')
+
+    @property
+    def uvindex(self) -> str:
+        return self._identifier('uvindex')
+
+    @property
+    def uvindex_control(self) -> str:
+        return self._identifier('uvindexControl')
+
+    def safeexposure(self, index: int) -> str:
+        return self._identifier(f'safeexposure{index}')
+
+    @property
+    def ozone(self) -> str:
+        return self._identifier('ozone')
+
+    @property
+    def gui_ozone(self) -> str:
+        return self._identifier('guiozone')
 
 
 class WeatherStationPoints(SensorPoints):
