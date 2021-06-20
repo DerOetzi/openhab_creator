@@ -139,13 +139,18 @@ class Thing(object):
         self.channelprefix: str = ':'.join(prefixes)
 
     def _init_channels(self, channels: Dict[str, Any]) -> None:
-        self.channels: List[Channel] = []
+        self._channels: Dict[str, Channel] = {}
 
         for channel_key, channel_definition in channels.items():
-            self.channels.append(
-                Channel(self.secrets, channel_key, **channel_definition))
+            self._channels[channel_key] = Channel(
+                self.secrets, channel_key, **channel_definition)
 
-        logger.debug('channels: %s', self.channels)
+    @property
+    def channels(self) -> List[Channel]:
+        return self._channels.values()
+
+    def has_point(self, point: str) -> bool:
+        return point in self._channels
 
     def replace_secrets(self, input_str: str) -> str:
         return input_str.format_map(self.secrets)

@@ -67,7 +67,8 @@ class EquipmentPoints():
         return self.equipment.thing.has_mac
 
     def has(self, point: str, recursive: Optional[bool] = False) -> bool:
-        has_point = point in self.points
+        has_point = point in self.points or (
+            self.equipment.is_thing and self.equipment.thing.has_point(point))
 
         if recursive:
             for subequipment in self.equipment.subequipment:
@@ -82,7 +83,9 @@ class EquipmentPoints():
                 f'Cannot create channel for point "{point}" '
                 'for equipment {self.equipment.identifier}')
 
-        return f'{self.equipment.thing.channelprefix}:{self.points[point]}'
+        channel = self.points[point] if point in self.points else point
+
+        return f'{self.equipment.thing.channelprefix}:{channel}'
 
 
 class Equipment(BaseObject):
