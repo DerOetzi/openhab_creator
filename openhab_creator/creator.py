@@ -47,5 +47,5 @@ class Creator():
         if self.icons:
             IconsCreator(self.outputdir).build(self.configdir)
 
-        with open(f'{self.configdir}/influxdb_series.json', 'w') as fp:
-            json.dump(BaseItem.influxdb_series, fp, indent=4)
+        with open(f'{self.configdir}/documentation/influxdb_series.json', 'w') as series_file:
+            json.dump(BaseItem.influxdb_series, series_file, indent=4)

@@ -229,6 +229,9 @@ class Configuration():
         self.name: str = name
         self.secrets: SecretsStorage = SecretsStorage(configdir, anonym)
 
+        os.makedirs(os.path.join(
+            configdir, 'documentation'), exist_ok=True)
+
         self.dashboard: Dashboard = Dashboard(self)
 
         self._init_templates(configdir)

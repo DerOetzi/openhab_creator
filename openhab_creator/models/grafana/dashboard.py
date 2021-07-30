@@ -73,7 +73,7 @@ class Dashboard(object):
                          self.panels[panel['title']])
 
     def _save_dashboard_to_configdir(self, configdir: str) -> None:
-        with open(f'{configdir}/grafana_dashboard.json', 'w') as fp:
+        with open(f'{configdir}/documentation/grafana_dashboard.json', 'w') as fp:
             json.dump(self.online, fp, indent=4)
 
     def panel_urls(self, identifier: str) -> Optional[Dict[str, str]]:
