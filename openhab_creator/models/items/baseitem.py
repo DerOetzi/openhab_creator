@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from abc import abstractproperty
+from abc import abstractmethod
 from typing import TYPE_CHECKING, Dict, List, Optional, Union
 
 from openhab_creator import CreatorEnum
@@ -76,7 +76,8 @@ class BaseItem():
         self._tags: List[str] = []
         self._metadata: Dict[str, Dict] = {}
 
-    @abstractproperty
+    @property
+    @abstractmethod
     def itemtype(self) -> str:
         pass
 
@@ -173,7 +174,11 @@ class BaseItem():
             }
         return self
 
-    def append_to(self, itemscreator: BaseItemsCreator) -> None:
+    def append_to(self, itemscreator: BaseItemsCreator) -> BaseItem:
+        itemscreator.append_item(self)
+        return self
+
+    def build_item(self, itemscreator: BaseItemsCreator) -> None:
         itemscreator.append(f'{self.itemtype} {self._name}')
 
         self._append_label(itemscreator)
