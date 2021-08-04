@@ -1,8 +1,9 @@
 import click
 import click_log
 
-from . import __version__, logger
 from openhab_creator.creator import Creator
+
+from . import __version__, logger
 
 click_log.basic_config(logger)
 
