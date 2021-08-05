@@ -48,6 +48,9 @@ class WeatherStationItemsCreator(BaseItemsCreator):
         Group('WeatherCondition')\
             .append_to(self)
 
+        Group('UVIndex')\
+            .append_to(self)
+
         Group('WeatherWarning')\
             .append_to(self)
 
@@ -95,14 +98,15 @@ class WeatherStationItemsCreator(BaseItemsCreator):
 
         for weathertype in WeatherStationType:
             if station.points.has(weathertype.point):
-                self._build_station_weathertype(weathertype, station)
+                sensor_item = self._build_station_weathertype(
+                    weathertype, station)
 
                 if weathertype == WeatherStationType.UVINDEX:
-                    self._build_uvindex(station)
+                    self._build_uvindex(station, sensor_item)
 
     def _build_station_weathertype(self,
                                    weathertype: WeatherStationType,
-                                   station: WeatherStation) -> None:
+                                   station: WeatherStation) -> Number:
         if weathertype not in self.groups:
             Group(f'{weathertype}WeatherStation')\
                 .typed(GroupType.NUMBER_AVG)\
@@ -121,7 +125,7 @@ class WeatherStationItemsCreator(BaseItemsCreator):
 
             self.groups[weathertype] = True
 
-        Number(f'{weathertype}{station.identifier}')\
+        sensor_item = Number(f'{weathertype}{station.identifier}')\
             .typed(weathertype.typed.number)\
             .label(weathertype.labels.item)\
             .format(weathertype.labels.format_str)\
@@ -144,18 +148,31 @@ class WeatherStationItemsCreator(BaseItemsCreator):
                          ProfileType.JS, f'togui{weathertype.labels.gui_factor}.js')\
                 .append_to(self)
 
-    def _build_uvindex(self, station: WeatherStation) -> None:
+        return sensor_item
+
+    def _build_uvindex(self, station: WeatherStation, uvindex_item: Number) -> None:
+        safeexposure_items_calculations = {}
+
         for index in range(1, 7):
+            safeexposure_item = Number(station.item_ids.safeexposure(index))\
+                .typed(NumberType.TIME)\
+                .label(self.FITZPATRICK_LABELS[index-1])\
+                .format('%d min')\
+                .icon('safeexposure')\
+                .groups(station.item_ids.merged_sensor)\
+                .semantic(PointType.MEASUREMENT)\
+                .append_to(self)
+
             if station.points.has(f'safeexposure{index}'):
-                Number(station.item_ids.safeexposure(index))\
-                    .typed(NumberType.TIME)\
-                    .label(self.FITZPATRICK_LABELS[index-1])\
-                    .format('%d min')\
-                    .icon('safeexposure')\
-                    .groups(station.item_ids.merged_sensor)\
-                    .semantic(PointType.MEASUREMENT)\
-                    .channel(station.points.channel(f'safeexposure{index}'))\
-                    .append_to(self)
+                safeexposure_item.channel(
+                    station.points.channel(f'safeexposure{index}'))
+            else:
+                safeexposure_items_calculations[f'calcsafeexposure{index}'] = station.item_ids.safeexposure(
+                    index)
+
+        uvindex_item\
+            .groups('UVIndex')\
+            .scripting(safeexposure_items_calculations)
 
     def _build_warning(self, station: WeatherStation) -> None:
         weatheritems = {}

@@ -221,18 +221,16 @@ class WeatherStationSitemapCreator(BaseSitemapCreator):
                 .valuecolor(*colors)\
                 .append_to(page)
 
-            if uvindex.points.has('safeexposure1'):
-                frame = page\
-                    .frame(uvindex.identifier,
-                           _('Self-protection time (below 3 hours) - {name}')
-                           .format(name=uvindex.name))\
-                    .visibility((uvindex.item_ids.safeexposure(1), '<=', 180))
+            frame = page\
+                .frame(uvindex.identifier,
+                       _('Self-protection time (below 3 hours) - {name}')
+                       .format(name=uvindex.name))\
+                .visibility((uvindex.item_ids.safeexposure(1), '<=', 180))
 
-                for index in range(1, 7):
-                    if uvindex.points.has(f'safeexposure{index}'):
-                        Text(uvindex.item_ids.safeexposure(index))\
-                            .visibility((uvindex.item_ids.safeexposure(index), '<=', 180))\
-                            .append_to(frame)
+            for index in range(1, 7):
+                Text(uvindex.item_ids.safeexposure(index))\
+                    .visibility((uvindex.item_ids.safeexposure(index), '<=', 180))\
+                    .append_to(frame)
 
     def _build_ozone(self, weatherstation_page: Page, configuration: Configuration) -> None:
         ozones = self.filter_stations(lambda x: x.points.has_ozone,
