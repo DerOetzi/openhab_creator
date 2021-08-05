@@ -196,15 +196,24 @@ class WeatherStationItemsCreator(BaseItemsCreator):
                 .channel(station.points.channel('warning_headline'))\
                 .equipment(station)\
                 .semantic(PointType.STATUS)\
-                .aisensor()\
                 .append_to(self)
 
             weatheritems['headline'] = station.item_ids.warning_headline
 
-        String(station.item_ids.warning_urgency)\
+        if station.points.has_warning_description:
+            String(station.item_ids.warning_description)\
+                .label(_('Description'))\
+                .format('%s')\
+                .channel(station.points.channel('warning_description'))\
+                .equipment(station)\
+                .semantic(PointType.STATUS)\
+                .append_to(self)
+
+            weatheritems['description'] = station.item_ids.warning_description
+
+        Switch(station.item_ids.warning_urgency)\
             .label(_('Urgency'))\
             .format('%s')\
-            .channel(station.points.channel('warning_urgency'))\
             .equipment(station)\
             .groups('WeatherWarningUrgency')\
             .semantic(PointType.STATUS)\
@@ -232,6 +241,7 @@ class WeatherStationItemsCreator(BaseItemsCreator):
             .aisensor()\
             .append_to(self)
 
+        weatheritems['text'] = _('{} of {}')
         weatheritems['event'] = station.item_ids.warning_event
         weatheritems['event_mapped'] = station.item_ids.warning_event_mapped
 
@@ -252,6 +262,7 @@ class WeatherStationItemsCreator(BaseItemsCreator):
             .channel(station.points.channel('warning_from'))\
             .equipment(station)\
             .semantic(PointType.STATUS)\
+            .scripting({'text': _('Valid from:')})\
             .append_to(self)
 
         weatheritems['from'] = station.item_ids.warning_from
@@ -263,6 +274,7 @@ class WeatherStationItemsCreator(BaseItemsCreator):
             .channel(station.points.channel('warning_to'))\
             .equipment(station)\
             .semantic(PointType.STATUS)\
+            .scripting({'text': _('Valid to:')})\
             .append_to(self)
 
         weatheritems['to'] = station.item_ids.warning_to

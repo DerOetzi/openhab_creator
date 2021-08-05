@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openHAB Creator\n"
-"POT-Creation-Date: 2021-08-04 16:04+0200\n"
-"PO-Revision-Date: 2021-08-05 10:09+0200\n"
+"POT-Creation-Date: 2021-08-05 21:30+0200\n"
+"PO-Revision-Date: 2021-08-05 21:31+0200\n"
 "Last-Translator: Johannes Ott <info@johannes-ott.net>\n"
 "Language-Team: Johannes Ott\n"
 "Language: de\n"
@@ -315,7 +315,7 @@ msgid "Weather warning"
 msgstr "Wetterwarnung"
 
 #: openhab_creator/models/configuration/equipment/types/astro.py:136
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:266
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:264
 msgid "Astro"
 msgstr "Astro"
 
@@ -410,11 +410,11 @@ msgid "UV index"
 msgstr "UV-Index"
 
 #: openhab_creator/models/configuration/equipment/types/weatherstation.py:28
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:245
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:243
 msgid "Ozone"
 msgstr "Ozon"
 
-#: openhab_creator/models/configuration/equipment/types/weatherstation.py:218
+#: openhab_creator/models/configuration/equipment/types/weatherstation.py:222
 msgid "Weatherstation"
 msgstr "Wetterstation"
 
@@ -828,43 +828,59 @@ msgstr "Fitzpatrick Hauttyp VI"
 msgid "Weather station"
 msgstr "Wetterstation"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:83
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:86
 msgid "Weather condition"
 msgstr "Wetterlage"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:164
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:181
 msgid "Warning severity"
 msgstr "Warnstufe"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:177
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:194
 msgid "Headline"
 msgstr "Überschrift"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:188
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:205
+msgid "Description"
+msgstr "Beschreibung"
+
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:215
 msgid "Urgency"
 msgstr "Aktualität"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:200
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:226
 msgid "Event"
 msgstr "Event"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:209
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:235
 msgid "Warning for"
 msgstr "Warnung vor"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:222
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:244
+msgid "{} of {}"
+msgstr "{} vor {}"
+
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:249
 msgid "Instruction"
 msgstr "Hinweis"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:232
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:259
 msgid "Valid from"
 msgstr "Gültig ab"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:243
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:265
+msgid "Valid from:"
+msgstr "Gültig ab:"
+
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:271
 msgid "Valid to"
 msgstr "Gültig bis"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:257
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:277
+msgid "Valid to:"
+msgstr "Gültig bis:"
+
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:286
 msgid "Warning"
 msgstr "Warnung"
 
@@ -1004,23 +1020,23 @@ msgstr "Boost"
 msgid "Trend"
 msgstr "Trend"
 
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:227
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:226
 msgid "Self-protection time (below 3 hours) - {name}"
 msgstr "Eigenschutzzeiten (weniger als 3 Stunden)"
 
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:282
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:280
 msgid "Sun rise"
 msgstr "Sonnenaufgang"
 
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:287
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:285
 msgid "Sun set"
 msgstr "Sonnenuntergang"
 
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:312
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:310
 msgid "Moon rise"
 msgstr "Mondaufgang"
 
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:317
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:315
 msgid "Moon set"
 msgstr "Monduntergang"
 

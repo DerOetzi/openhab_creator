@@ -1,7 +1,9 @@
 # pylint: skip-file
+from personal.dateutils import DateUtils
 from personal.signalmessenger import SignalMessenger
 from personal.item import Item
 from personal.stringutils import StringUtils
+from core.date import format_date
 from core.rules import rule
 from core.triggers import when
 from core.log import logging, LOG_PREFIX
@@ -12,32 +14,82 @@ reload(personal.item)
 logger = logging.getLogger('{}.Weather'.format(LOG_PREFIX))
 
 
+def send_warning_message(event, warning_item, event_mapped, severity_str):
+    event_str = Item.transform_map('dwdevent', event_mapped)
+    message = warning_item.scripting('text').format(severity_str, event_str)
+
+    description_item = warning_item.from_scripting('description')
+    if description_item is not None:
+        message += u' {}'.format(description_item.get_string('', event))
+
+    instruction_item = warning_item.from_scripting('instruction')
+    if instruction_item is not None:
+        instruction = instruction_item.get_string('', event)
+        if instruction != '':
+            message += u' {}'.format(instruction)
+
+    from_item = warning_item.from_scripting('from')
+    from_datetime = from_item.get_datetime(event)
+    message += u' {} {}'.format(from_item.scripting('text'),
+                                format_date(from_datetime, 'dd.MM.yyyy HH:mm'))
+
+    to_item = warning_item.from_scripting('to')
+    to_datetime = to_item.get_datetime(event)
+    if to_datetime is not None:
+        message += u' {} {}'.format(to_item.scripting('text'),
+                                    format_date(to_datetime, 'dd.MM.yyyy HH:mm'))
+
+    logger.info(message)
+    SignalMessenger.broadcast(message)
+
+
+lock_until = {
+    'warnings': DateUtils.now().minusSeconds(1)
+}
+
+
 @rule("Weather warning")
 @when("System started")
 @when("Member of WeatherWarning changed")
 @when("Member of WeatherWarningSeverity changed")
-@when("Member of WeatherWarningUrgency changed")
 @when("Member of WeatherWarningEvent changed")
 @when("Member of WeatherWarningFrom changed")
 @when("Member of WeatherWarningTo changed")
 def weather_warning(event):
+    global lock_until
+    if lock_until['warnings'].isAfter(DateUtils.now()):
+        return
+
+    lock_until['warnings'] = DateUtils.now().plusSeconds(30)
+
     for warning_active in ir.getItem('WeatherWarning').members:
         warning_item = Item(warning_active)
         event_item = warning_item.from_scripting('event')
         event_mapped_item = warning_item.from_scripting('event_mapped')
 
-        event_str = event_item.get_value('').upper()
-        event_str = event_str.replace('VORABINFORMATION', '')
+        event_str = event_item.get_string('').upper()
+
+        urgency_item = warning_item.from_scripting('urgency')
+
+        if 'VORABINFORMATION' in event_str:
+            event_str = event_str.replace('VORABINFORMATION', '')
+            urgency_item.post_update(ON)
+        else:
+            urgency_item.post_update(OFF)
+
         event_str = event_str.replace(' ', '')
         event_mapped = Item.transform_map('dwdeventkeyword', event_str)
 
-        event_str = Item.transform_map('dwdevent', event_mapped)
         severity_item = warning_item.from_scripting('severity')
         severity_str = Item.transform_map(
-            'dwdseverity', severity_item.get_value(''))
+            'dwdseverity', severity_item.get_string('', event))
 
         event_mapped_item.set_label(u"{}".format(severity_str))
         event_mapped_item.send_command(event_mapped)
+
+        if event is not None and warning_item.get_onoff(event) == ON and event_mapped != 10:
+            send_warning_message(event, warning_item,
+                                 event_mapped, severity_str)
 
 
 @rule('GUI Weatherstation')
@@ -49,13 +101,13 @@ def gui_weatherstation(event):
 
     warning_item = Item.from_members_first('WeatherWarning')
     severity_item = warning_item.from_scripting('severity')
-    severity_str = severity_item.get_value('')
+    severity_str = severity_item.get_string('')
 
     if severity_str in ['Severe', 'Extreme']:
         severity_str = Item.transform_map('dwdseverity', severity_str)
 
         event_mapped_item = warning_item.from_scripting('event_mapped')
-        event_id = event_mapped_item.get_value(0, event)
+        event_id = event_mapped_item.get_int(0, event)
         event_str = Item.transform_map('dwdevent', event_id)
 
         weatherstation_item.set_label(u'{}'.format(severity_str))
@@ -65,10 +117,10 @@ def gui_weatherstation(event):
         weatherstation_item.post_update(event_str)
     else:
         condition_item = Item.from_members_first('WeatherCondition')
-        condition_id = condition_item.get_value(0, event)
+        condition_id = condition_item.get_int(0, event)
         condition_str = Item.transform_map('weathercondition', condition_id)
 
-        temperature = Item('temperatureOutdoor').get_value(0.0, event)
+        temperature = Item('temperatureOutdoor').get_float(0.0, event)
         temperature = StringUtils.format_number(temperature, 1)
 
         weatherstation_item.set_label(weatherstation_item.scripting('label'))
@@ -104,7 +156,7 @@ def fitzpatrick_skin_types(event):
 
     calculation_items = uvindex_item.scripting()
 
-    uvindex = uvindex_item.get_value(0.0, event)
+    uvindex = uvindex_item.get_float(0.0, event)
 
     for calculation_item_name in calculation_items:
         calculation_item = uvindex_item.from_scripting(calculation_item_name)
