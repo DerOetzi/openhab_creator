@@ -26,7 +26,7 @@ class BatteryItemsCreator(BaseItemsCreator):
                 Group(equipment.item_ids.battery)\
                     .label(_('Battery'))\
                     .groups(equipment_id)\
-                    .tags('Battery')\
+                    .semantic('Battery')\
                     .append_to(self)
 
                 if equipment.points.has_battery_low:
