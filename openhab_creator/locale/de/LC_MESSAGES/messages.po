@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openHAB Creator\n"
-"POT-Creation-Date: 2021-06-20 16:38+0200\n"
-"PO-Revision-Date: 2021-06-20 16:40+0200\n"
+"POT-Creation-Date: 2021-08-04 16:04+0200\n"
+"PO-Revision-Date: 2021-08-05 10:09+0200\n"
 "Last-Translator: Johannes Ott <info@johannes-ott.net>\n"
 "Language-Team: Johannes Ott\n"
 "Language: de\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: pygettext.py 1.5\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 2.4.3\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
@@ -315,7 +315,7 @@ msgid "Weather warning"
 msgstr "Wetterwarnung"
 
 #: openhab_creator/models/configuration/equipment/types/astro.py:136
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:210
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:266
 msgid "Astro"
 msgstr "Astro"
 
@@ -339,50 +339,50 @@ msgstr "Bewegungsmelder"
 msgid "NetworkAppliance"
 msgstr "Netzwerkanwendung"
 
-#: openhab_creator/models/configuration/equipment/types/sensor.py:50
+#: openhab_creator/models/configuration/equipment/types/sensor.py:65
 msgid "Temperature"
 msgstr "Temperatur"
 
-#: openhab_creator/models/configuration/equipment/types/sensor.py:50
+#: openhab_creator/models/configuration/equipment/types/sensor.py:65
 #: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:37
 #: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:52
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:90
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:113
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:93
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:116
 msgid "Temperatures"
 msgstr "Temperaturen"
 
-#: openhab_creator/models/configuration/equipment/types/sensor.py:59
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:179
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:199
+#: openhab_creator/models/configuration/equipment/types/sensor.py:74
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:182
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:202
 msgid "Humidity"
 msgstr "Luftfeuchtigkeit"
 
-#: openhab_creator/models/configuration/equipment/types/sensor.py:67
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:172
+#: openhab_creator/models/configuration/equipment/types/sensor.py:82
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:175
 msgid "Pressure"
 msgstr "Luftdruck"
 
-#: openhab_creator/models/configuration/equipment/types/sensor.py:72
+#: openhab_creator/models/configuration/equipment/types/sensor.py:87
 msgid "CO2 concentration"
 msgstr "CO2-Gehalt"
 
-#: openhab_creator/models/configuration/equipment/types/sensor.py:80
+#: openhab_creator/models/configuration/equipment/types/sensor.py:95
 msgid "Soil moisture"
 msgstr "Bodenfeuchtigkeit"
 
-#: openhab_creator/models/configuration/equipment/types/sensor.py:88
+#: openhab_creator/models/configuration/equipment/types/sensor.py:103
 msgid "Noise"
 msgstr "Geräuschpegel"
 
-#: openhab_creator/models/configuration/equipment/types/sensor.py:93
+#: openhab_creator/models/configuration/equipment/types/sensor.py:108
 msgid "Felt temperature (Humidex)"
 msgstr "Gefühlte Temperatur (Humidex)"
 
-#: openhab_creator/models/configuration/equipment/types/sensor.py:93
+#: openhab_creator/models/configuration/equipment/types/sensor.py:108
 msgid "Felt temperatures (Humidex)"
 msgstr "Gefühlte Temperaturen (Humidex)"
 
-#: openhab_creator/models/configuration/equipment/types/sensor.py:220
+#: openhab_creator/models/configuration/equipment/types/sensor.py:235
 #: openhab_creator/output/items/creators/sensoritemscreator.py:78
 msgid "Sensor"
 msgstr "Sensor"
@@ -400,19 +400,21 @@ msgid "Button {count} ({name})"
 msgstr "Taste {count} ({name})"
 
 #: openhab_creator/models/configuration/equipment/types/weatherstation.py:15
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:141
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:144
 msgid "Rain gauge"
 msgstr "Niederschlag"
 
 #: openhab_creator/models/configuration/equipment/types/weatherstation.py:20
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:212
 msgid "UV index"
 msgstr "UV-Index"
 
 #: openhab_creator/models/configuration/equipment/types/weatherstation.py:28
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:245
 msgid "Ozone"
 msgstr "Ozon"
 
-#: openhab_creator/models/configuration/equipment/types/weatherstation.py:206
+#: openhab_creator/models/configuration/equipment/types/weatherstation.py:218
 msgid "Weatherstation"
 msgstr "Wetterstation"
 
@@ -830,39 +832,39 @@ msgstr "Wetterstation"
 msgid "Weather condition"
 msgstr "Wetterlage"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:139
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:164
 msgid "Warning severity"
 msgstr "Warnstufe"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:152
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:177
 msgid "Headline"
 msgstr "Überschrift"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:163
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:188
 msgid "Urgency"
 msgstr "Aktualität"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:175
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:200
 msgid "Event"
 msgstr "Event"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:184
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:209
 msgid "Warning for"
 msgstr "Warnung vor"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:197
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:222
 msgid "Instruction"
 msgstr "Hinweis"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:207
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:232
 msgid "Valid from"
 msgstr "Gültig ab"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:218
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:243
 msgid "Valid to"
 msgstr "Gültig bis"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:232
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:257
 msgid "Warning"
 msgstr "Warnung"
 
@@ -997,24 +999,28 @@ msgstr "Geschlossen"
 msgid "Boost"
 msgstr "Boost"
 
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:166
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:193
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:169
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:196
 msgid "Trend"
-msgstr ""
+msgstr "Trend"
 
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:226
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:227
+msgid "Self-protection time (below 3 hours) - {name}"
+msgstr "Eigenschutzzeiten (weniger als 3 Stunden)"
+
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:282
 msgid "Sun rise"
 msgstr "Sonnenaufgang"
 
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:231
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:287
 msgid "Sun set"
 msgstr "Sonnenuntergang"
 
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:256
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:312
 msgid "Moon rise"
 msgstr "Mondaufgang"
 
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:261
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:317
 msgid "Moon set"
 msgstr "Monduntergang"
 

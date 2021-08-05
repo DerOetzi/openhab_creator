@@ -151,7 +151,7 @@ class WeatherStationItemsCreator(BaseItemsCreator):
         return sensor_item
 
     def _build_uvindex(self, station: WeatherStation, uvindex_item: Number) -> None:
-        safeexposure_items_calculations = {}
+        exposure_calcs = {}
 
         for index in range(1, 7):
             safeexposure_item = Number(station.item_ids.safeexposure(index))\
@@ -167,12 +167,12 @@ class WeatherStationItemsCreator(BaseItemsCreator):
                 safeexposure_item.channel(
                     station.points.channel(f'safeexposure{index}'))
             else:
-                safeexposure_items_calculations[f'calcsafeexposure{index}'] = station.item_ids.safeexposure(
+                exposure_calcs[f'safe{index}'] = station.item_ids.safeexposure(
                     index)
 
         uvindex_item\
             .groups('UVIndex')\
-            .scripting(safeexposure_items_calculations)
+            .scripting(exposure_calcs)
 
     def _build_warning(self, station: WeatherStation) -> None:
         weatheritems = {}

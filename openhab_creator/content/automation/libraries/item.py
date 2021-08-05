@@ -80,7 +80,10 @@ class Item(object):
 
         return typed_value
 
-    def scripting(self, key):
+    def scripting(self, key=None):
+        if key is None:
+            return self.metadata
+
         return self.metadata[key]
 
     def set_label(self, label):

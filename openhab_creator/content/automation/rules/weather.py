@@ -88,3 +88,31 @@ def weatherstation_icon(weatherstation_item, mapping_item, identifier, prefix):
             '{}{}'.format(prefix, icon_mappings[icon_key]))
     else:
         weatherstation_item.set_icon('{}{}'.format(prefix, identifier))
+
+
+FITZPATRICK_COEFFICENT = [2.5, 3, 4, 5, 8, 15]
+
+
+@rule('UVIndex calculate skin types')
+@when('System started')
+@when('Member of UVIndex changed')
+def fitzpatrick_skin_types(event):
+    if event is None:
+        uvindex_item = Item.from_members_first('UVIndex')
+    else:
+        uvindex_item = Item.from_event(event)
+
+    calculation_items = uvindex_item.scripting()
+
+    uvindex = uvindex_item.get_value(0.0, event)
+
+    for calculation_item_name in calculation_items:
+        calculation_item = uvindex_item.from_scripting(calculation_item_name)
+
+        if uvindex == 0.0:
+            calculation_item.post_update(NULL)
+        else:
+            index = int(calculation_item_name[-1:]) - 1
+            safeexposure = (
+                200 * FITZPATRICK_COEFFICENT[index]) / (3 * uvindex)
+            calculation_item.post_update(int(safeexposure))
