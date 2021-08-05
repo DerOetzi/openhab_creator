@@ -47,7 +47,7 @@ def pressure_sealevel(event_or_itemname):
 
     value = new_state.floatValue()
     temperature_item = Item('temperatureOutdoor')
-    temperature = temperature_item.get_value(15.0) + 273.15
+    temperature = temperature_item.get_float(15.0) + 273.15
 
     altitude = pressure_item.scripting('altitude').intValue()
 
@@ -62,14 +62,14 @@ def pressure_sealevel(event_or_itemname):
 @when('Descendent of moistureIndoor changed')
 def moisture_notification(event):
     moisture_item = Item.from_event(event)
-    percentage = moisture_item.get_value(-1, event)
+    percentage = moisture_item.get_int(-1, event)
 
     if percentage == -1:
         return
 
     if percentage < 40:
         reminder_item = moisture_item.from_scripting('reminder_item')
-        reminder_time = reminder_item.get_value(
+        reminder_time = reminder_item.get_datetime(
             DateUtils.now().minusHours(25))
 
         if reminder_time.plusHours(24).isBefore(DateUtils.now()):

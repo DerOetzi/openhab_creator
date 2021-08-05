@@ -137,7 +137,7 @@ def garbage_can(garbagecan_item, event=None):
     def timer(): return SignalMessenger.broadcast(
         garbagecan_item.scripting('message'))
 
-    timer_date = garbagecan_item.get_value(DateUtils.now(), event)
+    timer_date = garbagecan_item.get_datetime(DateUtils.now(), event)
     timer_date = timer_date.minusDays(1)
     timer_date = DateUtils.set_time(timer_date, 18)
 
