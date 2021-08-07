@@ -40,7 +40,7 @@ class CalendarSitemapCreator(BaseSitemapCreator):
                     .append_to(sitemap)
 
                 Text(reminder.item_ids.datetime)\
-                    .visibility((reminder.item_ids.confirm, '==', 'ON'))\
+                    .visibility((reminder.item_ids.confirm, '!=', 'OFF'))\
                     .append_to(frame)
 
                 Switch(reminder.item_ids.confirm, [('ON', _('Done'))])\
