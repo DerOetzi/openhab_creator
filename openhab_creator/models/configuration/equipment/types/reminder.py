@@ -17,12 +17,18 @@ class ReminderItemIdentifiers(EquipmentItemIdentifiers):
         return self._identifier('reminder')
 
     @property
+    def datetime(self) -> str:
+        return self._identifier('reminderDateTime')
+
+    @property
     def confirm(self) -> str:
         return self._identifier('reminderConfirm')
 
 
 @EquipmentType()
 class Reminder(Equipment):
+    #pylint: disable=too-many-instance-attributes
+
     def __init__(self,
                  message: str,
                  recipient: Optional[str] = 'broadcast',

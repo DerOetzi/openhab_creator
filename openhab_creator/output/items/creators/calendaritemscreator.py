@@ -35,6 +35,11 @@ class CalendarItemsCreator(BaseItemsCreator):
                 .append_to(self)
 
             for reminder in reminders:
+                Group(reminder.item_ids.reminder)\
+                    .label(_('Reminder: {name}').format(name=reminder.blankname))\
+                    .icon(reminder.icon)\
+                    .semantic(reminder)\
+                    .append_to(self)
 
                 parameters = {
                     'identifier': reminder.identifier,
@@ -43,24 +48,28 @@ class CalendarItemsCreator(BaseItemsCreator):
                     'interval': reminder.interval,
                     'hour': reminder.hour,
                     'minutes': reminder.minutes,
-                    'reminder': reminder.item_ids.reminder,
+                    'reminder': reminder.item_ids.datetime,
                     'confirm': reminder.item_ids.confirm
                 }
 
-                DateTime(reminder.item_ids.reminder)\
+                DateTime(reminder.item_ids.datetime)\
                     .label(reminder.blankname)\
                     .dateonly_weekday()\
                     .icon(reminder.icon)\
+                    .equipment(reminder)\
                     .config()\
                     .groups('CalendarReminder')\
+                    .semantic(PointType.STATUS, PropertyType.TIMESTAMP)\
                     .scripting(parameters)\
                     .append_to(self)
 
                 Switch(reminder.item_ids.confirm)\
                     .label(reminder.blankname)\
                     .icon(reminder.icon)\
+                    .equipment(reminder)\
                     .config()\
                     .groups('CalendarReminderConfirm')\
+                    .semantic(PointType.CONTROL)\
                     .scripting(parameters)\
                     .append_to(self)
 

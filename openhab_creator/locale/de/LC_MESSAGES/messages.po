@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openHAB Creator\n"
-"POT-Creation-Date: 2021-08-05 21:30+0200\n"
-"PO-Revision-Date: 2021-08-05 21:31+0200\n"
+"POT-Creation-Date: 2021-08-07 23:22+0200\n"
+"PO-Revision-Date: 2021-08-07 23:23+0200\n"
 "Last-Translator: Johannes Ott <info@johannes-ott.net>\n"
 "Language-Team: Johannes Ott\n"
 "Language: de\n"
@@ -339,6 +339,10 @@ msgstr "Bewegungsmelder"
 msgid "NetworkAppliance"
 msgstr "Netzwerkanwendung"
 
+#: openhab_creator/models/configuration/equipment/types/reminder.py:87
+msgid "Reminder"
+msgstr "Erinnerung"
+
 #: openhab_creator/models/configuration/equipment/types/sensor.py:65
 msgid "Temperature"
 msgstr "Temperatur"
@@ -486,28 +490,32 @@ msgstr "Batteriestand niedrig"
 msgid "Battery level"
 msgstr "Batteriestand"
 
-#: openhab_creator/output/items/creators/calendaritemscreator.py:27
-#: openhab_creator/output/items/creators/calendaritemscreator.py:33
+#: openhab_creator/output/items/creators/calendaritemscreator.py:39
+msgid "Reminder: {name}"
+msgstr "Erinnerung: {name}"
+
+#: openhab_creator/output/items/creators/calendaritemscreator.py:78
+#: openhab_creator/output/items/creators/calendaritemscreator.py:84
 msgid "Holiday"
 msgstr "Feiertag"
 
-#: openhab_creator/output/items/creators/calendaritemscreator.py:46
+#: openhab_creator/output/items/creators/calendaritemscreator.py:97
 msgid "Special today"
 msgstr "Besonders heute"
 
-#: openhab_creator/output/items/creators/calendaritemscreator.py:49
+#: openhab_creator/output/items/creators/calendaritemscreator.py:100
 msgid "Birthday: {}"
 msgstr "Geburtstag: {}"
 
-#: openhab_creator/output/items/creators/calendaritemscreator.py:49
+#: openhab_creator/output/items/creators/calendaritemscreator.py:100
 msgid "Birthdays: {}"
 msgstr "Geburtstage: {}"
 
-#: openhab_creator/output/items/creators/calendaritemscreator.py:62
+#: openhab_creator/output/items/creators/calendaritemscreator.py:113
 msgid "Garbage cans events"
 msgstr "Mülltonnentermin"
 
-#: openhab_creator/output/items/creators/calendaritemscreator.py:75
+#: openhab_creator/output/items/creators/calendaritemscreator.py:126
 msgid "Event title"
 msgstr "Termintitel"
 
@@ -889,7 +897,7 @@ msgid "State"
 msgstr "Status"
 
 #: openhab_creator/output/sitemap/__init__.py:29
-#: openhab_creator/output/sitemap/creators/calendarsitemapcreator.py:39
+#: openhab_creator/output/sitemap/creators/calendarsitemapcreator.py:60
 #: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:88
 msgid "Configuration"
 msgstr "Konfiguration"
@@ -902,7 +910,16 @@ msgstr "Verlauf"
 msgid "Calendar"
 msgstr "Kalender"
 
-#: openhab_creator/output/sitemap/creators/calendarsitemapcreator.py:31
+#: openhab_creator/output/sitemap/creators/calendarsitemapcreator.py:36
+msgid "Reminders"
+msgstr "Erinnerungen"
+
+#: openhab_creator/output/sitemap/creators/calendarsitemapcreator.py:38
+#: openhab_creator/output/sitemap/creators/calendarsitemapcreator.py:46
+msgid "Done"
+msgstr "Erledigt"
+
+#: openhab_creator/output/sitemap/creators/calendarsitemapcreator.py:52
 msgid "Next 10 upcoming birthdays"
 msgstr "Nächsten 10 Geburtstage"
 
