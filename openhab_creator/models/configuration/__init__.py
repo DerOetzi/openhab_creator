@@ -3,7 +3,7 @@ from __future__ import annotations
 import csv
 import json
 import os
-from typing import TYPE_CHECKING, Dict, List, Optional
+from typing import TYPE_CHECKING, Dict, List, Optional, Tuple
 
 from openhab_creator import logger
 from openhab_creator.exception import ConfigurationException
@@ -130,11 +130,15 @@ class EquipmentRegistry():
                     equipment)
 
     def has(self, category: str,
-            filter_childs: Optional[bool] = True) -> bool:
-        return len(self.equipment(category, filter_childs)) > 0
+            filter_childs: Optional[bool] = True,
+            filter_categories: Optional[List[str]] = None) -> Tuple[bool, List[Equipment]]:
+        equipment = self.equipment(category, filter_childs, filter_categories)
+
+        return len(equipment) > 0, equipment
 
     def equipment(self, category: str,
-                  filter_childs: Optional[bool] = True) -> List[Equipment]:
+                  filter_childs: Optional[bool] = True,
+                  filter_categories: Optional[List[str]] = None) -> List[Equipment]:
         if category in self.registry:
             equipment_registry = self.registry[category]
         else:
@@ -147,6 +151,12 @@ class EquipmentRegistry():
             equipment = equipment_registry[self.WITHOUT_CHILDS]
         else:
             equipment = equipment_registry[self.WITH_CHILDS]
+
+        if filter_categories is not None:
+            for filter_category in filter_categories:
+                equipment = list(
+                    filter(lambda x, filter_category=filter_category: filter_category
+                           in x.categories, equipment))
 
         return equipment
 
@@ -223,7 +233,24 @@ class LocationRegistry():
         return self.registry['outdoors']
 
 
+class GeneralRegistry():
+    def __init__(self, configuration: Configuration):
+        self.configuration: Configuration = configuration
+        self.equipment: List[Equipment] = []
+
+    def read_configuration(self) -> None:
+        general_configuration = self.configuration.read_json_from_file(
+            self.configuration.configdir, 'general.json')
+
+        for equipment_definition in general_configuration:
+            equipment = EquipmentType.new(configuration=self.configuration,
+                                          **equipment_definition)
+
+        self.equipment.append(equipment)
+
+
 class Configuration():
+    #pylint: disable=too-many-instance-attributes
     def __init__(self, name: str, configdir: str, anonym: bool):
         self.configdir: str = configdir
         self.name: str = name
@@ -236,9 +263,11 @@ class Configuration():
 
         self._init_templates(configdir)
 
+        self.general: GeneralRegistry = GeneralRegistry(self)
         self.equipment: EquipmentRegistry = EquipmentRegistry(self)
         self.locations: LocationRegistry = LocationRegistry(self)
 
+        self.general.read_configuration()
         self.locations.read_configuration()
 
         self._init_persons(configdir)

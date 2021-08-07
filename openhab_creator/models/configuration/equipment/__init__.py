@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from abc import ABC, abstractproperty
+from abc import ABC, abstractmethod
 from copy import deepcopy
 from importlib import import_module
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Type
@@ -21,7 +21,8 @@ class EquipmentItemIdentifiers(ABC):
     def __init__(self, equipment: Equipment):
         self.equipment: Equipment = equipment
 
-    @abstractproperty
+    @property
+    @abstractmethod
     def equipment_id(self) -> str:
         pass
 
@@ -136,7 +137,8 @@ class Equipment(BaseObject):
 
         logger.debug(self.subequipment)
 
-    @abstractproperty
+    @property
+    @abstractmethod
     def item_ids(self) -> EquipmentItemIdentifiers:
         pass
 
@@ -144,7 +146,8 @@ class Equipment(BaseObject):
     def points(self) -> EquipmentPoints:
         return self._points
 
-    @abstractproperty
+    @property
+    @abstractmethod
     def name_with_type(self) -> str:
         pass
 

@@ -144,5 +144,84 @@ def garbage_can(garbagecan_item, event=None):
     timers.activate(garbagecan_item.scripting('identifier'), timer, timer_date)
 
 
+@rule('Reminders restart')
+@when('System started')
+def restart_reminders(event):
+    for reminder in ir.getItem('CalendarReminder').members:
+        reminder_item = Item(reminder, event)
+
+        config = reminder_item.scripting()
+
+        default_time = DateUtils.now()
+        default_time = DateUtils.set_time(default_time,
+                                          config['hour'].intValue(),
+                                          config['minutes'].intValue())
+
+        reminder_time = reminder_item.get_datetime(default_time,
+                                                   update_empty=True)
+
+        if reminder_time.isBefore(DateUtils.now()):
+            reminder_timer()
+        else:
+            timers.activate(config['identifier'],
+                            lambda: reminder_timer(),
+                            reminder_time)
+
+
+def reminder_timer():
+    for reminder in ir.getItem('CalendarReminder').members:
+        reminder_item = Item(reminder)
+        config = reminder_item.scripting()
+
+        default_time = DateUtils.now()
+        default_time = DateUtils.set_time(default_time,
+                                          config['hour'].intValue(),
+                                          config['minutes'].intValue())
+
+        reminder_time = reminder_item.get_datetime(default_time)
+
+        if DateUtils.now().isAfter(reminder_time):
+            if config['recipient'] == 'broadcast':
+                SignalMessenger.broadcast(config['message'])
+            else:
+                SignalMessenger.notification(
+                    config['recipient'], config['message'])
+
+            reminder_time = DateUtils.now().plusDays(1)
+            reminder_time = DateUtils.set_time(reminder_time,
+                                               config['hour'].intValue(),
+                                               config['minutes'].intValue())
+
+            reminder_item.post_update(reminder_time)
+
+            timers.activate(config['identifier'],
+                            lambda: reminder_timer(),
+                            reminder_time)
+
+            confirm_item = reminder_item.from_scripting('confirm')
+            confirm_item.post_update(OFF)
+
+
+@rule('Reminder confirm')
+@when('Member of CalendarReminderConfirm received command ON')
+def reminder_confirm(event):
+    confirm_item = Item.from_event(event)
+    reminder_item = confirm_item.from_scripting('reminder')
+    config = confirm_item.scripting()
+
+    reminder_time = DateUtils.now()
+    reminder_time = reminder_time.plusDays(config['interval'].intValue())
+    reminder_time = DateUtils.set_time(reminder_time,
+                                       config['hour'].intValue(),
+                                       config['minutes'].intValue())
+
+    timers.activate(config['identifier'],
+                    lambda: reminder_timer(),
+                    reminder_time)
+
+    reminder_item.post_update(reminder_time)
+    confirm_item.post_update(ON)
+
+
 def scriptUnloaded():  # NOSONAR
     timers.cancel_all()

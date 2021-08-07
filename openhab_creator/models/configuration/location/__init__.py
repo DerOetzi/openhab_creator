@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from abc import abstractproperty
+from abc import abstractmethod
 from importlib import import_module
 from typing import TYPE_CHECKING, Dict, Final, List, Optional, Type
 
@@ -40,11 +40,13 @@ class Location(BaseObject):
 
             self.equipment.append(equipment)
 
-    @abstractproperty
+    @property
+    @abstractmethod
     def area(self) -> str:
         pass
 
-    @abstractproperty
+    @property
+    @abstractmethod
     def typed(self) -> str:
         pass
 

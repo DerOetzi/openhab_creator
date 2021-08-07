@@ -18,9 +18,51 @@ class CalendarItemsCreator(BaseItemsCreator):
     def build(self, configuration: Configuration) -> None:
         self._build_holiday()
         self._build_special_day()
+        self._build_reminder(configuration)
         self._build_birthdays()
         self._build_garbage(configuration)
         self.write_file('calendar')
+
+    def _build_reminder(self, configuration: Configuration) -> None:
+        has_reminder, reminders = configuration.equipment.has(
+            'reminder', filter_categories=['calendar'])
+
+        if has_reminder:
+            Group('CalendarReminder')\
+                .append_to(self)
+
+            Group('CalendarReminderConfirm')\
+                .append_to(self)
+
+            for reminder in reminders:
+
+                parameters = {
+                    'identifier': reminder.identifier,
+                    'message': reminder.message,
+                    'recipient': reminder.recipient,
+                    'interval': reminder.interval,
+                    'hour': reminder.hour,
+                    'minutes': reminder.minutes,
+                    'reminder': reminder.item_ids.reminder,
+                    'confirm': reminder.item_ids.confirm
+                }
+
+                DateTime(reminder.item_ids.reminder)\
+                    .label(reminder.blankname)\
+                    .dateonly_weekday()\
+                    .icon(reminder.icon)\
+                    .config()\
+                    .groups('CalendarReminder')\
+                    .scripting(parameters)\
+                    .append_to(self)
+
+                Switch(reminder.item_ids.confirm)\
+                    .label(reminder.blankname)\
+                    .icon(reminder.icon)\
+                    .config()\
+                    .groups('CalendarReminderConfirm')\
+                    .scripting(parameters)\
+                    .append_to(self)
 
     def _build_holiday(self):
         String('holidayName')\

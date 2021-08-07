@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from openhab_creator import _
-from openhab_creator.models.sitemap import Page, Text, Sitemap
+from openhab_creator.models.sitemap import Page, Sitemap, Switch, Text
 from openhab_creator.output.sitemap import SitemapCreatorPipeline
 from openhab_creator.output.sitemap.basesitemapcreator import \
     BaseSitemapCreator
@@ -23,8 +23,29 @@ class CalendarSitemapCreator(BaseSitemapCreator):
             .icon('calendar')\
             .append_to(sitemap.second_frame)
 
+        self.build_reminders(sitemap, page, configuration)
         self.build_birthdays(page)
         self.build_configitems(page, configuration)
+
+    @staticmethod
+    def build_reminders(sitemap: Sitemap, page: Page, configuration: Configuration) -> None:
+        has_reminders, reminders = configuration.equipment.has(
+            'reminder', filter_categories=['calendar'])
+
+        if has_reminders:
+            frame = page.frame('reminders', _('Reminders'))
+            for reminder in reminders:
+                Switch(reminder.item_ids.confirm, [('ON', _('Done'))])\
+                    .visibility((reminder.item_ids.confirm, '==', 'OFF'))\
+                    .append_to(sitemap)
+
+                Text(reminder.item_ids.reminder)\
+                    .visibility((reminder.item_ids.confirm, '==', 'ON'))\
+                    .append_to(frame)
+
+                Switch(reminder.item_ids.confirm, [('ON', _('Done'))])\
+                    .visibility((reminder.item_ids.confirm, '==', 'OFF'))\
+                    .append_to(frame)
 
     @staticmethod
     def build_birthdays(page: Page) -> None:

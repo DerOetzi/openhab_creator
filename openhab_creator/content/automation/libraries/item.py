@@ -8,7 +8,7 @@ from java.time import ZonedDateTime
 
 
 class Item(object):
-    def __init__(self, item_or_item_name):
+    def __init__(self, item_or_item_name, event=None):
         if isinstance(item_or_item_name, basestring):
             self._item = itemRegistry.getItem(item_or_item_name)
             self.name = item_or_item_name
@@ -16,25 +16,30 @@ class Item(object):
             self._item = item_or_item_name
             self.name = item_or_item_name.name
 
+        self.event = event
+
         metadata = get_metadata(self.name, 'scripting')
         self.metadata = {} if metadata is None else metadata.configuration
 
     @classmethod
     def from_event(cls, event):
-        return cls(event.itemName)
+        return cls(event.itemName, event)
 
     @classmethod
-    def from_members_first(cls, group_name):
-        return cls([item for item in itemRegistry.getItem(group_name).members][0])
+    def from_members_first(cls, group_name, event=None):
+        return cls([item for item in itemRegistry.getItem(group_name).members][0], event)
 
     def from_scripting(self, name):
         item = None
         if self.is_scripting(name):
-            item = self.__class__(self.scripting(name))
+            item = self.__class__(self.scripting(name), self.event)
 
         return item
 
     def _get_state(self, event=None):
+        if event is None:
+            event = self.event
+
         if event is not None and hasattr(event, 'itemName') and event.itemName == self.name:
             new_state = event.itemCommand if hasattr(
                 event, 'itemCommand') else event.itemState

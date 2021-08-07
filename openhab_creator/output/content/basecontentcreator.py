@@ -68,7 +68,7 @@ class BaseContentCreator():
                 self.__write_configuration(output_file, content)
 
     def __replace_secrets(self, content: str, secrets_storage: SecretsStorage) -> str:
-        secrets = re.findall('__([A-Z1-9_]*)__', content, re.MULTILINE)
+        secrets = re.findall('__([A-Z0-9_]*)__', content, re.MULTILINE)
         for secret in secrets:
             replace = secrets_storage.secret(secret)
             content = content.replace(f'__{secret}__', replace)
