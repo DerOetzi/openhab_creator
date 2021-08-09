@@ -14,8 +14,28 @@ class MachineItemIdentifiers(PowerOutletItemIdentifiers):
         return self.machine
 
     @property
+    def poweroutlet(self) -> str:
+        return self._identifier('poweroutlet')
+
+    @property
     def machine(self) -> str:
-        return self._identifier('machine')
+        return self._identifier('')
+
+    @property
+    def state(self) -> str:
+        return self._identifier('state')
+
+    @property
+    def start(self) -> str:
+        return self._identifier('start')
+
+    @property
+    def done(self) -> str:
+        return self._identifier('done')
+
+    @property
+    def countdown(self) -> str:
+        return self._identifier('countdown')
 
     def _identifier(self, prefix: str) -> str:
         type_prefix = 'machine'
@@ -101,5 +121,9 @@ class Machine(PowerOutlet):
         return self.DISHWASHER in self.machine and self.machine[self.DISHWASHER]
 
     @property
-    def sensor_is_subequipment(self) -> bool:
+    def has_reminder(self) -> bool:
+        return self.reminder is not None
+
+    @property
+    def poweroutlet_is_subequipment(self) -> bool:
         return True

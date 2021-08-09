@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from openhab_creator.models.configuration import Configuration
 
 
-@ItemsCreatorPipeline(10)
+@ItemsCreatorPipeline(20)
 class BatteryItemsCreator(BaseItemsCreator):
     def build(self, configuration: Configuration) -> None:
         if configuration.equipment.has('battery', False):

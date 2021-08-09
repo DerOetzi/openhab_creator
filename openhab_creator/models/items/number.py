@@ -12,6 +12,7 @@ class NumberType(CreatorEnum):
     AREAL_DENSITY = ':ArealDensity'
     DIMENSIONLESS = ':Dimensionless'
     LENGTH = ':Length'
+    POWER = ':Power'
     PRESSURE = ':Pressure'
     TEMPERATURE = ':Temperature'
     TIME = ''  # TODO Number:Time See openhab-webui#765

@@ -17,7 +17,7 @@ if TYPE_CHECKING:
     from openhab_creator.models.configuration.location import Location
 
 
-@ItemsCreatorPipeline(6)
+@ItemsCreatorPipeline(9)
 class SensorItemsCreator(BaseItemsCreator):
     def __init__(self, outputdir: str):
         super().__init__(outputdir)

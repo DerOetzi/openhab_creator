@@ -15,7 +15,7 @@ class PowerOutletItemIdentifiers(SensorItemIdentifiers):
 
     @property
     def poweroutlet(self) -> str:
-        return self._identifier('outlet')
+        return self._identifier('poweroutlet')
 
     @property
     def onoff(self) -> str:
@@ -62,3 +62,11 @@ class PowerOutlet(Sensor):
     def name_with_type(self) -> str:
         typed = _("Power outlet")
         return f'{self.name} ({typed})'
+
+    @property
+    def sensor_is_subequipment(self) -> bool:
+        return True
+
+    @property
+    def poweroutlet_is_subequipment(self) -> bool:
+        return False

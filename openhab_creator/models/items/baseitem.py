@@ -6,12 +6,12 @@ from typing import TYPE_CHECKING, Dict, List, Optional, Union
 from openhab_creator import CreatorEnum
 from openhab_creator.models.common import MapTransformation
 from openhab_creator.models.configuration.baseobject import BaseObject
+from openhab_creator.models.configuration.equipment import Equipment
 from openhab_creator.output.formatter import Formatter
 
 if TYPE_CHECKING:
-    from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
     from openhab_creator.models.configuration.location import Location
-    from openhab_creator.models.configuration.equipment import Equipment
+    from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
 
 
 class PointType(CreatorEnum):
@@ -112,8 +112,13 @@ class BaseItem():
     def location(self, location: Location) -> BaseItem:
         return self.groups(location.identifier)
 
-    def equipment(self, equipment: Equipment) -> BaseItem:
-        return self.groups(equipment.item_ids.equipment_id)
+    def equipment(self, equipment: Union[str, Equipment]) -> BaseItem:
+        if isinstance(equipment, str):
+            self.groups(equipment)
+        elif isinstance(equipment, Equipment):
+            self.groups(equipment.item_ids.equipment_id)
+
+        return self
 
     def sensor(self, measurement: str, series_tags: Dict[str, str]) -> BaseItem:
         self.groups('Sensor')

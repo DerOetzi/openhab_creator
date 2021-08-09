@@ -21,7 +21,7 @@ if TYPE_CHECKING:
         WeatherStation
 
 
-@ItemsCreatorPipeline(7)
+@ItemsCreatorPipeline(11)
 class WeatherStationItemsCreator(BaseItemsCreator):
     FITZPATRICK_LABELS = [
         _('Fitzpatrick skin type I'),

@@ -40,6 +40,13 @@ class MapTransformation(CreatorEnum):
 
     DWDEVENT = 'dwdevent', DWDEvent.mappings_label
 
+    MACHINE_STATE = 'machinestate', {
+        'OFF': _('Off'),
+        'RUNNING': _('Running'),
+        'READY': _('Ready'),
+        'STANDBY': _('Standby')
+    }
+
     def __init__(self, filename: str, mappings: Dict[str, str]):
         self.filename: str = filename
         self.mappings: Dict[str, str] = mappings
