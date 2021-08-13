@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openHAB Creator\n"
-"POT-Creation-Date: 2021-08-09 21:59+0200\n"
-"PO-Revision-Date: 2021-08-09 22:00+0200\n"
+"POT-Creation-Date: 2021-08-13 22:02+0200\n"
+"PO-Revision-Date: 2021-08-13 22:03+0200\n"
 "Last-Translator: Johannes Ott <info@johannes-ott.net>\n"
 "Language-Team: Johannes Ott\n"
 "Language: de\n"
@@ -354,22 +354,6 @@ msgstr "Heizung"
 msgid "Lightbulb"
 msgstr "Leuchte"
 
-#: openhab_creator/models/configuration/equipment/types/machine.py:102
-msgid "Machine"
-msgstr "Maschine"
-
-#: openhab_creator/models/configuration/equipment/types/machine.py:104
-msgid "Washingmachine"
-msgstr "Waschmaschine"
-
-#: openhab_creator/models/configuration/equipment/types/machine.py:106
-msgid "Dryer"
-msgstr "Trockner"
-
-#: openhab_creator/models/configuration/equipment/types/machine.py:108
-msgid "Dishwasher"
-msgstr "Spülmaschine"
-
 #: openhab_creator/models/configuration/equipment/types/motiondetector.py:54
 msgid "Motiondetector"
 msgstr "Bewegungsmelder"
@@ -379,7 +363,7 @@ msgid "NetworkAppliance"
 msgstr "Netzwerkanwendung"
 
 #: openhab_creator/models/configuration/equipment/types/poweroutlet.py:63
-#: openhab_creator/output/items/creators/poweroutletitemscreator.py:25
+#: openhab_creator/output/items/creators/poweroutletitemscreator.py:28
 msgid "Power outlet"
 msgstr "Steckdose"
 
@@ -465,6 +449,31 @@ msgstr "Ozon"
 #: openhab_creator/models/configuration/equipment/types/weatherstation.py:222
 msgid "Weatherstation"
 msgstr "Wetterstation"
+
+#: openhab_creator/models/configuration/equipment/types/whitegood.py:77
+msgid "WhiteGood"
+msgstr "Haushaltsgerät"
+
+#: openhab_creator/models/configuration/equipment/types/whitegood.py:122
+msgid "Washingmachine"
+msgstr "Waschmaschine"
+
+#: openhab_creator/models/configuration/equipment/types/whitegood.py:128
+msgid "Washing machine is ready"
+msgstr "Waschmaschine ist fertig"
+
+#: openhab_creator/models/configuration/equipment/types/whitegood.py:142
+msgid "Dryer"
+msgstr "Trockner"
+
+#: openhab_creator/models/configuration/equipment/types/whitegood.py:148
+#: openhab_creator/models/configuration/equipment/types/whitegood.py:167
+msgid "Dryer is ready"
+msgstr "Trockner ist fertig"
+
+#: openhab_creator/models/configuration/equipment/types/whitegood.py:168
+msgid "Washing machine and dryer are ready"
+msgstr "Waschmaschine und Trockner sind fertig"
 
 #: openhab_creator/models/grafana/dashboard.py:20
 msgid "Day"
@@ -707,7 +716,7 @@ msgstr "Farbtemperatur"
 
 #: openhab_creator/output/items/creators/lightbulbitemscreator.py:191
 #: openhab_creator/output/items/creators/lightbulbitemscreator.py:267
-#: openhab_creator/output/items/creators/poweroutletitemscreator.py:34
+#: openhab_creator/output/items/creators/poweroutletitemscreator.py:37
 msgid "On/Off"
 msgstr "An/Aus"
 
@@ -744,23 +753,6 @@ msgstr "Am Wochenende"
 msgid "Guest stayed"
 msgstr "Gast zu Besuch"
 
-#: openhab_creator/output/items/creators/machineitemscreator.py:27
-#: openhab_creator/output/sitemap/__init__.py:26
-msgid "State"
-msgstr "Status"
-
-#: openhab_creator/output/items/creators/machineitemscreator.py:35
-msgid "Started at"
-msgstr "Gestartet am"
-
-#: openhab_creator/output/items/creators/machineitemscreator.py:44
-msgid "Cleaning"
-msgstr "Reinigung"
-
-#: openhab_creator/output/items/creators/machineitemscreator.py:51
-msgid "Cleaning countdown"
-msgstr "Reinigungscountdown"
-
 #: openhab_creator/output/items/creators/motiondetectoritemscreator.py:19
 msgid "Motiondetector assignment items"
 msgstr "Konfigurationsitems Bewegungsmelderzuordnung"
@@ -782,7 +774,7 @@ msgstr "Bewegungsmelderzuordnung"
 msgid "Network status"
 msgstr "Netzwerkstatus"
 
-#: openhab_creator/output/items/creators/poweroutletitemscreator.py:44
+#: openhab_creator/output/items/creators/poweroutletitemscreator.py:47
 msgid "Power"
 msgstr "Leistung"
 
@@ -958,6 +950,23 @@ msgstr "Gültig bis:"
 msgid "Warning"
 msgstr "Warnung"
 
+#: openhab_creator/output/items/creators/whitegooditemscreator.py:31
+#: openhab_creator/output/sitemap/__init__.py:26
+msgid "State"
+msgstr "Status"
+
+#: openhab_creator/output/items/creators/whitegooditemscreator.py:40
+msgid "Started at"
+msgstr "Gestartet am"
+
+#: openhab_creator/output/items/creators/whitegooditemscreator.py:50
+msgid "Cleaning"
+msgstr "Reinigung"
+
+#: openhab_creator/output/items/creators/whitegooditemscreator.py:58
+msgid "Cleaning countdown"
+msgstr "Reinigungscountdown"
+
 #: openhab_creator/output/sitemap/__init__.py:29
 #: openhab_creator/output/sitemap/creators/calendarsitemapcreator.py:60
 #: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:88
@@ -1108,6 +1117,12 @@ msgstr "Mondaufgang"
 #: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:315
 msgid "Moon set"
 msgstr "Monduntergang"
+
+#~ msgid "Machine"
+#~ msgstr "Maschine"
+
+#~ msgid "Dishwasher"
+#~ msgstr "Spülmaschine"
 
 #~ msgid "Sensor {blankname}"
 #~ msgstr "Sensor {blankname}"

@@ -70,3 +70,11 @@ class PowerOutlet(Sensor):
     @property
     def poweroutlet_is_subequipment(self) -> bool:
         return False
+
+    @property
+    def group(self) -> str:
+        return 'PowerOutlet'
+
+    @property
+    def scripting(self) -> Dict:
+        return {}

@@ -40,7 +40,7 @@ class MapTransformation(CreatorEnum):
 
     DWDEVENT = 'dwdevent', DWDEvent.mappings_label
 
-    MACHINE_STATE = 'machinestate', {
+    WHITEGOOD_STATE = 'whitegoodstate', {
         'OFF': _('Off'),
         'RUNNING': _('Running'),
         'READY': _('Ready'),

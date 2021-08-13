@@ -15,6 +15,9 @@ if TYPE_CHECKING:
 @ItemsCreatorPipeline(7)
 class PowerOutletItemsCreator(BaseItemsCreator):
     def build(self, configuration: Configuration) -> None:
+        Group('PowerOutlet')\
+            .append_to(self)
+
         for poweroutlet in configuration.equipment.equipment('poweroutlet'):
             poweroutlet_item = Group(poweroutlet.item_ids.poweroutlet)\
                 .semantic('PowerOutlet')\
@@ -43,10 +46,14 @@ class PowerOutletItemsCreator(BaseItemsCreator):
                     .typed(NumberType.POWER)\
                     .label(_('Power'))\
                     .format('%,.2f W')\
+                    .icon('poweroutlet')\
                     .equipment(poweroutlet.item_ids.poweroutlet)\
+                    .groups(poweroutlet.group)\
                     .sensor('power', poweroutlet.influxdb_tags)\
+                    .aisensor()\
                     .semantic(PointType.MEASUREMENT, PropertyType.POWER)\
                     .channel(poweroutlet.points.channel('power'))\
+                    .scripting(poweroutlet.scripting)\
                     .append_to(self)
 
         self.write_file('poweroutlet')

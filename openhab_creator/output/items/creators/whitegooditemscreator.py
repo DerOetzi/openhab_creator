@@ -14,45 +14,53 @@ if TYPE_CHECKING:
 
 
 @ItemsCreatorPipeline(5)
-class MachineItemsCreator(BaseItemsCreator):
+class WhiteGoodItemsCreator(BaseItemsCreator):
     def build(self, configuration: Configuration) -> None:
-        for machine in configuration.equipment.equipment('machine'):
-            Group(machine.item_ids.machine)\
-                .label(machine.blankname)\
-                .location(machine.location)\
-                .semantic(machine)\
+        Group('WhiteGood')\
+            .append_to(self)
+
+        for whitegood in configuration.equipment.equipment('whitegood'):
+            Group(whitegood.item_ids.whitegood)\
+                .label(whitegood.blankname)\
+                .location(whitegood.location)\
+                .icon(whitegood.category)\
+                .semantic(whitegood)\
                 .append_to(self)
 
-            String(machine.item_ids.state)\
+            String(whitegood.item_ids.state)\
                 .label(_('State'))\
-                .map(MapTransformation.MACHINE_STATE)\
-                .equipment(machine)\
+                .map(MapTransformation.WHITEGOOD_STATE)\
+                .icon(whitegood.category)\
+                .equipment(whitegood)\
                 .config()\
                 .semantic(PointType.STATUS)\
                 .append_to(self)
 
-            DateTime(machine.item_ids.start)\
+            DateTime(whitegood.item_ids.start)\
                 .label(_('Started at'))\
                 .datetime()\
-                .equipment(machine)\
+                .icon('datetime')\
+                .equipment(whitegood)\
                 .config()\
                 .semantic(PointType.STATUS, PropertyType.TIMESTAMP)\
                 .append_to(self)
 
-            if machine.has_reminder:
-                Switch(machine.item_ids.done)\
+            if whitegood.has_reminder:
+                Switch(whitegood.item_ids.done)\
                     .label(_('Cleaning'))\
-                    .equipment(machine)\
+                    .icon('checked')\
+                    .equipment(whitegood)\
                     .config()\
                     .semantic(PointType.CONTROL)\
                     .append_to(self)
 
-                Number(machine.item_ids.countdown)\
+                Number(whitegood.item_ids.countdown)\
                     .label(_('Cleaning countdown'))\
                     .format('%d')\
-                    .equipment(machine)\
+                    .icon('countdown')\
+                    .equipment(whitegood)\
                     .config()\
                     .semantic(PointType.SETPOINT)\
                     .append_to(self)
 
-        self.write_file('machine')
+        self.write_file('whitegood')
