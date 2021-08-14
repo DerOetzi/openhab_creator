@@ -25,12 +25,12 @@ def whitegood_state(event_or_itemname):
     elif isinstance(event_or_itemname, basestring):
         power_item = Item(event_or_itemname)
     else:
-        power_item = Item.from_event(event)
+        power_item = Item.from_event(event_or_itemname)
 
     power = power_item.get_float(0.0)
 
     status_item = power_item.from_scripting('status_item')
-    status = status_item.get_string(WHITEGOOD_OFF, update_empty=True)
+    status = status_item.get_string(WHITEGOOD_OFF, True)
 
     off_limit = power_item.scripting('off_limit').floatValue()
     standby_limit = power_item.scripting('standby_limit').floatValue()

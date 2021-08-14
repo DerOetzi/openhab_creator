@@ -20,21 +20,21 @@ def send_warning_message(event, warning_item, event_mapped, severity_str):
 
     description_item = warning_item.from_scripting('description')
     if description_item is not None:
-        message += u' {}'.format(description_item.get_string('', event))
+        message += u' {}'.format(description_item.get_string(''))
 
     instruction_item = warning_item.from_scripting('instruction')
     if instruction_item is not None:
-        instruction = instruction_item.get_string('', event)
+        instruction = instruction_item.get_string('')
         if instruction != '':
             message += u' {}'.format(instruction)
 
     from_item = warning_item.from_scripting('from')
-    from_datetime = from_item.get_datetime(event)
+    from_datetime = from_item.get_datetime()
     message += u' {} {}'.format(from_item.scripting('text'),
                                 format_date(from_datetime, 'dd.MM.yyyy HH:mm'))
 
     to_item = warning_item.from_scripting('to')
-    to_datetime = to_item.get_datetime(event)
+    to_datetime = to_item.get_datetime()
     if to_datetime is not None:
         message += u' {} {}'.format(to_item.scripting('text'),
                                     format_date(to_datetime, 'dd.MM.yyyy HH:mm'))
@@ -63,7 +63,7 @@ def weather_warning(event):
     lock_until['warnings'] = DateUtils.now().plusSeconds(30)
 
     for warning_active in ir.getItem('WeatherWarning').members:
-        warning_item = Item(warning_active)
+        warning_item = Item(warning_active, event)
         event_item = warning_item.from_scripting('event')
         event_mapped_item = warning_item.from_scripting('event_mapped')
 
@@ -82,12 +82,12 @@ def weather_warning(event):
 
         severity_item = warning_item.from_scripting('severity')
         severity_str = Item.transform_map(
-            'dwdseverity', severity_item.get_string('', event))
+            'dwdseverity', severity_item.get_string(''))
 
         event_mapped_item.set_label(u"{}".format(severity_str))
         event_mapped_item.send_command(event_mapped)
 
-        if event is not None and warning_item.get_onoff(event) == ON and event_mapped != 10:
+        if event is not None and warning_item.get_onoff() == ON and event_mapped != 10:
             send_warning_message(event, warning_item,
                                  event_mapped, severity_str)
 
@@ -97,9 +97,9 @@ def weather_warning(event):
 @when('Item temperatureOutdoor changed')
 @when('Member of WeatherWarningEventMapped received command')
 def gui_weatherstation(event):
-    weatherstation_item = Item('weatherstation')
+    weatherstation_item = Item('weatherstation', event)
 
-    warning_item = Item.from_members_first('WeatherWarning')
+    warning_item = Item.from_members_first('WeatherWarning', event)
     severity_item = warning_item.from_scripting('severity')
     severity_str = severity_item.get_string('')
 
@@ -107,7 +107,7 @@ def gui_weatherstation(event):
         severity_str = Item.transform_map('dwdseverity', severity_str)
 
         event_mapped_item = warning_item.from_scripting('event_mapped')
-        event_id = event_mapped_item.get_int(0, event)
+        event_id = event_mapped_item.get_int(0)
         event_str = Item.transform_map('dwdevent', event_id)
 
         weatherstation_item.set_label(u'{}'.format(severity_str))
@@ -116,11 +116,11 @@ def gui_weatherstation(event):
                             warning_item, event_id, 'dwdevent')
         weatherstation_item.post_update(event_str)
     else:
-        condition_item = Item.from_members_first('WeatherCondition')
-        condition_id = condition_item.get_int(0, event)
+        condition_item = Item.from_members_first('WeatherCondition', event)
+        condition_id = condition_item.get_int(0)
         condition_str = Item.transform_map('weathercondition', condition_id)
 
-        temperature = Item('temperatureOutdoor').get_float(0.0, event)
+        temperature = Item('temperatureOutdoor').get_float(0.0)
         temperature = StringUtils.format_number(temperature, 1)
 
         weatherstation_item.set_label(weatherstation_item.scripting('label'))
@@ -156,7 +156,7 @@ def fitzpatrick_skin_types(event):
 
     calculation_items = uvindex_item.scripting()
 
-    uvindex = uvindex_item.get_float(0.0, event)
+    uvindex = uvindex_item.get_float(0.0)
 
     for calculation_item_name in calculation_items:
         calculation_item = uvindex_item.from_scripting(calculation_item_name)

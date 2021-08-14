@@ -41,7 +41,7 @@ def pressure_sealevel(event_or_itemname):
     else:
         pressure_item = Item.from_event(event_or_itemname)
 
-    new_state = pressure_item.get_value(event=event_or_itemname)
+    new_state = pressure_item.get_value()
     if new_state in [NULL, UNDEF]:
         return
 
@@ -62,7 +62,7 @@ def pressure_sealevel(event_or_itemname):
 @when('Descendent of moistureIndoor changed')
 def moisture_notification(event):
     moisture_item = Item.from_event(event)
-    percentage = moisture_item.get_int(-1, event)
+    percentage = moisture_item.get_int(-1)
 
     if percentage == -1:
         return

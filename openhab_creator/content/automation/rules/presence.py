@@ -13,7 +13,7 @@ logger = logging.getLogger('{}.Presence'.format(LOG_PREFIX))
 @when('Member of Distances changed')
 def smartphone_distances(event):
     distance_item = Item.from_event(event)
-    actual_distance = distance_item.get_float(-0.1, event)
+    actual_distance = distance_item.get_float(-0.1)
     geofence_item = distance_item.from_scripting('geofence')
 
     if actual_distance <= 0.020 and actual_distance >= 0:
@@ -21,9 +21,9 @@ def smartphone_distances(event):
     else:
         geofence_item.post_update(OFF)
 
-        presence = Item('Presences').get_int(0, event)
+        presence = Item('Presences').get_int(0)
         wayhome_item = Item('wayhome')
-        wayhome = wayhome_item.get_onoff(event, True)
+        wayhome = wayhome_item.get_onoff(True)
 
         if presence == 0 and wayhome == OFF and actual_distance <= 12.0:
             delta_distance = distance_item.delta_since(

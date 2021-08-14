@@ -52,74 +52,47 @@ class Item(object):
         if update_empty and state in [NULL, UNDEF]:
             self.post_update(typed_state)
 
-    def get_value(self, default_value=None, event=None, update_empty=False):
+    def get_value(self, default_value=None, update_empty=False, event=None):
         state = self._get_state(event)
         typed_state = state if state not in [NULL, UNDEF] else default_value
         self._update_empty(state, typed_state, update_empty)
         return typed_state
 
-    def get_int(self, default_value=None, event=None, update_empty=False):
+    def get_int(self, default_value=None, update_empty=False, event=None):
         state = self._get_state(event)
-        typed_state = self._typed_int(state, default_value)
+        if isinstance(state, StringType):
+            typed_state = int(state.toFullString())
+        else:
+            typed_state = state.intValue() if state not in [
+                NULL, UNDEF] else default_value
         self._update_empty(state, typed_state, update_empty)
         return typed_state
 
-    def get_float(self, default_value=None, event=None, update_empty=False):
+    def get_float(self, default_value=None, update_empty=False, event=None):
         state = self._get_state(event)
-        typed_state = self._typed_float(state, default_value)
+        if isinstance(state, StringType):
+            typed_state = float(state.toFullString())
+        else:
+            typed_state = state.floatValue() if state not in [
+                NULL, UNDEF] else default_value
         self._update_empty(state, typed_state, update_empty)
         return typed_state
 
-    def get_string(self, default_value=None, event=None, update_empty=False):
+    def get_string(self, default_value=None, update_empty=False, event=None):
         state = self._get_state(event)
         typed_state = state.toFullString() if state not in [
             NULL, UNDEF] else default_value
         self._update_empty(state, typed_state, update_empty)
         return typed_state
 
-    def get_datetime(self, default_value=None, event=None, update_empty=False):
+    def get_datetime(self, default_value=None, update_empty=False, event=None):
         state = self._get_state(event)
         typed_state = to_java_zoneddatetime(state) if state not in [
             NULL, UNDEF] else default_value
         return typed_state
 
-    def get_onoff(self, event=None, update_empty=False, default_value=OFF):
-        return self.get_value(default_value, event, update_empty)
-
-    def _typed_value(self, new_state, default_value=None):
-        if isinstance(default_value, int):
-            typed_value = self._typed_int(new_state, default_value)
-        elif isinstance(default_value, float):
-            typed_value = self._typed_float(new_state, default_value)
-        elif isinstance(default_value, basestring):
-            typed_value = new_state.toFullString() if new_state not in [
-                NULL, UNDEF] else default_value
-        elif isinstance(default_value, ZonedDateTime):
-            typed_value = to_java_zoneddatetime(new_state) if new_state not in [
-                NULL, UNDEF] else default_value
-        else:
-            typed_value = new_state if new_state not in [
-                NULL, UNDEF] else default_value
-
-        return typed_value
-
-    def _typed_float(self, new_state, default_value):
-        if isinstance(new_state, StringType):
-            typed_value = float(new_state.toFullString())
-        else:
-            typed_value = new_state.floatValue() if new_state not in [
-                NULL, UNDEF] else default_value
-
-        return typed_value
-
-    def _typed_int(self, new_state, default_value):
-        if isinstance(new_state, StringType):
-            typed_value = int(new_state.toFullString())
-        else:
-            typed_value = new_state.intValue() if new_state not in [
-                NULL, UNDEF] else default_value
-
-        return typed_value
+    def get_onoff(self, update_empty=False, default_value=OFF, event=None):
+        return self.get_value(default_value, update_empty, event)
 
     def is_scripting(self, key):
         return key in self.metadata

@@ -137,7 +137,7 @@ def garbage_can(garbagecan_item, event=None):
     def timer(): return SignalMessenger.broadcast(
         garbagecan_item.scripting('message'))
 
-    timer_date = garbagecan_item.get_datetime(DateUtils.now(), event)
+    timer_date = garbagecan_item.get_datetime(DateUtils.now())
     timer_date = timer_date.minusDays(1)
     timer_date = DateUtils.set_time(timer_date, 18)
 
@@ -157,8 +157,7 @@ def restart_reminders(event):
                                           config['hour'].intValue(),
                                           config['minutes'].intValue())
 
-        reminder_time = reminder_item.get_datetime(default_time,
-                                                   update_empty=True)
+        reminder_time = reminder_item.get_datetime(default_time, True)
 
         if reminder_time.isBefore(DateUtils.now()):
             reminder_timer()
