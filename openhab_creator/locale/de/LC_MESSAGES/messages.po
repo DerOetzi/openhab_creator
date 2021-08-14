@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openHAB Creator\n"
-"POT-Creation-Date: 2021-08-13 22:02+0200\n"
-"PO-Revision-Date: 2021-08-13 22:03+0200\n"
+"POT-Creation-Date: 2021-08-14 15:38+0200\n"
+"PO-Revision-Date: 2021-08-14 15:40+0200\n"
 "Last-Translator: Johannes Ott <info@johannes-ott.net>\n"
 "Language-Team: Johannes Ott\n"
 "Language: de\n"
@@ -454,24 +454,24 @@ msgstr "Wetterstation"
 msgid "WhiteGood"
 msgstr "Haushaltsgerät"
 
-#: openhab_creator/models/configuration/equipment/types/whitegood.py:122
+#: openhab_creator/models/configuration/equipment/types/whitegood.py:123
 msgid "Washingmachine"
 msgstr "Waschmaschine"
 
-#: openhab_creator/models/configuration/equipment/types/whitegood.py:128
+#: openhab_creator/models/configuration/equipment/types/whitegood.py:129
 msgid "Washing machine is ready"
 msgstr "Waschmaschine ist fertig"
 
-#: openhab_creator/models/configuration/equipment/types/whitegood.py:142
+#: openhab_creator/models/configuration/equipment/types/whitegood.py:143
 msgid "Dryer"
 msgstr "Trockner"
 
-#: openhab_creator/models/configuration/equipment/types/whitegood.py:148
-#: openhab_creator/models/configuration/equipment/types/whitegood.py:167
+#: openhab_creator/models/configuration/equipment/types/whitegood.py:149
+#: openhab_creator/models/configuration/equipment/types/whitegood.py:169
 msgid "Dryer is ready"
 msgstr "Trockner ist fertig"
 
-#: openhab_creator/models/configuration/equipment/types/whitegood.py:168
+#: openhab_creator/models/configuration/equipment/types/whitegood.py:170
 msgid "Washing machine and dryer are ready"
 msgstr "Waschmaschine und Trockner sind fertig"
 
@@ -950,20 +950,20 @@ msgstr "Gültig bis:"
 msgid "Warning"
 msgstr "Warnung"
 
-#: openhab_creator/output/items/creators/whitegooditemscreator.py:31
+#: openhab_creator/output/items/creators/whitegooditemscreator.py:34
 #: openhab_creator/output/sitemap/__init__.py:26
 msgid "State"
 msgstr "Status"
 
-#: openhab_creator/output/items/creators/whitegooditemscreator.py:40
+#: openhab_creator/output/items/creators/whitegooditemscreator.py:43
 msgid "Started at"
 msgstr "Gestartet am"
 
-#: openhab_creator/output/items/creators/whitegooditemscreator.py:50
-msgid "Cleaning"
-msgstr "Reinigung"
+#: openhab_creator/output/items/creators/whitegooditemscreator.py:53
+msgid "Cleaning {name}"
+msgstr "Reinigung {name}"
 
-#: openhab_creator/output/items/creators/whitegooditemscreator.py:58
+#: openhab_creator/output/items/creators/whitegooditemscreator.py:66
 msgid "Cleaning countdown"
 msgstr "Reinigungscountdown"
 
@@ -987,6 +987,7 @@ msgstr "Erinnerungen"
 
 #: openhab_creator/output/sitemap/creators/calendarsitemapcreator.py:38
 #: openhab_creator/output/sitemap/creators/calendarsitemapcreator.py:46
+#: openhab_creator/output/sitemap/creators/whitegoodsitemapcreator.py:42
 msgid "Done"
 msgstr "Erledigt"
 
@@ -1117,6 +1118,9 @@ msgstr "Mondaufgang"
 #: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:315
 msgid "Moon set"
 msgstr "Monduntergang"
+
+#~ msgid "Cleaning"
+#~ msgstr "Reinigung"
 
 #~ msgid "Machine"
 #~ msgstr "Maschine"

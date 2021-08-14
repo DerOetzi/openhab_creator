@@ -19,6 +19,9 @@ class WhiteGoodItemsCreator(BaseItemsCreator):
         Group('WhiteGood')\
             .append_to(self)
 
+        Group('WhiteGoodReminderDone')\
+            .append_to(self)
+
         for whitegood in configuration.equipment.equipment('whitegood'):
             Group(whitegood.item_ids.whitegood)\
                 .label(whitegood.blankname)\
@@ -47,11 +50,16 @@ class WhiteGoodItemsCreator(BaseItemsCreator):
 
             if whitegood.has_reminder:
                 Switch(whitegood.item_ids.done)\
-                    .label(_('Cleaning'))\
+                    .label(_('Cleaning {name}').format(name=whitegood.blankname))\
                     .icon('checked')\
                     .equipment(whitegood)\
+                    .groups('WhiteGoodReminderDone')\
                     .config()\
                     .semantic(PointType.CONTROL)\
+                    .scripting({
+                        'countdown_item': whitegood.item_ids.countdown,
+                        'reminder_cycles': whitegood.reminder['cycles']
+                    })\
                     .append_to(self)
 
                 Number(whitegood.item_ids.countdown)\

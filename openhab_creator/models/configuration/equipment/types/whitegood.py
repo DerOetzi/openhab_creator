@@ -93,6 +93,7 @@ class WhiteGood(PowerOutlet):
     def scripting(self) -> Dict:
         scripting = {}
 
+        scripting['typed'] = self.semantic.lower()
         scripting['status_item'] = self.item_ids.state
         scripting['start_item'] = self.item_ids.start
 
@@ -164,6 +165,7 @@ class WashingMachineDryer(WashingMachine):
     @property
     def scripting(self) -> Dict:
         scripting = super().scripting
+        scripting['typed'] = 'washingmachine_dryer'
         scripting['dryer_message'] = _('Dryer is ready')
         scripting['washingmachine_dryer_message'] = _(
             'Washing machine and dryer are ready')

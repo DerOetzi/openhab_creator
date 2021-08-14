@@ -53,4 +53,53 @@ def whitegood_state(event_or_itemname):
 
 
 def whitegood_finished(power_item):
-    logger.info('Finished whitegood')
+    typed = power_item.scripting('typed')
+
+    start_item = power_item.from_scripting('start')
+    start = start_item.get_datetime(DateUtils.now().minusHours(2))
+
+    if typed == 'washingmachine_dryer':
+        typed = 'washingmachine'
+
+        max_power = power_item.maximum_since()
+        limit = power_item.scripting('washing_dryer_limit').floatValue()
+
+        if max_power > limit:
+            if start.plusHours(4).isBefore(DateUtils.now()):
+                typed = 'washingmachine_dryer'
+        else:
+            typed = 'dryer'
+
+    start_item.post_update(NULL)
+
+    message = power_item.scripting('{}_message').format(typed)
+    SignalMessenger.broadcast(message)
+
+    whitegood_reminder(power_item, typed)
+
+
+def whitegood_reminder(power_item, typed):
+    if power_item.is_scripting('reminder') and power_item.scripting('reminder') in typed:
+        default_cycles = power_item.scripting('reminder_cycles').intValue()
+        countdown_item = power_item.from_scripting('countdown_item')
+        done_item = power_item.from_scripting('done_item')
+
+        countdown = countdown_item.get_int(default_cycles, True) - 1
+
+        if countdown <= 0:
+            countdown = 0
+            done_item.post_update(OFF)
+            message = power_item.scripting('reminder_message')
+            SignalMessenger.broadcast(message)
+
+        countdown_item.post_update(countdown)
+
+
+@rule('White good reminder done')
+@when('Member of WhiteGoodReminderDone received command ON')
+def whitegood_reminder_done(event):
+    done_item = Item.from_event(event)
+    default_cycles = done_item.scripting('reminder_cycles').intValue()
+    countdown_item = done_item.from_scripting('countdown_item')
+
+    countdown_item.post_update(default_cycles)

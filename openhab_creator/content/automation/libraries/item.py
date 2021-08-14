@@ -130,6 +130,15 @@ class Item(object):
 
         return delta_since
 
+    def maximum_since(self, since):
+        maximum_since = PersistenceExtensions.maximumSince(
+            self._item, since, 'influxdb')
+
+        if maximum_since is not None:
+            maximum_since = maximum_since.floatValue()
+
+        return maximum_since
+
     @staticmethod
     def transform_map(map_name, value):
         return Transformation.transform("MAP", map_name + ".map", u"{}".format(value))
