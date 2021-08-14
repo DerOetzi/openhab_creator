@@ -1,4 +1,5 @@
 # pylint: skip-file
+from core.log import LOG_PREFIX, logging
 from core.actions import PersistenceExtensions, Transformation
 from core.date import format_date, to_java_zoneddatetime
 from core.jsr223.scope import (NULL, OFF, UNDEF, StringType, events,
@@ -17,6 +18,8 @@ class Item(object):
             self.name = item_or_item_name.name
 
         self.event = event
+
+        self.logger = logging.getLogger('{}.Item'.format(LOG_PREFIX))
 
         metadata = get_metadata(self.name, 'scripting')
         self.metadata = {} if metadata is None else metadata.configuration
@@ -135,7 +138,7 @@ class Item(object):
             self._item, since, 'influxdb')
 
         if maximum_since is not None:
-            maximum_since = maximum_since.floatValue()
+            maximum_since = maximum_since.state.floatValue()
 
         return maximum_since
 

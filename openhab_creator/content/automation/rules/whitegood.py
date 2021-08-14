@@ -55,13 +55,13 @@ def whitegood_state(event_or_itemname):
 def whitegood_finished(power_item):
     typed = power_item.scripting('typed')
 
-    start_item = power_item.from_scripting('start')
+    start_item = power_item.from_scripting('start_item')
     start = start_item.get_datetime(DateUtils.now().minusHours(2))
 
     if typed == 'washingmachine_dryer':
         typed = 'washingmachine'
 
-        max_power = power_item.maximum_since()
+        max_power = power_item.maximum_since(start)
         limit = power_item.scripting('washing_dryer_limit').floatValue()
 
         if max_power > limit:
@@ -72,7 +72,7 @@ def whitegood_finished(power_item):
 
     start_item.post_update(NULL)
 
-    message = power_item.scripting('{}_message').format(typed)
+    message = power_item.scripting('{}_message'.format(typed))
     SignalMessenger.broadcast(message)
 
     whitegood_reminder(power_item, typed)
