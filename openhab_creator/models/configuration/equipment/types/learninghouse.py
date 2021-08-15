@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Dict, List
+from typing import TYPE_CHECKING, Dict, List, Optional
 
 from openhab_creator import _
 from openhab_creator.models.configuration.equipment import (
@@ -19,12 +19,25 @@ class LearningHouseItemIdentifiers(EquipmentItemIdentifiers):
     def learninghouse(self) -> str:
         return self._identifier('learningHouse')
 
+    @property
+    def dependent(self) -> str:
+        return self.equipment.identifier.lower()
+
+    @property
+    def score(self) -> str:
+        return self._identifier('learningHouseScore')
+
+    @property
+    def train(self) -> str:
+        return self._identifier('learningHouseTrain')
+
 
 @EquipmentType()
 class LearningHouse(Equipment):
     def __init__(self,
                  model_name: str,
                  configuration: Configuration,
+                 icon: Optional[str] = 'learninghouse',
                  **equipment_configuration: Dict):
         super().__init__(configuration=configuration, **equipment_configuration)
 
@@ -34,6 +47,7 @@ class LearningHouse(Equipment):
         self.model_name: str = model_name
         self.base_url: str = configuration.secrets.secret(
             'learninghouse', model_name, 'baseurl')
+        self.icon = icon
 
     @property
     def item_ids(self) -> LearningHouseItemIdentifiers:
@@ -44,6 +58,10 @@ class LearningHouse(Equipment):
         categories = super().categories
         categories.append('learninghouse')
         return categories
+
+    @property
+    def semantic(self) -> str:
+        return 'Equipment'
 
     @property
     def name_with_type(self) -> str:
