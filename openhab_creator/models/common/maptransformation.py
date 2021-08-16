@@ -15,6 +15,10 @@ class MapTransformation(CreatorEnum):
         'OFF': _('Inactive'), 'ON': _('Active')
     }
 
+    DARKNESS = "darkness", {
+        'OFF': _('Bright'), 'ON': _('Dark')
+    }
+
     LOWBATTERY = "lowbattery", {
         '0': _('Ok'), '1': _('Low'),
         'OFF': _('Ok'), 'ON': _('Low')

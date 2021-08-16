@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openHAB Creator\n"
-"POT-Creation-Date: 2021-08-14 15:38+0200\n"
-"PO-Revision-Date: 2021-08-14 15:40+0200\n"
+"POT-Creation-Date: 2021-08-16 21:35+0200\n"
+"PO-Revision-Date: 2021-08-16 21:36+0200\n"
 "Last-Translator: Johannes Ott <info@johannes-ott.net>\n"
 "Language-Team: Johannes Ott\n"
 "Language: de\n"
@@ -27,36 +27,44 @@ msgid "Inactive"
 msgstr "Inaktiv"
 
 #: openhab_creator/models/common/maptransformation.py:19
-#: openhab_creator/models/common/maptransformation.py:20
+msgid "Bright"
+msgstr "Hell"
+
+#: openhab_creator/models/common/maptransformation.py:19
+msgid "Dark"
+msgstr "Dunkel"
+
+#: openhab_creator/models/common/maptransformation.py:23
+#: openhab_creator/models/common/maptransformation.py:24
 msgid "Low"
 msgstr "Niedrig"
 
-#: openhab_creator/models/common/maptransformation.py:19
-#: openhab_creator/models/common/maptransformation.py:20
+#: openhab_creator/models/common/maptransformation.py:23
+#: openhab_creator/models/common/maptransformation.py:24
 msgid "Ok"
 msgstr "Ok"
 
-#: openhab_creator/models/common/maptransformation.py:23
+#: openhab_creator/models/common/maptransformation.py:27
 msgid "Offline"
 msgstr "Offline"
 
-#: openhab_creator/models/common/maptransformation.py:23
+#: openhab_creator/models/common/maptransformation.py:27
 msgid "Online"
 msgstr "Online"
 
-#: openhab_creator/models/common/maptransformation.py:30
+#: openhab_creator/models/common/maptransformation.py:34
 msgid "Falling"
 msgstr "Fallend"
 
-#: openhab_creator/models/common/maptransformation.py:31
+#: openhab_creator/models/common/maptransformation.py:35
 msgid "Consistent"
 msgstr "Gleichbleibend"
 
-#: openhab_creator/models/common/maptransformation.py:32
+#: openhab_creator/models/common/maptransformation.py:36
 msgid "Rising"
 msgstr "Steigend"
 
-#: openhab_creator/models/common/maptransformation.py:44
+#: openhab_creator/models/common/maptransformation.py:48
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:68
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:72
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:76
@@ -67,15 +75,15 @@ msgstr "Steigend"
 msgid "Off"
 msgstr "Aus"
 
-#: openhab_creator/models/common/maptransformation.py:45
+#: openhab_creator/models/common/maptransformation.py:49
 msgid "Running"
 msgstr "Läuft"
 
-#: openhab_creator/models/common/maptransformation.py:46
+#: openhab_creator/models/common/maptransformation.py:50
 msgid "Ready"
 msgstr "Fertig"
 
-#: openhab_creator/models/common/maptransformation.py:47
+#: openhab_creator/models/common/maptransformation.py:51
 msgid "Standby"
 msgstr "Standby"
 
@@ -350,6 +358,10 @@ msgstr "Mülltonne"
 msgid "Heating"
 msgstr "Heizung"
 
+#: openhab_creator/models/configuration/equipment/types/learninghouse.py:75
+msgid "Learning House"
+msgstr "Learning House"
+
 #: openhab_creator/models/configuration/equipment/types/lightbulb.py:149
 msgid "Lightbulb"
 msgstr "Leuchte"
@@ -437,16 +449,28 @@ msgid "Rain gauge"
 msgstr "Niederschlag"
 
 #: openhab_creator/models/configuration/equipment/types/weatherstation.py:20
+msgid "Cloudiness"
+msgstr "Bewölkung"
+
+#: openhab_creator/models/configuration/equipment/types/weatherstation.py:25
+msgid "Snow"
+msgstr "Schneefall"
+
+#: openhab_creator/models/configuration/equipment/types/weatherstation.py:30
+msgid "Visibility"
+msgstr "Sichtweite"
+
+#: openhab_creator/models/configuration/equipment/types/weatherstation.py:35
 #: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:212
 msgid "UV index"
 msgstr "UV-Index"
 
-#: openhab_creator/models/configuration/equipment/types/weatherstation.py:28
+#: openhab_creator/models/configuration/equipment/types/weatherstation.py:43
 #: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:243
 msgid "Ozone"
 msgstr "Ozon"
 
-#: openhab_creator/models/configuration/equipment/types/weatherstation.py:222
+#: openhab_creator/models/configuration/equipment/types/weatherstation.py:237
 msgid "Weatherstation"
 msgstr "Wetterstation"
 
@@ -647,6 +671,22 @@ msgstr "Solltemperatur"
 #: openhab_creator/output/items/creators/heatingitemscreator.py:121
 msgid "Heating {name}"
 msgstr "Heizung {name}"
+
+#: openhab_creator/output/items/creators/learninghouseitemscreator.py:23
+msgid "LearningHouse: {name}"
+msgstr "LearningHouse:  {name}"
+
+#: openhab_creator/output/items/creators/learninghouseitemscreator.py:28
+msgid "Dependent variable"
+msgstr "Abhängige Variable"
+
+#: openhab_creator/output/items/creators/learninghouseitemscreator.py:43
+msgid "Model score"
+msgstr "Modellbewertung"
+
+#: openhab_creator/output/items/creators/learninghouseitemscreator.py:49
+msgid "Prediction is"
+msgstr "Auswertung ist"
 
 #: openhab_creator/output/items/creators/lightbulbitemscreator.py:42
 msgid "Lightcontrol items"
@@ -898,55 +938,55 @@ msgstr "Wetterstation"
 msgid "Weather condition"
 msgstr "Wetterlage"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:181
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:182
 msgid "Warning severity"
 msgstr "Warnstufe"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:194
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:195
 msgid "Headline"
 msgstr "Überschrift"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:205
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:206
 msgid "Description"
 msgstr "Beschreibung"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:215
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:216
 msgid "Urgency"
 msgstr "Aktualität"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:226
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:227
 msgid "Event"
 msgstr "Event"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:235
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:237
 msgid "Warning for"
 msgstr "Warnung vor"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:244
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:246
 msgid "{} of {}"
 msgstr "{} vor {}"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:249
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:251
 msgid "Instruction"
 msgstr "Hinweis"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:259
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:261
 msgid "Valid from"
 msgstr "Gültig ab"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:265
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:267
 msgid "Valid from:"
 msgstr "Gültig ab:"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:271
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:273
 msgid "Valid to"
 msgstr "Gültig bis"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:277
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:279
 msgid "Valid to:"
 msgstr "Gültig bis:"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:286
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:288
 msgid "Warning"
 msgstr "Warnung"
 
@@ -987,13 +1027,26 @@ msgstr "Erinnerungen"
 
 #: openhab_creator/output/sitemap/creators/calendarsitemapcreator.py:38
 #: openhab_creator/output/sitemap/creators/calendarsitemapcreator.py:46
-#: openhab_creator/output/sitemap/creators/whitegoodsitemapcreator.py:42
+#: openhab_creator/output/sitemap/creators/whitegoodsitemapcreator.py:25
+#: openhab_creator/output/sitemap/creators/whitegoodsitemapcreator.py:46
 msgid "Done"
 msgstr "Erledigt"
 
 #: openhab_creator/output/sitemap/creators/calendarsitemapcreator.py:52
 msgid "Next 10 upcoming birthdays"
 msgstr "Nächsten 10 Geburtstage"
+
+#: openhab_creator/output/sitemap/creators/learninghousesitemapcreator.py:25
+msgid "LearningHouse"
+msgstr "LearningHouse"
+
+#: openhab_creator/output/sitemap/creators/learninghousesitemapcreator.py:35
+msgid "Correct"
+msgstr "Korrekt"
+
+#: openhab_creator/output/sitemap/creators/learninghousesitemapcreator.py:35
+msgid "Wrong"
+msgstr "Falsch"
 
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:27
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:49

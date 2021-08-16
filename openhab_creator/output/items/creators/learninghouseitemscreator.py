@@ -15,6 +15,9 @@ if TYPE_CHECKING:
 @ItemsCreatorPipeline(6)
 class LearningHouseItemsCreator(BaseItemsCreator):
     def build(self, configuration: Configuration) -> None:
+        Group('LearningHouse')\
+            .append_to(self)
+
         Group('LearningHouseTrain')\
             .append_to(self)
 
@@ -26,8 +29,10 @@ class LearningHouseItemsCreator(BaseItemsCreator):
 
             Switch(learninghouse.item_ids.dependent)\
                 .label(_('Dependent variable'))\
+                .map(learninghouse.map_transformation)\
                 .icon(learninghouse.icon)\
                 .equipment(learninghouse)\
+                .groups('LearningHouse')\
                 .semantic(PointType.STATUS)\
                 .scripting({
                     'model_name': learninghouse.model_name,

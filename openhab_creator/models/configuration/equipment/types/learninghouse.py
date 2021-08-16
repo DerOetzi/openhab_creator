@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Dict, List, Optional
 
 from openhab_creator import _
+from openhab_creator.models.common import MapTransformation
 from openhab_creator.models.configuration.equipment import (
     Equipment, EquipmentItemIdentifiers, EquipmentType)
 
@@ -48,6 +49,12 @@ class LearningHouse(Equipment):
         self.base_url: str = configuration.secrets.secret(
             'learninghouse', model_name, 'baseurl')
         self.icon = icon
+
+    @property
+    def map_transformation(self) -> Dict:
+        map_key = self.identifier.upper()
+
+        return MapTransformation.__members__[map_key]
 
     @property
     def item_ids(self) -> LearningHouseItemIdentifiers:
