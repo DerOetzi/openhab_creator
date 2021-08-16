@@ -88,6 +88,7 @@ class WeatherStationItemsCreator(BaseItemsCreator):
                 .icon('weather')\
                 .groups(station.item_ids.merged_sensor, 'WeatherCondition')\
                 .semantic(PointType.STATUS)\
+                .aisensor()\
                 .channel(station.points.channel('condition_id'),
                          ProfileType.SCALE, 'weathercondition.scale')\
                 .scripting({
@@ -229,6 +230,7 @@ class WeatherStationItemsCreator(BaseItemsCreator):
             .equipment(station)\
             .groups('WeatherWarningEvent')\
             .semantic(PointType.STATUS)\
+            .aisensor()\
             .append_to(self)
 
         String(station.item_ids.warning_event_mapped)\

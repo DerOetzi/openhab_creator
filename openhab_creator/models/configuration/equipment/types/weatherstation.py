@@ -16,6 +16,21 @@ class WeatherStationType(CreatorEnum):
         SensorTyped(PropertyType.RAIN, NumberType.LENGTH),\
         SensorColors([])
 
+    CLOUDINESS = 'cloudiness',\
+        SensorLabel(_('Cloudiness'), _('Cloudiness'), '%d %unit%'),\
+        SensorTyped(None, NumberType.DIMENSIONLESS),\
+        SensorColors([])
+
+    SNOW = 'snow',\
+        SensorLabel(_('Snow'), _('Snow'), '%.1f %uni%'),\
+        SensorTyped(None, NumberType.LENGTH),\
+        SensorColors([])
+
+    VISIBILITY = 'visibility',\
+        SensorLabel(_('Visibility'), _('Visibility'), '%.1f %unit%'),\
+        SensorTyped(None, NumberType.LENGTH),\
+        SensorColors([])
+
     UVINDEX = 'uvindex',\
         SensorLabel(_('UV index'), _('UV index'), '%.3f'),\
         SensorTyped(PropertyType.ULTRAVIOLET, NumberType.NONE),\
