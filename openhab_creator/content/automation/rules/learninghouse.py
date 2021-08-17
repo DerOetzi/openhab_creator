@@ -10,7 +10,9 @@ from personal.item import Item
 
 logger = logging.getLogger('{}.AISensor'.format(LOG_PREFIX))
 
-lock_until = DateUtils.now().minusSeconds(1)
+lock_until = {
+    'all': DateUtils.now().minusSeconds(1)
+}
 
 
 def get_dataset(event):
@@ -40,10 +42,10 @@ def get_dataset(event):
 @when('Member of AISensor changed')
 def aisensor_changed(event):
     global lock_until
-    if lock_until.isAfter(DateUtils.now()):
+    if lock_until['all'].isAfter(DateUtils.now()):
         return
 
-    lock_until = DateUtils.now().plusSeconds(50)
+    lock_until['all'] = DateUtils.now().plusSeconds(50)
 
     dataset = get_dataset(event)
     data_json = json.dumps(dataset)
@@ -55,6 +57,11 @@ def aisensor_changed(event):
 
         base_url = dependent_item.scripting('base_url')
         model_name = dependent_item.scripting('model_name')
+
+        if model_name in lock_until and lock_until[model_name].isAfter(DateUtils.now()):
+            continue
+
+        lock_until[model_name] = DateUtils.now().plusSeconds(30)
 
         response_json = HTTP.sendHttpPostRequest(
             '{}/prediction/{}'.format(base_url, model_name), 'application/json', data_json)
@@ -69,3 +76,50 @@ def aisensor_changed(event):
             dependent_item.post_update(ON)
         elif not result['prediction']:
             dependent_item.post_update(OFF)
+
+        score_item = dependent_item.from_scripting('score_item')
+        model_score = result['model']['score'] * 100
+        score_item.post_update(model_score)
+
+        dependent_item.set_label(
+            dependent_item.scripting('label').format(model_score))
+
+
+@rule('LearningHouse training')
+@when('Member of LearningHouseTrain received command')
+def learning_house_training(event):
+    train_item = Item.from_event(event)
+    train = train_item.get_onoff() == ON
+
+    dependent_item = train_item.from_scripting('dependent_item')
+    dependent = dependent_item.get_onoff(True) == ON
+
+    base_url = dependent_item.scripting('base_url')
+    model_name = dependent_item.scripting('model_name')
+
+    if not train:
+        dependent = not dependent
+
+        global lock_until
+        lock_until[model_name] = DateUtils.now().plusMinutes(30)
+
+        if dependent:
+            dependent_item.post_update(ON)
+        else:
+            dependent_item.post_update(OFF)
+
+    dataset = get_dataset(event)
+    dataset[dependent_item.name] = dependent
+    data_json = json.dumps(dataset)
+
+    logger.debug(data_json)
+
+    response_json = HTTP.sendHttpPutRequest(
+        '{}/training/{}'.format(base_url, model_name), 'application/json', data_json)
+
+    result = json.loads(response_json)
+
+    logger.info('Trained {} results in score {:.1f}'.format(
+        model_name, result['score'] * 100))
+
+    train_item.post_update(NULL)

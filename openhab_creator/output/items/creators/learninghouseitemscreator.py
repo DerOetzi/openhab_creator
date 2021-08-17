@@ -28,13 +28,14 @@ class LearningHouseItemsCreator(BaseItemsCreator):
                 .append_to(self)
 
             Switch(learninghouse.item_ids.dependent)\
-                .label(_('Dependent variable'))\
+                .label(learninghouse.blankname)\
                 .map(learninghouse.map_transformation)\
                 .icon(learninghouse.icon)\
                 .equipment(learninghouse)\
                 .groups('LearningHouse')\
                 .semantic(PointType.STATUS)\
                 .scripting({
+                    'label': _('{name} (Score: {{:.1f}} %)').format(name=learninghouse.blankname),
                     'model_name': learninghouse.model_name,
                     'base_url': learninghouse.base_url,
                     'score_item': learninghouse.item_ids.score
@@ -56,10 +57,7 @@ class LearningHouseItemsCreator(BaseItemsCreator):
                 .groups('LearningHouseTrain')\
                 .semantic(PointType.CONTROL)\
                 .scripting({
-                    'model_name': learninghouse.model_name,
-                    'base_url': learninghouse.base_url,
                     'dependent_item': learninghouse.item_ids.dependent,
-                    'score_item': learninghouse.item_ids.score
                 })\
                 .append_to(self)
 

@@ -28,7 +28,6 @@ class LearningHouseSitemapCreator(BaseSitemapCreator):
 
         for learninghouse in configuration.equipment.equipment('learninghouse'):
             Text(learninghouse.item_ids.dependent)\
-                .label(learninghouse.blankname)\
                 .append_to(page)
 
             Switch(learninghouse.item_ids.train, [

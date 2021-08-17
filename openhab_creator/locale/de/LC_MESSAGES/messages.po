@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openHAB Creator\n"
-"POT-Creation-Date: 2021-08-16 21:35+0200\n"
-"PO-Revision-Date: 2021-08-16 21:36+0200\n"
+"POT-Creation-Date: 2021-08-17 19:44+0200\n"
+"PO-Revision-Date: 2021-08-17 19:45+0200\n"
 "Last-Translator: Johannes Ott <info@johannes-ott.net>\n"
 "Language-Team: Johannes Ott\n"
 "Language: de\n"
@@ -672,19 +672,19 @@ msgstr "Solltemperatur"
 msgid "Heating {name}"
 msgstr "Heizung {name}"
 
-#: openhab_creator/output/items/creators/learninghouseitemscreator.py:23
+#: openhab_creator/output/items/creators/learninghouseitemscreator.py:26
 msgid "LearningHouse: {name}"
 msgstr "LearningHouse:  {name}"
 
-#: openhab_creator/output/items/creators/learninghouseitemscreator.py:28
-msgid "Dependent variable"
-msgstr "Abhängige Variable"
+#: openhab_creator/output/items/creators/learninghouseitemscreator.py:38
+msgid "{name} (Score: {{:.1f}} %)"
+msgstr "{name} (Bewertung: {{:.1f}} %)"
 
-#: openhab_creator/output/items/creators/learninghouseitemscreator.py:43
+#: openhab_creator/output/items/creators/learninghouseitemscreator.py:48
 msgid "Model score"
 msgstr "Modellbewertung"
 
-#: openhab_creator/output/items/creators/learninghouseitemscreator.py:49
+#: openhab_creator/output/items/creators/learninghouseitemscreator.py:54
 msgid "Prediction is"
 msgstr "Auswertung ist"
 
@@ -1040,11 +1040,11 @@ msgstr "Nächsten 10 Geburtstage"
 msgid "LearningHouse"
 msgstr "LearningHouse"
 
-#: openhab_creator/output/sitemap/creators/learninghousesitemapcreator.py:35
+#: openhab_creator/output/sitemap/creators/learninghousesitemapcreator.py:34
 msgid "Correct"
 msgstr "Korrekt"
 
-#: openhab_creator/output/sitemap/creators/learninghousesitemapcreator.py:35
+#: openhab_creator/output/sitemap/creators/learninghousesitemapcreator.py:34
 msgid "Wrong"
 msgstr "Falsch"
 
@@ -1171,6 +1171,9 @@ msgstr "Mondaufgang"
 #: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:315
 msgid "Moon set"
 msgstr "Monduntergang"
+
+#~ msgid "Dependent variable"
+#~ msgstr "Abhängige Variable"
 
 #~ msgid "Cleaning"
 #~ msgstr "Reinigung"
