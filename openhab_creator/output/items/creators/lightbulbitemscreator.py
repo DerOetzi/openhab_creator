@@ -22,20 +22,26 @@ class LightbulbItemsCreator(BaseItemsCreator):
         self.__build_general_groups()
 
         for lightbulb in configuration.equipment.equipment('lightbulb'):
-            self.__build_parent(lightbulb)
+            lightbulb_item = self.__build_parent(lightbulb)
 
-            if not self.__build_subequipment(lightbulb):
-                self.__build_thing(lightbulb)
+            if not self.__build_subequipment(lightbulb, lightbulb_item):
+                self.__build_thing(lightbulb, lightbulb_item)
 
+        self.write_file('lightbulb')
+
+        for lightbulb in configuration.equipment.equipment('lightbulb'):
             if configuration.equipment.has('wallswitch'):
                 self.__build_buttons_assignment(
                     lightbulb, configuration.equipment.equipment('wallswitch'))
 
+        self.write_file('lightbulb_wallswitch')
+
+        for lightbulb in configuration.equipment.equipment('lightbulb'):
             if configuration.equipment.has('motiondetector'):
                 self.__build_motion_assignment(
                     lightbulb, configuration.equipment.equipment('motiondetector'))
 
-        self.write_file('lightbulb')
+        self.write_file('lightbulb_motiondetector')
 
     def __build_general_groups(self) -> None:
         Group('Lightcontrol')\
@@ -84,8 +90,8 @@ class LightbulbItemsCreator(BaseItemsCreator):
             .label(_('Switching cycles reset'))\
             .append_to(self)
 
-    def __build_parent(self, lightbulb: Lightbulb) -> None:
-        Group(lightbulb.item_ids.lightbulb)\
+    def __build_parent(self, lightbulb: Lightbulb) -> Group:
+        lightbulb_item = Group(lightbulb.item_ids.lightbulb)\
             .label(_('Lightbulb {blankname}').format(blankname=lightbulb.blankname))\
             .icon('light')\
             .location(lightbulb.location)\
@@ -98,6 +104,7 @@ class LightbulbItemsCreator(BaseItemsCreator):
             .equipment(lightbulb)\
             .groups('Lightcontrol')\
             .semantic(PointType.CONTROL)\
+            .scripting({'lightbulb_item': lightbulb.item_ids.lightbulb})\
             .append_to(self)
 
         Switch(lightbulb.item_ids.hide)\
@@ -165,7 +172,9 @@ class LightbulbItemsCreator(BaseItemsCreator):
                 .semantic(PointType.SETPOINT)\
                 .append_to(self)
 
-    def __build_subequipment(self, parent_lightbulb: Lightbulb) -> bool:
+        return lightbulb_item
+
+    def __build_subequipment(self, parent_lightbulb: Lightbulb, parent_lightbulb_item: Group) -> bool:
         if parent_lightbulb.has_subequipment:
             if parent_lightbulb.points.has_brightness:
                 Group(parent_lightbulb.item_ids.brightness)\
@@ -201,19 +210,31 @@ class LightbulbItemsCreator(BaseItemsCreator):
                     .semantic(PointType.CONTROL)\
                     .append_to(self)
 
+            sublightbulbs = []
+
             for sublightbulb in parent_lightbulb.subequipment:
-                self.__build_thing(sublightbulb)
+                sublightbulbs.append(sublightbulb.item_ids.lightbulb)
+                self.__build_thing(sublightbulb, parent_lightbulb_item)
+
+            parent_lightbulb_item.scripting({
+                'is_thing': False,
+                'subequipment': ','.join(sublightbulbs)
+            })
 
         return parent_lightbulb.has_subequipment
 
-    def __build_thing(self, lightbulb: Lightbulb) -> None:
+    def __build_thing(self, lightbulb: Lightbulb, lightbulb_item: Group) -> None:
         if lightbulb.is_child:
-            Group(lightbulb.item_ids.lightbulb)\
+            lightbulb_item = Group(lightbulb.item_ids.lightbulb)\
                 .label(_('Lightbulb {name}').format(name=lightbulb.name))\
                 .icon('light')\
                 .equipment(lightbulb.parent)\
                 .semantic(lightbulb)\
                 .append_to(self)
+
+        scripting = {
+            'cycles_item': lightbulb.item_ids.switchingcycles
+        }
 
         Number(lightbulb.item_ids.switchingcycles)\
             .typed(NumberType.DIMENSIONLESS)\
@@ -248,6 +269,8 @@ class LightbulbItemsCreator(BaseItemsCreator):
 
             brightness.append_to(self)
 
+            scripting['brightness_item'] = lightbulb.item_ids.brightness
+
         if lightbulb.points.has_colortemperature:
             colortemperature = Number(lightbulb.item_ids.colortemperature)\
                 .label(_('Colortemperature'))\
@@ -262,6 +285,8 @@ class LightbulbItemsCreator(BaseItemsCreator):
 
             colortemperature.append_to(self)
 
+            scripting['colortemperature_item'] = lightbulb.item_ids.colortemperature
+
         if lightbulb.points.has_onoff:
             onoff = Switch(lightbulb.item_ids.onoff)\
                 .label(_('On/Off'))\
@@ -275,6 +300,8 @@ class LightbulbItemsCreator(BaseItemsCreator):
 
             onoff.append_to(self)
 
+            scripting['onoff_item'] = lightbulb.item_ids.onoff
+
         if lightbulb.points.has_rgb:
             rgb = Color(lightbulb.item_ids.rgb)\
                 .label(_('RGB Color'))\
@@ -287,6 +314,10 @@ class LightbulbItemsCreator(BaseItemsCreator):
                 rgb.groups(lightbulb.parent.item_ids.rgb)
 
             rgb.append_to(self)
+
+            scripting['rgb_item'] = lightbulb.item_ids.rgb
+
+        lightbulb_item.scripting(scripting)
 
     def __build_buttons_assignment(self,
                                    lightbulb: Lightbulb,

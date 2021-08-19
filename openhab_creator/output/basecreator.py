@@ -27,7 +27,8 @@ class BaseCreator(object):
         with open(self.outputdir / self.subdir / f'{filename}.{self.typed}', 'w', encoding='utf-8') as f:
             f.writelines("\n".join(self.lines))
 
-        logger.info(f'File {self.subdir}/{filename}.{self.typed} written')
+        logger.info('File %s/%s.%s written',
+                    self.subdir, filename, self.typed)
 
         self.lines.clear()
 

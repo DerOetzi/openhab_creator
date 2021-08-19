@@ -26,3 +26,5 @@ class BaseItemsCreator(BaseCreator):
             item.build_item(self)
 
         super().write_file(filename)
+
+        self.items.clear()

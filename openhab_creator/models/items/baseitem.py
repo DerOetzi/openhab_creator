@@ -149,6 +149,9 @@ class BaseItem():
         return self
 
     def scripting(self, config: Dict[str, str]) -> BaseItem:
+        if 'scripting' in self._metadata:
+            config = {**self._metadata['scripting']['properties'], **config}
+
         self._metadata['scripting'] = {'properties': config}
         return self
 
