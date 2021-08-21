@@ -96,6 +96,9 @@ class LightbulbItemsCreator(BaseItemsCreator):
             .icon('light')\
             .location(lightbulb.location)\
             .semantic(lightbulb)\
+            .scripting({
+                'control_item': lightbulb.item_ids.lightcontrol
+            })\
             .append_to(self)
 
         String(lightbulb.item_ids.lightcontrol)\
@@ -172,6 +175,10 @@ class LightbulbItemsCreator(BaseItemsCreator):
                 .semantic(PointType.SETPOINT)\
                 .append_to(self)
 
+            lightbulb_item.scripting({
+                'nightmode_item': lightbulb.item_ids.nightmode
+            })
+
         return lightbulb_item
 
     def __build_subequipment(self, parent_lightbulb: Lightbulb, parent_lightbulb_item: Group) -> bool:
@@ -233,6 +240,7 @@ class LightbulbItemsCreator(BaseItemsCreator):
                 .append_to(self)
 
         scripting = {
+            'is_thing': True,
             'cycles_item': lightbulb.item_ids.switchingcycles
         }
 
