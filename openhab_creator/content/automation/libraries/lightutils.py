@@ -67,7 +67,7 @@ class LightUtils(object):
         elif rgb_item:
             actual = rgb_item.get_value(cls.BLACK)
             if actual != color:
-                rgb_item.send_command(rgb)
+                rgb_item.send_command(color)
                 updated = True
 
         return updated
