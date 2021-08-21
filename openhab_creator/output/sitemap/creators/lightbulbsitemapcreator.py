@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, List, Tuple
 
 from openhab_creator import _
 from openhab_creator.models.sitemap import (Page, Selection, Setpoint, Sitemap,
-                                            Switch)
+                                            Switch, Text)
 from openhab_creator.output.sitemap import SitemapCreatorPipeline
 from openhab_creator.output.sitemap.basesitemapcreator import \
     BaseSitemapCreator
@@ -17,7 +17,7 @@ if TYPE_CHECKING:
         WallSwitch
 
 
-@SitemapCreatorPipeline(mainpage=3, configpage=3)
+@SitemapCreatorPipeline(mainpage=3, statuspage=5, configpage=3)
 class LightbulbSitemapCreator(BaseSitemapCreator):
     @classmethod
     def has_needed_equipment(cls, configuration: Configuration) -> bool:
@@ -43,7 +43,23 @@ class LightbulbSitemapCreator(BaseSitemapCreator):
                 .append_to(frame)
 
     def build_statuspage(self, statuspage: Page, configuration: Configuration) -> None:
-        """No statuspage for lights"""
+        page = Page('SwitchingCycles')\
+            .append_to(statuspage)
+
+        for lightbulb in configuration.equipment.equipment('lightbulb', False):
+            location = lightbulb.location.toplevel
+
+            if lightbulb.is_thing:
+                frame = page.frame(location.identifier, location.name)
+
+                subpage = Page(lightbulb.item_ids.switchingcycles)\
+                    .append_to(frame)
+
+                Text(lightbulb.item_ids.switchingcycles)\
+                    .append_to(subpage)
+
+                Switch(lightbulb.item_ids.switchingcyclesreset, [('ON', 'Reset')])\
+                    .append_to(subpage)
 
     def build_configpage(self, configpage: Page, configuration: Configuration) -> None:
         page = Page(label=_('Lights'))\

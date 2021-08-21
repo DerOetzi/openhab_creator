@@ -83,7 +83,7 @@ class LightbulbItemsCreator(BaseItemsCreator):
             .typed(GroupType.NUMBER_AVG)\
             .label(_('Lights switching cycles'))\
             .format('%d')\
-            .icon('configuration')\
+            .icon('switchingcycles')\
             .append_to(self)
 
         Group('SwitchingCyclesReset')\
@@ -261,6 +261,9 @@ class LightbulbItemsCreator(BaseItemsCreator):
             .equipment(lightbulb)\
             .groups('SwitchingCyclesReset')\
             .semantic(PointType.CONTROL)\
+            .scripting({
+                'cycles_item': lightbulb.item_ids.switchingcycles
+            })\
             .expire('10s', state='OFF')\
             .append_to(self)
 

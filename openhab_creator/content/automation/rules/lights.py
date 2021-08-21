@@ -21,3 +21,12 @@ def lightcontrol(event):
                 command, lightbulb_item.scripting())
 
     LightUtils.command(lightbulb_item, command)
+
+
+@rule('Reset Switching cycles')
+@when('Member of SwitchingCyclesReset received command ON')
+def reset_switchingcycles(event):
+    reset_item = Item.from_event(event)
+    cycles_item = reset_item.from_scripting('cycles_item')
+    cycles_item.post_update(0)
+    reset_item.post_update(OFF)

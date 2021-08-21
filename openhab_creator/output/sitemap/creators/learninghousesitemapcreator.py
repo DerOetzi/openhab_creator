@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from openhab_creator.models.configuration import Configuration
 
 
-@SitemapCreatorPipeline(statuspage=3)
+@SitemapCreatorPipeline(statuspage=4)
 class LearningHouseSitemapCreator(BaseSitemapCreator):
     @classmethod
     def has_needed_equipment(cls, configuration: Configuration) -> bool:
