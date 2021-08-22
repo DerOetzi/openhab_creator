@@ -19,7 +19,7 @@ WHITEGOOD_READY = 'READY'
 @when('Member of WhiteGood changed')
 def whitegood_state(event_or_itemname):
     if event_or_itemname is None:
-        for item in ir.getItem('WhiteGood').members:
+        for item in Group('WhiteGood'):
             whitegood_state(item.name)
         return
     elif isinstance(event_or_itemname, basestring):

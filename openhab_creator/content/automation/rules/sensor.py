@@ -1,10 +1,9 @@
 # pylint: skip-file
+from core.log import LOG_PREFIX, logging
 from core.rules import rule
 from core.triggers import when
-from core.log import logging, LOG_PREFIX
-
 from personal.dateutils import DateUtils
-from personal.item import Item
+from personal.item import Group, Item
 from personal.signalmessenger import SignalMessenger
 
 logger = logging.getLogger('{}.Sensor'.format(LOG_PREFIX))
@@ -15,10 +14,10 @@ logger = logging.getLogger('{}.Sensor'.format(LOG_PREFIX))
 @when("Time cron 41 0/15 * * * ?")
 @when("System started")
 def trends(event):
-    for item in ir.getItem('Trend').members:
-        delta = Item(item).delta_since(DateUtils.now().minusHours(1))
+    for item in Group('Trend'):
+        delta = item.delta_since(DateUtils.now().minusHours(1))
 
-        trend_item = Item('trend{}'.format(item.name))
+        trend_item = item.from_scripting('trend_item')
 
         if delta < 0.0:
             trend_item.post_update('falling')
@@ -33,7 +32,7 @@ def trends(event):
 @when('Member of PressureSealevel changed')
 def pressure_sealevel(event_or_itemname):
     if event_or_itemname is None:
-        for item in ir.getItem('PressureSealevel').members:
+        for item in Group('PressureSealevel'):
             pressure_sealevel(item.name)
         return
     elif isinstance(event_or_itemname, basestring):

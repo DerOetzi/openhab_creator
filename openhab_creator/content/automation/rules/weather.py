@@ -62,8 +62,7 @@ def weather_warning(event):
 
     lock_until['warnings'] = DateUtils.now().plusSeconds(30)
 
-    for warning_active in ir.getItem('WeatherWarning').members:
-        warning_item = Item(warning_active, event)
+    for warning_item in Group('WeatherWarning'):
         event_item = warning_item.from_scripting('event')
         event_mapped_item = warning_item.from_scripting('event_mapped')
 

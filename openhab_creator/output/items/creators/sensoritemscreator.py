@@ -190,7 +190,11 @@ class SensorItemsCreator(BaseItemsCreator):
                 .aisensor()\
                 .append_to(self)
 
-            sensor_item.groups('Trend')
+            sensor_item\
+                .groups('Trend')\
+                .scripting({
+                    'trend_item': f'trend{sensortype}{sensor.item_ids.merged_sensor}'
+                })
 
         sensor_item.append_to(self)
 

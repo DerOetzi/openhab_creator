@@ -4,7 +4,7 @@ from core.rules import rule
 from core.triggers import when
 from personal.dateutils import DateUtils
 from personal.ephemerisutils import EphemerisUtils
-from personal.item import Item
+from personal.item import Group, Item
 from personal.signalmessenger import SignalMessenger
 from personal.timermanager import TimerManager
 
@@ -122,8 +122,8 @@ def birthday_notification(birthdays):
 @rule('Garbage cans system start')
 @when('System started')
 def garbage_cans(event):
-    for item in ir.getItem('garbagecan').members:
-        garbage_can(Item(item))
+    for item in Group('garbagecan'):
+        garbage_can(item)
 
 
 @rule('Garbage can event changed')
@@ -147,9 +147,7 @@ def garbage_can(garbagecan_item, event=None):
 @rule('Reminders restart')
 @when('System started')
 def restart_reminders(event):
-    for reminder in ir.getItem('CalendarReminder').members:
-        reminder_item = Item(reminder, event)
-
+    for reminder_item in Group('CalendarReminder'):
         config = reminder_item.scripting()
 
         default_time = DateUtils.now()
@@ -168,8 +166,7 @@ def restart_reminders(event):
 
 
 def reminder_timer():
-    for reminder in ir.getItem('CalendarReminder').members:
-        reminder_item = Item(reminder)
+    for reminder_item in Group('CalendarReminder'):
         config = reminder_item.scripting()
 
         default_time = DateUtils.now()

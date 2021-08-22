@@ -1,9 +1,9 @@
 # pylint: skip-file
-from core.log import LOG_PREFIX, logging
 from core.actions import PersistenceExtensions, Transformation
 from core.date import format_date, to_java_zoneddatetime
 from core.jsr223.scope import (NULL, OFF, UNDEF, StringType, events,
                                itemRegistry)
+from core.log import LOG_PREFIX, logging
 from core.metadata import get_metadata
 from java.time import ZonedDateTime
 
@@ -38,6 +38,10 @@ class Item(object):
             item = self.__class__(self.scripting(name), self.event)
 
         return item
+
+    @property
+    def item(self):
+        return self._item
 
     def _get_state(self, event=None):
         if event is None:
@@ -145,3 +149,32 @@ class Item(object):
     @staticmethod
     def transform_map(map_name, value):
         return Transformation.transform("MAP", map_name + ".map", u"{}".format(value))
+
+
+class Group(object):
+    def __init__(self, item_or_item_name=None, event=None):
+        self.item = None
+        self.members = []
+        self.members_names = []
+
+        self.log = logging.getLogger('{}.Group'.format(LOG_PREFIX))
+
+        if item_or_item_name is not None:
+            self.item = Item(item_or_item_name, event)
+            for member in self.item.item.members:
+                self.members_names.append(member.name)
+                self.members.append(Item(member, event))
+
+    @classmethod
+    def from_list(cls, member_list, event=None):
+        group = cls(event=event)
+
+        for member in member_list:
+            group.members.append(Item(member))
+
+        group.members_names = member_list
+
+        return group
+
+    def __iter__(self):
+        return iter(self.members)

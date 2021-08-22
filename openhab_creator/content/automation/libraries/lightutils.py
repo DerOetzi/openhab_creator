@@ -5,8 +5,8 @@ import random
 from core.jsr223.scope import (NULL, OFF, ON, UNDEF, DecimalType, HSBType,
                                PercentType, events, itemRegistry)
 from core.log import LOG_PREFIX, logging
-from personal.item import Item
 from personal.dateutils import DateUtils
+from personal.item import Group, Item
 
 
 class LightUtils(object):
@@ -79,23 +79,24 @@ class LightUtils(object):
 
     @classmethod
     def _handle_group_command(cls, lightbulb_item, command):
-        group_members = lightbulb_item.scripting('subequipment').split(',')
+        group_members = Group.from_list(
+            lightbulb_item.scripting('subequipment').split(','))
 
         if command == 'ALL':
             for group_member in group_members:
-                cls._handle_single_command(Item(group_member), 'ON')
+                cls._handle_single_command(group_member, 'ON')
         elif command == 'NIGHT':
             cls._handle_nightmode(lightbulb_item, group_members)
         elif command == 'OFF':
             for group_member in group_members:
-                cls._handle_single_command(Item(group_member), 'OFF')
+                cls._handle_single_command(group_member, 'OFF')
         else:
             command = 'lightbulb{}'.format(command)
             for group_member in group_members:
-                if group_member == command:
-                    cls._handle_single_command(Item(group_member), 'ON')
+                if group_member.name == command:
+                    cls._handle_single_command(group_member, 'ON')
                 else:
-                    cls._handle_single_command(Item(group_member), 'OFF')
+                    cls._handle_single_command(group_member, 'OFF')
 
     @classmethod
     def _handle_nightmode(cls, lightbulb_item, group_members):
@@ -106,10 +107,10 @@ class LightUtils(object):
         nightmode = nightmode_item.get_string('RANDOM', True)
 
         if nightmode == 'RANDOM':
-            nightmode = random.choice(group_members)
+            nightmode = random.choice(group_members.members_names)
 
         for group_member in group_members:
-            if group_member == nightmode:
-                cls._handle_single_command(Item(group_member), 'NIGHT')
+            if group_member.name == nightmode:
+                cls._handle_single_command(group_member, 'NIGHT')
             else:
-                cls._handle_single_command(Item(group_member), 'OFF')
+                cls._handle_single_command(group_member, 'OFF')

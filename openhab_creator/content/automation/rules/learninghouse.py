@@ -6,7 +6,7 @@ from core.log import LOG_PREFIX, logging
 from core.rules import rule
 from core.triggers import when
 from personal.dateutils import DateUtils
-from personal.item import Item
+from personal.item import Group, Item
 
 logger = logging.getLogger('{}.AISensor'.format(LOG_PREFIX))
 
@@ -18,8 +18,7 @@ lock_until = {
 def get_dataset(event):
     dataset = {}
 
-    for aisensor in ir.getItem('AISensor').members:
-        aisensor_item = Item(aisensor, event)
+    for aisensor_item in Group('AISensor', event):
         aisensor_value = aisensor_item.get_value()
 
         if isinstance(aisensor_value, QuantityType) or isinstance(aisensor_value, DecimalType):
@@ -33,6 +32,8 @@ def get_dataset(event):
         else:
             logger.warn('unknown AISensor type {}'.format(
                 type(aisensor_value)))
+
+    logger.debug('AISensor dataset: %s', dataset)
 
     return dataset
 
@@ -52,9 +53,7 @@ def aisensor_changed(event):
 
     logger.debug('%s', dataset)
 
-    for dependent in ir.getItem('LearningHouse').members:
-        dependent_item = Item(dependent)
-
+    for dependent_item in Group('LearningHouse'):
         base_url = dependent_item.scripting('base_url')
         model_name = dependent_item.scripting('model_name')
 
