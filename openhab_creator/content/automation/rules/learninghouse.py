@@ -88,10 +88,10 @@ def aisensor_changed(event):
 @when('Member of LearningHouseTrain received command')
 def learning_house_training(event):
     train_item = Item.from_event(event)
-    train = train_item.get_onoff() == ON
+    train = train_item.get_onoff()
 
     dependent_item = train_item.from_scripting('dependent_item')
-    dependent = dependent_item.get_onoff(True) == ON
+    dependent = dependent_item.get_onoff(True)
 
     base_url = dependent_item.scripting('base_url')
     model_name = dependent_item.scripting('model_name')

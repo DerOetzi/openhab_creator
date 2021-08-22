@@ -41,7 +41,7 @@ def pressure_sealevel(event_or_itemname):
         pressure_item = Item.from_event(event_or_itemname)
 
     new_state = pressure_item.get_value()
-    if new_state in [NULL, UNDEF]:
+    if new_state is None:
         return
 
     value = new_state.floatValue()

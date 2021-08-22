@@ -60,7 +60,7 @@ class LightUtils(object):
                 brightness_item.send_command(brightness)
                 updated = True
         elif onoff_item:
-            actual = onoff_item.get_onoff()
+            actual = onoff_item.get_value(OFF)
             if actual != onoff:
                 onoff_item.send_command(onoff)
                 updated = True

@@ -3,7 +3,7 @@ from core.log import LOG_PREFIX, logging
 from core.rules import rule
 from core.triggers import when
 from personal.dateutils import DateUtils
-from personal.item import Item
+from personal.item import Item, Group
 from personal.signalmessenger import SignalMessenger
 
 logger = logging.getLogger('{}.WhiteGood'.format(LOG_PREFIX))

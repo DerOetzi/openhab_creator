@@ -1,15 +1,12 @@
 # pylint: skip-file
-from personal.dateutils import DateUtils
-from personal.signalmessenger import SignalMessenger
-from personal.item import Item
-from personal.stringutils import StringUtils
 from core.date import format_date
+from core.log import LOG_PREFIX, logging
 from core.rules import rule
 from core.triggers import when
-from core.log import logging, LOG_PREFIX
-
-import personal.item
-reload(personal.item)
+from personal.dateutils import DateUtils
+from personal.item import Group, Item
+from personal.signalmessenger import SignalMessenger
+from personal.stringutils import StringUtils
 
 logger = logging.getLogger('{}.Weather'.format(LOG_PREFIX))
 
@@ -86,7 +83,7 @@ def weather_warning(event):
         event_mapped_item.set_label(u"{}".format(severity_str))
         event_mapped_item.send_command(event_mapped)
 
-        if event is not None and warning_item.get_onoff() == ON and event_mapped != 10:
+        if event is not None and warning_item.get_onoff() and event_mapped != 10:
             send_warning_message(event, warning_item,
                                  event_mapped, severity_str)
 

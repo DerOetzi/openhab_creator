@@ -25,7 +25,7 @@ def smartphone_distances(event):
         wayhome_item = Item('wayhome')
         wayhome = wayhome_item.get_onoff(True)
 
-        if presence == 0 and wayhome == OFF and actual_distance <= 12.0:
+        if presence == 0 and not wayhome and actual_distance <= 12.0:
             delta_distance = distance_item.delta_since(
                 DateUtils.now().minusMinutes(5))
 

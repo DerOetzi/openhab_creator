@@ -1,7 +1,7 @@
 # pylint: skip-file
 from core.actions import PersistenceExtensions, Transformation
 from core.date import format_date, to_java_zoneddatetime
-from core.jsr223.scope import (NULL, OFF, UNDEF, StringType, events,
+from core.jsr223.scope import (NULL, ON, OFF, UNDEF, StringType, events,
                                itemRegistry)
 from core.log import LOG_PREFIX, logging
 from core.metadata import get_metadata
@@ -53,15 +53,18 @@ class Item(object):
         else:
             new_state = self._item.state
 
+        if new_state in [NULL, UNDEF]:
+            new_state = None
+
         return new_state
 
     def _update_empty(self, state, typed_state, update_empty):
-        if update_empty and state in [NULL, UNDEF]:
+        if update_empty and state is None:
             self.post_update(typed_state)
 
     def get_value(self, default_value=None, update_empty=False, event=None):
         state = self._get_state(event)
-        typed_state = state if state not in [NULL, UNDEF] else default_value
+        typed_state = default_value if state is None else state
         self._update_empty(state, typed_state, update_empty)
         return typed_state
 
@@ -70,8 +73,7 @@ class Item(object):
         if isinstance(state, StringType):
             typed_state = int(state.toFullString())
         else:
-            typed_state = state.intValue() if state not in [
-                NULL, UNDEF] else default_value
+            typed_state = default_value if state is None else state.intValue()
         self._update_empty(state, typed_state, update_empty)
         return typed_state
 
@@ -80,26 +82,25 @@ class Item(object):
         if isinstance(state, StringType):
             typed_state = float(state.toFullString())
         else:
-            typed_state = state.floatValue() if state not in [
-                NULL, UNDEF] else default_value
+            typed_state = default_value if state is None else state.floatValue()
         self._update_empty(state, typed_state, update_empty)
         return typed_state
 
     def get_string(self, default_value=None, update_empty=False, event=None):
         state = self._get_state(event)
-        typed_state = state.toFullString() if state not in [
-            NULL, UNDEF] else default_value
+        typed_state = default_value if state is None else state.toFullString()
         self._update_empty(state, typed_state, update_empty)
         return typed_state
 
     def get_datetime(self, default_value=None, update_empty=False, event=None):
         state = self._get_state(event)
-        typed_state = to_java_zoneddatetime(state) if state not in [
-            NULL, UNDEF] else default_value
+        typed_state = default_value if state is None else to_java_zoneddatetime(
+            state)
         return typed_state
 
     def get_onoff(self, update_empty=False, default_value=OFF, event=None):
-        return self.get_value(default_value, update_empty, event)
+        onoff = self.get_value(default_value, update_empty, event)
+        return onoff == ON
 
     def is_scripting(self, key):
         return key in self.metadata
