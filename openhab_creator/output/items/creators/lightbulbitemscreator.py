@@ -246,10 +246,10 @@ class LightbulbItemsCreator(BaseItemsCreator):
 
         Number(lightbulb.item_ids.switchingcycles)\
             .typed(NumberType.DIMENSIONLESS)\
-            .label(_('Switching cycles {name}').format(name=lightbulb.name))\
+            .label(_('Switching cycles'))\
             .format('%d')\
             .icon('switchingcycles')\
-            .sensor('switchingcycle', lightbulb.influxdb_tags)\
+            .sensor('switchingcycle', lightbulb.influxdb_tags, True)\
             .equipment(lightbulb)\
             .groups('SwitchingCycles')\
             .semantic(PointType.MEASUREMENT)\

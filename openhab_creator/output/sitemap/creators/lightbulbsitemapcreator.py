@@ -53,6 +53,7 @@ class LightbulbSitemapCreator(BaseSitemapCreator):
                 frame = page.frame(location.identifier, location.name)
 
                 subpage = Page(lightbulb.item_ids.switchingcycles)\
+                    .label(lightbulb.name)\
                     .append_to(frame)
 
                 Text(lightbulb.item_ids.switchingcycles)\
