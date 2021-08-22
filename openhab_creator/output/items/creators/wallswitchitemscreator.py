@@ -15,6 +15,9 @@ if TYPE_CHECKING:
 @ItemsCreatorPipeline(3)
 class WallSwitchItemsCreator(BaseItemsCreator):
     def build(self, configuration: Configuration) -> None:
+        Group('Wallswitches')\
+            .append_to(self)
+
         Group('WallswitchesAssignment')\
             .label(_('Wallswitch assignment items'))\
             .config()\
@@ -35,6 +38,7 @@ class WallSwitchItemsCreator(BaseItemsCreator):
         Number(wallswitch.item_ids.button)\
             .label(_('Button state'))\
             .equipment(wallswitch)\
+            .groups('Wallswitches')\
             .semantic(PointType.STATUS)\
             .channel(wallswitch.points.channel('button'))\
             .scripting(wallswitch.scripting)\
