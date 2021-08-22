@@ -18,6 +18,8 @@ class AutomationCreator(BaseContentCreator):
         self._copy_all_files_from_subdir(
             f'{self.BASESRCPATH}lib/python/core', 'automation/lib/python/core')
 
+        self.prepare_and_copy_configuration(configdir, configuration.secrets)
+
         self._copy_all_files_from_subdir(
             f'{self.BASESRCPATH}jsr223/python/core', 'automation/jsr223/core')
 
@@ -26,8 +28,6 @@ class AutomationCreator(BaseContentCreator):
 
         self._copy_all_files_from_subdir(
             'automation/rules', 'automation/jsr223/personal', update=False)
-
-        self.prepare_and_copy_configuration(configdir, configuration.secrets)
 
     def prepare_and_copy_configuration(self,
                                        configdir: str,
