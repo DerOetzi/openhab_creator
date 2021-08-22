@@ -6,4 +6,5 @@ Strategies {
 
 Items {
     Sensor* : strategy = every5Minutes, everyChange
+    SensorRestore* : strategy = every5Minutes, everyChange, restoreOnStartup
 }

@@ -24,6 +24,10 @@ class GeneralItemsCreator(BaseItemsCreator):
             .label(_('Sensor items'))\
             .append_to(self)
 
+        Group('SensorRestore')\
+            .label(_('Sensor items'))\
+            .append_to(self)
+
         Group('AISensor')\
             .label(_('Sensor items for AI calculations'))\
             .append_to(self)
