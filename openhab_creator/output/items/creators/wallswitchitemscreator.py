@@ -37,6 +37,7 @@ class WallSwitchItemsCreator(BaseItemsCreator):
             .equipment(wallswitch)\
             .semantic(PointType.STATUS)\
             .channel(wallswitch.points.channel('button'))\
+            .scripting(wallswitch.scripting)\
             .append_to(self)
 
         Group(wallswitch.item_ids.wallswitchassignment)\

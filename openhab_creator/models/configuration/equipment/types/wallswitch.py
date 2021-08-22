@@ -42,14 +42,14 @@ class WallSwitchItemIdentifiers(EquipmentItemIdentifiers):
 class WallSwitch(Equipment):
 
     def __init__(self,
-                 buttons: List[str],
+                 buttons: List[Dict],
                  **equipment_configuration: Dict):
         super().__init__(**equipment_configuration)
 
         self._item_ids: WallSwitchItemIdentifiers = WallSwitchItemIdentifiers(
             self)
 
-        self.buttons: List[str] = buttons
+        self.buttons: List[Dict] = buttons
 
     @property
     def item_ids(self) -> WallSwitchItemIdentifiers:
@@ -73,5 +73,19 @@ class WallSwitch(Equipment):
     def buttonassignment_name(self, button_key: int) -> str:
         return _('Button {count} ({name})').format_map({
             'count': (button_key + 1),
-            'name': self.buttons[button_key]
+            'name': self.buttons[button_key]['label']
         })
+
+    @property
+    def scripting(self) -> Dict[str, str]:
+        scripting = {
+            "trigger_channel": self.points.channel('trigger')
+        }
+
+        for button_key in range(0, self.buttons_count):
+            button = self.buttons[button_key]
+            for button_event in button['events']:
+                scripting[f'event_{button_event}'] = self.item_ids.buttonassignment(
+                    button_key)
+
+        return scripting
