@@ -339,6 +339,9 @@ class LightbulbItemsCreator(BaseItemsCreator):
                     .label(wallswitch.buttonassignment_name(button_key))\
                     .icon('configuration')\
                     .groups(wallswitch.item_ids.buttonassignment(button_key))\
+                    .scripting({
+                        'lightbulb_item': lightbulb.item_ids.lightbulb
+                    })\
                     .append_to(self)
 
     def __build_motion_assignment(self,

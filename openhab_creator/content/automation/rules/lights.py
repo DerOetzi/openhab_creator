@@ -58,6 +58,12 @@ class WallSwitchEvent(object):
             self.execute_assigned_commands(wallswitch, event)
 
     def execute_assigned_commands(self, wallswitch, event):
-        for assignment_item in Group(wallswitch.scripting('event_{}'.format(event))):
-            self.log.info('%s: %s', assignment_item.name,
-                          assignment_item.get_string())
+        event_key = 'event_{}'.format(event)
+        if wallswitch.is_scripting(event_key):
+            for assignment_item in Group(wallswitch.scripting(event_key)):
+                command = assignment_item.get_string()
+                if command is not None:
+                    self.log.debug('%s: %s', assignment_item.name, command)
+                    lightbulb_item = assignment_item.from_scripting(
+                        'lightbulb_item')
+                    LightUtils.command(lightbulb_item, command)
