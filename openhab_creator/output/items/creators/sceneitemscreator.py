@@ -16,6 +16,9 @@ if TYPE_CHECKING:
 @ItemsCreatorPipeline(1)
 class SceneItemsCreator(BaseItemsCreator):
     def build(self, configuration: Configuration) -> None:
+        Group('sceneTimeConfiguration')\
+            .append_to(self)
+
         Switch('autoScene')\
             .label(_('Time controlled'))\
             .icon('auto')\
@@ -47,6 +50,7 @@ class SceneItemsCreator(BaseItemsCreator):
                     .format('%d h')\
                     .icon('clock')\
                     .auto()\
+                    .groups('sceneTimeConfiguration')\
                     .append_to(self)
 
                 Number(scene.timeweekend_id)\
@@ -55,6 +59,7 @@ class SceneItemsCreator(BaseItemsCreator):
                     .format('%d h')\
                     .icon('clock')\
                     .auto()\
+                    .groups('sceneTimeConfiguration')\
                     .append_to(self)
 
         self.write_file('scene')

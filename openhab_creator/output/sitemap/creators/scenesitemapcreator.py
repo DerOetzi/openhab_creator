@@ -34,6 +34,10 @@ class SceneSitemapCreator(BaseSitemapCreator):
             .label(_('Special scenes'))\
             .append_to(page)
 
+        Switch('autoScene', [('ON', _('Automation'))])\
+            .visibility(('autoScene', '!=', 'ON'))\
+            .append_to(page)
+
     def build_statuspage(self, statuspage: Page, configuration: Configuration) -> None:
         """No statuspage for scene items"""
 

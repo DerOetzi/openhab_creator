@@ -151,6 +151,9 @@ class Item(object):
     def transform_map(map_name, value):
         return Transformation.transform("MAP", map_name + ".map", u"{}".format(value))
 
+    def __str__(self):
+        return self.name
+
 
 class Group(object):
     def __init__(self, item_or_item_name=None, event=None):
@@ -179,3 +182,8 @@ class Group(object):
 
     def __iter__(self):
         return iter(self.members)
+
+    def __str__(self):
+        items = [x.name for x in self.members]
+
+        return '[{}]'.format(', '.join(items))
