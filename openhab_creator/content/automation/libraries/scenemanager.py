@@ -221,6 +221,14 @@ class SceneManager(object):
     def activate_scene(self, event=None):
         SceneItem.update_event(event)
 
+        for assigned_item in self.scene_members:
+            active_item = assigned_item.from_scripting('active_item')
+
+            if assigned_item.get_onoff(True, event=event):
+                active_item.post_update(ON)
+            else:
+                active_item.post_update(OFF)
+
     def clear_timer(self):
         self.timers.cancel_all()
 

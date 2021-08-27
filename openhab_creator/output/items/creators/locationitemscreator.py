@@ -94,4 +94,9 @@ class LocationItemsCreator(BaseItemsCreator):
                 .groups(scene.assignment_id)\
                 .location(location)\
                 .semantic(PointType.SETPOINT)\
+                .scripting({
+                    'active_item': location.autoactive_id,
+                    'weekend_item': location.autoweekend_id,
+                    'guest_item': location.autoguest_id
+                })\
                 .append_to(self)
