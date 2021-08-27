@@ -91,12 +91,7 @@ class LightUtils(object):
             for group_member in group_members:
                 cls._handle_single_command(group_member, 'OFF')
         else:
-            command = 'lightbulb{}'.format(command)
-            for group_member in group_members:
-                if group_member.name == command:
-                    cls._handle_single_command(group_member, 'ON')
-                else:
-                    cls._handle_single_command(group_member, 'OFF')
+            cls._handle_selected_lightbulb(command, group_members)
 
     @classmethod
     def _handle_nightmode(cls, lightbulb_item, group_members):
@@ -109,8 +104,15 @@ class LightUtils(object):
         if nightmode == 'RANDOM':
             nightmode = random.choice(group_members.members_names)
 
+        cls._handle_selected_lightbulb(nightmode, group_members, 'NIGHT')
+
+    @classmethod
+    def _handle_selected_lightbulb(cls, lightbulb, group_members, on_command='ON'):
+        lightbulb = 'lightbulb{}'.format(lightbulb)
         for group_member in group_members:
-            if group_member.name == nightmode:
-                cls._handle_single_command(group_member, 'NIGHT')
-            else:
+            if group_member.name == lightbulb:
+                cls._handle_single_command(group_member, on_command)
+
+        for group_member in group_members:
+            if group_member.name != lightbulb:
                 cls._handle_single_command(group_member, 'OFF')
