@@ -181,7 +181,7 @@ class SceneManager(object):
             else:
                 actual_scene = SpecialScene.ABSENCE
         else:
-            actual_scene_string = SceneItem.auto_scene.get_string()
+            actual_scene_string = SceneItem.auto_scene_active.get_string()
             actual_scene = TimeScene.from_string(actual_scene_string)
             if actual_scene is None:
                 actual_scene = SpecialScene.from_string(actual_scene_string)
@@ -222,15 +222,22 @@ class SceneManager(object):
     def activate_scene(self, event=None):
         SceneItem.update_event(event)
         guest_stayed = SceneItem.guest_stayed.get_onoff(True)
+        is_weekend = EphemerisUtils.is_weekend() or EphemerisUtils.is_holiday()
 
         for assigned_item in self.scene_members:
             active_item = assigned_item.from_scripting('active_item', event)
+
             guest_item = assigned_item.from_scripting('guest_item', event)
             guest_only = guest_item.get_onoff(True)
 
+            weekend_item = assigned_item.from_scripting('weekend_item', event)
+            weekend_active = weekend_item.get_onoff(True, ON, event)
+
             if (assigned_item.get_onoff(True, event=event)
                     and (guest_stayed
-                         or not (guest_stayed or guest_only))):
+                         or not (guest_stayed or guest_only))
+                    and (weekend_active
+                         or not (weekend_active or is_weekend))):
                 active_item.post_update(ON)
             else:
                 active_item.post_update(OFF)
