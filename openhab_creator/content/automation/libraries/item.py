@@ -32,10 +32,14 @@ class Item(object):
     def from_members_first(cls, group_name, event=None):
         return cls([item for item in itemRegistry.getItem(group_name).members][0], event)
 
-    def from_scripting(self, name):
+    def from_scripting(self, name, event=None):
         item = None
+
+        if event is None:
+            event = self.event
+
         if self.is_scripting(name):
-            item = self.__class__(self.scripting(name), self.event)
+            item = self.__class__(self.scripting(name), event)
 
         return item
 

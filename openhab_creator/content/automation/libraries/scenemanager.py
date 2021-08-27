@@ -221,12 +221,16 @@ class SceneManager(object):
 
     def activate_scene(self, event=None):
         SceneItem.update_event(event)
-        guest_stayed = SceneItem.guest_stayed.get_onoff()
+        guest_stayed = SceneItem.guest_stayed.get_onoff(True)
 
         for assigned_item in self.scene_members:
-            active_item = assigned_item.from_scripting('active_item')
+            active_item = assigned_item.from_scripting('active_item', event)
+            guest_item = assigned_item.from_scripting('guest_item', event)
+            guest_only = guest_item.get_onoff(True)
 
-            if assigned_item.get_onoff(True, event=event):
+            if (assigned_item.get_onoff(True, event=event)
+                    and (guest_stayed
+                         or not (guest_stayed or guest_only))):
                 active_item.post_update(ON)
             else:
                 active_item.post_update(OFF)
