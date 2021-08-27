@@ -82,6 +82,7 @@ class SceneItem(object):
     auto_scene_active = Item('autoSceneActive')
     wayhome = Item('wayhome')
     presences = Item('Presences')
+    guest_stayed = Item('autoGuestStayed')
 
     @classmethod
     def update_event(cls, event):
@@ -220,6 +221,7 @@ class SceneManager(object):
 
     def activate_scene(self, event=None):
         SceneItem.update_event(event)
+        guest_stayed = SceneItem.guest_stayed.get_onoff()
 
         for assigned_item in self.scene_members:
             active_item = assigned_item.from_scripting('active_item')
