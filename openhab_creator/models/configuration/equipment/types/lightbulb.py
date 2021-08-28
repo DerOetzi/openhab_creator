@@ -79,19 +79,19 @@ class LightbulbItemIdentifiers(EquipmentItemIdentifiers):
 
 class LightbulbPoints(EquipmentPoints):
     @property
-    def has_brightness(self) -> str:
+    def has_brightness(self) -> bool:
         return self.has('brightness', True)
 
     @property
-    def has_colortemperature(self) -> str:
+    def has_colortemperature(self) -> bool:
         return self.has('colortemperature', True)
 
     @property
-    def has_onoff(self) -> str:
+    def has_onoff(self) -> bool:
         return self.has('onoff', True)
 
     @property
-    def has_rgb(self) -> str:
+    def has_rgb(self) -> bool:
         return self.has('rgb', True)
 
 
