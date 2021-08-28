@@ -32,7 +32,7 @@ class LightUtils(object):
         if command in ['ALL', 'ON']:
             cls._execute(lightbulb_item, 100, ON, cls.color())
         elif command == 'NIGHT':
-            cls._execute(lightbulb_item, 10, ON, cls.color(10))
+            cls._execute(lightbulb_item, 10, None, cls.color(10))
         elif command == 'OFF':
             updated = cls._execute(lightbulb_item, 0, OFF, cls.BLACK)
 
@@ -59,8 +59,8 @@ class LightUtils(object):
             if actual != brightness:
                 brightness_item.send_command(brightness)
                 updated = True
-        elif onoff_item:
-            actual = onoff_item.get_value(OFF)
+        elif onoff and onoff_item:
+            actual = onoff_item.get_onoff()
             if actual != onoff:
                 onoff_item.send_command(onoff)
                 updated = True
@@ -91,12 +91,29 @@ class LightUtils(object):
             for group_member in group_members:
                 cls._handle_single_command(group_member, 'OFF')
         else:
-            cls._handle_selected_lightbulb(command, group_members)
+            lightbulb = 'lightbulb{}'.format(command)
+            cls._handle_selected_lightbulb(lightbulb, group_members)
 
     @classmethod
     def _handle_nightmode(cls, lightbulb_item, group_members):
         nightmode_item = lightbulb_item.from_scripting('nightmode_item')
         if nightmode_item is None:
+            return
+
+        is_nightmode_active = False
+        for group_member in group_members:
+            brightness = cls.get_brightness(group_member)
+            if brightness == 10:
+                if is_nightmode_active:
+                    is_nightmode_active = False
+                    break
+                else:
+                    is_nightmode_active = True
+            elif brightness > 0:
+                is_nightmode_active = False
+                break
+
+        if is_nightmode_active:
             return
 
         nightmode = nightmode_item.get_string('RANDOM', True)
@@ -107,8 +124,21 @@ class LightUtils(object):
         cls._handle_selected_lightbulb(nightmode, group_members, 'NIGHT')
 
     @classmethod
+    def get_brightness(cls, lightbulb_item):
+        brightness_item = lightbulb_item.from_scripting('brightness_item')
+        rgb_item = lightbulb_item.from_scripting('rgb_item')
+
+        brightness = 0
+        if brightness_item:
+            brightness = brightness_item.get_int(0)
+        elif rgb_item:
+            hsbcolor = rgb_item.get_value(cls.BLACK)
+            brightness = hsbcolor.getBrightness().intValue()
+
+        return brightness
+
+    @classmethod
     def _handle_selected_lightbulb(cls, lightbulb, group_members, on_command='ON'):
-        lightbulb = 'lightbulb{}'.format(lightbulb)
         for group_member in group_members:
             if group_member.name == lightbulb:
                 cls._handle_single_command(group_member, on_command)
