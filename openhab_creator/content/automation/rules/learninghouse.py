@@ -69,7 +69,6 @@ def aisensor_changed(event):
 
         logger.debug(u"{} => {} {:.2f} (model score: {:.2f})".format(
             data_json, model_name, result['prediction'], result['model']['score']))
-        logger.info(u"{}: {}".format(model_name, result['prediction']))
 
         if result['prediction']:
             dependent_item.post_update(ON)
