@@ -27,7 +27,7 @@ class AutomationCreator(BaseContentCreator):
             'automation/libraries', 'automation/lib/python/personal')
 
         self._copy_all_files_from_subdir(
-            'automation/rules', 'automation/jsr223/personal', update=False)
+            'automation/rules', 'automation/jsr223/personal', only_updated=False)
 
     def prepare_and_copy_configuration(self,
                                        configdir: str,

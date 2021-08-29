@@ -5,8 +5,7 @@ from pathlib import Path
 import os
 import re
 
-import distutils.log
-import distutils.dir_util
+import shutil
 
 from openhab_creator import logger
 from openhab_creator.exception import BuildException
@@ -25,7 +24,7 @@ class BaseContentCreator():
     def _copy_all_files_from_subdir(self,
                                     subdir: str, destination: Optional[str] = None,
                                     configdir: Optional[str] = None,
-                                    update: Optional[bool] = True) -> None:
+                                    only_updated: Optional[bool] = True) -> None:
         if destination is None:
             dest_dir = self._create_outputdir_if_not_exists(subdir)
         else:
@@ -33,13 +32,23 @@ class BaseContentCreator():
 
         srcdir = Path(configdir or self._srcdir)
 
-        distutils.log.set_verbosity(distutils.log.DEBUG)
-        distutils.dir_util.copy_tree(
-            str(srcdir / subdir),
-            str(dest_dir),
-            update=update,
-            verbose=1,
-        )
+        self.copytree(str(srcdir / subdir), str(dest_dir), only_updated)
+
+    @classmethod
+    def copytree(cls, srcdir: str, destdir: str, only_updated: bool) -> None:
+        if not os.path.exists(destdir):
+            os.makedirs(destdir)
+        for item in os.listdir(srcdir):
+            src = os.path.join(srcdir, item)
+            dest = os.path.join(destdir, item)
+            if os.path.isdir(src):
+                cls.copytree(src, dest, only_updated)
+            else:
+                if not only_updated\
+                        or not os.path.exists(dest)\
+                        or os.stat(src).st_mtime - os.stat(dest).st_mtime > 1:
+                    logger.info('Copy %s -> %s', src, dest)
+                    shutil.copy2(src, dest)
 
     def _create_outputdir_if_not_exists(self, subdir: str) -> Path:
         destination = self._outputdir / subdir
@@ -67,7 +76,8 @@ class BaseContentCreator():
 
                 self.__write_configuration(output_file, content)
 
-    def __replace_secrets(self, content: str, secrets_storage: SecretsStorage) -> str:
+    @staticmethod
+    def __replace_secrets(content: str, secrets_storage: SecretsStorage) -> str:
         secrets = re.findall('__([A-Z0-9_]*)__', content, re.MULTILINE)
         for secret in secrets:
             replace = secrets_storage.secret(secret)
