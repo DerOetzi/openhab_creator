@@ -10,6 +10,7 @@ class NumberType(CreatorEnum):
     NONE = ''
     ANGLE = ':Angle'
     AREAL_DENSITY = ':ArealDensity'
+    DENSITY = ':Density'
     DIMENSIONLESS = ':Dimensionless'
     LENGTH = ':Length'
     POWER = ':Power'

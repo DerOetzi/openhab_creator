@@ -40,8 +40,8 @@ class WeatherStationType(CreatorEnum):
         ])
 
     OZONE = 'ozone',\
-        SensorLabel(_('Ozone'), _('Ozone'), '%.1f DU', 10),\
-        SensorTyped(PropertyType.OZONE, NumberType.AREAL_DENSITY),\
+        SensorLabel(_('Ozone'), _('Ozone'), '%.5f %unit%'),\
+        SensorTyped(PropertyType.OZONE, NumberType.DENSITY),\
         SensorColors(outdoor=[
             (450, Color.DARKRED), (420, Color.RED), (400, Color.ORANGE),
             (370, Color.YELLOW), (300, Color.GREEN), (200, Color.BLUE),
