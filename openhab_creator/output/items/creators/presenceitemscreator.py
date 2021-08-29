@@ -29,6 +29,13 @@ class PresenceItemsCreator(BaseItemsCreator):
             .expire('30m', 'OFF')\
             .append_to(self)
 
+        Switch('overridePresence')\
+            .label(_('Permanent presence'))\
+            .config()\
+            .groups('Presences')\
+            .expire('24h', 'OFF')\
+            .append_to(self)
+
         self.build_persons(configuration.persons)
 
         self.write_file('presences')

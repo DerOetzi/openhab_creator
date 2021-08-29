@@ -38,6 +38,31 @@ class SceneSitemapCreator(BaseSitemapCreator):
             .visibility(('autoScene', '!=', 'ON'))\
             .append_to(page)
 
+        config_frame = page.frame('config_frame', _('Configuration'))
+
+        Switch('wayhome', [
+            ('OFF', _('Away')),
+            ('ON', _('Way home'))
+        ])\
+            .visibility(
+                ('Presences', '==', 0),
+                (Scene.sceneactive_id, '==', 'Absence'),
+                ('wayhome', '==', 'ON')
+        )\
+            .append_to(config_frame)
+
+        Switch('overridePresence', [
+            ('OFF', _('Inactive')),
+            ('ON', _('Active'))
+        ])\
+            .append_to(config_frame)
+
+        Switch('autoGuestStayed', [
+            ('OFF', _('No guest')),
+            ('ON', _('Guest'))
+        ])\
+            .append_to(config_frame)
+
     def build_statuspage(self, statuspage: Page, configuration: Configuration) -> None:
         """No statuspage for scene items"""
 
