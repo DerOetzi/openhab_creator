@@ -4,12 +4,13 @@ from core.rules import rule
 from core.triggers import when
 from personal.scenemanager import SceneManager
 
+manager = SceneManager()
+
 
 @rule('Scenes start up')
 @when('System started')
 @when('Member of sceneTimeConfiguration received command')
 def scene_startup(event):
-    manager = SceneManager.instance()
     manager.read_timeconfig(event)
     manager.start_scene_timer()
     manager.change_scene()
@@ -22,7 +23,6 @@ def scene_startup(event):
 @when('Descendent of Presences changed')
 @when('Item wayhome received command')
 def change_scene(event):
-    manager = SceneManager.instance()
     manager.change_scene(event)
 
 
@@ -30,10 +30,8 @@ def change_scene(event):
 @when('Descendent of Auto received command')
 @when('Item darkness changed')
 def activate_scene(event):
-    manager = SceneManager.instance()
     manager.activate_scene(event)
 
 
 def scriptUnloaded():  # NOSONAR
-    manager = SceneManager.instance()
     manager.clear_timer()
