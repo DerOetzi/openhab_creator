@@ -11,6 +11,10 @@ from openhab_creator.models.common.weatherstation import (DWDEvent,
 
 
 class MapTransformation(CreatorEnum):
+    ONOFF = 'onoff', {
+        'OFF': _('Off'), 'ON': _('On')
+    }
+
     ACTIVE = "active", {
         'OFF': _('Inactive'), 'ON': _('Active')
     }

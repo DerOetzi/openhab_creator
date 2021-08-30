@@ -41,6 +41,10 @@ class LightbulbItemIdentifiers(EquipmentItemIdentifiers):
         return self._identifier('autoAbsenceLight')
 
     @property
+    def motiondetectors(self) -> str:
+        return self._identifier('motiondetectors')
+
+    @property
     def motiondetectorperiod(self) -> str:
         return self._identifier('motionDetectorPeriod')
 

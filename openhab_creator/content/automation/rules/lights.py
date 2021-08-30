@@ -1,9 +1,13 @@
 # pylint: skip-file
 from core.log import LOG_PREFIX, logging
 from core.rules import rule
-from core.triggers import ChannelEventTrigger, StartupTrigger, when
+from core.triggers import (ChannelEventTrigger, ItemCommandTrigger,
+                           ItemStateChangeTrigger, StartupTrigger, when)
+from personal.dateutils import DateUtils
 from personal.item import Group, Item
 from personal.lightutils import LightUtils
+from personal.scenemanager import SceneManager, TimeScene
+from personal.timermanager import TimerManager
 
 logger = logging.getLogger('{}.Lights'.format(LOG_PREFIX))
 
@@ -35,6 +39,7 @@ def reset_switchingcycles(event):
 class WallSwitchEvent(object):
     def __init__(self):
         self.log = logging.getLogger('{}.WallSwitchEvent'.format(LOG_PREFIX))
+
         self.triggers = [StartupTrigger(
             trigger_name='WallswitchStartup').trigger]
 
@@ -67,3 +72,81 @@ class WallSwitchEvent(object):
                     lightbulb_item = assignment_item.from_scripting(
                         'lightbulb_item')
                     LightUtils.command(lightbulb_item, command)
+
+
+@rule('Motion detector event')
+class MotionDetectorEvent(object):
+    def __init__(self):
+        self.log = logging.getLogger(
+            '{}.MotionDetectorEvent'.format(LOG_PREFIX))
+        self.timers = TimerManager('Motiondetector')
+        self.scenemanager = SceneManager()
+        self.scenemanager.read_timeconfig()
+
+        self.triggers = [StartupTrigger(
+            trigger_name='MotiondetectorStartup').trigger]
+
+        for motiondetector in Group('MotionDetectorPresence'):
+            trigger_name = 'MotionDetectedEvent_{}'.format(motiondetector.name)
+            self.triggers.append(ItemStateChangeTrigger(
+                motiondetector.name, state="ON", trigger_name=trigger_name).trigger)
+
+        for timeconfig in Group('sceneTimeConfiguration'):
+            trigger_name = 'MotionSceneConfig_{}'.format(
+                timeconfig.name)
+            self.triggers.append(ItemCommandTrigger(
+                timeconfig.name, trigger_name=trigger_name).trigger)
+
+    def execute(self, action, inputs):
+        module = inputs['module']
+        modulecfg = module.split('_')
+
+        if modulecfg[0] == 'MotiondetectorStartup':
+            self.log.info('Motiondetector started up')
+        elif modulecfg[0] == 'MotionDetectedEvent':
+            presence_item = Item(modulecfg[1])
+
+            self.log.info('Motion detected by %s', presence_item.name)
+            self.motion(presence_item)
+        elif modulecfg[0] == 'MotionSceneConfig':
+            self.scenemanager.read_timeconfig()
+
+    def motion(self, presence_item):
+        is_darkness = Item('darkness').get_onoff()
+        is_night = TimeScene.NIGHT == self.scenemanager.actual_timescene()
+
+        for assignment_item in Group(presence_item.scripting('assignment_group')):
+            if assignment_item.get_onoff(True):
+                darkness_item = assignment_item.from_scripting('darkness_item')
+                if is_darkness or not darkness_item.get_onoff():
+                    lightbulb_item = assignment_item.from_scripting(
+                        'lightbulb_item')
+                    self.turn_light_on(lightbulb_item, is_night)
+                    self.start_timer(lightbulb_item)
+
+    def turn_light_on(self, lightbulb_item, is_night):
+        is_nightmode = lightbulb_item.is_scripting('nightmode_item')
+
+        if is_nightmode and is_night:
+            LightUtils.command(lightbulb_item, 'NIGHT')
+        else:
+            LightUtils.command(lightbulb_item, 'ALL')
+
+    def start_timer(self, lightbulb_item):
+        period_item = lightbulb_item.from_scripting('motionperiod_item')
+        period = period_item.get_int(10, True)
+
+        self.timers.activate(lightbulb_item.name, lambda: self.turn_light_off(
+            lightbulb_item), DateUtils.now().plusSeconds(period))
+
+    def turn_light_off(self, lightbulb_item):
+        for assignment_item in Group(lightbulb_item.scripting('motiondetectors_group')):
+            if not assignment_item.get_onoff(True):
+                continue
+
+            presence_item = assignment_item.from_scripting('presence_item')
+            if presence_item.get_onoff():
+                self.start_timer(lightbulb_item)
+                return
+
+        LightUtils.command(lightbulb_item, 'OFF')

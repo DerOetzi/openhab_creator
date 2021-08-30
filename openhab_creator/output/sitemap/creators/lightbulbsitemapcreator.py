@@ -172,9 +172,7 @@ class LightbulbSitemapCreator(BaseSitemapCreator):
                                     configuration: Configuration,
                                     lightpage: Page) -> None:
         if configuration.equipment.has('motiondetector'):
-            page = Page(label=_('Motiondetector {lightbulb}').format(
-                lightbulb=lightbulb.name))\
-                .icon('motiondetector')\
+            page = Page(lightbulb.item_ids.motiondetectors)\
                 .append_to(lightpage)
 
             Setpoint(lightbulb.item_ids.motiondetectorperiod, 10, 300, 10)\

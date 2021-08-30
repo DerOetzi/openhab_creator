@@ -15,6 +15,9 @@ if TYPE_CHECKING:
 @ItemsCreatorPipeline(3)
 class MotionDetectorItemsCreator(BaseItemsCreator):
     def build(self, configuration: Configuration) -> None:
+        Group('MotionDetectorPresence')\
+            .append_to(self)
+
         Group('MotionDetectorAssignment')\
             .label(_('Motiondetector assignment items'))\
             .config()\
@@ -36,8 +39,12 @@ class MotionDetectorItemsCreator(BaseItemsCreator):
             .label(_('Presence'))\
             .icon(motiondetector.category)\
             .equipment(motiondetector)\
+            .groups('MotionDetectorPresence')\
             .semantic(PointType.STATUS, PropertyType.PRESENCE)\
             .channel(motiondetector.points.channel('presence'))\
+            .scripting({
+                'assignment_group': motiondetector.item_ids.assignment()
+            })\
             .append_to(self)
 
         Group(motiondetector.item_ids.assignment())\

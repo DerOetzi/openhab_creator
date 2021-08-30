@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, List
 
 from openhab_creator import _
+from openhab_creator.models.common import MapTransformation
 from openhab_creator.models.items import (Color, Dimmer, Group, GroupType,
                                           Number, NumberType, PointType,
                                           PropertyType, String, Switch)
@@ -97,7 +98,10 @@ class LightbulbItemsCreator(BaseItemsCreator):
             .location(lightbulb.location)\
             .semantic(lightbulb)\
             .scripting({
-                'control_item': lightbulb.item_ids.lightcontrol
+                'control_item': lightbulb.item_ids.lightcontrol,
+                'darkness_item': lightbulb.item_ids.autodarkness,
+                'motionperiod_item': lightbulb.item_ids.motiondetectorperiod,
+                'motiondetectors_group': lightbulb.item_ids.motiondetectors
             })\
             .append_to(self)
 
@@ -181,7 +185,9 @@ class LightbulbItemsCreator(BaseItemsCreator):
 
         return lightbulb_item
 
-    def __build_subequipment(self, parent_lightbulb: Lightbulb, parent_lightbulb_item: Group) -> bool:
+    def __build_subequipment(self,
+                             parent_lightbulb: Lightbulb,
+                             parent_lightbulb_item: Group) -> bool:
         if parent_lightbulb.has_subequipment:
             if parent_lightbulb.points.has_brightness:
                 Group(parent_lightbulb.item_ids.brightness)\
@@ -347,9 +353,21 @@ class LightbulbItemsCreator(BaseItemsCreator):
     def __build_motion_assignment(self,
                                   lightbulb: Lightbulb,
                                   motiondetectors: List[MotionDetector]) -> None:
+        Group(lightbulb.item_ids.motiondetectors)\
+            .typed(GroupType.ONOFF)\
+            .label(_('Motiondetector {lightbulb}').format(lightbulb=lightbulb.name))\
+            .map(MapTransformation.ONOFF)\
+            .icon('motiondetector')\
+            .append_to(self)
+
         for motiondetector in motiondetectors:
             Switch(motiondetector.item_ids.assignment(lightbulb))\
                 .label(motiondetector.name)\
                 .icon('motiondetector')\
-                .groups(motiondetector.item_ids.assignment())\
+                .groups(motiondetector.item_ids.assignment(), lightbulb.item_ids.motiondetectors)\
+                .scripting({
+                    'lightbulb_item': lightbulb.item_ids.lightbulb,
+                    'darkness_item': lightbulb.item_ids.autodarkness,
+                    'presence_item': motiondetector.item_ids.presence
+                })\
                 .append_to(self)
