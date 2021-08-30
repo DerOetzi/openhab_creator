@@ -239,7 +239,7 @@ class WeatherStationSitemapCreator(BaseSitemapCreator):
         colors = WeatherStationType.OZONE.colors.outdoor_colors(  # pylint: disable=no-member
             'ozoneWeatherStation')
 
-        page = Page('guiozoneWeatherStation')\
+        page = Page('ozoneWeatherStation')\
             .label(_('Ozone'))\
             .valuecolor(*colors)\
             .append_to(weatherstation_page)
@@ -247,7 +247,7 @@ class WeatherStationSitemapCreator(BaseSitemapCreator):
         for ozone in ozones:
             colors = WeatherStationType.OZONE.colors.outdoor_colors(  # pylint: disable=no-member
                 ozone.item_ids.ozone)
-            Text(ozone.item_ids.gui_ozone)\
+            Text(ozone.item_ids.ozone)\
                 .label(ozone.name)\
                 .valuecolor(*colors)\
                 .append_to(page)
