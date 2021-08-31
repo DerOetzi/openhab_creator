@@ -1,4 +1,6 @@
 # pylint: skip-file
+from personal.timermanager import TimerManager
+from personal.scenemanager import SceneManager, TimeScene
 from core.log import LOG_PREFIX, logging
 from core.rules import rule
 from core.triggers import (ChannelEventTrigger, ItemCommandTrigger,
@@ -6,8 +8,6 @@ from core.triggers import (ChannelEventTrigger, ItemCommandTrigger,
 from personal.dateutils import DateUtils
 from personal.item import Group, Item
 from personal.lightutils import LightUtils
-from personal.scenemanager import SceneManager, TimeScene
-from personal.timermanager import TimerManager
 
 logger = logging.getLogger('{}.Lights'.format(LOG_PREFIX))
 
@@ -67,7 +67,7 @@ class WallSwitchEvent(object):
         if wallswitch.is_scripting(event_key):
             for assignment_item in Group(wallswitch.scripting(event_key)):
                 command = assignment_item.get_string()
-                if command is not None:
+                if command is not None and command != 'NULL':
                     self.log.debug('%s: %s', assignment_item.name, command)
                     lightbulb_item = assignment_item.from_scripting(
                         'lightbulb_item')
@@ -80,7 +80,7 @@ class MotionDetectorEvent(object):
         self.log = logging.getLogger(
             '{}.MotionDetectorEvent'.format(LOG_PREFIX))
         self.timers = TimerManager('Motiondetector')
-        self.scenemanager = SceneManager()
+        self.scenemanager = SceneManager.instance()
         self.scenemanager.read_timeconfig()
 
         self.triggers = [StartupTrigger(
