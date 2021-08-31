@@ -63,8 +63,13 @@ class HeatingItemsCreator(BaseItemsCreator):
             .label(_('Scene controlled'))\
             .icon('auto')\
             .equipment(heating)\
-            .groups('AutoHeating')\
+            .groups('AutoHeating', heating.location.autoequipment)\
             .semantic(PointType.CONTROL)\
+            .scripting({
+                'equipment_type': 'heating',
+                'control_item': heating.item_ids.heatcontrol,
+                'reactivation_item': heating.item_ids.autoreactivation
+            })\
             .append_to(self)
 
         Switch(heating.item_ids.autodisplay)\

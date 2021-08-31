@@ -100,6 +100,7 @@ class LightbulbItemsCreator(BaseItemsCreator):
             .scripting({
                 'control_item': lightbulb.item_ids.lightcontrol,
                 'darkness_item': lightbulb.item_ids.autodarkness,
+                'presences_item': lightbulb.item_ids.autoabsence,
                 'motionperiod_item': lightbulb.item_ids.motiondetectorperiod,
                 'motiondetectors_group': lightbulb.item_ids.motiondetectors
             })\
@@ -126,8 +127,13 @@ class LightbulbItemsCreator(BaseItemsCreator):
             .label(_('Scene controlled'))\
             .icon('auto')\
             .equipment(lightbulb)\
-            .groups('AutoLight')\
+            .groups('AutoLight', lightbulb.location.autoequipment)\
             .semantic(PointType.CONTROL)\
+            .scripting({
+                'lightbulb_item': lightbulb.item_ids.lightbulb,
+                'control_item': lightbulb.item_ids.lightcontrol,
+                'reactivation_item': lightbulb.item_ids.autoreactivation
+            })\
             .append_to(self)
 
         Switch(lightbulb.item_ids.autodisplay)\

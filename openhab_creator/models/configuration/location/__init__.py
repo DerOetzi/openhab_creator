@@ -83,6 +83,10 @@ class Location(BaseObject):
     def autoweekend_id(self) -> str:
         return f'autoWeekend{self.identifier}'
 
+    @property
+    def autoequipment(self) -> str:
+        return f'autoEquipment{self.identifier}'
+
     def sceneassignment_id(self, scene: Scene) -> str:
         return f'{scene.assignment_id}_{self.identifier}'
 

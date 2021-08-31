@@ -22,6 +22,7 @@ class SceneItemsCreator(BaseItemsCreator):
         Switch('autoScene')\
             .label(_('Time controlled'))\
             .icon('auto')\
+            .config()\
             .expire('1h', 'ON')\
             .append_to(self)
 

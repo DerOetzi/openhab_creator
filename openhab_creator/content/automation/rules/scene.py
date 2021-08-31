@@ -3,8 +3,10 @@ from core.log import LOG_PREFIX, logging
 from core.rules import rule
 from core.triggers import when
 from personal.scenemanager import SceneManager
+import personal.scenemanager
+reload(personal.scenemanager)
 
-manager = SceneManager()
+manager = SceneManager.instance()
 
 
 @rule('Scenes start up')
@@ -28,6 +30,7 @@ def change_scene(event):
 
 @rule('Activate scene')
 @when('Descendent of Auto received command')
+@when('Member of Lightcontrol received command')
 @when('Item darkness changed')
 def activate_scene(event):
     manager.activate_scene(event)

@@ -87,6 +87,9 @@ class LocationItemsCreator(BaseItemsCreator):
             .semantic(PointType.SETPOINT)\
             .append_to(self)
 
+        Group(location.autoequipment)\
+            .append_to(self)
+
         for scene in Scene:
             Switch(location.sceneassignment_id(scene))\
                 .label(scene.label)\
@@ -97,6 +100,7 @@ class LocationItemsCreator(BaseItemsCreator):
                 .scripting({
                     'active_item': location.autoactive_id,
                     'weekend_item': location.autoweekend_id,
-                    'guest_item': location.autoguest_id
+                    'guest_item': location.autoguest_id,
+                    'equipment_group': location.autoequipment
                 })\
                 .append_to(self)

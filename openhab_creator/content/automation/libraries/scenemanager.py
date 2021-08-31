@@ -6,6 +6,9 @@ from personal.dateutils import DateUtils
 from personal.ephemerisutils import EphemerisUtils
 from personal.item import Group, Item
 from personal.timermanager import TimerManager
+from personal.lightutils import LightUtils
+import personal.lightutils
+reload(personal.lightutils)
 
 
 class TimeSceneItem:
@@ -82,6 +85,7 @@ class SceneItem(object):
     auto_scene_active = Item('autoSceneActive')
     wayhome = Item('wayhome')
     presences = Item('Presences')
+    darkness = Item('darkness')
     guest_stayed = Item('autoGuestStayed')
 
     @classmethod
@@ -90,10 +94,20 @@ class SceneItem(object):
         cls.auto_scene_active.event = event
         cls.wayhome.event = event
         cls.presences.event = event
+        cls.darkness.event = event
 
 
 class SceneManager(object):
     log = logging.getLogger('{}.SceneManager'.format(LOG_PREFIX))
+
+    __instance = None
+
+    @classmethod
+    def instance(cls):
+        if cls.__instance is None:
+            cls.__instance = cls()
+
+        return cls.__instance
 
     def __init__(self):
         self.timers = TimerManager('SceneManager')
@@ -133,7 +147,7 @@ class SceneManager(object):
 
         self.log.info('Next scene %s at %s', scene, date)
 
-        def timer(): return self.__class__.instance().scene_timer_triggered()
+        def timer(): return SceneManager.instance().scene_timer_triggered()
 
         self.timers.activate('scenetimer', timer, date)
 
@@ -210,24 +224,62 @@ class SceneManager(object):
         SceneItem.update_event(event)
         guest_stayed = SceneItem.guest_stayed.get_onoff(True)
         is_weekend = EphemerisUtils.is_weekend() or EphemerisUtils.is_holiday()
+        is_night = self.is_night()
+        is_presences = self.presences()
+        is_darkness = SceneItem.darkness.get_onoff()
 
         for assigned_item in self.scene_members:
-            active_item = assigned_item.from_scripting('active_item', event)
+            is_location_active = self.is_location_active(
+                assigned_item, guest_stayed, is_weekend, event)
+            self._handle_location(
+                assigned_item, is_location_active, is_night, is_presences, is_darkness, event)
 
-            guest_item = assigned_item.from_scripting('guest_item', event)
-            guest_only = guest_item.get_onoff(True)
+    def is_location_active(self, assigned_item, guest_stayed, is_weekend, event=None):
+        guest_item = assigned_item.from_scripting('guest_item', event)
+        guest_only = guest_item.get_onoff(True)
 
-            weekend_item = assigned_item.from_scripting('weekend_item', event)
-            weekend_active = weekend_item.get_onoff(True, ON, event)
+        weekend_item = assigned_item.from_scripting('weekend_item', event)
+        weekend_active = weekend_item.get_onoff(True, ON, event)
 
-            if (assigned_item.get_onoff(True, event=event)
-                    and (guest_stayed
-                         or not (guest_stayed or guest_only))
-                    and (weekend_active
-                         or not (weekend_active or is_weekend))):
-                active_item.post_update(ON)
-            else:
-                active_item.post_update(OFF)
+        return (assigned_item.get_onoff(True, event=event)
+                and (guest_stayed
+                     or not (guest_stayed or guest_only))
+                and (weekend_active
+                     or not (weekend_active or is_weekend)))
+
+    def _handle_location(self, assigned_item, is_active, is_night, is_presences, is_darkness, event=None):
+        active_item = assigned_item.from_scripting('active_item', event)
+        if is_active:
+            active_item.post_update(ON)
+        else:
+            active_item.post_update(OFF)
+
+        for auto_item in Group(assigned_item.scripting('equipment_group')):
+            automodus = self._change_auto(auto_item, event)
+            self.log.debug('%s: %s', auto_item.name, automodus)
+
+            if not automodus:
+                continue
+
+            if auto_item.is_scripting('lightbulb_item'):
+                lightbulb_item = auto_item.from_scripting('lightbulb_item')
+                LightUtils.automation(
+                    lightbulb_item, is_active, is_night, is_presences, is_darkness)
+
+            # TODO Heating
+
+    def _change_auto(self, auto_item, event):
+        automodus = auto_item.get_onoff()
+
+        if (event is not None
+                and (event.itemName == auto_item.scripting('control_item')
+                     or (event.itemName == auto_item.name and not automodus))):
+            auto_item.post_update(OFF)
+            automodus = False
+
+            # TODO reactivation after timer
+
+        return automodus
 
     def clear_timer(self):
         self.timers.cancel_all()
