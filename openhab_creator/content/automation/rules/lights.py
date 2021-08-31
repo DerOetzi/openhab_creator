@@ -35,6 +35,15 @@ def reset_switchingcycles(event):
     reset_item.post_update(OFF)
 
 
+@rule('Change colors of RGB lights')
+@when("Time cron 45 * * * * ?")
+def change_colors(event):
+    for lightbulb_item in Group('RGBLight'):
+        control_item = lightbulb_item.from_scripting('control_item')
+        command = control_item.get_string('OFF')
+        LightUtils.command(lightbulb_item, command)
+
+
 @rule('Wallswitch event')
 class WallSwitchEvent(object):
     def __init__(self):

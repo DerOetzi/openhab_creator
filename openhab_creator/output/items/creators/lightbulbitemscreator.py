@@ -91,6 +91,9 @@ class LightbulbItemsCreator(BaseItemsCreator):
             .label(_('Switching cycles reset'))\
             .append_to(self)
 
+        Group('RGBLight')\
+            .append_to(self)
+
     def __build_parent(self, lightbulb: Lightbulb) -> Group:
         lightbulb_item = Group(lightbulb.item_ids.lightbulb)\
             .label(_('Lightbulb {blankname}').format(blankname=lightbulb.blankname))\
@@ -105,6 +108,9 @@ class LightbulbItemsCreator(BaseItemsCreator):
                 'motiondetectors_group': lightbulb.item_ids.motiondetectors
             })\
             .append_to(self)
+
+        if lightbulb.points.has_rgb:
+            lightbulb_item.groups('RGBLight')
 
         String(lightbulb.item_ids.lightcontrol)\
             .label(_('Lightcontrol'))\
@@ -223,7 +229,6 @@ class LightbulbItemsCreator(BaseItemsCreator):
 
             if parent_lightbulb.points.has_rgb:
                 Group(parent_lightbulb.item_ids.rgb)\
-                    .typed(GroupType.COLOR)\
                     .label(_('RGB Color'))\
                     .equipment(parent_lightbulb)\
                     .semantic(PointType.CONTROL)\
