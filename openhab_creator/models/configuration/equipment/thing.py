@@ -10,13 +10,23 @@ if TYPE_CHECKING:
     from openhab_creator.models.configuration.equipment.bridge import Bridge
 
 
-class Properties(object):
+class Properties():
     def __init__(self, secrets: Dict[str, str], properties: Dict[str, Any]):
         self._properties: Dict[str, Any] = {}
 
         for property_key, property_value in properties.items():
+            type_hint = None
+            if ':' in property_key:
+                property_key, type_hint = property_key.split(':')
+
             if isinstance(property_value, str):
                 property_value = property_value.format_map(secrets)
+
+                if type_hint is not None:
+                    if type_hint == 'int':
+                        property_value = int(property_value)
+                    elif type_hint == 'float':
+                        property_value = float(property_value)
 
             self._properties[property_key] = property_value
 
@@ -29,7 +39,7 @@ class Properties(object):
         return self._properties
 
 
-class Channel(object):
+class Channel():
     def __init__(self,
                  secrets: Dict[str, str],
                  identifier: str,

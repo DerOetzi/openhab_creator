@@ -48,8 +48,16 @@ class EquipmentItemIdentifiers(ABC):
 
 class EquipmentPoints():
     def __init__(self, points: Dict[str, str], equipment: Equipment):
-        self.points: Dict[str, str] = points
+
         self.equipment: Equipment = equipment
+
+        self.points: Dict[str, str] = {}
+        if self.equipment.is_thing:
+            for point, channel in points.items():
+                self.points[point] = self.equipment.thing.replace_secrets(
+                    channel)
+        else:
+            self.points = points
 
     @property
     def has_battery(self) -> bool:
