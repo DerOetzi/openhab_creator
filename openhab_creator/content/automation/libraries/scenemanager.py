@@ -254,7 +254,7 @@ class SceneManager(object):
         else:
             active_item.post_update(OFF)
 
-        for auto_item in Group(assigned_item.scripting('equipment_group')):
+        for auto_item in Group(assigned_item.scripting('equipment_group'), event):
             automodus = self._change_auto(auto_item, event)
             self.log.debug('%s: %s', auto_item.name, automodus)
 
@@ -269,7 +269,7 @@ class SceneManager(object):
             # TODO Heating
 
     def _change_auto(self, auto_item, event):
-        automodus = auto_item.get_onoff()
+        automodus = auto_item.get_onoff(True)
 
         if (event is not None
                 and (event.itemName == auto_item.scripting('control_item')
@@ -277,7 +277,11 @@ class SceneManager(object):
             auto_item.post_update(OFF)
             automodus = False
 
-            # TODO reactivation after timer
+            reactivation_item = auto_item.from_scripting('reactivation_item')
+            reactivation_period = reactivation_item.get_int(0, True)
+            if reactivation_period > 0:
+                self.timers.activate(auto_item.name, lambda auto_item=auto_item: auto_item.send_command(
+                    ON), DateUtils.now().plusMinutes(reactivation_period))
 
         return automodus
 

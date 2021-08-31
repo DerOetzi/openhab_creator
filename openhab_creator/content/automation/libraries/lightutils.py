@@ -23,8 +23,8 @@ class LightUtils(object):
                       lightbulb_item.name, is_active, is_night, is_presences, is_darkness, presences_item.get_onoff(), darkness_item.get_onoff())
 
         if (is_active
-            and (is_presences or presences_item.get_onoff())
-                and (is_darkness or not darkness_item.get_onoff())):
+            and (is_presences or presences_item.get_onoff(True))
+                and (is_darkness or not darkness_item.get_onoff(True))):
             if is_night and lightbulb_item.is_scripting('nightmode_item'):
                 cls.command(lightbulb_item, 'NIGHT')
             else:
