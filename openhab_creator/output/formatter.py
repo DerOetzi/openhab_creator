@@ -8,12 +8,13 @@ from openhab_creator import CreatorEnum
 class Formatter():
     @staticmethod
     def ucfirst(raw: str) -> str:
+        ucfirst = ''
         if len(raw) > 1:
-            return raw[0].upper() + raw[1:].lower()
+            ucfirst = raw[0].upper() + raw[1:].lower()
         elif len(raw) == 1:
-            return raw.upper()
-        else:
-            return ''
+            ucfirst = raw.upper()
+
+        return ucfirst
 
     @staticmethod
     def format_id(raw_id: str) -> str:
@@ -64,7 +65,7 @@ class Formatter():
 
     @staticmethod
     def value(value: Any) -> str:
-        if isinstance(value, str) or isinstance(value, CreatorEnum):
+        if isinstance(value, (str, CreatorEnum)):
             value = f'"{value}"'
         elif isinstance(value, bool):
             value = 'true' if value else 'false'
