@@ -102,18 +102,23 @@ class SceneManager(object):
 
     __instance = None
 
-    @classmethod
-    def instance(cls):
-        if cls.__instance is None:
-            cls.__instance = cls()
+    @staticmethod
+    def instance():
+        if SceneManager.__instance is None:
+            SceneManager()
 
-        return cls.__instance
+        return SceneManager.__instance
 
     def __init__(self):
-        self.timers = TimerManager('SceneManager')
-        self.scenes = {}
-        self.scene_members = None
-        self.auto = False
+        if SceneManager.__instance is None:
+            self.timers = TimerManager('SceneManager')
+            self.scenes = {}
+            self.scene_members = None
+            self.auto = False
+
+            SceneManager.__instance = self
+        else:
+            raise RuntimeError('This class is a singleton')
 
     def read_timeconfig(self, event=None):
         self.scenes['WorkingDay'] = {}
