@@ -275,6 +275,8 @@ class SceneManager(object):
 
     def _change_auto(self, auto_item, event):
         automodus = auto_item.get_onoff(True)
+        reactivation_item = auto_item.from_scripting('reactivation_item')
+        reactivation_period = reactivation_item.get_int(0, True)
 
         if (event is not None
                 and (event.itemName == auto_item.scripting('control_item')
@@ -282,11 +284,17 @@ class SceneManager(object):
             auto_item.post_update(OFF)
             automodus = False
 
-            reactivation_item = auto_item.from_scripting('reactivation_item')
-            reactivation_period = reactivation_item.get_int(0, True)
             if reactivation_period > 0:
                 self.timers.activate(auto_item.name, lambda auto_item=auto_item: auto_item.send_command(
                     ON), DateUtils.now().plusMinutes(reactivation_period))
+
+        display_item = auto_item.from_scripting('display_item')
+        if display_item is not None:
+            hide_item = auto_item.from_scripting('hide_item')
+            if not automodus and not hide_item.get_onoff(True) and reactivation_period > 0:
+                display_item.post_update(ON)
+            else:
+                display_item.post_update(OFF)
 
         return automodus
 

@@ -138,7 +138,9 @@ class LightbulbItemsCreator(BaseItemsCreator):
             .scripting({
                 'lightbulb_item': lightbulb.item_ids.lightbulb,
                 'control_item': lightbulb.item_ids.lightcontrol,
-                'reactivation_item': lightbulb.item_ids.autoreactivation
+                'reactivation_item': lightbulb.item_ids.autoreactivation,
+                'display_item': lightbulb.item_ids.autodisplay,
+                'hide_item': lightbulb.item_ids.hide
             })\
             .append_to(self)
 
