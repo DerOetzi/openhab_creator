@@ -8,6 +8,7 @@ from openhab_creator.models.common.scene import Scene
 from openhab_creator.models.common.weatherstation import (DWDEvent,
                                                           DWDSeverity,
                                                           WeatherCondition)
+from openhab_creator.models.common.heatcontrol import Heatcontrol
 
 
 class MapTransformation(CreatorEnum):
@@ -54,6 +55,8 @@ class MapTransformation(CreatorEnum):
         'READY': _('Ready'),
         'STANDBY': _('Standby')
     }
+
+    HEATCONTROL = 'heatcontrol', Heatcontrol.mappings()
 
     def __init__(self, filename: str, mappings: Dict[str, str]):
         self.filename: str = filename

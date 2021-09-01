@@ -10,7 +10,7 @@ class Setpoint(BaseElement):
                  item: str,
                  min_value: int,
                  max_value: int,
-                 step: Optional[int] = 1,
+                 step: Optional[float] = 1,
                  label: Optional[str] = ''):
         super().__init__(item, label)
 

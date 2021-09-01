@@ -3,8 +3,10 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Dict, List, Tuple
 
 from openhab_creator import _
+from openhab_creator.models.common import Heatcontrol, MapTransformation
 from openhab_creator.models.configuration import Configuration
-from openhab_creator.models.sitemap import Page, Sitemap, Switch, Text
+from openhab_creator.models.sitemap import (Page, Setpoint, Sitemap, Switch,
+                                            Text)
 from openhab_creator.output.color import Color
 from openhab_creator.output.sitemap import SitemapCreatorPipeline
 from openhab_creator.output.sitemap.basesitemapcreator import \
@@ -16,7 +18,7 @@ if TYPE_CHECKING:
     from openhab_creator.models.configuration.location import Location
 
 
-@SitemapCreatorPipeline(mainpage=4)
+@SitemapCreatorPipeline(mainpage=4, configpage=5)
 class TemperatureSitemapCreator(BaseSitemapCreator):
     def __init__(self):
         self.toplevel_locations = {}
@@ -70,24 +72,13 @@ class TemperatureSitemapCreator(BaseSitemapCreator):
 
         return subpage
 
-    def build_heating(self, page: Page, location: Location,  heatings: Dict) -> None:
+    @staticmethod
+    def build_heating(page: Page, location: Location,  heatings: Dict) -> None:
         if location in heatings:
             heating = heatings[location]
-            mappings = [
-                ('"COMFORT"', _('Comfort')),
-                ('"ECO"', _('ECO')),
-                ('"CLOSED"', _('Closed'))
-            ]
+            mappings = Heatcontrol.switch_mappings(heating.boost)
 
-            page.labelcolor(
-                (f'{heating.item_ids.heatcontrol}=="BOOST"', Color.RED),
-                (f'{heating.item_ids.heatcontrol}=="COMFORT"', Color.YELLOW),
-                (f'{heating.item_ids.heatcontrol}=="ECO"', Color.GREEN),
-                (f'{heating.item_ids.heatcontrol}=="CLOSED"', Color.LIGHTGREY)
-            )
-
-            if heating.boost:
-                mappings.insert(0, ('"BOOST"', _('Boost')))
+            page.labelcolor(*Heatcontrol.colors(heating.item_ids.heatcontrol))
 
             Switch(heating.item_ids.heatcontrol, mappings)\
                 .append_to(page)
@@ -118,4 +109,42 @@ class TemperatureSitemapCreator(BaseSitemapCreator):
         """No statuspage for temperatures"""
 
     def build_configpage(self, configpage: Page, configuration: Configuration) -> None:
-        """No configpage for temperatures"""
+        has_heating, heatings = configuration.equipment.has('heating')
+
+        if has_heating:
+            page = Page(label=_('Heatings'))\
+                .append_to(configpage)
+
+            for heating in heatings:
+                toplevel_location = heating.location.toplevel
+                frame = page.frame(
+                    toplevel_location.identifier, toplevel_location.name)
+
+                colors = Heatcontrol.colors(heating.item_ids.heatcontrol)
+
+                subpage = Page(heating.item_ids.heatcontrol)\
+                    .label(heating.name)\
+                    .map(MapTransformation.HEATCONTROL)\
+                    .valuecolor(*colors)\
+                    .append_to(frame)
+
+                Switch(heating.item_ids.heatcontrol, Heatcontrol.switch_mappings(heating.boost))\
+                    .labelcolor(*colors)\
+                    .append_to(subpage)
+
+                Text(heating.item_ids.heatsetpoint)\
+                    .valuecolor(*TemperatureSitemapCreator.valuecolor(heating.item_ids.heatsetpoint))\
+                    .append_to(subpage)
+
+                Switch(heating.item_ids.auto, [('OFF', _('Off')), ('ON', _('Automation'))])\
+                    .append_to(subpage)
+
+                Switch(heating.item_ids.autoreactivation, [
+                    ('0', _('Off')), ('30', '30 M'), ('60', '1 H')])\
+                    .append_to(subpage)
+
+                Setpoint(heating.item_ids.ecotemperature, 16, 20, 0.5)\
+                    .append_to(subpage)
+
+                Setpoint(heating.item_ids.comforttemperature, 20, 24, 0.5)\
+                    .append_to(subpage)
