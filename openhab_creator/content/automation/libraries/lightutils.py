@@ -2,13 +2,13 @@
 
 import random
 
-from core.jsr223.scope import (NULL, OFF, ON, UNDEF, DecimalType, HSBType,
-                               PercentType, events, itemRegistry)
+import personal.autoitemmanager
+from core.jsr223.scope import OFF, ON, DecimalType, HSBType, PercentType
 from core.log import LOG_PREFIX, logging
+from personal.autoitemmanager import AutoItemManager
 from personal.dateutils import DateUtils
 from personal.item import Group, Item
-from personal.autoitemmanager import AutoItemManager
-import personal.autoitemmanager
+
 reload(personal.autoitemmanager)
 
 

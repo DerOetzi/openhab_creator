@@ -22,10 +22,10 @@ class HeatingItemsCreator(BaseItemsCreator):
         self.__build_heating(configuration)
 
         for heating in configuration.equipment.equipment('heating'):
-            self.__build_parent(heating)
+            heating_item = self.__build_parent(heating)
 
-            if not self.__build_subequipment(heating):
-                self.__build_thing(heating)
+            if not self.__build_subequipment(heating, heating_item):
+                self.__build_thing(heating, heating_item)
 
         self.write_file('heating')
 
@@ -53,15 +53,17 @@ class HeatingItemsCreator(BaseItemsCreator):
                 .config()\
                 .append_to(self)
 
-    def __build_parent(self, heating: Heating) -> None:
-        Group(heating.item_ids.heating)\
+    def __build_parent(self, heating: Heating) -> Group:
+        heating_item = Group(heating.item_ids.heating)\
             .label(_('Heating {blankname}').format(blankname=heating.blankname))\
             .icon('heating')\
             .location(heating.location)\
             .semantic(heating)\
             .scripting({
                 'control_item': heating.item_ids.heatcontrol,
-                'auto_item': heating.item_ids.auto
+                'auto_item': heating.item_ids.auto,
+                'comfort_item': heating.item_ids.comforttemperature,
+                'eco_item': heating.item_ids.ecotemperature
             })\
             .append_to(self)
 
@@ -71,7 +73,9 @@ class HeatingItemsCreator(BaseItemsCreator):
             .equipment(heating)\
             .groups('Heatcontrol')\
             .semantic(PointType.CONTROL)\
-            .scripting({'heating_item': heating.item_ids.heating})\
+            .scripting({
+                'heating_item': heating.item_ids.heating
+            })\
             .append_to(self)
 
         Switch(heating.item_ids.hide)\
@@ -129,7 +133,9 @@ class HeatingItemsCreator(BaseItemsCreator):
             .auto()\
             .append_to(self)
 
-    def __build_subequipment(self, parent_heating: Heating) -> bool:
+        return heating_item
+
+    def __build_subequipment(self, parent_heating: Heating, parent_heating_item: Group) -> bool:
         if parent_heating.has_subequipment:
             Group(parent_heating.item_ids.heatsetpoint)\
                 .typed(GroupType.NUMBER_AVG)\
@@ -140,19 +146,39 @@ class HeatingItemsCreator(BaseItemsCreator):
                 .semantic(PointType.SETPOINT, PropertyType.TEMPERATURE)\
                 .append_to(self)
 
+            subheatings = []
+
             for subheating in parent_heating.subequipment:
-                self.__build_thing(subheating)
+                subheatings.append(subheating.item_ids.heating)
+                self.__build_thing(subheating, parent_heating_item)
+
+            parent_heating_item.scripting({
+                'is_thing': False,
+                'subequipment': ','.join(subheatings)
+
+            })
 
         return parent_heating.has_subequipment
 
-    def __build_thing(self, heating: Heating) -> None:
+    def __build_thing(self, heating: Heating, heating_item: Group) -> None:
         if heating.is_child:
-            Group(heating.item_ids.heating)\
+            heating_item = Group(heating.item_ids.heating)\
                 .label(_('Heating {name}').format(name=heating.name))\
                 .icon('heating')\
                 .equipment(heating.parent)\
                 .semantic(heating)\
+                .scripting({
+                    'comfort_item': heating.parent.item_ids.comforttemperature,
+                    'eco_item': heating.parent.item_ids.ecotemperature
+                })\
                 .append_to(self)
+
+        heating_item.scripting({
+            'is_thing': True,
+            'setpoint_item': heating.item_ids.heatsetpoint,
+            'off_temp': heating.off_temp,
+            'boost_temp': heating.boost_temp
+        })
 
         heatsetpoint = Number(heating.item_ids.heatsetpoint)\
             .label(_('Target temperature'))\
