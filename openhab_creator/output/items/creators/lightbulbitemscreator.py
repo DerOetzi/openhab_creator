@@ -102,6 +102,7 @@ class LightbulbItemsCreator(BaseItemsCreator):
             .semantic(lightbulb)\
             .scripting({
                 'control_item': lightbulb.item_ids.lightcontrol,
+                'auto_item': lightbulb.item_ids.auto,
                 'darkness_item': lightbulb.item_ids.autodarkness,
                 'presences_item': lightbulb.item_ids.autoabsence,
                 'motionperiod_item': lightbulb.item_ids.motiondetectorperiod,

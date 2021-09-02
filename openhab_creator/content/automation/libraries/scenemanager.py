@@ -7,8 +7,7 @@ from personal.ephemerisutils import EphemerisUtils
 from personal.item import Group, Item
 from personal.timermanager import TimerManager
 from personal.lightutils import LightUtils
-import personal.lightutils
-reload(personal.lightutils)
+from personal.autoitemmanager import AutoItemManager
 
 
 class TimeSceneItem:
@@ -260,7 +259,7 @@ class SceneManager(object):
             active_item.post_update(OFF)
 
         for auto_item in Group(assigned_item.scripting('equipment_group'), event):
-            automodus = self._change_auto(auto_item, event)
+            automodus = AutoItemManager.instance().change_auto(auto_item, event)
             self.log.debug('%s: %s', auto_item.name, automodus)
 
             if not automodus:
@@ -272,31 +271,6 @@ class SceneManager(object):
                     lightbulb_item, is_active, is_night, is_presences, is_darkness)
 
             # TODO Heating
-
-    def _change_auto(self, auto_item, event):
-        automodus = auto_item.get_onoff(True)
-        reactivation_item = auto_item.from_scripting('reactivation_item')
-        reactivation_period = reactivation_item.get_int(0, True)
-
-        if (event is not None
-                and (event.itemName == auto_item.scripting('control_item')
-                     or (event.itemName == auto_item.name and not automodus))):
-            auto_item.post_update(OFF)
-            automodus = False
-
-            if reactivation_period > 0:
-                self.timers.activate(auto_item.name, lambda auto_item=auto_item: auto_item.send_command(
-                    ON), DateUtils.now().plusMinutes(reactivation_period))
-
-        display_item = auto_item.from_scripting('display_item')
-        if display_item is not None:
-            hide_item = auto_item.from_scripting('hide_item')
-            if not automodus and not hide_item.get_onoff(True) and reactivation_period > 0:
-                display_item.post_update(ON)
-            else:
-                display_item.post_update(OFF)
-
-        return automodus
 
     def clear_timer(self):
         self.timers.cancel_all()

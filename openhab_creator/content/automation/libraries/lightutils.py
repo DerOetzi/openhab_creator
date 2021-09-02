@@ -7,6 +7,9 @@ from core.jsr223.scope import (NULL, OFF, ON, UNDEF, DecimalType, HSBType,
 from core.log import LOG_PREFIX, logging
 from personal.dateutils import DateUtils
 from personal.item import Group, Item
+from personal.autoitemmanager import AutoItemManager
+import personal.autoitemmanager
+reload(personal.autoitemmanager)
 
 
 class LightUtils(object):
@@ -31,6 +34,13 @@ class LightUtils(object):
                 cls.command(lightbulb_item, 'ALL')
         else:
             cls.command(lightbulb_item, 'OFF')
+
+    @classmethod
+    def manual(cls, lightbulb_item, command, event=None):
+        AutoItemManager.instance().change_auto(
+            lightbulb_item.from_scripting('auto_item'), event)
+
+        cls.command(lightbulb_item, command)
 
     @classmethod
     def command(cls, lightbulb_item, command):

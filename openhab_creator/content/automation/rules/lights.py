@@ -1,13 +1,17 @@
 # pylint: skip-file
-from personal.timermanager import TimerManager
-from personal.scenemanager import SceneManager, TimeScene
+import personal.lightutils
 from core.log import LOG_PREFIX, logging
 from core.rules import rule
 from core.triggers import (ChannelEventTrigger, ItemCommandTrigger,
                            ItemStateChangeTrigger, StartupTrigger, when)
+
 from personal.dateutils import DateUtils
 from personal.item import Group, Item
 from personal.lightutils import LightUtils
+from personal.scenemanager import SceneManager, TimeScene
+from personal.timermanager import TimerManager
+
+reload(personal.lightutils)
 
 logger = logging.getLogger('{}.Lights'.format(LOG_PREFIX))
 
@@ -20,10 +24,10 @@ def lightcontrol(event):
 
     lightbulb_item = lightcontrol_item.from_scripting('lightbulb_item')
 
-    logger.info('%s: %s %s', lightbulb_item.name,
-                command, lightbulb_item.scripting())
+    logger.debug('%s: %s %s', lightbulb_item.name,
+                 command, lightbulb_item.scripting())
 
-    LightUtils.command(lightbulb_item, command)
+    LightUtils.manual(lightbulb_item, command, event)
 
 
 @rule('Reset Switching cycles')
@@ -80,7 +84,7 @@ class WallSwitchEvent(object):
                     self.log.debug('%s: %s', assignment_item.name, command)
                     lightbulb_item = assignment_item.from_scripting(
                         'lightbulb_item')
-                    LightUtils.command(lightbulb_item, command)
+                    LightUtils.manual(lightbulb_item, command)
 
 
 @rule('Motion detector event')
