@@ -19,6 +19,8 @@ class HeatingItemsCreator(BaseItemsCreator):
     def build(self, configuration: Configuration) -> None:
         self.__build_general_groups()
 
+        self.__build_heating(configuration)
+
         for heating in configuration.equipment.equipment('heating'):
             self.__build_parent(heating)
 
@@ -43,12 +45,24 @@ class HeatingItemsCreator(BaseItemsCreator):
             .auto()\
             .append_to(self)
 
+    def __build_heating(self, configuration: Configuration) -> None:
+        if not configuration.general.has_learninghouse('heating'):
+            Switch('heating')\
+                .label(_('Heatings'))\
+                .icon('heating')\
+                .config()\
+                .append_to(self)
+
     def __build_parent(self, heating: Heating) -> None:
         Group(heating.item_ids.heating)\
             .label(_('Heating {blankname}').format(blankname=heating.blankname))\
             .icon('heating')\
             .location(heating.location)\
             .semantic(heating)\
+            .scripting({
+                'control_item': heating.item_ids.heatcontrol,
+                'auto_item': heating.item_ids.auto
+            })\
             .append_to(self)
 
         String(heating.item_ids.heatcontrol)\
@@ -56,6 +70,15 @@ class HeatingItemsCreator(BaseItemsCreator):
             .icon('heatcontrol')\
             .equipment(heating)\
             .groups('Heatcontrol')\
+            .semantic(PointType.CONTROL)\
+            .scripting({'heating_item': heating.item_ids.heating})\
+            .append_to(self)
+
+        Switch(heating.item_ids.hide)\
+            .label(_('Hide on temperature page'))\
+            .icon('hide')\
+            .config()\
+            .equipment(heating)\
             .semantic(PointType.CONTROL)\
             .append_to(self)
 
@@ -66,9 +89,11 @@ class HeatingItemsCreator(BaseItemsCreator):
             .groups('AutoHeating', heating.location.autoequipment)\
             .semantic(PointType.CONTROL)\
             .scripting({
-                'equipment_type': 'heating',
+                'heating_item': heating.item_ids.heating,
                 'control_item': heating.item_ids.heatcontrol,
-                'reactivation_item': heating.item_ids.autoreactivation
+                'reactivation_item': heating.item_ids.autoreactivation,
+                'display_item': heating.item_ids.autodisplay,
+                'hide_item': heating.item_ids.hide
             })\
             .append_to(self)
 

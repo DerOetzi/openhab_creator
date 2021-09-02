@@ -9,6 +9,7 @@ from openhab_creator import logger
 from openhab_creator.exception import ConfigurationException
 from openhab_creator.models.configuration.equipment import EquipmentType
 from openhab_creator.models.configuration.equipment.bridge import Bridge
+from openhab_creator.models.configuration.equipment.types.learninghouse import LearningHouse
 from openhab_creator.models.configuration.location import (Location,
                                                            LocationFactory)
 from openhab_creator.models.configuration.person import Person
@@ -237,6 +238,7 @@ class GeneralRegistry():
     def __init__(self, configuration: Configuration):
         self.configuration: Configuration = configuration
         self.equipment: List[Equipment] = []
+        self.learninghouse: List[str] = []
 
     def read_configuration(self) -> None:
         general_configuration = self.configuration.read_json_from_file(
@@ -246,7 +248,13 @@ class GeneralRegistry():
             equipment = EquipmentType.new(configuration=self.configuration,
                                           **equipment_definition)
 
-        self.equipment.append(equipment)
+            self.equipment.append(equipment)
+
+            if isinstance(equipment, LearningHouse):
+                self.learninghouse.append(equipment.item_ids.dependent)
+
+    def has_learninghouse(self, dependent: str):
+        return dependent in self.learninghouse
 
 
 class Configuration():

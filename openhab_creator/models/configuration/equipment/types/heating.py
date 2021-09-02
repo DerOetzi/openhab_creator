@@ -38,6 +38,10 @@ class HeatingItemIdentifiers(SensorItemIdentifiers):
         return self._identifier('autoReactivationHeating')
 
     @property
+    def hide(self) -> str:
+        return self._identifier('hideHeating')
+
+    @property
     def heatsetpoint(self) -> str:
         return self._identifier('heatsetpoint')
 

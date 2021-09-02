@@ -81,10 +81,11 @@ class TemperatureSitemapCreator(BaseSitemapCreator):
             page.labelcolor(*Heatcontrol.colors(heating.item_ids.heatcontrol))
 
             Switch(heating.item_ids.heatcontrol, mappings)\
+                .visibility((heating.item_ids.hide, '!=', 'ON'))\
                 .append_to(page)
 
             Switch(heating.item_ids.auto, [('ON', _('Automation'))])\
-                .visibility((heating.item_ids.auto, '!=', 'ON'))\
+                .visibility((heating.item_ids.autodisplay, '==', 'ON'))\
                 .append_to(page)
 
             Text(heating.item_ids.heatsetpoint)\
@@ -112,8 +113,22 @@ class TemperatureSitemapCreator(BaseSitemapCreator):
         has_heating, heatings = configuration.equipment.has('heating')
 
         if has_heating:
-            page = Page(label=_('Heatings'))\
+            page = Page('heating')\
+                .label(_('Heatings'))\
+                .map(MapTransformation.ACTIVE)\
+                .valuecolor(('==OFF', Color.RED), ('==ON', Color.GREEN))\
                 .append_to(configpage)
+
+            if configuration.general.has_learninghouse('heating'):
+                Text('heating')\
+                    .map(MapTransformation.ACTIVE)\
+                    .valuecolor(('==OFF', Color.RED), ('==ON', Color.GREEN))\
+                    .append_to(page)
+            else:
+                Switch('heating', [
+                       ('OFF', _('Inactive')), ('ON', _('Active'))])\
+                    .labelcolor(('==OFF', Color.RED), ('==ON', Color.GREEN))\
+                    .append_to(page)
 
             for heating in heatings:
                 toplevel_location = heating.location.toplevel
@@ -130,6 +145,9 @@ class TemperatureSitemapCreator(BaseSitemapCreator):
 
                 Switch(heating.item_ids.heatcontrol, Heatcontrol.switch_mappings(heating.boost))\
                     .labelcolor(*colors)\
+                    .append_to(subpage)
+
+                Switch(heating.item_ids.hide, [('OFF', _('Display')), ('ON', _('Hide'))])\
                     .append_to(subpage)
 
                 Text(heating.item_ids.heatsetpoint)\
