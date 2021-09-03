@@ -33,13 +33,17 @@ class PowerOutletItemsCreator(BaseItemsCreator):
                     .location(poweroutlet.location)
 
             if poweroutlet.points.has_onoff:
-                Switch(poweroutlet.item_ids.onoff)\
+                onoff_item = Switch(poweroutlet.item_ids.onoff)\
                     .label(_('On/Off'))\
                     .equipment(poweroutlet.item_ids.poweroutlet)\
                     .config()\
                     .semantic(PointType.SWITCH)\
                     .channel(poweroutlet.points.channel('onoff'))\
+                    .scripting(poweroutlet.scripting)\
                     .append_to(self)
+
+                if poweroutlet.onoff_group is not None:
+                    onoff_item.groups(poweroutlet.onoff_group)
 
             if poweroutlet.points.has_power:
                 Number(poweroutlet.item_ids.power)\

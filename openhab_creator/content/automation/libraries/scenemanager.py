@@ -280,6 +280,12 @@ class SceneManager(object):
             elif auto_item.is_scripting('heating_item'):
                 heating_item = auto_item.from_scripting('heating_item')
                 HeatingUtils.automation(heating_item, is_active, is_heating)
+            elif auto_item.is_scripting('pump_item'):
+                control_item = auto_item.from_scripting('control_item')
+                if is_active:
+                    control_item.send_command(ON)
+                else:
+                    control_item.send_command(OFF)
 
     def clear_timer(self):
         self.timers.cancel_all()

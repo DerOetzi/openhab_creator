@@ -111,8 +111,10 @@ class TemperatureSitemapCreator(BaseSitemapCreator):
 
     def build_configpage(self, configpage: Page, configuration: Configuration) -> None:
         has_heating, heatings = configuration.equipment.has('heating')
+        has_warmwaterpump, warmwaterpumps = configuration.equipment.has(
+            'warmwaterpump')
 
-        if has_heating:
+        if has_heating or has_warmwaterpump:
             page = Page('heating')\
                 .label(_('Heatings'))\
                 .map(MapTransformation.ACTIVE)\
@@ -129,6 +131,18 @@ class TemperatureSitemapCreator(BaseSitemapCreator):
                        ('OFF', _('Inactive')), ('ON', _('Active'))])\
                     .labelcolor(('==OFF', Color.RED), ('==ON', Color.GREEN))\
                     .append_to(page)
+
+            for pump in warmwaterpumps:
+                frame = page.frame(pump.identifier, pump.blankname)
+                Switch(pump.item_ids.onoff, [('OFF', _('Off')), ('ON', _('On'))])\
+                    .append_to(frame)
+
+                Switch(pump.item_ids.auto, [('OFF', _('Off')), ('ON', _('Automation'))])\
+                    .append_to(frame)
+
+                Switch(pump.item_ids.autoreactivation, [
+                    ('0', _('Off')), ('30', '30 M'), ('60', '1 H')])\
+                    .append_to(frame)
 
             for heating in heatings:
                 toplevel_location = heating.location.toplevel

@@ -76,5 +76,9 @@ class PowerOutlet(Sensor):
         return 'PowerOutlet'
 
     @property
+    def onoff_group(self) -> str | None:
+        return None
+
+    @property
     def scripting(self) -> Dict:
         return {}

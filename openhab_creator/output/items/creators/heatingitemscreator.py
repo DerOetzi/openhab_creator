@@ -21,6 +21,8 @@ class HeatingItemsCreator(BaseItemsCreator):
 
         self.__build_heating(configuration)
 
+        self.__build_pumps(configuration)
+
         for heating in configuration.equipment.equipment('heating'):
             heating_item = self.__build_parent(heating)
 
@@ -49,12 +51,61 @@ class HeatingItemsCreator(BaseItemsCreator):
             .auto()\
             .append_to(self)
 
+        Group('WarmWaterPumpControl')\
+            .label(_('Warm water pump control items'))\
+            .config()\
+            .append_to(self)
+
+        Group('AutoWarmWaterPump')\
+            .label(_('Scene controlled configuration items'))\
+            .auto()\
+            .append_to(self)
+
+        Group('AutoReactivationWarmWaterPump')\
+            .label(_('Reactivation scene controlled configuration items'))\
+            .auto()\
+            .append_to(self)
+
     def __build_heating(self, configuration: Configuration) -> None:
         if not configuration.general.has_learninghouse('heating'):
             Switch('heating')\
                 .label(_('Heatings'))\
                 .icon('heating')\
                 .config()\
+                .append_to(self)
+
+    def __build_pumps(self, configuration: Configuration) -> None:
+        for pump in configuration.equipment.equipment('warmwaterpump'):
+            Group(pump.item_ids.warmwaterpump)\
+                .label(_('Warm water pump {blankname}').format(blankname=pump.blankname))\
+                .icon('pump')\
+                .location(pump.location)\
+                .semantic(pump)\
+                .scripting({
+                    'control_item': pump.item_ids.onoff,
+                    'auto_item': pump.item_ids.auto
+                })\
+                .append_to(self)
+
+            Switch(pump.item_ids.auto)\
+                .label(_('Scene controlled'))\
+                .icon('auto')\
+                .equipment(pump)\
+                .groups('AutoWarmWaterPump', pump.location.autoequipment)\
+                .semantic(PointType.CONTROL)\
+                .scripting({
+                    'pump_item': pump.item_ids.warmwaterpump,
+                    'control_item': pump.item_ids.onoff,
+                    'reactivation_item': pump.item_ids.autoreactivation
+                })\
+                .append_to(self)
+
+            Number(pump.item_ids.autoreactivation)\
+                .label(_('Reactivate scene controlled'))\
+                .icon('reactivation')\
+                .equipment(pump)\
+                .groups('AutoReactivationWarmWaterPump')\
+                .semantic(PointType.SETPOINT)\
                 .append_to(self)
 
     def __build_parent(self, heating: Heating) -> Group:

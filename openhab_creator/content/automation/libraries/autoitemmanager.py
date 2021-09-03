@@ -27,7 +27,7 @@ class AutoItemManager(object):
 
     @staticmethod
     def startup():
-        for group_name in ['AutoLight', 'AutoHeating']:
+        for group_name in ['AutoLight', 'AutoHeating', 'AutoWarmWaterPump']:
             for auto_item in Group(group_name):
                 reactivation_item = auto_item.from_scripting(
                     'reactivation_item')
