@@ -27,11 +27,13 @@ class AutoItemManager(object):
 
     @staticmethod
     def startup():
-        for auto_item in Group('AutoLight'):
-            reactivation_item = auto_item.from_scripting('reactivation_item')
-            reactivation_period = reactivation_item.get_int(0, True)
-            if reactivation_period > 0:
-                auto_item.post_update(ON)
+        for group_name in ['AutoLight', 'AutoHeating']:
+            for auto_item in Group(group_name):
+                reactivation_item = auto_item.from_scripting(
+                    'reactivation_item')
+                reactivation_period = reactivation_item.get_int(0, True)
+                if reactivation_period > 0:
+                    auto_item.post_update(ON)
 
     def change_auto(self, auto_item, event=None):
         automodus = auto_item.get_onoff(True)

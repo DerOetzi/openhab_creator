@@ -35,6 +35,10 @@ class HeatingItemsCreator(BaseItemsCreator):
             .config()\
             .append_to(self)
 
+        Group('HeatTemperature')\
+            .config()\
+            .append_to(self)
+
         Group('AutoHeating')\
             .label(_('Scene controlled configuration items'))\
             .auto()\
@@ -120,8 +124,12 @@ class HeatingItemsCreator(BaseItemsCreator):
             .temperature()\
             .icon('temperature')\
             .equipment(heating)\
+            .groups('HeatTemperature')\
             .semantic(PointType.SETPOINT, PropertyType.TEMPERATURE)\
-            .auto()\
+            .scripting({
+                'heating_item': heating.item_ids.heating,
+                'control_item': heating.item_ids.heatcontrol
+            })\
             .append_to(self)
 
         Number(heating.item_ids.comforttemperature)\
@@ -129,8 +137,12 @@ class HeatingItemsCreator(BaseItemsCreator):
             .temperature()\
             .icon('temperature')\
             .equipment(heating)\
+            .groups('HeatTemperature')\
             .semantic(PointType.SETPOINT, PropertyType.TEMPERATURE)\
-            .auto()\
+            .scripting({
+                'heating_item': heating.item_ids.heating,
+                'control_item': heating.item_ids.heatcontrol
+            })\
             .append_to(self)
 
         return heating_item
@@ -176,7 +188,7 @@ class HeatingItemsCreator(BaseItemsCreator):
         heating_item.scripting({
             'is_thing': True,
             'setpoint_item': heating.item_ids.heatsetpoint,
-            'off_temp': heating.off_temp,
+            'heatmode_item': heating.item_ids.heatmode,
             'boost_temp': heating.boost_temp
         })
 
@@ -187,12 +199,21 @@ class HeatingItemsCreator(BaseItemsCreator):
             .equipment(heating)\
             .semantic(PointType.SETPOINT, PropertyType.TEMPERATURE)\
             .scripting({
-                'off_temp': heating.off_temp,
                 'boost_temp': heating.boost_temp
             })\
-            .channel(heating.points.channel('heatsetpoint'))
+            .channel(heating.points.channel('heatsetpoint'))\
+            .append_to(self)
 
         if heating.is_child:
             heatsetpoint.groups(heating.parent.item_ids.heatsetpoint)
 
-        heatsetpoint.append_to(self)
+        scripting = dict(
+            map(lambda x: (f'heatmode_{x[0]}', x[1]), heating.heatmode.items()))
+
+        String(heating.item_ids.heatmode)\
+            .label(_('Heat mode'))\
+            .equipment(heating)\
+            .semantic(PointType.SETPOINT)\
+            .scripting(scripting)\
+            .channel(heating.points.channel('heatmode'))\
+            .append_to(self)

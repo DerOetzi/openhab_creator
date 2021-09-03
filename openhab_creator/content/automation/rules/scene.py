@@ -38,6 +38,7 @@ def change_scene(event):
 @rule('Activate scene')
 @when('Item darkness changed')
 @when('Descendent of Auto received command')
+@when('Item heating changed')
 def activate_scene(event):
     manager.activate_scene(event)
 

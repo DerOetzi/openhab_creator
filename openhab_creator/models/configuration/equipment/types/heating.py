@@ -26,6 +26,10 @@ class HeatingItemIdentifiers(SensorItemIdentifiers):
         return self._identifier('heatcontrol')
 
     @property
+    def heatmode(self) -> str:
+        return self._identifier('heatmode')
+
+    @property
     def auto(self) -> str:
         return self._identifier('autoHeating')
 
@@ -58,7 +62,7 @@ class HeatingItemIdentifiers(SensorItemIdentifiers):
 class Heating(Sensor):
     def __init__(self,
                  boost: Optional[bool] = False,
-                 off_temp: Optional[float] = 6.0,
+                 heatmode: Optional[Dict[str, str]] = None,
                  boost_temp: Optional[float] = 28.0,
                  **equipment_configuration: Dict):
 
@@ -67,7 +71,7 @@ class Heating(Sensor):
         self._item_ids: HeatingItemIdentifiers = HeatingItemIdentifiers(self)
 
         self.boost: bool = boost
-        self.off_temp: float = off_temp
+        self.heatmode: Dict[str, str] = heatmode or {}
         self.boost_temp: float = boost_temp
 
     @property

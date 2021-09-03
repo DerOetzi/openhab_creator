@@ -7,6 +7,7 @@ from personal.ephemerisutils import EphemerisUtils
 from personal.item import Group, Item
 from personal.timermanager import TimerManager
 from personal.lightutils import LightUtils
+from personal.heatingutils import HeatingUtils
 from personal.autoitemmanager import AutoItemManager
 
 
@@ -85,6 +86,7 @@ class SceneItem(object):
     wayhome = Item('wayhome')
     presences = Item('Presences')
     darkness = Item('darkness')
+    heating = Item('heating')
     guest_stayed = Item('autoGuestStayed')
 
     @classmethod
@@ -94,6 +96,7 @@ class SceneItem(object):
         cls.wayhome.event = event
         cls.presences.event = event
         cls.darkness.event = event
+        cls.heating.event = event
 
 
 class SceneManager(object):
@@ -231,12 +234,13 @@ class SceneManager(object):
         is_night = self.is_night()
         is_presences = self.presences()
         is_darkness = SceneItem.darkness.get_onoff()
+        is_heating = SceneItem.heating.get_onoff()
 
         for assigned_item in self.scene_members:
             is_location_active = self.is_location_active(
                 assigned_item, guest_stayed, is_weekend, event)
             self._handle_location(
-                assigned_item, is_location_active, is_night, is_presences, is_darkness, event)
+                assigned_item, is_location_active, is_night, is_presences, is_darkness, is_heating, event)
 
     def is_location_active(self, assigned_item, guest_stayed, is_weekend, event=None):
         guest_item = assigned_item.from_scripting('guest_item', event)
@@ -251,7 +255,11 @@ class SceneManager(object):
                 and (weekend_active
                      or not (weekend_active or is_weekend)))
 
-    def _handle_location(self, assigned_item, is_active, is_night, is_presences, is_darkness, event=None):
+    def _handle_location(self, assigned_item,
+                         is_active, is_night,
+                         is_presences,
+                         is_darkness, is_heating,
+                         event=None):
         active_item = assigned_item.from_scripting('active_item', event)
         if is_active:
             active_item.post_update(ON)
@@ -269,8 +277,9 @@ class SceneManager(object):
                 lightbulb_item = auto_item.from_scripting('lightbulb_item')
                 LightUtils.automation(
                     lightbulb_item, is_active, is_night, is_presences, is_darkness)
-
-            # TODO Heating
+            elif auto_item.is_scripting('heating_item'):
+                heating_item = auto_item.from_scripting('heating_item')
+                HeatingUtils.automation(heating_item, is_active, is_heating)
 
     def clear_timer(self):
         self.timers.cancel_all()
