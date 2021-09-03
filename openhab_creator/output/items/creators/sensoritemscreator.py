@@ -50,6 +50,9 @@ class SensorItemsCreator(BaseItemsCreator):
         Group('Trend')\
             .append_to(self)
 
+        Group('Average7d')\
+            .append_to(self)
+
         Group('PressureSealevel')\
             .append_to(self)
 
@@ -195,6 +198,21 @@ class SensorItemsCreator(BaseItemsCreator):
                 .scripting({
                     'trend_item': f'trend{sensortype}{sensor.item_ids.merged_sensor}'
                 })
+
+            if sensortype == SensorType.TEMPERATURE:
+                Number(f'average7d{sensortype}{sensor.item_ids.merged_sensor}')\
+                    .label(_('7 days average {label}').format(label=sensortype.labels.item))\
+                    .icon('average7d')\
+                    .groups(sensor.item_ids.merged_sensor)\
+                    .semantic(PointType.STATUS)\
+                    .aisensor()\
+                    .append_to(self)
+
+                sensor_item\
+                    .groups('Average7d')\
+                    .scripting({
+                        'average_item': f'average7d{sensortype}{sensor.item_ids.merged_sensor}'
+                    })
 
         sensor_item.append_to(self)
 

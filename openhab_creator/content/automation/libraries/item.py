@@ -142,6 +142,15 @@ class Item(object):
 
         return delta_since
 
+    def average_since(self, since):
+        average_since = PersistenceExtensions.averageSince(
+            self._item, since, 'influxdb')
+
+        if average_since is not None:
+            average_since = average_since.floatValue()
+
+        return average_since
+
     def maximum_since(self, since):
         maximum_since = PersistenceExtensions.maximumSince(
             self._item, since, 'influxdb')

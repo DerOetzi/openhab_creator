@@ -78,3 +78,21 @@ def moisture_notification(event):
         watered_item = moisture_item.from_scripting('watered_item')
         watered_item.post_update(DateUtils.set_now())
         SignalMessenger.broadcast(watered_item.scripting('message'))
+
+
+@rule('Average 7 days')
+@when('System started')
+@when('Member of Average7d changed')
+def average7days(event_or_itemname):
+    if event_or_itemname is None:
+        for item in Group('Average7d'):
+            average7days(item.name)
+        return
+    elif isinstance(event_or_itemname, basestring):
+        sensor_item = Item(event_or_itemname)
+    else:
+        sensor_item = Item.from_event(event_or_itemname)
+
+    average_item = sensor_item.from_scripting('average_item')
+    average = sensor_item.average_since(DateUtils.now().minusDays(7))
+    average_item.post_update(average)
