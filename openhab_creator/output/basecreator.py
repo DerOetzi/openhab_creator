@@ -6,8 +6,7 @@ from pathlib import Path
 from openhab_creator import logger
 
 
-class BaseCreator(object):
-
+class BaseCreator():
     def __init__(self, typed: str, outputdir: str, subdir: Optional[str] = None):
         self.typed: str = typed
         self.outputdir: Path = Path(outputdir)

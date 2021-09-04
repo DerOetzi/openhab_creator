@@ -1,13 +1,11 @@
 from __future__ import annotations
 
-import json
-
 from openhab_creator import __version__, logger
 from openhab_creator.models.configuration import Configuration
-from openhab_creator.models.items.baseitem import BaseItem
 from openhab_creator.output.content import (AutomationCreator,
                                             BasicConfigCreator, IconsCreator,
                                             MapTransformationCreator)
+from openhab_creator.output.documentationcreator import DocumentationCreator
 from openhab_creator.output.items import ItemsCreator
 from openhab_creator.output.sitemap import SitemapCreator
 from openhab_creator.output.things import ThingsCreator
@@ -47,5 +45,4 @@ class Creator():
         if self.icons:
             IconsCreator(self.outputdir).build(self.configdir)
 
-        with open(f'{self.configdir}/documentation/influxdb_series.json', 'w') as series_file:
-            json.dump(BaseItem.influxdb_series, series_file, indent=4)
+        DocumentationCreator(self.configdir).build(configuration)

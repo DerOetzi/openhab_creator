@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Optional, Dict
 
 import requests
-import json
 
 from openhab_creator import _, logger, CreatorEnum
 
@@ -28,17 +27,16 @@ class Period(CreatorEnum):
         self.retention: Retention = retention
 
 
-class Dashboard(object):
+class Dashboard():
     def __init__(self, configuration: Configuration):
         self.host: Optional[str] = configuration.secrets.secret_optional(
             'grafana', 'host')
 
         self.panels = {}
 
-        if self.__init_from_grafana():
-            self._save_dashboard_to_configdir(configuration.configdir)
+        self.success: bool = self.init_from_grafana()
 
-    def __init_from_grafana(self) -> bool:
+    def init_from_grafana(self) -> bool:
         success = False
         if self.host is not None:
             try:
@@ -71,10 +69,6 @@ class Dashboard(object):
             }
             logger.debug('%s: %s', panel['title'],
                          self.panels[panel['title']])
-
-    def _save_dashboard_to_configdir(self, configdir: str) -> None:
-        with open(f'{configdir}/documentation/grafana_dashboard.json', 'w') as fp:
-            json.dump(self.online, fp, indent=4)
 
     def panel_urls(self, identifier: str) -> Optional[Dict[str, str]]:
         urls = {}

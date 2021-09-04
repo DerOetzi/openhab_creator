@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from openhab_creator.models.grafana import Dashboard
 
 
-class BaseSitemapCreator(object):
+class BaseSitemapCreator():
     @abstractmethod
     def build_mainpage(self, sitemap: Sitemap, configuration: Configuration) -> None:
         raise NotImplementedError("Must override build_mainpage")
@@ -46,7 +46,8 @@ class BaseSitemapCreator(object):
 
         self._graph_frame(page, grafana_urls)
 
-    def _graph_frame(self, page: Page, grafana_urls: List[Dict[str, str]]) -> None:
+    @staticmethod
+    def _graph_frame(page: Page, grafana_urls: List[Dict[str, str]]) -> None:
         if len(grafana_urls) > 0:
             frame = page.frame('period', _('Course'))
 

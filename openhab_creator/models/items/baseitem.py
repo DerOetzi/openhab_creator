@@ -66,6 +66,7 @@ class ProfileType(CreatorEnum):
 
 class BaseItem():
     influxdb_series = {}
+    aisensors = []
 
     def __init__(self, name: str):
         self._name: str = name
@@ -144,6 +145,7 @@ class BaseItem():
         return self
 
     def aisensor(self) -> BaseItem:
+        BaseItem.aisensors.append(self._name)
         return self.groups('AISensor')
 
     def expire(self, duration: str, state: Optional[str] = None) -> BaseItem:
