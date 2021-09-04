@@ -24,6 +24,10 @@ class MapTransformation(CreatorEnum):
         'OFF': _('Bright'), 'ON': _('Dark')
     }
 
+    HEATING = "heating", {
+        'OFF': _('Inactive'), 'ON': _('Active')
+    }
+
     LOWBATTERY = "lowbattery", {
         '0': _('Ok'), '1': _('Low'),
         'OFF': _('Ok'), 'ON': _('Low')

@@ -123,7 +123,6 @@ class TemperatureSitemapCreator(BaseSitemapCreator):
 
             if configuration.general.has_learninghouse('heating'):
                 Text('heating')\
-                    .map(MapTransformation.ACTIVE)\
                     .valuecolor(('==OFF', Color.RED), ('==ON', Color.GREEN))\
                     .append_to(page)
             else:
