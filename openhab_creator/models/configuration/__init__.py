@@ -104,6 +104,8 @@ class EquipmentRegistry():
         bridges = Configuration.read_jsons_from_dir(configdir, 'bridges')
 
         for bridge_key, bridge_configuration in bridges.items():
+            bridge_configuration.pop('typed', None)
+
             self.bridges[bridge_key] = Bridge(
                 configuration=self.configuration, **bridge_configuration)
 
@@ -241,6 +243,10 @@ class GeneralRegistry():
         self.learninghouse: List[str] = []
 
     def read_configuration(self) -> None:
+        self.read_general()
+        self.read_bridges()
+
+    def read_general(self) -> None:
         general_configuration = self.configuration.read_json_from_file(
             self.configuration.configdir, 'general.json')
 
@@ -252,6 +258,20 @@ class GeneralRegistry():
 
             if isinstance(equipment, LearningHouse):
                 self.learninghouse.append(equipment.item_ids.dependent)
+
+    def read_bridges(self):
+        bridges = Configuration.read_jsons_from_dir(
+            self.configuration.configdir, 'bridges')
+
+        for bridge_key, bridge_configuration in bridges.items():
+            if 'typed' in bridge_configuration:
+                bridge_configuration.pop('binding')
+                bridge_configuration['thing']['bridge'] = bridge_key
+
+                equipment = EquipmentType.new(configuration=self.configuration,
+                                              **bridge_configuration)
+
+                self.equipment.append(equipment)
 
     def has_learninghouse(self, dependent: str):
         return dependent in self.learninghouse

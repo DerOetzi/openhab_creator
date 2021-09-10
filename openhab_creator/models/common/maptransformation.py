@@ -20,6 +20,13 @@ class MapTransformation(CreatorEnum):
         'OFF': _('Inactive'), 'ON': _('Active')
     }
 
+    CALLSTATE = "callstate", {
+        'IDLE': _('Inactive'),
+        'RINGING': _('Ringing'),
+        'DIALING': _('Dialing'),
+        'ACTIVE': _('Active')
+    }
+
     DARKNESS = "darkness", {
         'OFF': _('Bright'), 'ON': _('Dark')
     }

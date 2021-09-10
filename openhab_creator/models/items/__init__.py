@@ -1,4 +1,5 @@
 from openhab_creator.models.items.baseitem import PointType, PropertyType, ProfileType
+from openhab_creator.models.items.call import Call
 from openhab_creator.models.items.color import Color
 from openhab_creator.models.items.contact import Contact
 from openhab_creator.models.items.datetime import DateTime

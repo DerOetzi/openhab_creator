@@ -56,7 +56,7 @@ class Channel():
         return self._properties.all
 
 
-class Thing(object):
+class Thing():
     def __init__(self,
                  equipment_node: Equipment,
                  thingtype: str,
@@ -141,7 +141,7 @@ class Thing(object):
             self.typed
         ]
 
-        if self.has_bridge and self.bridge.is_thing:
+        if self.has_bridge and self.bridge.is_thing and self.bridge.identifier != self.equipment_node.identifier:
             prefixes.append(self.bridge.thing.uid)
 
         prefixes.append(self.uid)

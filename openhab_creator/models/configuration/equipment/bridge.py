@@ -34,7 +34,8 @@ class Bridge(Equipment):
         return self._item_ids
 
     def add_thing(self, thing: Thing) -> None:
-        self.things.append(thing)
+        if self.thing is None or self.thing.equipment_node.identifier != thing.equipment_node.identifier:
+            self.things.append(thing)
 
     @property
     def name_with_type(self) -> str:
