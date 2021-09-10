@@ -21,6 +21,10 @@ class CallMonitorItemIdentifiers(EquipmentItemIdentifiers):
         return self._identifier('incoming')
 
     @property
+    def incoming_resolved(self) -> str:
+        return self._identifier('incomingResolved')
+
+    @property
     def lastincoming(self) -> str:
         return self._identifier('lastIncoming')
 

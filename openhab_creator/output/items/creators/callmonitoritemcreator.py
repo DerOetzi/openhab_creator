@@ -25,9 +25,9 @@ class CallMonitorItemsCreator(BaseItemsCreator):
                 .append_to(self)
 
             for callmonitor in callmonitors:
-                incoming_item = self.build_callmonitor(callmonitor)
+                callstate_item = self.build_callmonitor(callmonitor)
                 self._connect_channel_with_phonebook(
-                    callmonitor, incoming_item, configuration)
+                    callmonitor, callstate_item, configuration)
 
             self.write_file('callmonitor')
 
@@ -37,7 +37,7 @@ class CallMonitorItemsCreator(BaseItemsCreator):
             .semantic(callmonitor)\
             .append_to(self)
 
-        String(callmonitor.item_ids.state)\
+        callstate_item = String(callmonitor.item_ids.state)\
             .label(_('Call state'))\
             .map(MapTransformation.CALLSTATE)\
             .equipment(callmonitor)\
@@ -60,10 +60,11 @@ class CallMonitorItemsCreator(BaseItemsCreator):
             .semantic(PointType.STATUS)\
             .append_to(self)
 
-        incoming_item = Call(callmonitor.item_ids.incoming)\
+        Call(callmonitor.item_ids.incoming)\
             .label(_('Incoming call'))\
             .equipment(callmonitor)\
             .semantic(PointType.STATUS)\
+            .channel(callmonitor.points.channel('incoming'))\
             .append_to(self)
 
         String(callmonitor.item_ids.lastincoming)\
@@ -72,21 +73,27 @@ class CallMonitorItemsCreator(BaseItemsCreator):
             .semantic(PointType.STATUS)\
             .append_to(self)
 
-        return incoming_item
+        return callstate_item
 
-    @staticmethod
-    def _connect_channel_with_phonebook(callmonitor: CallMonitor,
-                                        incoming_item: Call,
+    def _connect_channel_with_phonebook(self,
+                                        callmonitor: CallMonitor,
+                                        callstate_item: String,
                                         configuration: Configuration) -> None:
         if configuration.equipment.has_bridge('tr064'):
             phonebook_bridge = configuration.equipment.bridge('tr064')
             if phonebook_bridge.thing.has_property('phonebookInterval'):
                 phonebook = phonebook_bridge.thing.channelprefix.replace(
                     ':', '_3A')
-                incoming_item.channel(callmonitor.points.channel('incoming'), ProfileType.PHONEBOOK, {
-                    'phonebook': phonebook,
-                    'phoneNumberIndex': '1',
-                    'matchCount': '5'
-                })
-            else:
-                incoming_item.channel(callmonitor.points.channel('incoming'))
+                String(callmonitor.item_ids.incoming_resolved)\
+                    .label(_('Incoming call name'))\
+                    .equipment(callmonitor)\
+                    .semantic(PointType.STATUS)\
+                    .channel(callmonitor.points.channel('incoming'), ProfileType.PHONEBOOK, {
+                        'phonebook': phonebook,
+                        'phoneNumberIndex': '1',
+                        'matchCount': '5'
+                    })\
+                    .append_to(self)
+
+                callstate_item.scripting(
+                    {'resolved_item': callmonitor.item_ids.incoming_resolved})

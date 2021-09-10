@@ -22,8 +22,15 @@ def callmonitor(event):
 
     if 'RINGING' == callstate:
         incoming_call = incoming_item.get_call().getValue(1)
-        lastincoming_item.post_update(incoming_call)
-        logger.info('%s (%s)', incoming_call, type(incoming_call))
+        caller = incoming_call
+
+        if callstate_item.is_scripting('resolved_item'):
+            resolved_item = callstate_item.from_scripting('resolved_item')
+            resolved = resolved_item.get_string('')
+            if resolved != '':
+                caller = u'{} ({})'.format(resolved, incoming_call)
+
+        lastincoming_item.post_update(caller)
     elif 'IDLE' == callstate:
         laststate = laststate_item.get_string('IDLE')
         if laststate == 'RINGING':
