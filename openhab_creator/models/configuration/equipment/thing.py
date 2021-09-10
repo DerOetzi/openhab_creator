@@ -38,6 +38,16 @@ class Properties():
     def all(self) -> Dict[str, Any]:
         return self._properties
 
+    def has(self, property_key: str) -> bool:
+        return property_key in self._properties
+
+    def key(self, property_key: str) -> Any | None:
+        property_value = None
+        if self.has(property_key):
+            property_value = self._properties[property_key]
+
+        return property_value
+
 
 class Channel():
     def __init__(self,
@@ -184,6 +194,9 @@ class Thing():
     @property
     def has_properties(self) -> bool:
         return not self._properties.empty
+
+    def has_property(self, property_key: str) -> bool:
+        return self._properties.has(property_key)
 
     @property
     def properties(self) -> Dict[str, Any]:

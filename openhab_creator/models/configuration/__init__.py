@@ -109,9 +109,12 @@ class EquipmentRegistry():
             self.bridges[bridge_key] = Bridge(
                 configuration=self.configuration, **bridge_configuration)
 
+    def has_bridge(self, bridge_key: str) -> bool:
+        return bridge_key in self.bridges
+
     def bridge(self, bridge_key: str) -> Bridge:
         bridge_key = bridge_key.lower()
-        if bridge_key not in self.bridges:
+        if not self.has_bridge(bridge_key):
             raise ConfigurationException(
                 f'No bridge "{bridge_key}" in configuration')
 

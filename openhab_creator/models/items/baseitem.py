@@ -62,6 +62,7 @@ class PropertyType(CreatorEnum):
 class ProfileType(CreatorEnum):
     JS = 'transform:JS'
     SCALE = 'transform:SCALE'
+    PHONEBOOK = 'transform:PHONEBOOK'
 
 
 class BaseItem():
@@ -182,13 +183,19 @@ class BaseItem():
 
     def channel(self, channel: str,
                 profile_type: Optional[ProfileType] = None,
-                profile_function: Optional[str] = None) -> BaseItem:
+                profile_properties: Optional[Union[str, Dict]] = None) -> BaseItem:
         self._metadata['channel'] = {'value': channel}
-        if not (profile_type is None or profile_function is None):
-            self._metadata['channel']['properties'] = {
-                'profile': profile_type,
-                'function': profile_function
-            }
+        if not (profile_type is None or profile_properties is None):
+            if isinstance(profile_properties, str):
+                self._metadata['channel']['properties'] = {
+                    'profile': profile_type,
+                    'function': profile_properties
+                }
+            else:
+                self._metadata['channel']['properties'] = {
+                    'profile': profile_type,
+                    **profile_properties
+                }
         return self
 
     def append_to(self, itemscreator: BaseItemsCreator) -> BaseItem:

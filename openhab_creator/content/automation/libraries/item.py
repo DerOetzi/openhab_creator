@@ -106,6 +106,9 @@ class Item(object):
         onoff = self.get_value(default_value, update_empty, event)
         return onoff == ON
 
+    def get_call(self, event=None):
+        return self.get_value(event=event)
+
     def is_scripting(self, key):
         return key in self.metadata
 
