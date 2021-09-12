@@ -61,6 +61,7 @@ class PropertyType(CreatorEnum):
 
 class ProfileType(CreatorEnum):
     JS = 'transform:JS'
+    MAP = 'transform:MAP'
     SCALE = 'transform:SCALE'
     PHONEBOOK = 'transform:PHONEBOOK'
 

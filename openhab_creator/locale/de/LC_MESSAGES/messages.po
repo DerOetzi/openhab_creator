@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openHAB Creator\n"
-"POT-Creation-Date: 2021-09-10 22:08+0200\n"
-"PO-Revision-Date: 2021-09-10 22:11+0200\n"
+"POT-Creation-Date: 2021-09-12 22:02+0200\n"
+"PO-Revision-Date: 2021-09-12 22:03+0200\n"
 "Last-Translator: Johannes Ott <info@johannes-ott.net>\n"
 "Language-Team: Johannes Ott\n"
 "Language: de\n"
@@ -34,8 +34,8 @@ msgstr "Geschlossen"
 msgid "Boost"
 msgstr "Boost"
 
-#: openhab_creator/models/common/maptransformation.py:16
-#: openhab_creator/models/common/maptransformation.py:64
+#: openhab_creator/models/common/maptransformation.py:17
+#: openhab_creator/models/common/maptransformation.py:69
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:85
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:89
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:93
@@ -51,7 +51,7 @@ msgstr "Boost"
 msgid "Off"
 msgstr "Aus"
 
-#: openhab_creator/models/common/maptransformation.py:16
+#: openhab_creator/models/common/maptransformation.py:17
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:93
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:163
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:186
@@ -61,79 +61,111 @@ msgstr "Aus"
 msgid "On"
 msgstr "An"
 
-#: openhab_creator/models/common/maptransformation.py:20
-#: openhab_creator/models/common/maptransformation.py:24
-#: openhab_creator/models/common/maptransformation.py:35
+#: openhab_creator/models/common/maptransformation.py:21
+#: openhab_creator/models/common/maptransformation.py:25
+#: openhab_creator/models/common/maptransformation.py:36
 #: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:55
 #: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:130
 msgid "Inactive"
 msgstr "Inaktiv"
 
-#: openhab_creator/models/common/maptransformation.py:20
-#: openhab_creator/models/common/maptransformation.py:27
-#: openhab_creator/models/common/maptransformation.py:35
+#: openhab_creator/models/common/maptransformation.py:21
+#: openhab_creator/models/common/maptransformation.py:28
+#: openhab_creator/models/common/maptransformation.py:36
 #: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:56
 #: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:130
 msgid "Active"
 msgstr "Aktiv"
 
-#: openhab_creator/models/common/maptransformation.py:25
+#: openhab_creator/models/common/maptransformation.py:26
 msgid "Ringing"
 msgstr "Klingelt"
 
-#: openhab_creator/models/common/maptransformation.py:26
+#: openhab_creator/models/common/maptransformation.py:27
 msgid "Dialing"
 msgstr "Wählt"
 
-#: openhab_creator/models/common/maptransformation.py:31
+#: openhab_creator/models/common/maptransformation.py:32
 msgid "Bright"
 msgstr "Hell"
 
-#: openhab_creator/models/common/maptransformation.py:31
+#: openhab_creator/models/common/maptransformation.py:32
 msgid "Dark"
 msgstr "Dunkel"
 
-#: openhab_creator/models/common/maptransformation.py:39
 #: openhab_creator/models/common/maptransformation.py:40
+#: openhab_creator/models/common/maptransformation.py:41
 msgid "Low"
 msgstr "Niedrig"
 
-#: openhab_creator/models/common/maptransformation.py:39
 #: openhab_creator/models/common/maptransformation.py:40
+#: openhab_creator/models/common/maptransformation.py:41
 msgid "Ok"
 msgstr "Ok"
 
-#: openhab_creator/models/common/maptransformation.py:43
+#: openhab_creator/models/common/maptransformation.py:44
 msgid "Offline"
 msgstr "Offline"
 
-#: openhab_creator/models/common/maptransformation.py:43
+#: openhab_creator/models/common/maptransformation.py:44
 msgid "Online"
 msgstr "Online"
 
-#: openhab_creator/models/common/maptransformation.py:50
+#: openhab_creator/models/common/maptransformation.py:55
 msgid "Falling"
 msgstr "Fallend"
 
-#: openhab_creator/models/common/maptransformation.py:51
+#: openhab_creator/models/common/maptransformation.py:56
 msgid "Consistent"
 msgstr "Gleichbleibend"
 
-#: openhab_creator/models/common/maptransformation.py:52
+#: openhab_creator/models/common/maptransformation.py:57
 msgid "Rising"
 msgstr "Steigend"
 
-#: openhab_creator/models/common/maptransformation.py:65
+#: openhab_creator/models/common/maptransformation.py:70
 msgid "Running"
 msgstr "Läuft"
 
-#: openhab_creator/models/common/maptransformation.py:66
+#: openhab_creator/models/common/maptransformation.py:71
 msgid "Ready"
 msgstr "Fertig"
 
-#: openhab_creator/models/common/maptransformation.py:67
+#: openhab_creator/models/common/maptransformation.py:72
 msgid "Standby"
 msgstr "Standby"
+
+#: openhab_creator/models/common/pollencountindex.py:9
+msgid "Not specified"
+msgstr "Keine Daten"
+
+#: openhab_creator/models/common/pollencountindex.py:10
+msgid "No pollen pollution"
+msgstr "Keine"
+
+#: openhab_creator/models/common/pollencountindex.py:11
+msgid "No to low pollen count"
+msgstr "Keine bis geringe"
+
+#: openhab_creator/models/common/pollencountindex.py:12
+msgid "Low pollen count"
+msgstr "Geringe"
+
+#: openhab_creator/models/common/pollencountindex.py:13
+msgid "Low to medium pollen count"
+msgstr "Gering bis mittel"
+
+#: openhab_creator/models/common/pollencountindex.py:15
+msgid "Medium pollen count"
+msgstr "Mittel"
+
+#: openhab_creator/models/common/pollencountindex.py:16
+msgid "Medium to high pollen count"
+msgstr "Mittel bis hoch"
+
+#: openhab_creator/models/common/pollencountindex.py:18
+msgid "High pollen count"
+msgstr "Hoch"
 
 #: openhab_creator/models/common/presence.py:9
 msgid "At home"
@@ -398,7 +430,7 @@ msgstr "Wetterwarnung"
 msgid "Astro"
 msgstr "Astro"
 
-#: openhab_creator/models/configuration/equipment/types/callmonitor.py:60
+#: openhab_creator/models/configuration/equipment/types/callmonitor.py:64
 msgid "Call monitor"
 msgstr "Anrufüberwachung"
 
@@ -425,6 +457,42 @@ msgstr "Bewegungsmelder"
 #: openhab_creator/models/configuration/equipment/types/networkappliance.py:52
 msgid "NetworkAppliance"
 msgstr "Netzwerkanwendung"
+
+#: openhab_creator/models/configuration/equipment/types/pollencount.py:15
+msgid "Alder"
+msgstr "Erle"
+
+#: openhab_creator/models/configuration/equipment/types/pollencount.py:16
+msgid "Ambrosia"
+msgstr "Ambrosia"
+
+#: openhab_creator/models/configuration/equipment/types/pollencount.py:17
+msgid "Ash"
+msgstr "Esche"
+
+#: openhab_creator/models/configuration/equipment/types/pollencount.py:18
+msgid "Birch"
+msgstr "Birke"
+
+#: openhab_creator/models/configuration/equipment/types/pollencount.py:19
+msgid "Grasses"
+msgstr "Gräser"
+
+#: openhab_creator/models/configuration/equipment/types/pollencount.py:20
+msgid "Hazel"
+msgstr "Hasel"
+
+#: openhab_creator/models/configuration/equipment/types/pollencount.py:21
+msgid "Mugwort"
+msgstr "Beifuss"
+
+#: openhab_creator/models/configuration/equipment/types/pollencount.py:22
+msgid "Rye"
+msgstr "Roggen"
+
+#: openhab_creator/models/configuration/equipment/types/pollencount.py:92
+msgid "Pollen count region"
+msgstr "Pollenflug Region"
 
 #: openhab_creator/models/configuration/equipment/types/poweroutlet.py:63
 #: openhab_creator/output/items/creators/poweroutletitemscreator.py:28
@@ -672,9 +740,13 @@ msgstr "Vorheriger Anrufstatus"
 msgid "Incoming call"
 msgstr "Eingehender Anruf"
 
-#: openhab_creator/output/items/creators/callmonitoritemcreator.py:70
+#: openhab_creator/output/items/creators/callmonitoritemcreator.py:71
 msgid "Last incoming call"
 msgstr "Letzter eingehender Anruf"
+
+#: openhab_creator/output/items/creators/callmonitoritemcreator.py:88
+msgid "Incoming call name"
+msgstr "Eingehender Anrufer"
 
 #: openhab_creator/output/items/creators/generalitemscreator.py:20
 msgid "Configuration items"
@@ -926,6 +998,22 @@ msgstr "Bewegungsmelderzuordnung"
 #: openhab_creator/output/items/creators/networkitemscreator.py:35
 msgid "Network status"
 msgstr "Netzwerkstatus"
+
+#: openhab_creator/output/items/creators/pollencountitemscreator.py:29
+msgid "Pollen count index"
+msgstr "Pollenflugindex"
+
+#: openhab_creator/output/items/creators/pollencountitemscreator.py:39
+msgid "Pollen count index {name}"
+msgstr "Pollenflugindex {name}"
+
+#: openhab_creator/output/items/creators/pollencountitemscreator.py:58
+msgid "{pollentype} tomorrow"
+msgstr "{pollentype} morgen"
+
+#: openhab_creator/output/items/creators/pollencountitemscreator.py:67
+msgid "{pollentype} day after tomorrow"
+msgstr "{pollentype} übermorgen"
 
 #: openhab_creator/output/items/creators/poweroutletitemscreator.py:51
 msgid "Power"

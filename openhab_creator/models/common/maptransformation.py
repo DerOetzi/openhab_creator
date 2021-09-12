@@ -9,6 +9,7 @@ from openhab_creator.models.common.weatherstation import (DWDEvent,
                                                           DWDSeverity,
                                                           WeatherCondition)
 from openhab_creator.models.common.heatcontrol import Heatcontrol
+from openhab_creator.models.common.pollencountindex import PollenCountIndex
 
 
 class MapTransformation(CreatorEnum):
@@ -41,6 +42,10 @@ class MapTransformation(CreatorEnum):
     }
 
     ONLINE = "online", {'ON': _('Online'), 'OFF': _('Offline')}
+
+    POLLENCOUNT_API = 'pollencountapi', PollenCountIndex.api_mappings()
+
+    POLLENCOUNT = 'pollencount', PollenCountIndex.mappings()
 
     PRESENCE = "presence", Presence.mappings
 
