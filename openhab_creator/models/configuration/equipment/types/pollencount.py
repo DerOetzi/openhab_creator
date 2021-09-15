@@ -35,6 +35,15 @@ class PollenCountItemIdentifiers(EquipmentItemIdentifiers):
     def pollencount(self) -> str:
         return self._identifier('pollencount')
 
+    def today(self, pollentype: PollenType) -> str:
+        return self._identifier(f'pollenCount{pollentype}Today')
+
+    def tomorrow(self, pollentype: PollenType) -> str:
+        return self._identifier(f'pollenCount{pollentype}Tomorrow')
+
+    def day_after_tomorrow(self, pollentype: PollenType) -> str:
+        return self._identifier(f'pollenCount{pollentype}DayAfter')
+
 
 class PollenCountPoints(EquipmentPoints):
     def __init__(self, points: str | Dict[str, str], equipment: PollenCount):
