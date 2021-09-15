@@ -37,7 +37,7 @@ class SitemapCreator(BaseCreator):
         self.write_file('default')
 
 
-class SitemapCreatorPipeline(object):
+class SitemapCreatorPipeline():
     mainpage_pipeline: List[Dict[str, Union[int, BaseSitemapCreator]]] = []
     statuspage_pipeline: List[Dict[str, Union[int, BaseSitemapCreator]]] = []
     configpage_pipeline: List[Dict[str, Union[int, BaseSitemapCreator]]] = []
