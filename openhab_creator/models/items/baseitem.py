@@ -69,6 +69,7 @@ class ProfileType(CreatorEnum):
 class BaseItem():
     influxdb_series = {}
     aisensors = []
+    icons = {}
 
     def __init__(self, name: str):
         self._name: str = name
@@ -100,6 +101,7 @@ class BaseItem():
 
     def icon(self, icon: str) -> BaseItem:
         self._icon = icon.lower()
+        BaseItem.icons[self._icon] = self._icon
         return self
 
     def groups(self, *groups: List[str]) -> BaseItem:

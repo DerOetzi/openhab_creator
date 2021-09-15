@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, List
 
 from cairosvg import svg2png
 from openhab_creator import logger
@@ -15,6 +15,10 @@ if TYPE_CHECKING:
 
 
 class IconsCreator(BaseContentCreator):
+    def __init__(self, outputdir: str):
+        super().__init__(outputdir)
+        self.icons = []
+
     def build(self, configdir: str) -> None:
         self._create_outputdir_if_not_exists('icons/classic')
         src_dir = Path(configdir) / 'icons'
@@ -33,7 +37,14 @@ class IconsCreator(BaseContentCreator):
             elif category.name.endswith('.svg'):
                 self._createfiles(category, category.name[0:-4])
 
+    def check_icons_exist(self, icons: List[str]) -> None:
+        for icon in icons:
+            if not icon in self.icons:
+                logger.warning('Missing icon: %s', icon)
+
     def _createfiles(self, srcfile: DirEntry, icon_name: str):
+        self.icons.append(icon_name)
+
         logger.info('Create icon: %s', icon_name)
 
         content = self.generate_output_icons(srcfile)

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from openhab_creator import __version__, logger
 from openhab_creator.models.configuration import Configuration
+from openhab_creator.models.items.baseitem import BaseItem
 from openhab_creator.output.content import (AutomationCreator,
                                             BasicConfigCreator, IconsCreator,
                                             MapTransformationCreator)
@@ -37,12 +38,15 @@ class Creator():
 
         ThingsCreator(self.outputdir).build(configuration)
         ItemsCreator(self.outputdir).build(configuration)
+
         SitemapCreator(self.outputdir).build(configuration)
 
         MapTransformationCreator(self.outputdir).build()
         AutomationCreator(self.outputdir).build(self.configdir, configuration)
 
         if self.icons:
-            IconsCreator(self.outputdir).build(self.configdir)
+            icons_creator = IconsCreator(self.outputdir)
+            icons_creator.build(self.configdir)
+            icons_creator.check_icons_exist(BaseItem.icons)
 
         DocumentationCreator(self.configdir).build(configuration)
