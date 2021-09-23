@@ -45,9 +45,11 @@ class LightUtils(object):
     @classmethod
     def command(cls, lightbulb_item, command):
         is_thing = lightbulb_item.scripting('is_thing')
-
         if is_thing:
-            cls._handle_single_command(lightbulb_item, command)
+            if lightbulb_item.is_scripting('subequipment'):
+                cls._handle_groupthing_command(lightbulb_item, command)
+            else:
+                cls._handle_single_command(lightbulb_item, command)
         else:
             cls._handle_group_command(lightbulb_item, command)
 
@@ -55,8 +57,30 @@ class LightUtils(object):
         lightcontrol_item.post_update(command)
 
     @classmethod
-    def _handle_single_command(cls, lightbulb_item, command):
+    def _handle_groupthing_command(cls, lightbulb_item, command):
+        if command in ['ALL', 'ON']:
+            cls._execute(lightbulb_item, 100, ON, cls.color())
+        elif command == 'NIGHT':
+            cls._handle_group_command(lightbulb_item, command)
+        elif command == 'OFF':
+            group_members = Group.from_list(
+                lightbulb_item.scripting('subequipment').split(','))
 
+            on_items = []
+
+            for group_member in group_members:
+                if cls.get_brightness(group_member):
+                    on_items.append(group_member)
+
+            if len(on_items) > 0:
+                cls._handle_single_command(lightbulb_item, command)
+                for on_item in on_items:
+                    cls._increment_switchingcycles(on_item)
+        else:
+            cls._handle_group_command(lightbulb_item, command)
+
+    @classmethod
+    def _handle_single_command(cls, lightbulb_item, command):
         if command in ['ALL', 'ON']:
             cls._execute(lightbulb_item, 100, ON, cls.color())
         elif command == 'NIGHT':
@@ -69,10 +93,11 @@ class LightUtils(object):
 
     @staticmethod
     def _increment_switchingcycles(lightbulb_item):
-        cycles_item = lightbulb_item.from_scripting('cycles_item')
-        cycles = cycles_item.get_int(0, True)
-        cycles += 1
-        cycles_item.post_update(cycles)
+        if lightbulb_item.is_scripting('cycles_item'):
+            cycles_item = lightbulb_item.from_scripting('cycles_item')
+            cycles = cycles_item.get_int(0, True)
+            cycles += 1
+            cycles_item.post_update(cycles)
 
     @classmethod
     def _execute(cls, lightbulb_item, brightness, onoff, color):

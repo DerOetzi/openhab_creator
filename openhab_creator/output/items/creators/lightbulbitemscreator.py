@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING, Dict, List
 
 from openhab_creator import _
 from openhab_creator.models.common import MapTransformation
@@ -205,13 +205,26 @@ class LightbulbItemsCreator(BaseItemsCreator):
                              parent_lightbulb_item: Group) -> bool:
         if parent_lightbulb.has_subequipment:
             if parent_lightbulb.points.has_brightness:
-                Group(parent_lightbulb.item_ids.brightness)\
-                    .typed(GroupType.DIMMER_AVG)\
-                    .label(_('Brightness'))\
-                    .icon('light')\
-                    .equipment(parent_lightbulb)\
-                    .semantic(PointType.CONTROL, PropertyType.LIGHT)\
-                    .append_to(self)
+                if parent_lightbulb.is_thing:
+                    Dimmer(parent_lightbulb.item_ids.brightness)\
+                        .label(_('Brightness'))\
+                        .icon('light')\
+                        .equipment(parent_lightbulb)\
+                        .semantic(PointType.CONTROL, PropertyType.LIGHT)\
+                        .channel(parent_lightbulb.points.channel('brightness'))\
+                        .append_to(self)
+
+                    parent_lightbulb_item.scripting({
+                        'brightness_item': parent_lightbulb.item_ids.brightness
+                    })
+                else:
+                    Group(parent_lightbulb.item_ids.brightness)\
+                        .typed(GroupType.DIMMER_AVG)\
+                        .label(_('Brightness'))\
+                        .icon('light')\
+                        .equipment(parent_lightbulb)\
+                        .semantic(PointType.CONTROL, PropertyType.LIGHT)\
+                        .append_to(self)
 
             if parent_lightbulb.points.has_colortemperature:
                 Group(parent_lightbulb.item_ids.colortemperature)\
@@ -244,7 +257,7 @@ class LightbulbItemsCreator(BaseItemsCreator):
                 self.__build_thing(sublightbulb, parent_lightbulb_item)
 
             parent_lightbulb_item.scripting({
-                'is_thing': False,
+                'is_thing': parent_lightbulb.is_thing,
                 'subequipment': ','.join(sublightbulbs)
             })
 
@@ -264,43 +277,10 @@ class LightbulbItemsCreator(BaseItemsCreator):
             'cycles_item': lightbulb.item_ids.switchingcycles
         }
 
-        Number(lightbulb.item_ids.switchingcycles)\
-            .typed(NumberType.DIMENSIONLESS)\
-            .label(_('Switching cycles'))\
-            .format('%d')\
-            .icon('switchingcycles')\
-            .sensor('switchingcycle', lightbulb.influxdb_tags, True)\
-            .equipment(lightbulb)\
-            .groups('SwitchingCycles')\
-            .semantic(PointType.MEASUREMENT)\
-            .append_to(self)
-
-        Switch(lightbulb.item_ids.switchingcyclesreset)\
-            .label(_('Reset'))\
-            .icon('configuration')\
-            .equipment(lightbulb)\
-            .groups('SwitchingCyclesReset')\
-            .semantic(PointType.CONTROL)\
-            .scripting({
-                'cycles_item': lightbulb.item_ids.switchingcycles
-            })\
-            .expire('10s', state='OFF')\
-            .append_to(self)
+        self._build_switching_cycles(lightbulb)
 
         if lightbulb.points.has_brightness:
-            brightness = Dimmer(lightbulb.item_ids.brightness)\
-                .label(_('Brightness'))\
-                .icon('light')\
-                .equipment(lightbulb)\
-                .semantic(PointType.CONTROL, PropertyType.LIGHT)\
-                .channel(lightbulb.points.channel('brightness'))
-
-            if lightbulb.is_child:
-                brightness.groups(lightbulb.parent.item_ids.brightness)
-
-            brightness.append_to(self)
-
-            scripting['brightness_item'] = lightbulb.item_ids.brightness
+            scripting = self._build_thing_brightness(lightbulb, scripting)
 
         if lightbulb.points.has_colortemperature:
             colortemperature = Number(lightbulb.item_ids.colortemperature)\
@@ -349,6 +329,46 @@ class LightbulbItemsCreator(BaseItemsCreator):
             scripting['rgb_item'] = lightbulb.item_ids.rgb
 
         lightbulb_item.scripting(scripting)
+
+    def _build_switching_cycles(self, lightbulb):
+        Number(lightbulb.item_ids.switchingcycles)\
+            .typed(NumberType.DIMENSIONLESS)\
+            .label(_('Switching cycles'))\
+            .format('%d')\
+            .icon('switchingcycles')\
+            .sensor('switchingcycle', lightbulb.influxdb_tags, True)\
+            .equipment(lightbulb)\
+            .groups('SwitchingCycles')\
+            .semantic(PointType.MEASUREMENT)\
+            .append_to(self)
+
+        Switch(lightbulb.item_ids.switchingcyclesreset)\
+            .label(_('Reset'))\
+            .icon('configuration')\
+            .equipment(lightbulb)\
+            .groups('SwitchingCyclesReset')\
+            .semantic(PointType.CONTROL)\
+            .scripting({
+                'cycles_item': lightbulb.item_ids.switchingcycles
+            })\
+            .expire('10s', state='OFF')\
+            .append_to(self)
+
+    def _build_thing_brightness(self, lightbulb: Lightbulb, scripting: Dict) -> Dict:
+        brightness_item = Dimmer(lightbulb.item_ids.brightness)\
+            .label(_('Brightness'))\
+            .icon('light')\
+            .equipment(lightbulb)\
+            .semantic(PointType.CONTROL, PropertyType.LIGHT)\
+            .channel(lightbulb.points.channel('brightness'))
+
+        if lightbulb.is_child and not lightbulb.parent.is_thing:
+            brightness_item.groups(lightbulb.parent.item_ids.brightness)
+
+        brightness_item.append_to(self)
+        scripting['brightness_item'] = lightbulb.item_ids.brightness
+
+        return scripting
 
     def __build_buttons_assignment(self,
                                    lightbulb: Lightbulb,
