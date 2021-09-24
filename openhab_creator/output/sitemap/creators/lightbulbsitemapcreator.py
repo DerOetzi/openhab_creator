@@ -49,7 +49,7 @@ class LightbulbSitemapCreator(BaseSitemapCreator):
         for lightbulb in configuration.equipment.equipment('lightbulb', False):
             location = lightbulb.location.toplevel
 
-            if lightbulb.is_thing:
+            if lightbulb.is_thing and not lightbulb.has_subequipment:
                 frame = page.frame(location.identifier, location.name)
 
                 subpage = Page(lightbulb.item_ids.switchingcycles)\
