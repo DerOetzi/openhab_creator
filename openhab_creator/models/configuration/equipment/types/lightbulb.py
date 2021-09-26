@@ -65,6 +65,10 @@ class LightbulbItemIdentifiers(EquipmentItemIdentifiers):
         return self._identifier('brightness')
 
     @property
+    def brightnessgroup(self) -> str:
+        return self._identifier('brightnessgroup')
+
+    @property
     def colortemperature(self) -> str:
         return self._identifier('colortemperature')
 

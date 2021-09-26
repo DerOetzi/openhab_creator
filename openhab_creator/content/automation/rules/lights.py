@@ -1,17 +1,17 @@
 # pylint: skip-file
-import personal.lightutils
-from core.log import LOG_PREFIX, logging
-from core.rules import rule
+from personal.timermanager import TimerManager
+from personal.scenemanager import SceneManager, TimeScene
+from personal.lightutils import LightUtils
+from personal.item import Group, Item
+from personal.dateutils import DateUtils
 from core.triggers import (ChannelEventTrigger, ItemCommandTrigger,
                            ItemStateChangeTrigger, StartupTrigger, when)
+from core.rules import rule
+from core.log import LOG_PREFIX, logging
 
-from personal.dateutils import DateUtils
-from personal.item import Group, Item
-from personal.lightutils import LightUtils
-from personal.scenemanager import SceneManager, TimeScene
-from personal.timermanager import TimerManager
-
+import personal.lightutils
 reload(personal.lightutils)
+
 
 logger = logging.getLogger('{}.Lights'.format(LOG_PREFIX))
 

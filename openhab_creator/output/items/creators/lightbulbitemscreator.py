@@ -205,9 +205,18 @@ class LightbulbItemsCreator(BaseItemsCreator):
                              parent_lightbulb_item: Group) -> bool:
         if parent_lightbulb.has_subequipment:
             if parent_lightbulb.points.has_brightness:
+
+                Group(parent_lightbulb.item_ids.brightness)\
+                    .typed(GroupType.DIMMER_AVG)\
+                    .label(_('Brightness'))\
+                    .icon('light')\
+                    .equipment(parent_lightbulb)\
+                    .semantic(PointType.CONTROL, PropertyType.LIGHT)\
+                    .append_to(self)
+
                 if parent_lightbulb.is_thing:
-                    Dimmer(parent_lightbulb.item_ids.brightness)\
-                        .label(_('Brightness'))\
+                    Dimmer(parent_lightbulb.item_ids.brightnessgroup)\
+                        .label(_('Group brightness'))\
                         .icon('light')\
                         .equipment(parent_lightbulb)\
                         .semantic(PointType.CONTROL, PropertyType.LIGHT)\
@@ -215,16 +224,10 @@ class LightbulbItemsCreator(BaseItemsCreator):
                         .append_to(self)
 
                     parent_lightbulb_item.scripting({
-                        'brightness_item': parent_lightbulb.item_ids.brightness
+
+                        'brightness_item': parent_lightbulb.item_ids.brightness,
+                        'brightnessgroup_item': parent_lightbulb.item_ids.brightnessgroup
                     })
-                else:
-                    Group(parent_lightbulb.item_ids.brightness)\
-                        .typed(GroupType.DIMMER_AVG)\
-                        .label(_('Brightness'))\
-                        .icon('light')\
-                        .equipment(parent_lightbulb)\
-                        .semantic(PointType.CONTROL, PropertyType.LIGHT)\
-                        .append_to(self)
 
             if parent_lightbulb.points.has_colortemperature:
                 Group(parent_lightbulb.item_ids.colortemperature)\
@@ -355,17 +358,15 @@ class LightbulbItemsCreator(BaseItemsCreator):
             .append_to(self)
 
     def _build_thing_brightness(self, lightbulb: Lightbulb, scripting: Dict) -> Dict:
-        brightness_item = Dimmer(lightbulb.item_ids.brightness)\
+        Dimmer(lightbulb.item_ids.brightness)\
             .label(_('Brightness'))\
             .icon('light')\
             .equipment(lightbulb)\
+            .groups(lightbulb.parent.item_ids.brightness)\
             .semantic(PointType.CONTROL, PropertyType.LIGHT)\
-            .channel(lightbulb.points.channel('brightness'))
+            .channel(lightbulb.points.channel('brightness'))\
+            .append_to(self)
 
-        if lightbulb.is_child and not lightbulb.parent.is_thing:
-            brightness_item.groups(lightbulb.parent.item_ids.brightness)
-
-        brightness_item.append_to(self)
         scripting['brightness_item'] = lightbulb.item_ids.brightness
 
         return scripting

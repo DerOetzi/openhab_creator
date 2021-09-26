@@ -1,5 +1,4 @@
 # pylint: skip-file
-
 import random
 
 import personal.autoitemmanager
@@ -45,12 +44,16 @@ class LightUtils(object):
     @classmethod
     def command(cls, lightbulb_item, command):
         is_thing = lightbulb_item.scripting('is_thing')
+        cls.log.debug('Command %s: %s', lightbulb_item, command)
         if is_thing:
-            if lightbulb_item.is_scripting('subequipment'):
+            if lightbulb_item.is_scripting('brightnessgroup_item'):
+                cls.log.debug('Brightnessgroup: %s', lightbulb_item)
                 cls._handle_groupthing_command(lightbulb_item, command)
             else:
+                cls.log.debug('Single: %s', lightbulb_item)
                 cls._handle_single_command(lightbulb_item, command)
         else:
+            cls.log.debug('Group: %s', lightbulb_item)
             cls._handle_group_command(lightbulb_item, command)
 
         lightcontrol_item = lightbulb_item.from_scripting('control_item')
@@ -69,11 +72,11 @@ class LightUtils(object):
             on_items = []
 
             for group_member in group_members:
-                if cls.get_brightness(group_member):
+                if cls.get_brightness(group_member) > 0:
                     on_items.append(group_member)
 
             if len(on_items) > 0:
-                cls._handle_single_command(lightbulb_item, command)
+                cls._execute(lightbulb_item, 0, OFF, cls.BLACK)
                 for on_item in on_items:
                     cls._increment_switchingcycles(on_item)
         else:
@@ -104,13 +107,24 @@ class LightUtils(object):
         updated = False
 
         brightness_item = lightbulb_item.from_scripting('brightness_item')
+        brightnessgroup_item = lightbulb_item.from_scripting(
+            'brightnessgroup_item')
         onoff_item = lightbulb_item.from_scripting('onoff_item')
         rgb_item = lightbulb_item.from_scripting('rgb_item')
 
+        cls.log.debug('_execute: %s, %d, %s, %s',
+                      lightbulb_item, brightness, onoff, color)
+
         if brightness_item:
             actual = brightness_item.get_int(0)
+            cls.log.debug('%s: %d, %d', brightness_item, actual, brightness)
             if actual != brightness:
-                brightness_item.send_command(brightness)
+                if brightnessgroup_item:
+                    cls.log.debug('%s, %d', brightnessgroup_item, brightness)
+                    brightnessgroup_item.send_command(brightness)
+                else:
+                    cls.log.debug('%s, %d', brightness_item, brightness)
+                    brightness_item.send_command(brightness)
                 updated = True
         elif onoff and onoff_item:
             actual = onoff_item.get_value()

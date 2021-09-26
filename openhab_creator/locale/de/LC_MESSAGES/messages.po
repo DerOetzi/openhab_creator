@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openHAB Creator\n"
-"POT-Creation-Date: 2021-09-12 22:02+0200\n"
-"PO-Revision-Date: 2021-09-12 22:03+0200\n"
+"POT-Creation-Date: 2021-09-26 11:14+0200\n"
+"PO-Revision-Date: 2021-09-26 11:17+0200\n"
 "Last-Translator: Johannes Ott <info@johannes-ott.net>\n"
 "Language-Team: Johannes Ott\n"
 "Language: de\n"
@@ -446,7 +446,7 @@ msgstr "Heizung"
 msgid "Learning House"
 msgstr "Learning House"
 
-#: openhab_creator/models/configuration/equipment/types/lightbulb.py:153
+#: openhab_creator/models/configuration/equipment/types/lightbulb.py:157
 msgid "Lightbulb"
 msgstr "Leuchte"
 
@@ -490,7 +490,7 @@ msgstr "Beifuss"
 msgid "Rye"
 msgstr "Roggen"
 
-#: openhab_creator/models/configuration/equipment/types/pollencount.py:92
+#: openhab_creator/models/configuration/equipment/types/pollencount.py:101
 msgid "Pollen count region"
 msgstr "Pollenflug Region"
 
@@ -922,40 +922,44 @@ msgstr "Wartezeit Bewegungsmelder"
 msgid "Nightmode configuration"
 msgstr "Nachtmodus"
 
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:210
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:292
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:211
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:360
 msgid "Brightness"
 msgstr "Helligkeit"
 
 #: openhab_creator/output/items/creators/lightbulbitemscreator.py:219
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:307
+msgid "Group brightness"
+msgstr "Gruppe Helligkeit"
+
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:233
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:288
 msgid "Colortemperature"
 msgstr "Farbtemperatur"
 
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:228
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:323
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:242
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:304
 #: openhab_creator/output/items/creators/poweroutletitemscreator.py:37
 msgid "On/Off"
 msgstr "An/Aus"
 
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:235
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:338
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:249
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:319
 msgid "RGB Color"
 msgstr "RGB Farbe"
 
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:256
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:270
 msgid "Lightbulb {name}"
 msgstr "Leuchte {name}"
 
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:269
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:337
 msgid "Switching cycles"
 msgstr "Schaltzyklen"
 
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:279
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:347
 msgid "Reset"
 msgstr "Zurücksetzen"
 
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:372
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:391
 msgid "Motiondetector {lightbulb}"
 msgstr "Bewegungsmelder {lightbulb}"
 
@@ -1000,10 +1004,11 @@ msgid "Network status"
 msgstr "Netzwerkstatus"
 
 #: openhab_creator/output/items/creators/pollencountitemscreator.py:29
+#: openhab_creator/output/sitemap/creators/pollencountsitemapcreator.py:36
 msgid "Pollen count index"
 msgstr "Pollenflugindex"
 
-#: openhab_creator/output/items/creators/pollencountitemscreator.py:39
+#: openhab_creator/output/items/creators/pollencountitemscreator.py:41
 msgid "Pollen count index {name}"
 msgstr "Pollenflugindex {name}"
 
@@ -1011,7 +1016,7 @@ msgstr "Pollenflugindex {name}"
 msgid "{pollentype} tomorrow"
 msgstr "{pollentype} morgen"
 
-#: openhab_creator/output/items/creators/pollencountitemscreator.py:67
+#: openhab_creator/output/items/creators/pollencountitemscreator.py:64
 msgid "{pollentype} day after tomorrow"
 msgstr "{pollentype} übermorgen"
 
