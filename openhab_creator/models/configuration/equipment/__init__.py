@@ -120,10 +120,16 @@ class Equipment(BaseObject):
         self.location = location
         self.person = person
         self.parent = parent
+        self.thing: Optional[Thing] = None
 
-        self.thing: Optional[Thing] = Thing(equipment_node=self,
-                                            configuration=configuration,
-                                            secrets_config=secrets, **thing) if thing else None
+        if thing:
+            self.thing = Thing(equipment_node=self,
+                               configuration=configuration,
+                               secrets_config=secrets, **thing)
+
+            if 'name' in self.thing.secrets:
+                self.blankname = self.thing.secrets['name']
+                self.name = self.blankname
 
         self._init_subequipment(
             configuration, subequipment or [])

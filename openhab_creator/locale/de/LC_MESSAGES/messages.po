@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openHAB Creator\n"
-"POT-Creation-Date: 2021-09-26 11:14+0200\n"
-"PO-Revision-Date: 2021-09-26 11:17+0200\n"
+"POT-Creation-Date: 2021-09-29 20:58+0200\n"
+"PO-Revision-Date: 2021-09-29 20:59+0200\n"
 "Last-Translator: Johannes Ott <info@johannes-ott.net>\n"
 "Language-Team: Johannes Ott\n"
 "Language: de\n"
@@ -437,6 +437,22 @@ msgstr "Anrufüberwachung"
 #: openhab_creator/models/configuration/equipment/types/garbagecan.py:55
 msgid "Garbage can"
 msgstr "Mülltonne"
+
+#: openhab_creator/models/configuration/equipment/types/gasstation.py:11
+msgid "Diesel"
+msgstr "Diesel"
+
+#: openhab_creator/models/configuration/equipment/types/gasstation.py:12
+msgid "E10"
+msgstr "E10"
+
+#: openhab_creator/models/configuration/equipment/types/gasstation.py:13
+msgid "E5"
+msgstr "Super"
+
+#: openhab_creator/models/configuration/equipment/types/gasstation.py:90
+msgid "Gas station"
+msgstr "Tankstelle"
 
 #: openhab_creator/models/configuration/equipment/types/heating.py:97
 msgid "Heating"
@@ -923,7 +939,7 @@ msgid "Nightmode configuration"
 msgstr "Nachtmodus"
 
 #: openhab_creator/output/items/creators/lightbulbitemscreator.py:211
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:360
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:362
 msgid "Brightness"
 msgstr "Helligkeit"
 
@@ -931,35 +947,35 @@ msgstr "Helligkeit"
 msgid "Group brightness"
 msgstr "Gruppe Helligkeit"
 
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:233
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:288
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:235
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:290
 msgid "Colortemperature"
 msgstr "Farbtemperatur"
 
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:242
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:304
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:244
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:306
 #: openhab_creator/output/items/creators/poweroutletitemscreator.py:37
 msgid "On/Off"
 msgstr "An/Aus"
 
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:249
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:319
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:251
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:321
 msgid "RGB Color"
 msgstr "RGB Farbe"
 
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:270
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:272
 msgid "Lightbulb {name}"
 msgstr "Leuchte {name}"
 
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:337
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:339
 msgid "Switching cycles"
 msgstr "Schaltzyklen"
 
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:347
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:349
 msgid "Reset"
 msgstr "Zurücksetzen"
 
-#: openhab_creator/output/items/creators/lightbulbitemscreator.py:391
+#: openhab_creator/output/items/creators/lightbulbitemscreator.py:393
 msgid "Motiondetector {lightbulb}"
 msgstr "Bewegungsmelder {lightbulb}"
 
