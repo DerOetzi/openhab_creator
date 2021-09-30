@@ -9,6 +9,7 @@ class GroupType(CreatorEnum):
     DIMMER_AVG = ':Dimmer:AVG'
     NUMBER = ':Number'
     NUMBER_AVG = ':Number:AVG'
+    NUMBER_MIN = ':Number:MIN'
     NUMBER_MAX = ':Number:MAX'
     ONOFF = ':Switch:OR(ON,OFF)'
     LOCATION = 'Location'

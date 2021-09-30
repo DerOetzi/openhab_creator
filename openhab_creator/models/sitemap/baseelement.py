@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import re
-from abc import abstractproperty
+from abc import abstractmethod
 from typing import TYPE_CHECKING, Dict, List, Optional, Tuple, Union
 
 from openhab_creator.output.formatter import Formatter
@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from openhab_creator.output.color import Color
 
 
-class BaseElement(object):
+class BaseElement():
     def __init__(self, item: Optional[str] = None, label: Optional[str] = ''):
         self.attributes: Dict[str, str] = {}
 
@@ -22,7 +22,8 @@ class BaseElement(object):
         self.attribute('item', item)
         self.elements: List[BaseElement] = []
 
-    @abstractproperty
+    @property
+    @abstractmethod
     def elementtype(self) -> str:
         pass
 

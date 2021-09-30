@@ -74,6 +74,11 @@ class MapTransformation(CreatorEnum):
 
     HEATCONTROL = 'heatcontrol', Heatcontrol.mappings()
 
+    STATION_OPEN = 'stationopen', {
+        'OPEN': _('Opened'),
+        'CLOSED': _('Closed')
+    }
+
     def __init__(self, filename: str, mappings: Dict[str, str]):
         self.filename: str = filename
         self.mappings: Dict[str, str] = mappings

@@ -8,13 +8,14 @@ from openhab_creator.models.configuration.equipment import (
 
 
 class FuelType(CreatorEnum):
-    DIESEL = 'diesel', _('Diesel')
-    E10 = 'e10', _('E10')
-    E5 = 'e5', _('E5')
+    DIESEL = 'diesel', _('Diesel'), 'DieselPrices'
+    E10 = 'e10', _('E10'), 'E10Prices'
+    E5 = 'e5', _('E5'), 'E5Prices'
 
-    def __init__(self, identifier: str, label: str):
+    def __init__(self, identifier: str, label: str, group_identifier: str):
         self.identifier: str = identifier
         self.label: str = label
+        self.group_identifier: str = group_identifier
 
 
 class GasStationIdentifiers(EquipmentItemIdentifiers):
@@ -49,6 +50,12 @@ class GasStationIdentifiers(EquipmentItemIdentifiers):
     @property
     def difference_e5(self) -> str:
         return self._identifier('differenceE5')
+
+    def price(self, fueltype: FuelType) -> str:
+        return self._identifier(f'price{fueltype}')
+
+    def difference(self, fueltype: FuelType) -> str:
+        return self._identifier(f'difference{fueltype}')
 
     @property
     def opened(self) -> str:
@@ -89,6 +96,10 @@ class GasStation(Equipment):
     @property
     def points(self) -> GasStationPoints:
         return self._points
+
+    @property
+    def semantic(self) -> str:
+        return 'Equipment'
 
     @property
     def categories(self) -> List[str]:

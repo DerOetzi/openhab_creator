@@ -1,8 +1,8 @@
 # pylint: skip-file
 from core.actions import PersistenceExtensions, Transformation
 from core.date import format_date, to_java_zoneddatetime
-from core.jsr223.scope import (NULL, ON, OFF, UNDEF, StringType, events,
-                               itemRegistry)
+from core.jsr223.scope import (CLOSED, NULL, OFF, ON, OPEN, UNDEF, StringType,
+                               events, itemRegistry)
 from core.log import LOG_PREFIX, logging
 from core.metadata import get_metadata
 from java.time import ZonedDateTime
@@ -105,6 +105,10 @@ class Item(object):
     def get_onoff(self, update_empty=False, default_value=OFF, event=None):
         onoff = self.get_value(default_value, update_empty, event)
         return onoff == ON
+
+    def get_openclosed(self, update_empty=False, default_value=CLOSED, event=None):
+        openclosed = self.get_value(default_value, update_empty, event)
+        return openclosed == OPEN
 
     def get_call(self, event=None):
         return self.get_value(event=event)

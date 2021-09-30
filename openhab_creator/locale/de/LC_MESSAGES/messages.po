@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openHAB Creator\n"
-"POT-Creation-Date: 2021-09-29 20:58+0200\n"
-"PO-Revision-Date: 2021-09-29 20:59+0200\n"
+"POT-Creation-Date: 2021-09-30 21:31+0200\n"
+"PO-Revision-Date: 2021-09-30 21:31+0200\n"
 "Last-Translator: Johannes Ott <info@johannes-ott.net>\n"
 "Language-Team: Johannes Ott\n"
 "Language: de\n"
@@ -27,6 +27,7 @@ msgid "ECO"
 msgstr "Absenk"
 
 #: openhab_creator/models/common/heatcontrol.py:12
+#: openhab_creator/models/common/maptransformation.py:79
 msgid "Closed"
 msgstr "Geschlossen"
 
@@ -134,6 +135,10 @@ msgstr "Fertig"
 #: openhab_creator/models/common/maptransformation.py:72
 msgid "Standby"
 msgstr "Standby"
+
+#: openhab_creator/models/common/maptransformation.py:78
+msgid "Opened"
+msgstr "Geöffnet"
 
 #: openhab_creator/models/common/pollencountindex.py:9
 msgid "Not specified"
@@ -450,7 +455,7 @@ msgstr "E10"
 msgid "E5"
 msgstr "Super"
 
-#: openhab_creator/models/configuration/equipment/types/gasstation.py:90
+#: openhab_creator/models/configuration/equipment/types/gasstation.py:117
 msgid "Gas station"
 msgstr "Tankstelle"
 
@@ -763,6 +768,10 @@ msgstr "Letzter eingehender Anruf"
 #: openhab_creator/output/items/creators/callmonitoritemcreator.py:88
 msgid "Incoming call name"
 msgstr "Eingehender Anrufer"
+
+#: openhab_creator/output/items/creators/gasstationitemscreator.py:76
+msgid "Station status"
+msgstr "Tankstellenstatus"
 
 #: openhab_creator/output/items/creators/generalitemscreator.py:20
 msgid "Configuration items"
@@ -1267,6 +1276,14 @@ msgstr "Erledigt"
 #: openhab_creator/output/sitemap/creators/calendarsitemapcreator.py:52
 msgid "Next 10 upcoming birthdays"
 msgstr "Nächsten 10 Geburtstage"
+
+#: openhab_creator/output/sitemap/creators/gasstationsitemapcreator.py:23
+msgid "Fuel prices"
+msgstr "Benzinpreise"
+
+#: openhab_creator/output/sitemap/creators/gasstationsitemapcreator.py:34
+msgid "Price development"
+msgstr "Preisentwicklung"
 
 #: openhab_creator/output/sitemap/creators/learninghousesitemapcreator.py:25
 msgid "LearningHouse"
