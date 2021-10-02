@@ -6,9 +6,9 @@ from openhab_creator import _
 from openhab_creator.models.common import MapTransformation
 from openhab_creator.models.configuration.equipment.types.sensor import (
     Sensor, SensorType)
-from openhab_creator.models.items import (DateTime, Group, GroupType, Number,
-                                          PointType, ProfileType, PropertyType,
-                                          String)
+from openhab_creator.models.items import (AISensorDataType, DateTime, Group,
+                                          GroupType, Number, PointType,
+                                          ProfileType, PropertyType, String)
 from openhab_creator.output.items import ItemsCreatorPipeline
 from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
 
@@ -148,7 +148,7 @@ class SensorItemsCreator(BaseItemsCreator):
             .groups(sensor.item_ids.merged_sensor)\
             .semantic(PointType.MEASUREMENT, sensortype.typed.property)\
             .channel(sensor.points.channel(sensortype.point))\
-            .aisensor()
+            .aisensor(AISensorDataType.NUMERICAL)
 
         if sensortype == SensorType.MOISTURE:
             sensor_item\
@@ -190,7 +190,7 @@ class SensorItemsCreator(BaseItemsCreator):
                 .icon(f'trend{sensortype}')\
                 .groups(sensor.item_ids.merged_sensor)\
                 .semantic(PointType.STATUS)\
-                .aisensor()\
+                .aisensor(AISensorDataType.CATEGORICAL)\
                 .append_to(self)
 
             sensor_item\
@@ -205,7 +205,7 @@ class SensorItemsCreator(BaseItemsCreator):
                     .icon('average7d')\
                     .groups(sensor.item_ids.merged_sensor)\
                     .semantic(PointType.STATUS)\
-                    .aisensor()\
+                    .aisensor(AISensorDataType.NUMERICAL)\
                     .append_to(self)
 
                 sensor_item\

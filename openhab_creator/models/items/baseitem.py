@@ -66,9 +66,14 @@ class ProfileType(CreatorEnum):
     PHONEBOOK = 'transform:PHONEBOOK'
 
 
+class AISensorDataType(CreatorEnum):
+    NUMERICAL = "numerical"
+    CATEGORICAL = "categorical"
+
+
 class BaseItem():
     influxdb_series = {}
-    aisensors = []
+    aisensors = {}
     icons = {}
 
     def __init__(self, name: str):
@@ -148,8 +153,8 @@ class BaseItem():
 
         return self
 
-    def aisensor(self) -> BaseItem:
-        BaseItem.aisensors.append(self._name)
+    def aisensor(self, datatype: AISensorDataType) -> BaseItem:
+        BaseItem.aisensors[self._name] = str(datatype)
         return self.groups('AISensor')
 
     def expire(self, duration: str, state: Optional[str] = None) -> BaseItem:

@@ -19,5 +19,6 @@
     "--disable=C0111"
   ],
   "python.linting.enabled": true,
-  "python.pythonPath": "/usr/bin/python3"
+  "python.pythonPath": "/usr/bin/python3",
+  "git.alwaysSignOff": true
 }

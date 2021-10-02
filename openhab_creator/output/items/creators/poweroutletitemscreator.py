@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from openhab_creator import _
-from openhab_creator.models.items import (Group, Number, NumberType, PointType,
+from openhab_creator.models.items import (AISensorDataType, Group, Number, NumberType, PointType,
                                           PropertyType, Switch)
 from openhab_creator.output.items import ItemsCreatorPipeline
 from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
@@ -54,7 +54,7 @@ class PowerOutletItemsCreator(BaseItemsCreator):
                     .equipment(poweroutlet.item_ids.poweroutlet)\
                     .groups(poweroutlet.group)\
                     .sensor('power', poweroutlet.influxdb_tags)\
-                    .aisensor()\
+                    .aisensor(AISensorDataType.NUMERICAL)\
                     .semantic(PointType.MEASUREMENT, PropertyType.POWER)\
                     .channel(poweroutlet.points.channel('power'))\
                     .scripting(poweroutlet.scripting)\

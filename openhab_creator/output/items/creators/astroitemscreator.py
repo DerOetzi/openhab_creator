@@ -3,14 +3,16 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from openhab_creator import _
-from openhab_creator.models.items import (Group, Number, NumberType, PointType,
-                                          PropertyType, String, DateTime)
-from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
+from openhab_creator.models.items import (AISensorDataType, DateTime, Group,
+                                          Number, NumberType, PointType,
+                                          PropertyType, String)
 from openhab_creator.output.items import ItemsCreatorPipeline
+from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
 
 if TYPE_CHECKING:
     from openhab_creator.models.configuration import Configuration
-    from openhab_creator.models.configuration.equipment.types.astro import Astro
+    from openhab_creator.models.configuration.equipment.types.astro import \
+        Astro
 
 
 @ItemsCreatorPipeline(7)
@@ -47,7 +49,7 @@ class AstroItemsCreator(BaseItemsCreator):
                 .groups(f'{astro.thing.typed}position')\
                 .semantic(PointType.STATUS)\
                 .sensor('astro', astro.influxdb_tags)\
-                .aisensor()\
+                .aisensor(AISensorDataType.NUMERICAL)\
                 .channel(astro.points.channel('azimuth'))\
                 .append_to(self)
 
@@ -61,7 +63,7 @@ class AstroItemsCreator(BaseItemsCreator):
                 .groups(f'{astro.thing.typed}position')\
                 .semantic(PointType.STATUS)\
                 .sensor('astro', astro.influxdb_tags)\
-                .aisensor()\
+                .aisensor(AISensorDataType.NUMERICAL)\
                 .channel(astro.points.channel('elevation'))\
                 .append_to(self)
 

@@ -8,7 +8,7 @@ from openhab_creator.models.common.weatherstation import (DWDEvent,
                                                           WeatherCondition)
 from openhab_creator.models.configuration.equipment.types.weatherstation import \
     WeatherStationType
-from openhab_creator.models.items import (DateTime, Group, GroupType, Number,
+from openhab_creator.models.items import (AISensorDataType, DateTime, Group, GroupType, Number,
                                           NumberType, PointType, ProfileType,
                                           String, Switch)
 from openhab_creator.output.formatter import Formatter
@@ -88,7 +88,7 @@ class WeatherStationItemsCreator(BaseItemsCreator):
                 .icon('weather')\
                 .groups(station.item_ids.merged_sensor, 'WeatherCondition')\
                 .semantic(PointType.STATUS)\
-                .aisensor()\
+                .aisensor(AISensorDataType.CATEGORICAL)\
                 .channel(station.points.channel('condition_id'),
                          ProfileType.SCALE, 'weathercondition.scale')\
                 .scripting({
@@ -135,7 +135,7 @@ class WeatherStationItemsCreator(BaseItemsCreator):
             .semantic(PointType.MEASUREMENT, weathertype.typed.property)\
             .channel(station.points.channel(weathertype.point))\
             .sensor(weathertype.point, station.influxdb_tags)\
-            .aisensor()\
+            .aisensor(AISensorDataType.NUMERICAL)\
             .append_to(self)
 
         if weathertype.labels.has_gui_factor:
@@ -185,7 +185,7 @@ class WeatherStationItemsCreator(BaseItemsCreator):
             .equipment(station)\
             .groups('WeatherWarningSeverity')\
             .semantic(PointType.STATUS)\
-            .aisensor()\
+            .aisensor(AISensorDataType.CATEGORICAL)\
             .append_to(self)
 
         weatheritems['severity'] = station.item_ids.warning_severity
@@ -218,7 +218,7 @@ class WeatherStationItemsCreator(BaseItemsCreator):
             .equipment(station)\
             .groups('WeatherWarningUrgency')\
             .semantic(PointType.STATUS)\
-            .aisensor()\
+            .aisensor(AISensorDataType.CATEGORICAL)\
             .append_to(self)
 
         weatheritems['urgency'] = station.item_ids.warning_urgency
@@ -230,7 +230,6 @@ class WeatherStationItemsCreator(BaseItemsCreator):
             .equipment(station)\
             .groups('WeatherWarningEvent')\
             .semantic(PointType.STATUS)\
-            .aisensor()\
             .append_to(self)
 
         String(station.item_ids.warning_event_mapped)\
@@ -240,7 +239,7 @@ class WeatherStationItemsCreator(BaseItemsCreator):
             .equipment(station)\
             .groups('WeatherWarningEventMapped')\
             .semantic(PointType.STATUS)\
-            .aisensor()\
+            .aisensor(AISensorDataType.CATEGORICAL)\
             .append_to(self)
 
         weatheritems['text'] = _('{} of {}')
@@ -291,6 +290,6 @@ class WeatherStationItemsCreator(BaseItemsCreator):
             .equipment(station)\
             .groups('WeatherWarning')\
             .semantic(PointType.ALARM)\
-            .aisensor()\
+            .aisensor(AISensorDataType.CATEGORICAL)\
             .scripting(weatheritems)\
             .append_to(self)
