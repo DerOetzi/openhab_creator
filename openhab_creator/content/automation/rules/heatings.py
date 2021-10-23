@@ -22,8 +22,8 @@ def heatingcontrol(event):
 
     heating_item = heatcontrol_item.from_scripting('heating_item')
 
-    logger.info('%s: %s %s', heating_item.name,
-                command, heating_item.scripting())
+    logger.debug('%s: %s %s', heating_item.name,
+                 command, heating_item.scripting())
 
     HeatingUtils.manual(heating_item, command, event)
 

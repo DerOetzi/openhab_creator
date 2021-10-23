@@ -54,7 +54,7 @@ class HeatingUtils(object):
             cls._execute(heating_item, eco_item.get_float(
                 17.0, True), 'heatmode_eco')
         elif command == 'BOOST':
-            new_temperature = heating_item.scripting('boost_item').floatValue()
+            new_temperature = heating_item.scripting('boost_temp').floatValue()
             cls._execute(heating_item, new_temperature, 'heatmode_boost')
 
     @staticmethod
