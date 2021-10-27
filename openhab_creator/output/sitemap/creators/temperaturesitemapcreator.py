@@ -47,7 +47,7 @@ class TemperatureSitemapCreator(BaseSitemapCreator):
                     Text(f'temperature{sensor.item_ids.merged_sensor}')\
                         .label(sensor.name)\
                         .valuecolor(*TemperatureSitemapCreator
-                                    .valuecolor(f'temperature{sensor.item_ids.sensor}'))\
+                                    .valuecolor(f'temperature{sensor.item_ids.merged_sensor}'))\
                         .append_to(subpage)
 
             self._add_grafana(configuration.dashboard, page,
