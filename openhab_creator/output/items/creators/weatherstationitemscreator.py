@@ -139,7 +139,8 @@ class WeatherStationItemsCreator(BaseItemsCreator):
             .append_to(self)
 
         if weathertype.labels.has_gui_factor:
-            String(f'gui{weathertype}{station.identifier}')\
+            Number(f'gui{weathertype}{station.identifier}')\
+                .typed(weathertype.typed.number)\
                 .label(weathertype.labels.item)\
                 .transform_js(f'gui{weathertype}')\
                 .icon(f'{weathertype}')\

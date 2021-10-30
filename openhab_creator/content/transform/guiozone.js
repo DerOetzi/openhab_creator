@@ -1,3 +1,3 @@
-(function(i) {
-    return Math.floor(parseFloat(i)*10) + ' DU';
+(function (i) {
+    return Math.round(parseFloat(i) * 10) + ' µg/m³';
 })(input)

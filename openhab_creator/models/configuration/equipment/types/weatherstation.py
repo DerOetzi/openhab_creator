@@ -40,12 +40,11 @@ class WeatherStationType(CreatorEnum):
         ])
 
     OZONE = 'ozone',\
-        SensorLabel(_('Ozone'), _('Ozone'), '%.5f %unit%'),\
+        SensorLabel(_('Ozone'), _('Ozone'), '%.2f %unit%', 10),\
         SensorTyped(PropertyType.OZONE, NumberType.DENSITY),\
         SensorColors(outdoor=[
-            (450, Color.DARKRED), (420, Color.RED), (400, Color.ORANGE),
-            (370, Color.YELLOW), (300, Color.GREEN), (200, Color.BLUE),
-            (0, Color.VIOLETT)
+            (240, Color.RED), (180, Color.ORANGE),
+            (120, Color.YELLOW), (0, Color.GREEN)
         ])
 
     def __init__(self, point: str, labels: SensorLabel,
