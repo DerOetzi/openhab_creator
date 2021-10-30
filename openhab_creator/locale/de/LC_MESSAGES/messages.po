@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openHAB Creator\n"
-"POT-Creation-Date: 2021-09-30 21:31+0200\n"
-"PO-Revision-Date: 2021-09-30 21:31+0200\n"
+"POT-Creation-Date: 2021-10-30 20:49+0200\n"
+"PO-Revision-Date: 2021-10-30 20:50+0200\n"
 "Last-Translator: Johannes Ott <info@johannes-ott.net>\n"
 "Language-Team: Johannes Ott\n"
 "Language: de\n"
@@ -615,7 +615,7 @@ msgstr "UV-Index"
 msgid "Ozone"
 msgstr "Ozon"
 
-#: openhab_creator/models/configuration/equipment/types/weatherstation.py:237
+#: openhab_creator/models/configuration/equipment/types/weatherstation.py:236
 msgid "Weatherstation"
 msgstr "Wetterstation"
 
@@ -668,47 +668,56 @@ msgstr "Status und Konfiguration"
 msgid "Unknown"
 msgstr "Unbekannt"
 
-#: openhab_creator/output/items/creators/astroitemscreator.py:42
+#: openhab_creator/output/items/creators/astroitemscreator.py:44
 msgid "Azimuth"
 msgstr "Azimut"
 
-#: openhab_creator/output/items/creators/astroitemscreator.py:56
+#: openhab_creator/output/items/creators/astroitemscreator.py:58
 msgid "Elevation"
 msgstr "Höhenwinkel"
 
-#: openhab_creator/output/items/creators/astroitemscreator.py:71
+#: openhab_creator/output/items/creators/astroitemscreator.py:73
 msgid "Rise"
 msgstr "Aufgang"
 
-#: openhab_creator/output/items/creators/astroitemscreator.py:81
+#: openhab_creator/output/items/creators/astroitemscreator.py:83
 msgid "Set"
 msgstr "Untergang"
 
-#: openhab_creator/output/items/creators/astroitemscreator.py:92
+#: openhab_creator/output/items/creators/astroitemscreator.py:94
 msgid "Total eclipse"
 msgstr "Totale Finsternis"
 
-#: openhab_creator/output/items/creators/astroitemscreator.py:102
+#: openhab_creator/output/items/creators/astroitemscreator.py:104
 msgid "Partial eclipse"
 msgstr "Partielle Finsternis"
 
-#: openhab_creator/output/items/creators/astroitemscreator.py:113
+#: openhab_creator/output/items/creators/astroitemscreator.py:115
 msgid "Full moon"
 msgstr "Vollmond"
 
-#: openhab_creator/output/items/creators/astroitemscreator.py:123
+#: openhab_creator/output/items/creators/astroitemscreator.py:125
 msgid "Moon phase"
 msgstr "Mondphase"
 
-#: openhab_creator/output/items/creators/batteryitemscreator.py:27
+#: openhab_creator/output/items/creators/batteryitemscreator.py:21
+#: openhab_creator/output/sitemap/creators/batterysitemapcreator.py:54
+msgid "Batteries status"
+msgstr "Batterienstatus"
+
+#: openhab_creator/output/items/creators/batteryitemscreator.py:37
 msgid "Battery"
 msgstr "Batterie"
 
-#: openhab_creator/output/items/creators/batteryitemscreator.py:34
+#: openhab_creator/output/items/creators/batteryitemscreator.py:43
 msgid "Battery low"
 msgstr "Batteriestand niedrig"
 
-#: openhab_creator/output/items/creators/batteryitemscreator.py:44
+#: openhab_creator/output/items/creators/batteryitemscreator.py:49
+msgid "Battery low {name}"
+msgstr "Batteriestand niedrig {name}"
+
+#: openhab_creator/output/items/creators/batteryitemscreator.py:55
 msgid "Battery level"
 msgstr "Batteriestand"
 
@@ -773,32 +782,27 @@ msgstr "Eingehender Anrufer"
 msgid "Station status"
 msgstr "Tankstellenstatus"
 
-#: openhab_creator/output/items/creators/generalitemscreator.py:20
+#: openhab_creator/output/items/creators/generalitemscreator.py:19
 msgid "Configuration items"
 msgstr "Konfigurationsitems"
 
-#: openhab_creator/output/items/creators/generalitemscreator.py:24
-#: openhab_creator/output/items/creators/generalitemscreator.py:28
+#: openhab_creator/output/items/creators/generalitemscreator.py:23
+#: openhab_creator/output/items/creators/generalitemscreator.py:27
 msgid "Sensor items"
 msgstr "Sensoren"
 
-#: openhab_creator/output/items/creators/generalitemscreator.py:32
+#: openhab_creator/output/items/creators/generalitemscreator.py:31
 msgid "Sensor items for AI calculations"
 msgstr "Sensoren für die KI-Berechnung"
 
-#: openhab_creator/output/items/creators/generalitemscreator.py:36
+#: openhab_creator/output/items/creators/generalitemscreator.py:35
 #: openhab_creator/output/items/creators/heatingitemscreator.py:45
 #: openhab_creator/output/items/creators/heatingitemscreator.py:60
 #: openhab_creator/output/items/creators/lightbulbitemscreator.py:59
 msgid "Scene controlled configuration items"
 msgstr "Konfigurationsitems Szenensteuerung"
 
-#: openhab_creator/output/items/creators/generalitemscreator.py:41
-#: openhab_creator/output/sitemap/creators/batterysitemapcreator.py:54
-msgid "Batteries status"
-msgstr "Batterienstatus"
-
-#: openhab_creator/output/items/creators/generalitemscreator.py:48
+#: openhab_creator/output/items/creators/generalitemscreator.py:40
 msgid "Period"
 msgstr "Zeitraum"
 
@@ -1178,23 +1182,23 @@ msgstr "Wetterstation"
 msgid "Weather condition"
 msgstr "Wetterlage"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:182
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:183
 msgid "Warning severity"
 msgstr "Warnstufe"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:195
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:196
 msgid "Headline"
 msgstr "Überschrift"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:206
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:207
 msgid "Description"
 msgstr "Beschreibung"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:216
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:217
 msgid "Urgency"
 msgstr "Aktualität"
 
-#: openhab_creator/output/items/creators/weatherstationitemscreator.py:227
+#: openhab_creator/output/items/creators/weatherstationitemscreator.py:228
 msgid "Event"
 msgstr "Event"
 

@@ -4,8 +4,7 @@ from typing import TYPE_CHECKING
 
 from openhab_creator import _
 from openhab_creator.models.grafana import Period
-from openhab_creator.models.items import Group, GroupType, String
-from openhab_creator.models.common import MapTransformation
+from openhab_creator.models.items import Group, String
 from openhab_creator.output.items import ItemsCreatorPipeline
 from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
 
@@ -35,13 +34,6 @@ class GeneralItemsCreator(BaseItemsCreator):
         Group('Auto')\
             .label(_('Scene controlled configuration items'))\
             .config()\
-            .append_to(self)
-
-        Group('LowBattery')\
-            .label(_('Batteries status'))\
-            .map(MapTransformation.LOWBATTERY)\
-            .icon('lowbattery')\
-            .typed(GroupType.NUMBER_MAX)\
             .append_to(self)
 
         String('guiPeriod')\
