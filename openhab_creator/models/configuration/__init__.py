@@ -5,11 +5,14 @@ import json
 import os
 from typing import TYPE_CHECKING, Dict, List, Optional, Tuple
 
+import yaml
+
 from openhab_creator import logger
 from openhab_creator.exception import ConfigurationException
 from openhab_creator.models.configuration.equipment import EquipmentType
 from openhab_creator.models.configuration.equipment.bridge import Bridge
-from openhab_creator.models.configuration.equipment.types.learninghouse import LearningHouse
+from openhab_creator.models.configuration.equipment.types.learninghouse import \
+    LearningHouse
 from openhab_creator.models.configuration.location import (Location,
                                                            LocationFactory)
 from openhab_creator.models.configuration.person import Person
@@ -31,22 +34,31 @@ class SecretsStorage():
             self.__read_secrets(configdir)
 
     def __read_secrets(self, configdir: str) -> None:
-        with open(os.path.join(configdir, 'secrets.csv')) as secretsfile:
-            reader = csv.DictReader(secretsfile)
+        with open(os.path.join(configdir, 'secrets.yaml')) as secretsfile:
+            self.storage = yaml.safe_load(secretsfile)
+            self.storage = self.__keys_to_lower(self.storage)
+            logger.debug(self.storage)
 
-            for row in reader:
-                key = row['key'].lower()
-                if row['value'].strip() == '':
-                    logger.warning("Empty secret: %s", key)
-                    self.storage[key] = '__%s__' % (
-                        key.upper())
-                else:
-                    self.storage[key.lower()] = row['value'].strip()
+    @classmethod
+    def __keys_to_lower(cls, iterable):
+        if isinstance(iterable, dict):
+            new_dict = {}
+            for key in iterable.keys():
+                key_lower = key.lower()
+                new_dict[key_lower] = iterable[key]
+                if isinstance(new_dict[key_lower], dict):
+                    new_dict[key_lower] = cls.__keys_to_lower(
+                        new_dict[key_lower])
+
+            iterable = new_dict
+
+        return iterable
 
     def secret(self, *args: List[str]) -> str:
         value = self.secret_optional(*args)
 
         if value is None:
+            logger.info(args)
             key = self.secret_key(*args)
             if key not in self.missing_keys:
                 self.missing_keys.append(key)
@@ -55,12 +67,20 @@ class SecretsStorage():
         return value
 
     def secret_optional(self, *args: List[str]) -> Optional[str]:
-        key = self.secret_key(*args)
+        value = None
+        tree = self.storage
 
-        if key in self.storage:
-            value = self.storage[key]
-        else:
-            value = None
+        for key in args[:-1]:
+            key = key.lower()
+            if key in tree:
+                tree = tree[key]
+            else:
+                tree = None
+                break
+
+        key = args[-1].lower()
+        if tree is not None and key in tree:
+            value = tree[key]
 
         return value
 

@@ -16,7 +16,7 @@ class Person(BaseObject):
                  configuration: Configuration,
                  key: int,
                  equipment: Optional[List[Dict]] = None):
-        name = configuration.secrets.secret(f'person{key}')
+        name = configuration.secrets.secret(f'person{key}', 'identifier')
         super().__init__(name)
 
         self.has_presence: bool = False
