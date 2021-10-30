@@ -1,0 +1,36 @@
+ThirdPartyNotices
+-----------------
+DerOetzi/openhab_creator uses third-party software or other resources that
+may be distributed under licenses different from DerOetzi/openhab_creator
+software.
+In the event that we overlooked to list a required notice, please bring this
+to our attention by opening an issue on:
+https://github.com/DerOetzi/openhab_creator/issues
+
+Components:
+-----------
+
+Component: Python3
+Licensor: Python Software Foundatio
+Website: https://www.python.org
+License: PSF License
+
+Component: click
+Licensor: Pallets
+Website: https://click.palletsprojects.com/en/7.x/
+License: BSD-3-Clause License
+
+Component: click_log
+Licensor: click-contrib
+Website: https://github.com/click-contrib/click-log
+License: MIT License
+
+Component: cairosvg
+Licensor: Guillaume Ayoub
+Website: https://courtbouillon.org/cairosvg
+License: LGPL-3.0 License
+
+Component: pyyaml
+Licensor: Kirill Simonov
+Website: https://pyyaml.org/
+License: MIT License

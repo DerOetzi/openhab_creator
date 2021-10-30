@@ -1,3 +1,4 @@
 click
 click-log
 cairosvg
+pyyaml
