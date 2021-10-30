@@ -12,6 +12,7 @@ class GroupType(CreatorEnum):
     NUMBER_MIN = ':Number:MIN'
     NUMBER_MAX = ':Number:MAX'
     ONOFF = ':Switch:OR(ON,OFF)'
+    OFFON = ':Switch:OR(OFF,ON)'
     LOCATION = 'Location'
 
 

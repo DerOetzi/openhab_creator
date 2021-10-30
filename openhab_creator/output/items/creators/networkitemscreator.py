@@ -19,9 +19,10 @@ if TYPE_CHECKING:
 class NetworkItemsCreator(BaseItemsCreator):
     def build(self, configuration) -> None:
         Group('Networkstatus')\
-            .typed(GroupType.ONOFF)\
+            .typed(GroupType.OFFON)\
             .label(_('Network status'))\
             .map(MapTransformation.ONLINE)\
+            .icon('networkstatus')\
             .append_to(self)
 
         for lan in configuration.equipment.equipment('lan', False):
@@ -33,6 +34,7 @@ class NetworkItemsCreator(BaseItemsCreator):
         for mac, equipment in lan.macs.items():
             online = Switch(equipment.item_ids.maconline)\
                 .label(_('Network status'))\
+                .icon('networkstatus')\
                 .equipment(equipment)\
                 .channel(lan.maconline_channel(mac))\
                 .semantic(PointType.STATUS)
