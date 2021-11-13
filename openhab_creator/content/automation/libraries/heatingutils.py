@@ -63,13 +63,13 @@ class HeatingUtils(object):
             setpoint_item = heating_item.from_scripting('setpoint_item')
             actual_temperature = setpoint_item.get_float()
 
-            if actual_temperature is None or actual_temperature != new_temperature:
-                setpoint_item.send_command(new_temperature)
+            setpoint_item.send_command(new_temperature, actual_temperature)
 
         heatmode_item = heating_item.from_scripting('heatmode_item')
         if heatmode_item.is_scripting(new_heatmode_key):
             heatmode_item.send_command(
-                heatmode_item.scripting(new_heatmode_key))
+                heatmode_item.scripting(new_heatmode_key),
+                heatmode_item.get_string())
 
     @classmethod
     def __handle_group_command(cls, heating_item, command):

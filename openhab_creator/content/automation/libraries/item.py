@@ -134,11 +134,12 @@ class Item(object):
         else:
             events.postUpdate(self._item, value)
 
-    def send_command(self, value):
-        if isinstance(value, ZonedDateTime):
-            events.sendCommand(self._item, format_date(value))
-        else:
-            events.sendCommand(self._item, value)
+    def send_command(self, value, actual_value=None):
+        if actual_value is None or actual_value != value:
+            if isinstance(value, ZonedDateTime):
+                events.sendCommand(self._item, format_date(value))
+            else:
+                events.sendCommand(self._item, value)
 
     def delta_since(self, since):
         delta_since = PersistenceExtensions.deltaSince(

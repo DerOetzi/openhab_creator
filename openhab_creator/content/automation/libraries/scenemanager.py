@@ -283,9 +283,9 @@ class SceneManager(object):
             elif auto_item.is_scripting('pump_item'):
                 control_item = auto_item.from_scripting('control_item')
                 if is_active:
-                    control_item.send_command(ON)
+                    control_item.send_command(ON, control_item.get_value())
                 else:
-                    control_item.send_command(OFF)
+                    control_item.send_command(OFF, control_item.get_value())
 
     def clear_timer(self):
         self.timers.cancel_all()
