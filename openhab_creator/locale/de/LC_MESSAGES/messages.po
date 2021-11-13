@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openHAB Creator\n"
-"POT-Creation-Date: 2021-10-30 20:49+0200\n"
-"PO-Revision-Date: 2021-10-30 20:50+0200\n"
+"POT-Creation-Date: 2021-11-13 22:02+0100\n"
+"PO-Revision-Date: 2021-11-13 22:05+0100\n"
 "Last-Translator: Johannes Ott <info@johannes-ott.net>\n"
 "Language-Team: Johannes Ott\n"
 "Language: de\n"
@@ -42,8 +42,7 @@ msgstr "Boost"
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:93
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:153
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:186
-#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:114
-#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:120
+#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:115
 #: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:136
 #: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:139
 #: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:143
@@ -56,8 +55,6 @@ msgstr "Aus"
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:93
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:163
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:186
-#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:114
-#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:120
 #: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:136
 msgid "On"
 msgstr "An"
@@ -65,7 +62,7 @@ msgstr "An"
 #: openhab_creator/models/common/maptransformation.py:21
 #: openhab_creator/models/common/maptransformation.py:25
 #: openhab_creator/models/common/maptransformation.py:36
-#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:55
+#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:56
 #: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:130
 msgid "Inactive"
 msgstr "Inaktiv"
@@ -73,7 +70,7 @@ msgstr "Inaktiv"
 #: openhab_creator/models/common/maptransformation.py:21
 #: openhab_creator/models/common/maptransformation.py:28
 #: openhab_creator/models/common/maptransformation.py:36
-#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:56
+#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:57
 #: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:130
 msgid "Active"
 msgstr "Aktiv"
@@ -992,24 +989,15 @@ msgstr "Zurücksetzen"
 msgid "Motiondetector {lightbulb}"
 msgstr "Bewegungsmelder {lightbulb}"
 
-#: openhab_creator/output/items/creators/locationitemscreator.py:69
+#: openhab_creator/output/items/creators/locationitemscreator.py:70
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:41
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:85
-#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:37
+#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:38
 #: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:87
 #: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:139
 #: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:170
 msgid "Automation"
 msgstr "Automatik"
-
-#: openhab_creator/output/items/creators/locationitemscreator.py:77
-msgid "On weekend"
-msgstr "Am Wochenende"
-
-#: openhab_creator/output/items/creators/locationitemscreator.py:84
-#: openhab_creator/output/items/creators/sceneitemscreator.py:36
-msgid "Guest stayed"
-msgstr "Gast zu Besuch"
 
 #: openhab_creator/output/items/creators/motiondetectoritemscreator.py:22
 msgid "Motiondetector assignment items"
@@ -1028,7 +1016,7 @@ msgid "Motiondetector assignment"
 msgstr "Bewegungsmelderzuordnung"
 
 #: openhab_creator/output/items/creators/networkitemscreator.py:23
-#: openhab_creator/output/items/creators/networkitemscreator.py:35
+#: openhab_creator/output/items/creators/networkitemscreator.py:36
 msgid "Network status"
 msgstr "Netzwerkstatus"
 
@@ -1054,7 +1042,7 @@ msgid "Power"
 msgstr "Leistung"
 
 #: openhab_creator/output/items/creators/presenceitemscreator.py:26
-#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:45
+#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:46
 msgid "Way home"
 msgstr "Heimweg"
 
@@ -1099,15 +1087,20 @@ msgid "Last updated"
 msgstr "Zuletzt aktualisiert"
 
 #: openhab_creator/output/items/creators/sceneitemscreator.py:23
-#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:71
-#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:79
+#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:72
+#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:80
 msgid "Time controlled"
 msgstr "Zeitsteuerung"
 
 #: openhab_creator/output/items/creators/sceneitemscreator.py:30
-#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:21
+#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:22
 msgid "Scene"
 msgstr "Szene"
+
+#: openhab_creator/output/items/creators/sceneitemscreator.py:36
+#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:119
+msgid "Guest stayed"
+msgstr "Gast zu Besuch"
 
 #: openhab_creator/output/items/creators/sensoritemscreator.py:188
 msgid "Trend {label}"
@@ -1253,8 +1246,7 @@ msgstr "Reinigungscountdown"
 
 #: openhab_creator/output/sitemap/__init__.py:29
 #: openhab_creator/output/sitemap/creators/calendarsitemapcreator.py:60
-#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:41
-#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:117
+#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:42
 msgid "Configuration"
 msgstr "Konfiguration"
 
@@ -1317,14 +1309,13 @@ msgid "Hide"
 msgstr "Ausblenden"
 
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:97
-#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:124
-msgid "Always"
-msgstr "Immer"
-
-#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:97
-#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:124
 msgid "Only"
 msgstr "Nur"
+
+#: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:97
+#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:116
+msgid "Always"
+msgstr "Immer"
 
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:106
 msgid "Random"
@@ -1347,7 +1338,7 @@ msgid "All"
 msgstr "Alle"
 
 #: openhab_creator/output/sitemap/creators/prescencesitemapcreator.py:32
-#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:44
+#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:45
 msgid "Away"
 msgstr "Unterwegs"
 
@@ -1355,33 +1346,38 @@ msgstr "Unterwegs"
 msgid "On the way"
 msgstr "Heimweg"
 
-#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:26
+#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:27
 msgid "Scenes"
 msgstr "Szenen"
 
-#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:30
+#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:31
 msgid "Food scenes"
 msgstr "Essenszenen"
 
-#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:34
+#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:35
 msgid "Special scenes"
 msgstr "Spezialszenen"
 
-#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:61
+#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:62
 msgid "No guest"
 msgstr "Kein Gast"
 
-#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:62
+#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:63
 msgid "Guest"
 msgstr "Gast"
 
-#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:81
+#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:82
+#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:117
 msgid "Working days"
 msgstr "Werktage"
 
-#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:84
+#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:85
 msgid "Weekend and holidays"
 msgstr "Wochenende und freie Tage"
+
+#: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:118
+msgid "Weekend"
+msgstr "Wochenende"
 
 #: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:169
 #: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:196
@@ -1407,6 +1403,14 @@ msgstr "Mondaufgang"
 #: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:315
 msgid "Moon set"
 msgstr "Monduntergang"
+
+#, fuzzy
+#~| msgid "Working days"
+#~ msgid "Working day"
+#~ msgstr "Werktage"
+
+#~ msgid "On weekend"
+#~ msgstr "Am Wochenende"
 
 #~ msgid "Switching cycles {name}"
 #~ msgstr "Schaltzyklen {name}"

@@ -4,7 +4,8 @@ from typing import TYPE_CHECKING
 
 from openhab_creator import _
 from openhab_creator.models.common import MapTransformation, Scene
-from openhab_creator.models.sitemap import Page, Setpoint, Sitemap, Switch
+from openhab_creator.models.sitemap import (Page, Selection, Setpoint, Sitemap,
+                                            Switch)
 from openhab_creator.output.sitemap import SitemapCreatorPipeline
 from openhab_creator.output.sitemap.basesitemapcreator import \
     BaseSitemapCreator
@@ -75,7 +76,8 @@ class SceneSitemapCreator(BaseSitemapCreator):
         self._build_timesframe(page)
         self._build_locationassignment(page, configuration)
 
-    def _build_timesframe(self, page: Page) -> None:
+    @staticmethod
+    def _build_timesframe(page: Page) -> None:
         timesframe = page.frame('times', _('Time controlled'))
 
         workingday = Page(label=_('Working days'))\
@@ -110,16 +112,10 @@ class SceneSitemapCreator(BaseSitemapCreator):
                 .append_to(frame)
 
             for scene in Scene:
-                Switch(location.sceneassignment_id(scene),
-                       [('OFF', _('Off')), ('ON', _('On'))])\
+                Selection(location.sceneassignment_id(scene),
+                          [('OFF', _('Off')),
+                           ('ALWAYS', _('Always')),
+                           ('WORKINGDAY', _('Working days')),
+                           ('WEEKEND', _('Weekend')),
+                           ('GUEST', _('Guest stayed'))])\
                     .append_to(subpage)
-
-            configframe = subpage.frame('config', _('Configuration'))
-
-            Switch(location.autoweekend_id,
-                   [('OFF', _('Off')), ('ON', _('On'))])\
-                .append_to(configframe)
-
-            Switch(location.autoguest_id,
-                   [('OFF', _('Always')), ('ON', _('Only'))])\
-                .append_to(configframe)

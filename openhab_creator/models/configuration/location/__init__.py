@@ -76,14 +76,6 @@ class Location(BaseObject):
         return f'autoActive{self.identifier}'
 
     @property
-    def autoguest_id(self) -> str:
-        return f'autoGuest{self.identifier}'
-
-    @property
-    def autoweekend_id(self) -> str:
-        return f'autoWeekend{self.identifier}'
-
-    @property
     def autoequipment(self) -> str:
         return f'autoEquipment{self.identifier}'
 

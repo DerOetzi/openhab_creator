@@ -4,15 +4,16 @@ from typing import TYPE_CHECKING
 
 from openhab_creator import _
 from openhab_creator.models.common import MapTransformation, Scene
-from openhab_creator.models.items import Group, Switch, PointType
+from openhab_creator.models.items import Group, PointType, String, Switch
 from openhab_creator.output.items import ItemsCreatorPipeline
 from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
 
 if TYPE_CHECKING:
     from openhab_creator.models.configuration import Configuration
     from openhab_creator.models.configuration.location import Location
-    from openhab_creator.models.configuration.location.indoor.floors import Floor
     from openhab_creator.models.configuration.location.indoor import Indoor
+    from openhab_creator.models.configuration.location.indoor.floors import \
+        Floor
     from openhab_creator.models.configuration.location.outdoors import Outdoor
 
 
@@ -73,25 +74,11 @@ class LocationItemsCreator(BaseItemsCreator):
             .semantic(PointType.SETPOINT)\
             .append_to(self)
 
-        Switch(location.autoweekend_id)\
-            .label(_('On weekend'))\
-            .auto()\
-            .location(location)\
-            .semantic(PointType.SETPOINT)\
-            .append_to(self)
-
-        Switch(location.autoguest_id)\
-            .label(_('Guest stayed'))\
-            .auto()\
-            .location(location)\
-            .semantic(PointType.SETPOINT)\
-            .append_to(self)
-
         Group(location.autoequipment)\
             .append_to(self)
 
         for scene in Scene:
-            Switch(location.sceneassignment_id(scene))\
+            String(location.sceneassignment_id(scene))\
                 .label(scene.label)\
                 .icon(f'scene{scene.icon}')\
                 .groups(scene.assignment_id)\
@@ -99,8 +86,6 @@ class LocationItemsCreator(BaseItemsCreator):
                 .semantic(PointType.SETPOINT)\
                 .scripting({
                     'active_item': location.autoactive_id,
-                    'weekend_item': location.autoweekend_id,
-                    'guest_item': location.autoguest_id,
                     'equipment_group': location.autoequipment
                 })\
                 .append_to(self)

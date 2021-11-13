@@ -243,17 +243,12 @@ class SceneManager(object):
                 assigned_item, is_location_active, is_night, is_presences, is_darkness, is_heating, event)
 
     def is_location_active(self, assigned_item, guest_stayed, is_weekend, event=None):
-        guest_item = assigned_item.from_scripting('guest_item', event)
-        guest_only = guest_item.get_onoff(True)
+        assigned = assigned_item.get_string('OFF', True, event)
 
-        weekend_item = assigned_item.from_scripting('weekend_item', event)
-        weekend_active = weekend_item.get_onoff(True, ON, event)
-
-        return (assigned_item.get_onoff(True, event=event)
-                and (guest_stayed
-                     or not (guest_stayed or guest_only))
-                and (weekend_active
-                     or not (weekend_active or is_weekend)))
+        return (assigned == 'ALWAYS'
+                or (not is_weekend and assigned == 'WORKINGDAY')
+                or (is_weekend and assigned == 'WEEKEND')
+                or (guest_stayed and assigned == 'GUEST'))
 
     def _handle_location(self, assigned_item,
                          is_active, is_night,
