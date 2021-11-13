@@ -5,7 +5,7 @@ from core.triggers import when
 from personal.item import Item
 from personal.signalmessenger import SignalMessenger
 
-logger = logging.getLogger('{}.maintenance', LOG_PREFIX)
+logger = logging.getLogger('{}.maintenance'.format(LOG_PREFIX))
 
 
 @rule('Calculate battery low')
