@@ -3,8 +3,9 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from openhab_creator import _
-from openhab_creator.models.items import (Group, GroupType, Number, PointType,
-                                          PropertyType, String, Switch)
+from openhab_creator.models.items import (Group, GroupType, Number, NumberType,
+                                          PointType, PropertyType, String,
+                                          Switch)
 from openhab_creator.output.items import ItemsCreatorPipeline
 from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
 
@@ -101,7 +102,9 @@ class HeatingItemsCreator(BaseItemsCreator):
                 .append_to(self)
 
             Number(pump.item_ids.autoreactivation)\
+                .typed(NumberType.TIME)\
                 .label(_('Reactivate scene controlled'))\
+                .format('%d m')\
                 .icon('reactivation')\
                 .equipment(pump)\
                 .groups('AutoReactivationWarmWaterPump')\
@@ -163,7 +166,9 @@ class HeatingItemsCreator(BaseItemsCreator):
             .append_to(self)
 
         Number(heating.item_ids.autoreactivation)\
+            .typed(NumberType.TIME)\
             .label(_('Reactivate scene controlled'))\
+            .format('%d m')\
             .icon('reactivation')\
             .equipment(heating)\
             .groups('AutoReactivationHeating')\

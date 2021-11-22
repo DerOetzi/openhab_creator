@@ -85,8 +85,7 @@ class LightbulbSitemapCreator(BaseSitemapCreator):
             Switch(lightbulb.item_ids.auto, [('OFF', _('Off')), ('ON', _('Automation'))])\
                 .append_to(lightpage)
 
-            Switch(lightbulb.item_ids.autoreactivation, [
-                   ('0', _('Off')), ('30', '30 M'), ('60', '1 H')])\
+            Setpoint(lightbulb.item_ids.autoreactivation, 0, 240, 10)\
                 .append_to(lightpage)
 
             Switch(lightbulb.item_ids.autoabsence, [

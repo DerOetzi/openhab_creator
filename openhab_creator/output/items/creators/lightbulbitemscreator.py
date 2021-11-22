@@ -152,7 +152,9 @@ class LightbulbItemsCreator(BaseItemsCreator):
             .append_to(self)
 
         Number(lightbulb.item_ids.autoreactivation)\
+            .typed(NumberType.TIME)\
             .label(_('Reactivate scene controlled'))\
+            .format('%d m')\
             .icon('reactivation')\
             .equipment(lightbulb)\
             .groups('AutoReactivationLight')\

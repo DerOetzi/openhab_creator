@@ -139,8 +139,7 @@ class TemperatureSitemapCreator(BaseSitemapCreator):
                 Switch(pump.item_ids.auto, [('OFF', _('Off')), ('ON', _('Automation'))])\
                     .append_to(frame)
 
-                Switch(pump.item_ids.autoreactivation, [
-                    ('0', _('Off')), ('30', '30 M'), ('60', '1 H')])\
+                Setpoint(pump.item_ids.autoreactivation, 0, 240, 10)\
                     .append_to(frame)
 
             for heating in heatings:
@@ -170,8 +169,7 @@ class TemperatureSitemapCreator(BaseSitemapCreator):
                 Switch(heating.item_ids.auto, [('OFF', _('Off')), ('ON', _('Automation'))])\
                     .append_to(subpage)
 
-                Switch(heating.item_ids.autoreactivation, [
-                    ('0', _('Off')), ('30', '30 M'), ('60', '1 H')])\
+                Setpoint(heating.item_ids.autoreactivation, 0, 240, 10)\
                     .append_to(subpage)
 
                 Setpoint(heating.item_ids.ecotemperature, 16, 20, 0.5)\
