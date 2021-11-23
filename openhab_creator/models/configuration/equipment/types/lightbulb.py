@@ -49,6 +49,10 @@ class LightbulbItemIdentifiers(EquipmentItemIdentifiers):
         return self._identifier('motionDetectorPeriod')
 
     @property
+    def motiondetectorblocked(self) -> str:
+        return self._identifier('motionDetectorBlocked')
+
+    @property
     def switchingcycles(self) -> str:
         return self._identifier('switchingCycles')
 

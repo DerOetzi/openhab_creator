@@ -4,6 +4,7 @@ from personal.scenemanager import SceneManager, TimeScene
 from personal.lightutils import LightUtils
 from personal.item import Group, Item
 from personal.dateutils import DateUtils
+from core.osgi import get_service
 from core.triggers import (ChannelEventTrigger, ItemCommandTrigger,
                            ItemStateChangeTrigger, StartupTrigger, when)
 from core.rules import rule
@@ -14,6 +15,8 @@ reload(personal.lightutils)
 
 
 logger = logging.getLogger('{}.Lights'.format(LOG_PREFIX))
+
+rulemanager = get_service("org.openhab.core.automation.RuleManager")
 
 
 @rule('GUI Lightcontrols')
@@ -52,7 +55,6 @@ def change_colors(event):
 class WallSwitchEvent(object):
     def __init__(self):
         self.log = logging.getLogger('{}.WallSwitchEvent'.format(LOG_PREFIX))
-
         self.triggers = [StartupTrigger(
             trigger_name='WallswitchStartup').trigger]
 
@@ -84,7 +86,17 @@ class WallSwitchEvent(object):
                     self.log.debug('%s: %s', assignment_item.name, command)
                     lightbulb_item = assignment_item.from_scripting(
                         'lightbulb_item')
-                    LightUtils.manual(lightbulb_item, command)
+
+                    if command == 'UNBLOCK':
+                        MotionDetectorEvent.trigger_unblock(lightbulb_item)
+                    elif command == 'OFFUNBLOCK':
+                        MotionDetectorEvent.trigger_unblock(lightbulb_item)
+                        LightUtils.manual(lightbulb_item, 'OFF')
+                    elif command == 'TRIGGERMOTION':
+                        MotionDetectorEvent.trigger_motion(lightbulb_item)
+                    else:
+                        LightUtils.manual(lightbulb_item, command)
+                        MotionDetectorEvent().trigger_block(lightbulb_item)
 
 
 @rule('Motion detector event')
@@ -103,6 +115,12 @@ class MotionDetectorEvent(object):
             trigger_name = 'MotionDetectedEvent_{}'.format(motiondetector.name)
             self.triggers.append(ItemStateChangeTrigger(
                 motiondetector.name, state="ON", trigger_name=trigger_name).trigger)
+
+        for motionblocked in Group('MotionDetectorBlocked'):
+            lightbulb = motionblocked.scripting('lightbulb_item')
+            trigger_name = 'MotionUnblock_{}'.format(lightbulb)
+            self.triggers.append(ItemCommandTrigger(
+                motionblocked.name, command="OFF", trigger_name=trigger_name).trigger)
 
         for timeconfig in Group('sceneTimeConfiguration'):
             trigger_name = 'MotionSceneConfig_{}'.format(
@@ -123,10 +141,61 @@ class MotionDetectorEvent(object):
             self.motion(presence_item)
         elif modulecfg[0] == 'MotionSceneConfig':
             self.scenemanager.read_timeconfig()
+        elif modulecfg[0] == 'MotionUnblock':
+            lightbulb_item = Item(modulecfg[1])
+            self.unblock(lightbulb_item)
+        elif modulecfg[0] == 'MotionBlock':
+            lightbulb_item = Item(modulecfg[1])
+            self.block(lightbulb_item)
+        elif modulecfg[0] == 'MotionTrigger':
+            lightbulb_item = Item(modulecfg[1])
+            if self.get_period(lightbulb_item) > 0:
+                self.turn_light_on(
+                    lightbulb_item, self.scenemanager.is_night())
+                self.unblock(lightbulb_item)
+        else:
+            self.log.info(inputs)
+
+    def get_period(self, lightbulb_item):
+        period_item = lightbulb_item.from_scripting('motionperiod_item')
+        period = period_item.get_int(0, True)
+        return period
+
+    @classmethod
+    def trigger_unblock(cls, lightbulb_item):
+        rulemanager.runNow(MotionDetectorEvent.UID, False, {
+            'module': 'MotionUnblock_{}'.format(lightbulb_item.name)})
+
+    def unblock(self, lightbulb_item):
+        if self.get_period(lightbulb_item) > 0:
+            self.log.debug('Unblock {}'.format(lightbulb_item.name))
+            motionblocked_item = lightbulb_item.from_scripting(
+                'motionblocked_item')
+
+            motionblocked_item.post_update(OFF)
+            self.turn_light_off(lightbulb_item)
+
+    @classmethod
+    def trigger_block(cls, lightbulb_item):
+        rulemanager.runNow(MotionDetectorEvent.UID, False, {
+            'module': 'MotionBlock_{}'.format(lightbulb_item.name)})
+
+    def block(self, lightbulb_item):
+        if self.get_period(lightbulb_item) > 0:
+            motionblocked_item = lightbulb_item.from_scripting(
+                'motionblocked_item')
+
+            motionblocked_item.post_update(ON)
+            self.timers.cancel(lightbulb_item.name)
+
+    @classmethod
+    def trigger_motion(cls, lightbulb_item):
+        rulemanager.runNow(MotionDetectorEvent.UID, False, {
+            'module': 'MotionTrigger_{}'.format(lightbulb_item.name)})
 
     def motion(self, presence_item):
         is_darkness = Item('darkness').get_onoff()
-        is_night = TimeScene.NIGHT == self.scenemanager.actual_timescene()
+        is_night = self.scenemanager.is_night()
 
         for assignment_item in Group(presence_item.scripting('assignment_group')):
             if assignment_item.get_onoff(True):
@@ -134,10 +203,16 @@ class MotionDetectorEvent(object):
                 if is_darkness or not darkness_item.get_onoff():
                     lightbulb_item = assignment_item.from_scripting(
                         'lightbulb_item')
+                    motionblocked_item = lightbulb_item.from_scripting(
+                        'motionblocked_item')
+                    if motionblocked_item.get_onoff(True):
+                        continue
+
                     self.turn_light_on(lightbulb_item, is_night)
                     self.start_timer(lightbulb_item)
 
-    def turn_light_on(self, lightbulb_item, is_night):
+    @staticmethod
+    def turn_light_on(lightbulb_item, is_night):
         is_nightmode = lightbulb_item.is_scripting('nightmode_item')
 
         if is_nightmode and is_night:
@@ -146,8 +221,7 @@ class MotionDetectorEvent(object):
             LightUtils.command(lightbulb_item, 'ALL')
 
     def start_timer(self, lightbulb_item):
-        period_item = lightbulb_item.from_scripting('motionperiod_item')
-        period = period_item.get_int(10, True)
+        period = self.get_period(lightbulb_item)
 
         self.timers.activate(lightbulb_item.name, lambda: self.turn_light_off(
             lightbulb_item), DateUtils.now().plusSeconds(period))

@@ -80,6 +80,10 @@ class LightbulbItemsCreator(BaseItemsCreator):
             .config()\
             .append_to(self)
 
+        Group('MotionDetectorBlocked')\
+            .config()\
+            .append_to(self)
+
         Group('SwitchingCycles')\
             .typed(GroupType.NUMBER_AVG)\
             .label(_('Lights switching cycles'))\
@@ -106,6 +110,7 @@ class LightbulbItemsCreator(BaseItemsCreator):
                 'darkness_item': lightbulb.item_ids.autodarkness,
                 'presences_item': lightbulb.item_ids.autoabsence,
                 'motionperiod_item': lightbulb.item_ids.motiondetectorperiod,
+                'motionblocked_item': lightbulb.item_ids.motiondetectorblocked,
                 'motiondetectors_group': lightbulb.item_ids.motiondetectors
             })\
             .append_to(self)
@@ -185,6 +190,17 @@ class LightbulbItemsCreator(BaseItemsCreator):
             .equipment(lightbulb)\
             .groups('MotionDetectorPeriod')\
             .semantic(PointType.SETPOINT, PropertyType.DURATION)\
+            .append_to(self)
+
+        Switch(lightbulb.item_ids.motiondetectorblocked)\
+            .label(_('Motiondetector blocked'))\
+            .icon('motionblocked')\
+            .equipment(lightbulb)\
+            .groups('MotionDetectorBlocked')\
+            .semantic(PointType.SETPOINT)\
+            .scripting({
+                'lightbulb_item': lightbulb.item_ids.lightbulb
+            })\
             .append_to(self)
 
         if lightbulb.nightmode:

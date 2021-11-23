@@ -122,6 +122,9 @@ class LightbulbSitemapCreator(BaseSitemapCreator):
 
             mappings = self._create_lightcontrol_mappings(lightbulb)
             mappings.insert(0, ('NULL', _('No assignment')))
+            mappings.append(('UNBLOCK', _('Unblock')))
+            mappings.append(('OFFUNBLOCK', _('Off & unblock')))
+            mappings.append(('TRIGGERMOTION', _('Trigger motion')))
 
             for wallswitch in configuration.equipment.equipment('wallswitch'):
                 self._create_wallswitch_page(
@@ -174,7 +177,11 @@ class LightbulbSitemapCreator(BaseSitemapCreator):
             page = Page(lightbulb.item_ids.motiondetectors)\
                 .append_to(lightpage)
 
-            Setpoint(lightbulb.item_ids.motiondetectorperiod, 10, 300, 10)\
+            Setpoint(lightbulb.item_ids.motiondetectorperiod, 0, 300, 10)\
+                .append_to(page)
+
+            Switch(lightbulb.item_ids.motiondetectorblocked, [('OFF', _('Unblock'))])\
+                .visibility((lightbulb.item_ids.motiondetectorblocked, '==', 'ON'))\
                 .append_to(page)
 
             for motiondetector in configuration.equipment.equipment('motiondetector'):
