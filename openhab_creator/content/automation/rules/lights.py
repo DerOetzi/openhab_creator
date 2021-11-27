@@ -174,6 +174,7 @@ class MotionDetectorEvent(object):
 
             motionblocked_item.post_update(OFF)
             self.turn_light_off(lightbulb_item)
+            self.timers.cancel('unblock_{}'.format(lightbulb_item.name))
 
     @classmethod
     def trigger_block(cls, lightbulb_item):
@@ -186,7 +187,10 @@ class MotionDetectorEvent(object):
                 'motionblocked_item')
 
             motionblocked_item.post_update(ON)
-            self.timers.cancel(lightbulb_item.name)
+            self.timers.cancel('turn_light_off_{}'.format(lightbulb_item.name))
+            self.timers.activate('unblock_{}'.format(lightbulb_item.name),
+                                 lambda: self.unblock(lightbulb_item),
+                                 DateUtils.now().plusHours(2))
 
     @classmethod
     def trigger_motion(cls, lightbulb_item):
@@ -205,7 +209,9 @@ class MotionDetectorEvent(object):
                         'lightbulb_item')
                     motionblocked_item = lightbulb_item.from_scripting(
                         'motionblocked_item')
+
                     if motionblocked_item.get_onoff(True):
+                        self.block(lightbulb_item)
                         continue
 
                     self.turn_light_on(lightbulb_item, is_night)
@@ -223,8 +229,9 @@ class MotionDetectorEvent(object):
     def start_timer(self, lightbulb_item):
         period = self.get_period(lightbulb_item)
 
-        self.timers.activate(lightbulb_item.name, lambda: self.turn_light_off(
-            lightbulb_item), DateUtils.now().plusSeconds(period))
+        self.timers.activate('turn_light_off_{}'.format(lightbulb_item.name),
+                             lambda: self.turn_light_off(lightbulb_item),
+                             DateUtils.now().plusSeconds(period))
 
     def turn_light_off(self, lightbulb_item):
         for assignment_item in Group(lightbulb_item.scripting('motiondetectors_group')):
