@@ -16,14 +16,15 @@ def smartphone_distances(event):
     actual_distance = distance_item.get_float(-0.1)
     geofence_item = distance_item.from_scripting('geofence')
 
+    wayhome_item = Item('wayhome')
+    wayhome = wayhome_item.get_onoff(True)
+
     if actual_distance <= 0.020 and actual_distance >= 0:
         geofence_item.post_update(ON)
     else:
         geofence_item.post_update(OFF)
 
         presence = Item('Presences').get_int(0)
-        wayhome_item = Item('wayhome')
-        wayhome = wayhome_item.get_onoff(True)
 
         if presence == 0 and not wayhome and actual_distance <= 12.0:
             delta_distance = distance_item.delta_since(
@@ -32,3 +33,15 @@ def smartphone_distances(event):
             if delta_distance <= -0.7:
                 wayhome_item.send_command(ON)
                 logger.info('Way home activated')
+
+
+@rule('Coming home')
+@when('Item Presences changed')
+def coming_home(event):
+    presence = Item('Presences', event).get_int(0) == 1
+
+    wayhome_item = Item('wayhome')
+    wayhome = wayhome_item.get_onoff(True)
+
+    if presence and wayhome:
+        wayhome_item.send_command(OFF)
