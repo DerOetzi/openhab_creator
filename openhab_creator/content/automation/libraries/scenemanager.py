@@ -203,7 +203,8 @@ class SceneManager(object):
         actual_scene = self.actual_scene()
         actual_timescene = self.actual_timescene()
 
-        return actual_timescene == TimeScene.NIGHT and actual_scene != SpecialScene.PARTY
+        return (actual_scene == TimeScene.NIGHT
+                or (actual_timescene == TimeScene.NIGHT and actual_scene != SpecialScene.PARTY))
 
     def actual_timescene(self):
         day_type = EphemerisUtils.day_type()

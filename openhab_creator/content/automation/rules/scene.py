@@ -30,7 +30,7 @@ def scene_startup(event):
 @when('Item autoSceneActive received command')
 @when('Item autoGuestStayed received command')
 @when('Descendent of Presences changed')
-@when('Item wayhome received command')
+@when('Item wayhome received command ON')
 def change_scene(event):
     manager.change_scene(event)
 
