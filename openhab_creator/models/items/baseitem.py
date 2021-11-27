@@ -71,6 +71,11 @@ class AISensorDataType(CreatorEnum):
     CATEGORICAL = "categorical"
 
 
+class ExpireType(CreatorEnum):
+    STATE = 'state'
+    COMMAND = 'command'
+
+
 class BaseItem():
     influxdb_series = {}
     aisensors = {}
@@ -157,11 +162,16 @@ class BaseItem():
         BaseItem.aisensors[self._name] = str(datatype)
         return self.groups('AISensor')
 
-    def expire(self, duration: str, state: Optional[str] = None) -> BaseItem:
+    def expire(self, duration: str,
+               state: Optional[str] = None,
+               expire_type: Optional[ExpireType] = None) -> BaseItem:
         value = f'{duration},'
 
         if state is not None:
-            value += f'state={state}'
+            if expire_type is None:
+                expire_type = ExpireType.STATE
+
+            value += f'{expire_type}={state}'
 
         self._metadata['expire'] = {'value': value}
         return self
