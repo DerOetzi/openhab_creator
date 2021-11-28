@@ -233,7 +233,7 @@ class SceneManager(object):
         guest_stayed = SceneItem.guest_stayed.get_onoff(True)
         is_weekend = EphemerisUtils.is_weekend() or EphemerisUtils.is_holiday()
         is_night = self.is_night()
-        is_absence_scene = SpecialScene.ABSENCE == self.actual_scene()
+        is_absence = not self.presences() or SpecialScene.ABSENCE == self.actual_scene()
         is_darkness = SceneItem.darkness.get_onoff()
         is_heating = SceneItem.heating.get_onoff()
 
@@ -241,7 +241,7 @@ class SceneManager(object):
             is_location_active = self.is_location_active(
                 assigned_item, guest_stayed, is_weekend, event)
             self._handle_location(
-                assigned_item, is_location_active, is_night, is_absence_scene, is_darkness, is_heating, event)
+                assigned_item, is_location_active, is_night, is_absence, is_darkness, is_heating, event)
 
     def is_location_active(self, assigned_item, guest_stayed, is_weekend, event=None):
         assigned = assigned_item.get_string('OFF', True, event)
@@ -252,12 +252,12 @@ class SceneManager(object):
                 or (guest_stayed and assigned == 'GUEST'))
 
     def _handle_location(self, assigned_item,
-                         is_active, is_night,
-                         is_absence_scene,
+                         is_location_active, is_night,
+                         is_absence,
                          is_darkness, is_heating,
                          event=None):
         active_item = assigned_item.from_scripting('active_item', event)
-        if is_active:
+        if is_location_active:
             active_item.post_update(ON)
         else:
             active_item.post_update(OFF)
@@ -272,13 +272,14 @@ class SceneManager(object):
             if auto_item.is_scripting('lightbulb_item'):
                 lightbulb_item = auto_item.from_scripting('lightbulb_item')
                 LightUtils.automation(
-                    lightbulb_item, is_active, is_night, is_absence_scene, is_darkness)
+                    lightbulb_item, is_location_active, is_night, is_absence, is_darkness)
             elif auto_item.is_scripting('heating_item'):
                 heating_item = auto_item.from_scripting('heating_item')
-                HeatingUtils.automation(heating_item, is_active, is_heating)
+                HeatingUtils.automation(
+                    heating_item, is_location_active, is_heating)
             elif auto_item.is_scripting('pump_item'):
                 control_item = auto_item.from_scripting('control_item')
-                if is_active:
+                if is_location_active:
                     control_item.send_command(ON, control_item.get_value())
                 else:
                     control_item.send_command(OFF, control_item.get_value())

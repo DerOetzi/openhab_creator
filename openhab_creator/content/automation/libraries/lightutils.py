@@ -17,17 +17,23 @@ class LightUtils(object):
     log = logging.getLogger('{}.LightUtils'.format(LOG_PREFIX))
 
     @classmethod
-    def automation(cls, lightbulb_item, is_location_active, is_night, is_absence_scene, is_darkness):
+    def automation(cls, lightbulb_item, is_location_active, is_night, is_absence, is_darkness):
         presences_item = lightbulb_item.from_scripting('presences_item')
         darkness_item = lightbulb_item.from_scripting('darkness_item')
 
-        cls.log.debug('Name: %s, active: %s, night: %s, absence_scene: %s, darkness: %s, presences_item: %s, darkness_item: %s',
-                      lightbulb_item.name, is_location_active, is_night, is_absence_scene, is_darkness, presences_item.get_onoff(), darkness_item.get_onoff())
+        cls.log.debug('Name: %s, active: %s, night: %s, absence: %s, darkness: %s, presences_item: %s, darkness_item: %s',
+                      lightbulb_item.name, is_location_active, is_night, is_absence, is_darkness, presences_item.get_onoff(), darkness_item.get_onoff())
 
-        if ((is_location_active
-                or (is_absence_scene and presences_item.get_onoff(True)))
-                and (is_darkness or not darkness_item.get_onoff(True))):
-            if is_night and lightbulb_item.is_scripting('nightmode_item'):
+
+        is_location_active_and_presence = (is_location_active and not is_absence)
+        at_absence_too = (is_absence and presences_item.get_onoff(True))
+        is_darkness_or_always_configuration = (is_darkness or not darkness_item.get_onoff(True))
+        
+        if ((is_location_active_and_presence or at_absence_too)
+                and is_darkness_or_always_configuration):
+
+            is_nightmode = is_night and lightbulb_item.is_scripting('nightmode_item')
+            if is_nightmode:
                 cls.command(lightbulb_item, 'NIGHT')
             else:
                 cls.command(lightbulb_item, 'ALL')
