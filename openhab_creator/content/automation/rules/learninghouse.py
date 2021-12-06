@@ -35,7 +35,7 @@ def get_dataset(event):
 
     logger.debug('AISensor dataset: %s', dataset)
 
-    return dataset
+    return {'data': dataset}
 
 
 @rule('AISensor changed')
@@ -63,12 +63,12 @@ def aisensor_changed(event):
         lock_until[model_name] = DateUtils.now().plusSeconds(30)
 
         response_json = HTTP.sendHttpPostRequest(
-            '{}/prediction/{}'.format(base_url, model_name), 'application/json', data_json)
+            '{}/brain/{}/prediction'.format(base_url, model_name), 'application/json', data_json)
 
         result = json.loads(response_json)
 
         logger.debug(u"{} => {} {:.2f} (model score: {:.2f})".format(
-            data_json, model_name, result['prediction'], result['model']['score']))
+            data_json, model_name, result['prediction'], result['brain']['score']))
 
         if result['prediction']:
             dependent_item.post_update(ON)
@@ -76,7 +76,7 @@ def aisensor_changed(event):
             dependent_item.post_update(OFF)
 
         score_item = dependent_item.from_scripting('score_item')
-        model_score = result['model']['score'] * 100
+        model_score = result['brain']['score'] * 100
         score_item.post_update(model_score)
 
         dependent_item.set_label(
@@ -107,13 +107,13 @@ def learning_house_training(event):
             dependent_item.post_update(OFF)
 
     dataset = get_dataset(event)
-    dataset[dependent_item.name] = dependent
+    dataset['data'][dependent_item.name] = dependent
     data_json = json.dumps(dataset)
 
     logger.debug(data_json)
 
     response_json = HTTP.sendHttpPutRequest(
-        '{}/training/{}'.format(base_url, model_name), 'application/json', data_json)
+        '{}/brain/{}/training'.format(base_url, model_name), 'application/json', data_json)
 
     result = json.loads(response_json)
 
