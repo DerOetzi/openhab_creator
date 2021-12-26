@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING, List, Tuple, Union
 
 from openhab_creator import _
 from openhab_creator.models.common import MapTransformation
@@ -14,6 +14,8 @@ if TYPE_CHECKING:
     from openhab_creator.models.configuration import Configuration
     from openhab_creator.models.configuration.equipment.types.smartphone import \
         Smartphone
+    from openhab_creator.models.configuration.equipment.types.personstate import \
+        PersonState
     from openhab_creator.models.configuration.person import Person
 
 
@@ -54,26 +56,33 @@ class PresenceItemsCreator(BaseItemsCreator):
             .format('f,.3f km')\
             .append_to(self)
 
+        Group('PersonStateBegins')\
+            .append_to(self)
+
     def build_persons(self, persons: List[Person]) -> None:
         for person in persons:
-            if person.has_presence:
-                Group(person.presence_id)\
-                    .typed(GroupType.NUMBER_MAX)\
-                    .label(_('Presence {person}').format(person=person.name))\
-                    .map(MapTransformation.PRESENCE)\
-                    .icon('presence')\
-                    .groups('Presences')\
+            self.build_presence(person)
+            self.build_personstates(person)
+
+    def build_presence(self, person: Person) -> None:
+        if person.has_presence:
+            Group(person.presence_id)\
+                .typed(GroupType.NUMBER_MAX)\
+                .label(_('Presence {person}').format(person=person.name))\
+                .map(MapTransformation.PRESENCE)\
+                .icon('presence')\
+                .groups('Presences')\
+                .append_to(self)
+
+            for smartphone in list(filter(
+                    lambda x: x.category == 'smartphone', person.equipment)):
+                Group(smartphone.item_ids.smartphone)\
+                    .label(_('Smartphone {name}').format(name=smartphone.name))\
+                    .semantic(smartphone)\
                     .append_to(self)
 
-                for smartphone in list(filter(
-                        lambda x: x.category == 'smartphone', person.equipment)):
-                    Group(smartphone.item_ids.smartphone)\
-                        .label(_('Smartphone {name}').format(name=smartphone.name))\
-                        .semantic(smartphone)\
-                        .append_to(self)
-
-                    if smartphone.points.has_distance:
-                        self.build_smartphone_geofence(smartphone)
+                if smartphone.points.has_distance:
+                    self.build_smartphone_geofence(smartphone)
 
     def build_smartphone_geofence(self, smartphone: Smartphone) -> None:
         Switch(smartphone.item_ids.geofence)\
@@ -131,3 +140,45 @@ class PresenceItemsCreator(BaseItemsCreator):
                 .equipment(smartphone)\
                 .channel(smartphone.points.channel('lastseen'))\
                 .append_to(self)
+
+    def build_personstates(self, person: Person) -> None:
+        homeoffice_state, homeoffice_item = self.build_personstate(
+            person, 'homeoffice', _('Homeoffice'))
+        holidays_state, holidays_item = self.build_personstate(
+            person, 'holidays', _('Holidays'))
+
+        if homeoffice_state and holidays_state:
+            homeoffice_item.scripting({
+                'holidays_item': holidays_state.item_ids.personstate
+            })
+
+            holidays_item.scripting({
+                'homeoffice_item': homeoffice_state.item_ids.personstate
+            })
+
+    def build_personstate(self, person: Person, statetype: str, label: str) \
+            -> Tuple[Union[PersonState, None], Union[Switch, None]]:
+        personstate = person.get_state(statetype)
+        state_item = None
+        if personstate:
+            DateTime(personstate.item_ids.begin)\
+                .label(_('Begin'))\
+                .dateonly_weekday()\
+                .icon('calendar')\
+                .groups('PersonStateBegins')\
+                .channel(personstate.points.channel('begin'))\
+                .scripting({
+                    'statetype': statetype,
+                    'state_item': personstate.item_ids.personstate
+                })\
+                .append_to(self)
+
+            state_item = Switch(personstate.item_ids.personstate)\
+                .label(label)\
+                .icon(statetype)\
+                .scripting({
+                    'statetype': statetype
+                })\
+                .append_to(self)
+
+        return personstate, state_item

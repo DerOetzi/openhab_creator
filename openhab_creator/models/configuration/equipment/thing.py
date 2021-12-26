@@ -133,6 +133,9 @@ class Thing():
             'identifier': self.equipment_node.identifier
         }
 
+        if self.equipment_node.has_person:
+            self.secrets['person'] = self.equipment_node.person.name
+
         prefixes = [
             self.binding,
             self.equipment_node.category,
@@ -151,7 +154,9 @@ class Thing():
             self.typed
         ]
 
-        if self.has_bridge and self.bridge.is_thing and self.bridge.identifier != self.equipment_node.identifier:
+        if self.has_bridge \
+                and self.bridge.is_thing \
+                and self.bridge.identifier != self.equipment_node.identifier:
             prefixes.append(self.bridge.thing.uid)
 
         prefixes.append(self.uid)

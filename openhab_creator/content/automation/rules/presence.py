@@ -4,7 +4,7 @@ from core.triggers import when
 from core.log import logging, LOG_PREFIX
 
 from personal.dateutils import DateUtils
-from personal.item import Item
+from personal.item import Item, Group
 
 logger = logging.getLogger('{}.Presence'.format(LOG_PREFIX))
 
@@ -45,3 +45,28 @@ def coming_home(event):
 
     if presence and wayhome:
         wayhome_item.send_command(OFF)
+
+
+@rule('Set person state by calendar')
+@when('System started')
+@when('Member of PersonStateBegins changed')
+def personstate_by_calendar(event_or_itemname):
+    if event_or_itemname is None:
+        for item in Group('PersonStateBegins'):
+            personstate_by_calendar(item.name)
+        return
+    elif isinstance(event_or_itemname, basestring):
+        begin_item = Item(event_or_itemname)
+    else:
+        begin_item = Item.from_event(event)
+
+    state_item = begin_item.from_scripting('state_item')
+    statetype = state_item.scripting('statetype')
+
+    begin = begin_item.get_datetime(DateUtils.now().plusSeconds(10))
+
+    if statetype == 'holidays':
+        if DateUtils.now().isAfter(begin):
+            state_item.post_update(ON)
+        else:
+            state_item.post_update(OFF)

@@ -4,7 +4,10 @@ from typing import TYPE_CHECKING, Dict, List, Optional
 
 from openhab_creator.models.configuration.baseobject import BaseObject
 from openhab_creator.models.configuration.equipment import EquipmentType
-from openhab_creator.models.configuration.equipment.types.smartphone import Smartphone
+from openhab_creator.models.configuration.equipment.types.smartphone import \
+    Smartphone
+from openhab_creator.models.configuration.equipment.types.personstate import \
+    PersonState
 
 if TYPE_CHECKING:
     from openhab_creator.models.configuration import Configuration
@@ -21,6 +24,8 @@ class Person(BaseObject):
 
         self.has_presence: bool = False
 
+        self.states: Dict[str, PersonState] = {}
+
         self._init_equipment(configuration, equipment or [])
 
     def _init_equipment(self, configuration: Configuration, equipment: List[Dict]) -> None:
@@ -36,6 +41,9 @@ class Person(BaseObject):
             self.has_presence = self.has_presence \
                 or isinstance(equipment, Smartphone)
 
+            if isinstance(equipment, PersonState):
+                self.states[equipment.statetype] = equipment
+
     @property
     def presence_id(self) -> str:
         return f'presence{self.identifier}'
@@ -47,3 +55,6 @@ class Person(BaseObject):
         }
 
         return tags
+
+    def get_state(self, statetype: str) -> PersonState | None:
+        return self.states[statetype] or None

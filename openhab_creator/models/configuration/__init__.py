@@ -34,7 +34,7 @@ class SecretsStorage():
             self.__read_secrets(configdir)
 
     def __read_secrets(self, configdir: str) -> None:
-        with open(os.path.join(configdir, 'secrets.yaml')) as secretsfile:
+        with open(os.path.join(configdir, 'secrets.yaml'), encoding="utf-8") as secretsfile:
             self.storage = yaml.safe_load(secretsfile)
             self.storage = self.__keys_to_lower(self.storage)
             logger.debug(self.storage)
@@ -62,7 +62,7 @@ class SecretsStorage():
             key = self.secret_key(*args)
             if key not in self.missing_keys:
                 self.missing_keys.append(key)
-            value = "__%s__" % key.upper()
+            value = f'__{key.upper()}__'
 
         return value
 
