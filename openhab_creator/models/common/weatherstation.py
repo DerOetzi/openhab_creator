@@ -124,6 +124,7 @@ class DWDEvent(CreatorEnum):
     STARKE_HITZE = 11, 'STARKEHITZE', 'Starke Hitze', 10
     FROST = 22, 'FROST', 'Frost'
     GLAETTE = 24, 'GLÄTTE', 'Glätte', 22
+    VERBREITET_GLAETTE = 25, 'VERBREITETGLÄTTE', 'Verbreitet Glätte', 22
     GEWITTER = 31, 'GEWITTER', 'Gewitter'
     STARKES_GEWITTER = 33, 'STARKESGEWITTER', 'Starkes Gewitter', 31
     SCHWERES_GEWITTER_MIT_ORKANBOEEN = 40,\
