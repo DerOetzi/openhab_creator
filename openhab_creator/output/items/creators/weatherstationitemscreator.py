@@ -82,7 +82,8 @@ class WeatherStationItemsCreator(BaseItemsCreator):
 
     def _build_station(self, station: WeatherStation) -> None:
         if station.points.has_condition_id:
-            String(station.item_ids.condition)\
+            Number(station.item_ids.condition)\
+                .typed(NumberType.DIMENSIONLESS)\
                 .label(_('Weather condition'))\
                 .map(MapTransformation.WEATHERCONDITION)\
                 .icon('weather')\
