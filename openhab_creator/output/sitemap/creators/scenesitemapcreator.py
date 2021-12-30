@@ -4,6 +4,8 @@ from typing import TYPE_CHECKING
 
 from openhab_creator import _
 from openhab_creator.models.common import MapTransformation, Scene
+from openhab_creator.models.configuration.equipment.types.personstate import \
+    PersonStateType
 from openhab_creator.models.sitemap import (Page, Selection, Setpoint, Sitemap,
                                             Switch)
 from openhab_creator.output.sitemap import SitemapCreatorPipeline
@@ -100,6 +102,18 @@ class SceneSitemapCreator(BaseSitemapCreator):
     @staticmethod
     def _build_locationassignment(page: Page,
                                   configuration: Configuration) -> None:
+        selection_options = [('OFF', _('Off')),
+                             ('ALWAYS', _('Always')),
+                             ('WORKINGDAY', _('Working days')),
+                             ('WEEKEND', _('Weekend')),
+                             ('GUEST', _('Guest stayed'))]
+
+        for person in configuration.persons:
+            personstate = person.get_state(PersonStateType.HOMEOFFICE)
+            if personstate:
+                selection_options.append((f'HOMEOFFICE_{person.name.upper()}', _(
+                    'Homeoffice {person}').format(person=person.name)))
+
         for location in configuration.locations.timecontrolled.values():
             toplevel = location
             while toplevel.has_parent:
@@ -113,9 +127,5 @@ class SceneSitemapCreator(BaseSitemapCreator):
 
             for scene in Scene:
                 Selection(location.sceneassignment_id(scene),
-                          [('OFF', _('Off')),
-                           ('ALWAYS', _('Always')),
-                           ('WORKINGDAY', _('Working days')),
-                           ('WEEKEND', _('Weekend')),
-                           ('GUEST', _('Guest stayed'))])\
+                          selection_options)\
                     .append_to(subpage)
