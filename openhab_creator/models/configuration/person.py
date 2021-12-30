@@ -7,7 +7,7 @@ from openhab_creator.models.configuration.equipment import EquipmentType
 from openhab_creator.models.configuration.equipment.types.smartphone import \
     Smartphone
 from openhab_creator.models.configuration.equipment.types.personstate import \
-    PersonState
+    PersonState, PersonStateType
 
 if TYPE_CHECKING:
     from openhab_creator.models.configuration import Configuration
@@ -56,5 +56,5 @@ class Person(BaseObject):
 
         return tags
 
-    def get_state(self, statetype: str) -> PersonState | None:
-        return self.states[statetype] or None
+    def get_state(self, statetype: PersonStateType) -> PersonState | None:
+        return self.states[statetype] if statetype in self.states else None

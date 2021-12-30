@@ -25,6 +25,10 @@ class DateUtils():
         return date_time.withHour(hour).withMinute(minute).withSecond(second).withNano(nanos)
 
     @classmethod
+    def is_now_after(cls, date_time):
+        return cls.now().isAfter(date_time)
+
+    @classmethod
     def replace_year_by_age(cls, dayname, date=None):
         if date is None:
             date = cls.now()

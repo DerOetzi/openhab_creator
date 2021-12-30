@@ -4,18 +4,20 @@ from typing import TYPE_CHECKING, List, Tuple, Union
 
 from openhab_creator import _
 from openhab_creator.models.common import MapTransformation
-from openhab_creator.models.items import (DateTime, Group, GroupType, Location, Number,
-                                          NumberType, PointType, PropertyType,
-                                          Switch)
+from openhab_creator.models.configuration.equipment.types.personstate import \
+    PersonStateType
+from openhab_creator.models.items import (DateTime, Group, GroupType, Location,
+                                          Number, NumberType, PointType,
+                                          PropertyType, Switch)
 from openhab_creator.output.items import ItemsCreatorPipeline
 from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
 
 if TYPE_CHECKING:
     from openhab_creator.models.configuration import Configuration
-    from openhab_creator.models.configuration.equipment.types.smartphone import \
-        Smartphone
     from openhab_creator.models.configuration.equipment.types.personstate import \
         PersonState
+    from openhab_creator.models.configuration.equipment.types.smartphone import \
+        Smartphone
     from openhab_creator.models.configuration.person import Person
 
 
@@ -58,6 +60,17 @@ class PresenceItemsCreator(BaseItemsCreator):
 
         Group('PersonStateBegins')\
             .append_to(self)
+
+        Group('PersonStateBeginsNext')\
+            .append_to(self)
+
+        Group('PersonState')\
+            .append_to(self)
+
+        for statetype in PersonStateType:
+            Group(statetype.group)\
+                .groups('PersonState')\
+                .append_to(self)
 
     def build_persons(self, persons: List[Person]) -> None:
         for person in persons:
@@ -143,20 +156,32 @@ class PresenceItemsCreator(BaseItemsCreator):
 
     def build_personstates(self, person: Person) -> None:
         homeoffice_state, homeoffice_item = self.build_personstate(
-            person, 'homeoffice', _('Homeoffice'))
+            person, PersonStateType.HOMEOFFICE)
         holidays_state, holidays_item = self.build_personstate(
-            person, 'holidays', _('Holidays'))
+            person, PersonStateType.HOLIDAYS)
+        sickness_state, sickness_item = self.build_personstate(
+            person, PersonStateType.SICKNESS)
 
-        if homeoffice_state and holidays_state:
-            homeoffice_item.scripting({
-                'holidays_item': holidays_state.item_ids.personstate
-            })
+        if homeoffice_state:
+            if holidays_state:
+                homeoffice_item.scripting({
+                    'holidays_item': holidays_state.item_ids.personstate
+                })
 
-            holidays_item.scripting({
-                'homeoffice_item': homeoffice_state.item_ids.personstate
-            })
+                holidays_item.scripting({
+                    'homeoffice_item': homeoffice_state.item_ids.personstate
+                })
 
-    def build_personstate(self, person: Person, statetype: str, label: str) \
+            if sickness_state:
+                homeoffice_item.scripting({
+                    'sickness_item': sickness_state.item_ids.personstate
+                })
+
+                sickness_item.scripting({
+                    'homeoffice_item': homeoffice_state.item_ids.personstate
+                })
+
+    def build_personstate(self, person: Person, statetype: PersonStateType) \
             -> Tuple[Union[PersonState, None], Union[Switch, None]]:
         personstate = person.get_state(statetype)
         state_item = None
@@ -168,16 +193,32 @@ class PresenceItemsCreator(BaseItemsCreator):
                 .groups('PersonStateBegins')\
                 .channel(personstate.points.channel('begin'))\
                 .scripting({
-                    'statetype': statetype,
+                    'statetype': statetype.identifier,
                     'state_item': personstate.item_ids.personstate
                 })\
                 .append_to(self)
 
+            if statetype.has_next and personstate.points.has('begin_next'):
+                DateTime(personstate.item_ids.begin_next)\
+                    .label(_('Begin'))\
+                    .dateonly_weekday()\
+                    .icon('calendar')\
+                    .groups('PersonStateBeginsNext')\
+                    .channel(personstate.points.channel('begin_next'))\
+                    .scripting({
+                        'statetype': statetype.identifier,
+                        'state_item': personstate.item_ids.personstate
+                    })\
+                    .append_to(self)
+
             state_item = Switch(personstate.item_ids.personstate)\
-                .label(label)\
-                .icon(statetype)\
+                .label(personstate.statetype.label)\
+                .map(MapTransformation.ACTIVE)\
+                .icon(statetype.icon)\
+                .groups(statetype.group)\
                 .scripting({
-                    'statetype': statetype
+                    'statetype': statetype.identifier,
+                    'begin_item': personstate.item_ids.begin
                 })\
                 .append_to(self)
 
