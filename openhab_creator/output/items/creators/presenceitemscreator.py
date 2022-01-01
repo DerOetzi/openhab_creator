@@ -67,6 +67,14 @@ class PresenceItemsCreator(BaseItemsCreator):
         Group('PersonState')\
             .append_to(self)
 
+        Group('PersonStateFreeday')\
+            .typed(GroupType.NUMBER_MAX)\
+            .append_to(self)
+
+        Group('PersonStateFreedayTomorrow')\
+            .typed(GroupType.NUMBER_MAX)\
+            .append_to(self)
+
         for statetype in PersonStateType:  # type: PersonStateType
             Group(statetype.group)\
                 .typed(GroupType.NUMBER_MAX)\
@@ -216,6 +224,9 @@ class PresenceItemsCreator(BaseItemsCreator):
                 })\
                 .append_to(self)
 
+            if statetype.is_freeday:
+                state_item.groups('PersonStateFreeday')
+
             if statetype.has_next and personstate.points.has('begin_next'):
                 DateTime(personstate.item_ids.begin_next)\
                     .dateonly_weekday()\
@@ -228,8 +239,11 @@ class PresenceItemsCreator(BaseItemsCreator):
                     })\
                     .append_to(self)
 
-                Switch(personstate.item_ids.personstate_tomorrow)\
+                tomorrow_item = Switch(personstate.item_ids.personstate_tomorrow)\
                     .groups(statetype.group_tomorrow)\
                     .append_to(self)
+
+                if statetype.is_freeday:
+                    tomorrow_item.groups('PersonStateFreedayTomorrow')
 
         return personstate, state_item

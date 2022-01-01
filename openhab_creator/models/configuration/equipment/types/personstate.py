@@ -15,18 +15,21 @@ class PersonStateType(CreatorEnum):
                 _('Holidays'),
                 'holidays',
                 'Holidays',
+                True,
                 True)
 
     HOMEOFFICE = ('homeoffice',
                   _('Homeoffice'),
                   'homeoffice',
                   'Homeoffice',
+                  False,
                   False)
 
     SICKNESS = ('sickness',
                 _('Sickness'),
                 'sickness',
                 'Sickness',
+                True,
                 True)
 
     def __init__(self,
@@ -34,12 +37,14 @@ class PersonStateType(CreatorEnum):
                  label: str,
                  icon: str,
                  group: str,
-                 has_next: bool):
+                 has_next: bool,
+                 is_freeday: bool):
         self.identifier: str = identifier
         self.label: str = label
         self.icon: str = icon
         self._group: str = group
         self.has_next: bool = has_next
+        self.is_freeday: bool = is_freeday
 
     @property
     def group(self) -> str:
