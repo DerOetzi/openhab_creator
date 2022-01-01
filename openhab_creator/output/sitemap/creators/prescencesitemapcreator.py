@@ -42,7 +42,7 @@ class PresenceSitemapCreator(BaseSitemapCreator):
             .append_to(page)
 
     def build_person(self, page: Page, person: Person) -> None:
-        subpage = Page(person.presence_id)\
+        subpage = Page()\
             .append_to(page)
         if person.has_presence:
             subpage.item(person.presence_id)

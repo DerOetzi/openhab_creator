@@ -67,10 +67,17 @@ class PresenceItemsCreator(BaseItemsCreator):
         Group('PersonState')\
             .append_to(self)
 
-        for statetype in PersonStateType:
+        for statetype in PersonStateType:  # type: PersonStateType
             Group(statetype.group)\
+                .typed(GroupType.NUMBER_MAX)\
                 .groups('PersonState')\
                 .append_to(self)
+
+            if statetype.has_next:
+                Group(statetype.group_tomorrow)\
+                    .typed(GroupType.NUMBER_MAX)\
+                    .groups('PersonState')\
+                    .append_to(self)
 
     def build_persons(self, persons: List[Person]) -> None:
         for person in persons:
@@ -198,19 +205,6 @@ class PresenceItemsCreator(BaseItemsCreator):
                 })\
                 .append_to(self)
 
-            if statetype.has_next and personstate.points.has('begin_next'):
-                DateTime(personstate.item_ids.begin_next)\
-                    .label(_('Begin'))\
-                    .dateonly_weekday()\
-                    .icon('calendar')\
-                    .groups('PersonStateBeginsNext')\
-                    .channel(personstate.points.channel('begin_next'))\
-                    .scripting({
-                        'statetype': statetype.identifier,
-                        'state_item': personstate.item_ids.personstate
-                    })\
-                    .append_to(self)
-
             state_item = Switch(personstate.item_ids.personstate)\
                 .label(personstate.statetype.label)\
                 .map(MapTransformation.ACTIVE)\
@@ -221,5 +215,21 @@ class PresenceItemsCreator(BaseItemsCreator):
                     'begin_item': personstate.item_ids.begin
                 })\
                 .append_to(self)
+
+            if statetype.has_next and personstate.points.has('begin_next'):
+                DateTime(personstate.item_ids.begin_next)\
+                    .dateonly_weekday()\
+                    .groups('PersonStateBeginsNext')\
+                    .channel(personstate.points.channel('begin_next'))\
+                    .scripting({
+                        'statetype': statetype.identifier,
+                        'begin_item': personstate.item_ids.begin,
+                        'tomorrow_item': personstate.item_ids.personstate_tomorrow
+                    })\
+                    .append_to(self)
+
+                Switch(personstate.item_ids.personstate_tomorrow)\
+                    .groups(statetype.group_tomorrow)\
+                    .append_to(self)
 
         return personstate, state_item

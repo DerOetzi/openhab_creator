@@ -88,6 +88,10 @@ class SceneItem(object):
     darkness = Item('darkness')
     heating = Item('heating')
     guest_stayed = Item('autoGuestStayed')
+    holidays = Item('PersonStateHolidays')
+    holidays_tomorrow = Item('PersonStateTomorrowHolidays')
+    sickness = Item('PersonStateSickness')
+    sickness_tomorrow = Item('PersonStateTomorrowSickness')
 
     @classmethod
     def update_event(cls, event):
@@ -97,6 +101,10 @@ class SceneItem(object):
         cls.presences.event = event
         cls.darkness.event = event
         cls.heating.event = event
+        cls.holidays.event = event
+        cls.holidays_tomorrow.event = event
+        cls.sickness.event = event
+        cls.sickness_tomorrow.event = event
 
 
 class SceneManager(object):
@@ -135,7 +143,7 @@ class SceneManager(object):
         self.log.debug(self.scenes)
 
     def start_scene_timer(self):
-        day_type = EphemerisUtils.day_type()
+        day_type = self.day_type()
         date = DateUtils.now()
 
         found_scene = False
@@ -147,7 +155,7 @@ class SceneManager(object):
                 break
 
         if not found_scene:
-            day_type = EphemerisUtils.day_type(1)
+            day_type = self.day_type(True)
             scene = TimeScene.NIGHT
             date = DateUtils.set_time(date.plusDays(
                 1), self.scenes[day_type][scene.identifier])
@@ -207,7 +215,7 @@ class SceneManager(object):
                 or (actual_timescene == TimeScene.NIGHT and actual_scene != SpecialScene.PARTY))
 
     def actual_timescene(self):
-        day_type = EphemerisUtils.day_type()
+        day_type = self.day_type()
         date = DateUtils.now()
 
         found_scene = False
@@ -224,6 +232,22 @@ class SceneManager(object):
         self.log.debug('Actual time scene: %s', scene)
 
         return scene
+
+    @staticmethod
+    def day_type(tomorrow=False):
+        day_type = 'WorkingDay'
+        if tomorrow:
+            if (EphemerisUtils.is_freeday(1)
+                or SceneItem.holidays_tomorrow.get_int(0)
+                    or SceneItem.sickness_tomorrow.get_int(0)):
+                day_type = 'Weekend'
+        else:
+            if (EphemerisUtils.is_freeday()
+                or SceneItem.holidays.get_int(0)
+                    or SceneItem.sickness.get_int(0)):
+                day_type = 'Weekend'
+
+        return day_type
 
     def presences(self):
         return SceneItem.presences.get_int(0) == 1

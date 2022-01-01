@@ -48,8 +48,23 @@ def coming_home(event):
         wayhome_item.send_command(OFF)
 
 
+FUTURE_TIME = 9999
+
+
+def get_date_or_future(state_item=None, begin_item=None):
+    date = DateUtils.now().plusDays(FUTURE_TIME)
+    if state_item:
+        begin_item = state_item.from_scripting('begin_item')
+
+    if begin_item:
+        date = begin_item.get_datetime(date)
+
+    return date
+
+
 def set_homeoffice(item):
     statetype = item.scripting('statetype')
+
     if statetype == 'homeoffice':
         homeoffice_item = item
     elif statetype in ('holidays', 'sickness'):
@@ -59,27 +74,14 @@ def set_homeoffice(item):
         holidays_item = homeoffice_item.from_scripting('holidays_item')
         sickness_item = homeoffice_item.from_scripting('sickness_item')
 
-        default_time = DateUtils.now().plusSeconds(60)
+        homeoffice_begin = get_date_or_future(homeoffice_item)
+        holidays_begin = get_date_or_future(holidays_item)
+        sickness_item = get_date_or_future(sickness_item)
 
-        homeoffice_begin = homeoffice_item.from_scripting(
-            'begin_item').get_datetime(default_time)
-
-        if holidays_item:
-            holidays_begin = holidays_item.from_scripting(
-                'begin_item').get_datetime(default_time)
-        else:
-            holidays_begin = default_time
-
-        if sickness_item:
-            sickness_begin = sickness_item.from_scripting(
-                'begin_item').get_datetime(default_time)
-        else:
-            sickness_begin = default_time
-
-        if (not EphemerisUtils.is_weekend()
-            and DateUtils.is_now_after(homeoffice_begin)
-            and not (DateUtils.is_now_after(sickness_begin)
-                     or DateUtils.is_now_after(holidays_begin))):
+        if (not EphemerisUtils.is_freeday()
+            and DateUtils.is_day_after(homeoffice_begin)
+            and not (DateUtils.is_day_after(sickness_begin)
+                     or DateUtils.is_day_after(holidays_begin))):
             homeoffice_item.post_update(ON)
         else:
             homeoffice_item.post_update(OFF)
@@ -96,17 +98,41 @@ def personstate_by_calendar(event_or_itemname):
     elif isinstance(event_or_itemname, basestring):
         begin_item = Item(event_or_itemname)
     else:
-        begin_item = Item.from_event(event)
+        begin_item = Item.from_event(event_or_itemname)
 
     state_item = begin_item.from_scripting('state_item')
     statetype = state_item.scripting('statetype')
 
-    begin = begin_item.get_datetime(DateUtils.now().plusSeconds(10))
+    begin = get_date_or_future(state_item)
 
     if statetype in ('holidays', 'sickness'):
-        if DateUtils.is_now_after(begin):
+        if DateUtils.is_day_after(begin):
             state_item.post_update(ON)
         else:
             state_item.post_update(OFF)
 
     set_homeoffice(state_item)
+
+
+@rule('Set person state tomorrow by calendar')
+@when('System started')
+@when('Member of PersonStateBeginsNext changed')
+def personstate_next_by_calendar(event_or_itemname):
+    if event_or_itemname is None:
+        for item in Group('PersonStateBeginsNext'):
+            personstate_next_by_calendar(item.name)
+        return
+    elif isinstance(event_or_itemname, basestring):
+        begin_next_item = Item(event_or_itemname)
+    else:
+        begin_next_item = Item.from_event(event_or_itemname)
+
+    tomorrow_item = begin_next_item.from_scripting('tomorrow_item')
+
+    begin = get_date_or_future(begin_next_item)
+    begin_next = get_date_or_future(begin_item=begin_next_item)
+
+    if DateUtils.is_day_after(begin, 1) or DateUtils.is_day_after(begin_next, 1):
+        tomorrow_item.post_update(ON)
+    else:
+        tomorrow_item.post_update(OFF)

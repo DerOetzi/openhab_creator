@@ -14,19 +14,19 @@ class PersonStateType(CreatorEnum):
     HOLIDAYS = ('holidays',
                 _('Holidays'),
                 'holidays',
-                'PersonStateHolidays',
+                'Holidays',
                 True)
 
     HOMEOFFICE = ('homeoffice',
                   _('Homeoffice'),
                   'homeoffice',
-                  'PersonStateHomeoffice',
+                  'Homeoffice',
                   False)
 
     SICKNESS = ('sickness',
                 _('Sickness'),
                 'sickness',
-                'PersonStateSickness',
+                'Sickness',
                 True)
 
     def __init__(self,
@@ -38,8 +38,16 @@ class PersonStateType(CreatorEnum):
         self.identifier: str = identifier
         self.label: str = label
         self.icon: str = icon
-        self.group: str = group
+        self._group: str = group
         self.has_next: bool = has_next
+
+    @property
+    def group(self) -> str:
+        return f'PersonState{self._group}'
+
+    @property
+    def group_tomorrow(self) -> str:
+        return f'PersonStateTomorrow{self._group}'
 
     @classmethod
     def of_value(cls, value: str):
@@ -60,6 +68,10 @@ class PersonStateItemIdentifiers(EquipmentItemIdentifiers):
     @property
     def personstate(self) -> str:
         return self._identifier('personState')
+
+    @property
+    def personstate_tomorrow(self) -> str:
+        return self._identifier('personStateTomorrow')
 
     @property
     def begin(self) -> str:

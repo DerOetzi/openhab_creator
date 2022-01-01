@@ -123,6 +123,10 @@ class EphemerisUtils(object):
     @classmethod
     def day_type(cls, offset=0):
         day_type = 'WorkingDay'
-        if cls.is_weekend(offset) or cls.is_holiday(offset):
+        if cls.is_freeday(offset):
             day_type = 'Weekend'
         return day_type
+
+    @classmethod
+    def is_freeday(cls, offset=0):
+        return cls.is_weekend(offset) or cls.is_holiday(offset)
