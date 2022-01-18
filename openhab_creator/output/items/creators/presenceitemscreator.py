@@ -209,7 +209,8 @@ class PresenceItemsCreator(BaseItemsCreator):
                 .channel(personstate.points.channel('begin'))\
                 .scripting({
                     'statetype': statetype.identifier,
-                    'state_item': personstate.item_ids.personstate
+                    'state_item': personstate.item_ids.personstate,
+                    'person': person.name
                 })\
                 .append_to(self)
 
@@ -220,7 +221,8 @@ class PresenceItemsCreator(BaseItemsCreator):
                 .groups(statetype.group)\
                 .scripting({
                     'statetype': statetype.identifier,
-                    'begin_item': personstate.item_ids.begin
+                    'begin_item': personstate.item_ids.begin,
+                    'person': person.name
                 })\
                 .append_to(self)
 

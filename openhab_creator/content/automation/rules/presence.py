@@ -76,7 +76,7 @@ def set_homeoffice(item):
 
         homeoffice_begin = get_date_or_future(homeoffice_item)
         holidays_begin = get_date_or_future(holidays_item)
-        sickness_item = get_date_or_future(sickness_item)
+        sickness_begin = get_date_or_future(sickness_item)
 
         if (not EphemerisUtils.is_freeday()
             and DateUtils.is_day_after(homeoffice_begin)

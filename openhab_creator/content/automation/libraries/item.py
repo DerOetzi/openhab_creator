@@ -201,6 +201,11 @@ class Group(object):
 
         return group
 
+    def update_event(self, event):
+        self.item.event = event
+        for member in self.members:
+            member.event = event
+
     def __iter__(self):
         return iter(self.members)
 

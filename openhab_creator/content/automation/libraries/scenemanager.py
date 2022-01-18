@@ -90,6 +90,7 @@ class SceneItem(object):
     guest_stayed = Item('autoGuestStayed')
     freeday = Item('PersonStateFreeday')
     freeday_tomorrow = Item('PersonStateFreedayTomorrow')
+    homeoffice_states = Group('PersonStateHomeoffice')
 
     @classmethod
     def update_event(cls, event):
@@ -101,6 +102,7 @@ class SceneItem(object):
         cls.heating.event = event
         cls.freeday.event = event
         cls.freeday_tomorrow.event = event
+        cls.homeoffice_states.update_event(event)
 
 
 class SceneManager(object):
@@ -259,20 +261,27 @@ class SceneManager(object):
         is_absence = not self.presences() or SpecialScene.ABSENCE == self.actual_scene()
         is_darkness = SceneItem.darkness.get_onoff()
         is_heating = SceneItem.heating.get_onoff()
+        is_homeoffice_states = {}
+        for homeoffice_item in SceneItem.homeoffice_states:
+            homeoffice_key = 'HOMEOFFICE_{}'.format(
+                homeoffice_item.scripting('person').upper())
+            is_homeoffice_states[homeoffice_key] = homeoffice_item.get_onoff(
+                OFF)
 
         for assigned_item in self.scene_members:
             is_location_active = self.is_location_active(
-                assigned_item, guest_stayed, is_weekend, event)
+                assigned_item, guest_stayed, is_weekend, is_homeoffice_states, event)
             self._handle_location(
                 assigned_item, is_location_active, is_night, is_absence, is_darkness, is_heating, event)
 
-    def is_location_active(self, assigned_item, guest_stayed, is_weekend, event=None):
+    def is_location_active(self, assigned_item, guest_stayed, is_weekend, is_homeoffice_states, event=None):
         assigned = assigned_item.get_string('OFF', True, event)
 
         return (assigned == 'ALWAYS'
                 or (not is_weekend and assigned == 'WORKINGDAY')
                 or (is_weekend and assigned == 'WEEKEND')
-                or (guest_stayed and assigned == 'GUEST'))
+                or (guest_stayed and assigned == 'GUEST')
+                or (assigned in is_homeoffice_states and is_homeoffice_states[assigned]))
 
     def _handle_location(self, assigned_item,
                          is_location_active, is_night,

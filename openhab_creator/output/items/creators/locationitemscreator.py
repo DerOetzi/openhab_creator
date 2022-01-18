@@ -1,10 +1,9 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Dict
+from typing import TYPE_CHECKING
 
 from openhab_creator import _
 from openhab_creator.models.common import MapTransformation, Scene
-from openhab_creator.models.configuration.equipment.types.personstate import PersonStateType
 from openhab_creator.models.items import Group, PointType, String, Switch
 from openhab_creator.output.items import ItemsCreatorPipeline
 from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
@@ -32,16 +31,8 @@ class LocationItemsCreator(BaseItemsCreator):
         for outdoor in configuration.locations.outdoors:
             self._create_outdoor(outdoor)
 
-        homeoffice_scripting = {}
-
-        for person in configuration.persons:
-            personstate = person.get_state(PersonStateType.HOMEOFFICE)
-            if personstate:
-                homeoffice_scripting[f'homeoffice_{person.name.lower()}_item'] \
-                    = personstate.item_ids.personstate
-
         for location in configuration.locations.timecontrolled.values():
-            self._create_automation(location, homeoffice_scripting)
+            self._create_automation(location)
 
         self.write_file('locations')
 
@@ -74,7 +65,7 @@ class LocationItemsCreator(BaseItemsCreator):
             .semantic(outdoor)\
             .append_to(self)
 
-    def _create_automation(self, location: Location, homeoffice_scripting: Dict[str, str]) -> None:
+    def _create_automation(self, location: Location) -> None:
         Switch(location.autoactive_id)\
             .label(_('Automation'))\
             .map(MapTransformation.ACTIVE)\
@@ -95,7 +86,6 @@ class LocationItemsCreator(BaseItemsCreator):
                 .semantic(PointType.SETPOINT)\
                 .scripting({
                     'active_item': location.autoactive_id,
-                    'equipment_group': location.autoequipment,
-                    **homeoffice_scripting
+                    'equipment_group': location.autoequipment
                 })\
                 .append_to(self)
