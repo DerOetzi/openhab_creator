@@ -160,8 +160,8 @@ class DWDEvent(CreatorEnum):
         'Schweres Gewitter mit extremen Orkanböen, heftigem Starkregen und Hagel',\
         31
     WINDBOEN = 51, 'WINDBÖEN', 'Windböen'
-    STURMBÖEN = 53, 'STURMBÖEN', 'Sturmböen', 51
-    SCHWERE_STURMBOEEN = 53, 'SCHWERESTURMBÖEN', 'Sturmböen', 51
+    STURMBÖEN = 52, 'STURMBÖEN', 'Sturmböen', 51
+    SCHWERE_STURMBOEEN = 53, 'SCHWERESTURMBÖEN', 'Schwere Sturmböen', 51
     ORKANARTIGE_BOEEN = 54, 'ORKANARTIGEBÖEN', 'Orkanartige Böen', 51
     ORKANBOEEN = 55, 'ORKANBÖEN', 'Orkanböen', 51
     EXTREME_ORKANBOEEN = 56, 'EXTREMEORKANBÖEN', 'Extreme Orkanböen', 51
