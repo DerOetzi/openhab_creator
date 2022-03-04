@@ -89,6 +89,7 @@ def set_homeoffice(item):
 
 @rule('Set person state by calendar')
 @when('System started')
+@when("Time cron 46 3 0 * * ?")
 @when('Member of PersonStateBegins changed')
 def personstate_by_calendar(event_or_itemname):
     if event_or_itemname is None:
