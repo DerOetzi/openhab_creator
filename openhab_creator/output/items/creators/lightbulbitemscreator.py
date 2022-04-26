@@ -45,6 +45,9 @@ class LightbulbItemsCreator(BaseItemsCreator):
         self.write_file('lightbulb_motiondetector')
 
     def __build_general_groups(self) -> None:
+        Group('Lights')\
+            .append_to(self)
+
         Group('Lightcontrol')\
             .label(_('Lightcontrol items'))\
             .config()\
@@ -103,6 +106,7 @@ class LightbulbItemsCreator(BaseItemsCreator):
             .label(_('Lightbulb {blankname}').format(blankname=lightbulb.blankname))\
             .icon('light')\
             .location(lightbulb.location)\
+            .groups('Lights')\
             .semantic(lightbulb)\
             .scripting({
                 'control_item': lightbulb.item_ids.lightcontrol,

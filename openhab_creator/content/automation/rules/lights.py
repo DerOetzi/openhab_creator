@@ -65,6 +65,7 @@ class WallSwitchEvent(object):
                 trigger_channel, trigger_name=trigger_name).trigger)
 
     def execute(self, action, inputs):
+        self.log.debug(action)
         module = inputs['module']
         modulecfg = module.split('_')
 
@@ -128,7 +129,11 @@ class MotionDetectorEvent(object):
             self.triggers.append(ItemCommandTrigger(
                 timeconfig.name, trigger_name=trigger_name).trigger)
 
+        self.triggers.append(ItemStateChangeTrigger(
+            'darkness', trigger_name='DarknessChanged').trigger)
+
     def execute(self, action, inputs):
+        self.log.debug(action)
         module = inputs['module']
         modulecfg = module.split('_')
 
@@ -153,6 +158,9 @@ class MotionDetectorEvent(object):
                 self.turn_light_on(
                     lightbulb_item, self.scenemanager.is_night())
                 self.unblock(lightbulb_item)
+        elif modulecfg[0] == 'DarknessChanged':
+            self.darkness_changed(
+                {'itemName': 'darkness', 'itemCommand': inputs['newState']})
         else:
             self.log.info(inputs)
 
@@ -167,7 +175,7 @@ class MotionDetectorEvent(object):
             'module': 'MotionUnblock_{}'.format(lightbulb_item.name)})
 
     def unblock(self, lightbulb_item):
-        if self.get_period(lightbulb_item) > 0:
+        if has_motion_period(lightbulb_item):
             self.log.debug('Unblock {}'.format(lightbulb_item.name))
             motionblocked_item = lightbulb_item.from_scripting(
                 'motionblocked_item')
@@ -233,14 +241,38 @@ class MotionDetectorEvent(object):
                              lambda: self.turn_light_off(lightbulb_item),
                              DateUtils.now().plusSeconds(period))
 
-    def turn_light_off(self, lightbulb_item):
-        for assignment_item in Group(lightbulb_item.scripting('motiondetectors_group')):
-            if not assignment_item.get_onoff(True):
-                continue
+    def turn_light_off(self, lightbulb_item, event=None):
+        is_darkness = Item('darkness', event).get_onoff()
+        darkness_item = lightbulb_item.from_scripting('darkness_item')
+        if is_darkness or not darkness_item.get_onoff():
+            for assignment_item in Group(lightbulb_item.scripting('motiondetectors_group')):
+                if not assignment_item.get_onoff(True):
+                    continue
 
-            presence_item = assignment_item.from_scripting('presence_item')
-            if presence_item.get_onoff():
-                self.start_timer(lightbulb_item)
-                return
+                presence_item = assignment_item.from_scripting('presence_item')
+                if presence_item.get_onoff():
+                    self.start_timer(lightbulb_item)
+                    return
 
         LightUtils.command(lightbulb_item, 'OFF')
+
+    def has_motion_period(self, lightbulb_item):
+        return self.get_period(lightbulb_item) > 0
+
+    def darkness_changed(self, event):
+        darkness_item = Item('darkness', event)
+        is_darkness = darkness_item.get_onoff()
+
+        if is_darkness:
+            for presence_item in Group('MotionDetectorPresence'):
+                if presence_item.get_onoff():
+                    self.motion(presence_item)
+        else:
+            for lightbulb_item in Group('Lights'):
+                motionblocked_item = lightbulb_item.from_scripting(
+                    'motionblocked_item')
+
+                if self.has_motion_period(lightbulb_item) \
+                        and not motionblocked_item.get_onoff(True):
+
+                    self.turn_light_off(lightbulb_item, event)

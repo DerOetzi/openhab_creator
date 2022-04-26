@@ -23,24 +23,47 @@ class LightbulbSitemapCreator(BaseSitemapCreator):
     def has_needed_equipment(cls, configuration: Configuration) -> bool:
         return configuration.equipment.has('lightbulb')
 
+    def _build_mainpage_light(self, lightbulb, page):
+        location = lightbulb.location.toplevel
+        frame = page.frame(location.identifier, location.name)
+
+        Switch(lightbulb.item_ids.lightcontrol, self._create_lightcontrol_mappings(
+            lightbulb))\
+            .label(lightbulb.name)\
+            .visibility((lightbulb.item_ids.hide, '!=', 'ON'))\
+            .append_to(frame)
+
+        Switch(lightbulb.item_ids.auto, [('ON', _('Automation'))])\
+            .visibility((lightbulb.item_ids.autodisplay, '==', 'ON'))\
+            .append_to(frame)
+        return frame
+
     def build_mainpage(self, sitemap: Sitemap, configuration: Configuration) -> None:
         page = Page(label=_('Lights'))\
             .icon('light')\
             .append_to(sitemap)
 
         for lightbulb in configuration.equipment.equipment('lightbulb'):
-            location = lightbulb.location.toplevel
-            frame = page.frame(location.identifier, location.name)
+            self._build_mainpage_light(lightbulb, page)
 
-            Switch(lightbulb.item_ids.lightcontrol, self._create_lightcontrol_mappings(
-                lightbulb))\
-                .label(lightbulb.name)\
-                .visibility((lightbulb.item_ids.hide, '!=', 'ON'))\
-                .append_to(frame)
+    def _build_mainpage_light(self, lightbulb: Lightbulb, page: Page) -> None:
+        location = lightbulb.location.toplevel
+        frame = page.frame(location.identifier, location.name)
 
-            Switch(lightbulb.item_ids.auto, [('ON', _('Automation'))])\
-                .visibility((lightbulb.item_ids.autodisplay, '==', 'ON'))\
-                .append_to(frame)
+        Switch(lightbulb.item_ids.lightcontrol, self._create_lightcontrol_mappings(
+            lightbulb))\
+            .label(lightbulb.name)\
+            .visibility((lightbulb.item_ids.hide, '!=', 'ON'))\
+            .append_to(frame)
+
+        Switch(lightbulb.item_ids.auto, [('ON', _('Automation'))])\
+            .visibility((lightbulb.item_ids.autodisplay, '==', 'ON'))\
+            .append_to(frame)
+
+        Switch(lightbulb.item_ids.motiondetectorblocked, [('OFF', _('Unblock'))])\
+            .label(lightbulb.name)\
+            .visibility((lightbulb.item_ids.motiondetectorblocked, '==', 'ON'))\
+            .append_to(frame)
 
     def build_statuspage(self, statuspage: Page, configuration: Configuration) -> None:
         page = Page('SwitchingCycles')\
