@@ -2,3 +2,5 @@ click
 click-log
 cairosvg
 pyyaml
+requests
+xcffib
