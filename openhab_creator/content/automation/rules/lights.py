@@ -175,7 +175,7 @@ class MotionDetectorEvent(object):
             'module': 'MotionUnblock_{}'.format(lightbulb_item.name)})
 
     def unblock(self, lightbulb_item):
-        if has_motion_period(lightbulb_item):
+        if self.has_motion_period(lightbulb_item):
             self.log.debug('Unblock {}'.format(lightbulb_item.name))
             motionblocked_item = lightbulb_item.from_scripting(
                 'motionblocked_item')
