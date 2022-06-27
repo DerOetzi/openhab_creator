@@ -18,6 +18,9 @@ class ThingsCreator(BaseCreator):
 
     def build(self, configuration: Configuration) -> None:
         for bridge_key, bridge_obj in configuration.equipment.bridges.items():
+            if bridge_obj.is_subbridge:
+                continue
+
             self._append_bridge(bridge_obj)
 
             if bridge_obj.is_thing:
@@ -43,28 +46,39 @@ class ThingsCreator(BaseCreator):
 
     def _append_things(self, bridge: Bridge) -> None:
         for thing in bridge.things:
-            if bridge.is_thing:
-                thingstring = f'  Thing {thing.typed} {thing.uid} '
-            else:
-                thingstring = f'Thing {bridge.binding}:{thing.typed}:{thing.uid} '
+            thingstring = self._build_thingstring(thing, bridge)
 
-            thinglabel = f'{thing.nameprefix} {thing.name} ({thing.identifier})'.strip(
-            )
-
-            thingstring += f'"{thinglabel}" '
-            thingstring += f'@ "{thing.category}" '
-
-            if thing.has_properties:
-                thingstring += f'{Formatter.key_value_pairs(thing.properties, "[", "]")} '
-
-            if thing.has_channels:
+            if thing.has_channels or thing.is_subbridge:
                 thingstring += '{'
 
             self.append(thingstring)
 
             if thing.has_channels:
                 self._append_thing_channels(thing.channels)
+
+            if thing.is_subbridge:
+                self._append_things(thing.combined_bridge)
+
+            if thing.has_channels or thing.is_subbridge:
                 self.append('  }')
+
+    def _build_thingstring(self, thing, bridge):
+        thingtype = 'Bridge' if thing.is_subbridge else 'Thing'
+
+        if bridge.is_thing:
+            thingstring = f'  {thingtype} {thing.typed} {thing.uid} '
+        else:
+            thingstring = f'{thingtype} {bridge.binding}:{thing.typed}:{thing.uid} '
+
+        thinglabel = f'{thing.nameprefix} {thing.name} ({thing.identifier})'.strip(
+        )
+
+        thingstring += f'"{thinglabel}" '
+        thingstring += f'@ "{thing.category}" '
+
+        if thing.has_properties:
+            thingstring += f'{Formatter.key_value_pairs(thing.properties, "[", "]")} '
+        return thingstring
 
     def _append_thing_channels(self, channels: List[Channel]) -> None:
         self.append('    Channels:')

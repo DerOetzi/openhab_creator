@@ -77,13 +77,14 @@ class Thing():
                  properties: Optional[Dict[str, Any]] = None,
                  channels: Optional[Dict[str, Any]] = None,
                  bridge: Optional[str] = None,
-                 mac: Optional[bool] = False):
+                 mac: Optional[bool] = False,
+                 tobridge: Optional[str] = None):
 
         self.equipment_node: Equipment = equipment_node
 
         self.typed: str = thingtype
 
-        self._init_bridge(configuration, bridge)
+        self._init_bridge(configuration, bridge, tobridge)
 
         self._init_nameprefix(nameprefix)
 
@@ -106,13 +107,23 @@ class Thing():
 
     def _init_bridge(self,
                      configuration: Optional[Configuration] = None,
-                     bridge_key: Optional[str] = None) -> None:
+                     bridge_key: Optional[str] = None,
+                     tobridge: Optional[str] = None) -> None:
 
         self.bridge: Optional[Bridge] = None
+        self.combined_bridge = None
 
         if not (configuration is None or bridge_key is None):
             self.bridge = configuration.equipment.bridge(bridge_key)
             self.bridge.add_thing(self)
+
+            if tobridge is not None:
+                self.combined_bridge = configuration.equipment.bridge(tobridge)
+                self.combined_bridge.subbridge = self
+
+    @property
+    def is_subbridge(self) -> bool:
+        return self.combined_bridge is not None
 
     def _init_nameprefix(self, nameprefix: str) -> None:
         if self.has_bridge and self.bridge.is_thing:

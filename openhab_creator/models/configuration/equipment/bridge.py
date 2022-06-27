@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING, List, Optional
 
 from openhab_creator.models.configuration.equipment import (
     Equipment, EquipmentItemIdentifiers)
@@ -29,14 +29,21 @@ class Bridge(Equipment):
 
         self.things: List[Thing] = []
 
+        self.subbridge: Optional[Thing] = None
+
     @property
     def item_ids(self) -> BridgeItemIdentifiers:
         return self._item_ids
 
     def add_thing(self, thing: Thing) -> None:
-        if self.thing is None or self.thing.equipment_node.identifier != thing.equipment_node.identifier:
+        if (self.thing is None
+                or self.thing.equipment_node.identifier != thing.equipment_node.identifier):
             self.things.append(thing)
 
     @property
     def name_with_type(self) -> str:
         return f'{self.name} (Bridge)'
+
+    @property
+    def is_subbridge(self) -> bool:
+        return self.subbridge is not None
