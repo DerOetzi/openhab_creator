@@ -1,6 +1,8 @@
 # pylint: skip-file
 import json
 
+from configuration import (LEARNINGHOUSE_API_KEY_ADMIN,
+                           LEARNINGHOUSE_API_KEY_USER)
 from core.actions import HTTP
 from core.log import LOG_PREFIX, logging
 from core.rules import rule
@@ -13,6 +15,8 @@ logger = logging.getLogger('{}.AISensor'.format(LOG_PREFIX))
 lock_until = {
     'all': DateUtils.now().minusSeconds(1)
 }
+
+TIMEOUT_MS = 5000
 
 
 def get_dataset(event):
@@ -35,7 +39,7 @@ def get_dataset(event):
 
     logger.debug('AISensor dataset: %s', dataset)
 
-    return {'data': dataset}
+    return dataset
 
 
 @rule('AISensor changed')
@@ -63,9 +67,15 @@ def aisensor_changed(event):
         lock_until[model_name] = DateUtils.now().plusSeconds(30)
 
         response_json = HTTP.sendHttpPostRequest(
-            '{}/brain/{}/prediction'.format(base_url, model_name), 'application/json', data_json)
+            '{}/api/brain/{}/prediction'.format(base_url, model_name),
+            'application/json',
+            data_json,
+            {'X-LEARNINGHOUSE-API-KEY': LEARNINGHOUSE_API_KEY_USER},
+            TIMEOUT_MS)
 
         result = json.loads(response_json)
+
+        logger.debug(result)
 
         logger.debug(u"{} => {} {:.2f} (model score: {:.2f})".format(
             data_json, model_name, result['prediction'], result['brain']['score']))
@@ -113,7 +123,11 @@ def learning_house_training(event):
     logger.debug(data_json)
 
     response_json = HTTP.sendHttpPutRequest(
-        '{}/brain/{}/training'.format(base_url, model_name), 'application/json', data_json)
+        '{}/api/brain/{}/training'.format(base_url, model_name),
+        'application/json',
+        data_json,
+        {'X-LEARNINGHOUSE-API-KEY': LEARNINGHOUSE_API_KEY_ADMIN},
+        TIMEOUT_MS)
 
     result = json.loads(response_json)
 

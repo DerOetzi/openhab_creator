@@ -4,7 +4,8 @@ from openhab_creator import __version__, logger
 from openhab_creator.models.configuration import Configuration
 from openhab_creator.models.items.baseitem import BaseItem
 from openhab_creator.output.content import (AutomationCreator,
-                                            BasicConfigCreator, IconsCreator,
+                                            BasicConfigCreator,
+                                            EphemerisCreator, IconsCreator,
                                             MapTransformationCreator)
 from openhab_creator.output.documentationcreator import DocumentationCreator
 from openhab_creator.output.items import ItemsCreator
@@ -41,6 +42,7 @@ class Creator():
 
         SitemapCreator(self.outputdir).build(configuration)
 
+        EphemerisCreator(self.outputdir).build(self.configdir, configuration)
         MapTransformationCreator(self.outputdir).build()
         AutomationCreator(self.outputdir).build(self.configdir, configuration)
 
