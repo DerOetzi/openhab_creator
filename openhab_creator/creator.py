@@ -42,7 +42,7 @@ class Creator():
 
         SitemapCreator(self.outputdir).build(configuration)
 
-        EphemerisCreator(self.outputdir).build(self.configdir, configuration)
+        EphemerisCreator(self.outputdir).build(configuration)
         MapTransformationCreator(self.outputdir).build()
         AutomationCreator(self.outputdir).build(self.configdir, configuration)
 
