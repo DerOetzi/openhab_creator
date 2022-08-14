@@ -77,20 +77,24 @@ def aisensor_changed(event):
 
         logger.debug(result)
 
-        logger.debug(u"{} => {} {:.2f} (model score: {:.2f})".format(
-            data_json, model_name, result['prediction'], result['brain']['score']))
+        if 'error' in result:
+            logger.error('{}: {}'.format(
+                result['error'], result['description']))
+        else:
+            logger.debug(u"{} => {} {:.2f} (model score: {:.2f})".format(
+                data_json, model_name, result['prediction'], result['brain']['score']))
 
-        if result['prediction']:
-            dependent_item.post_update(ON)
-        elif not result['prediction']:
-            dependent_item.post_update(OFF)
+            if result['prediction']:
+                dependent_item.post_update(ON)
+            elif not result['prediction']:
+                dependent_item.post_update(OFF)
 
-        score_item = dependent_item.from_scripting('score_item')
-        model_score = result['brain']['score'] * 100
-        score_item.post_update(model_score)
+            score_item = dependent_item.from_scripting('score_item')
+            model_score = result['brain']['score'] * 100
+            score_item.post_update(model_score)
 
-        dependent_item.set_label(
-            dependent_item.scripting('label').format(model_score))
+            dependent_item.set_label(
+                dependent_item.scripting('label').format(model_score))
 
 
 @rule('LearningHouse training')
@@ -117,10 +121,8 @@ def learning_house_training(event):
             dependent_item.post_update(OFF)
 
     dataset = get_dataset(event)
-    dataset['data'][dependent_item.name] = dependent
+    dataset[dependent_item.name] = dependent
     data_json = json.dumps(dataset)
-
-    logger.debug(data_json)
 
     response_json = HTTP.sendHttpPutRequest(
         '{}/api/brain/{}/training'.format(base_url, model_name),
@@ -131,7 +133,12 @@ def learning_house_training(event):
 
     result = json.loads(response_json)
 
-    logger.info('Trained {} results in score {:.1f}'.format(
-        model_name, result['score'] * 100))
+    if 'error' in result:
+        logger.error('{}: {}'.format(result['error'], result['description']))
+    else:
+        logger.info('Trained {} results in score {:.1f}'.format(
+            model_name, result['score'] * 100))
+        dependent_item.set_label(
+            dependent_item.scripting('label').format(result['score'] * 100))
 
     train_item.post_update(NULL)
