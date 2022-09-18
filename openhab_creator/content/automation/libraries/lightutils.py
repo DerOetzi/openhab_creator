@@ -24,15 +24,17 @@ class LightUtils(object):
         cls.log.debug('Name: %s, active: %s, night: %s, absence: %s, darkness: %s, presences_item: %s, darkness_item: %s',
                       lightbulb_item.name, is_location_active, is_night, is_absence, is_darkness, presences_item.get_onoff(), darkness_item.get_onoff())
 
-
-        is_location_active_and_presence = (is_location_active and not is_absence)
+        is_location_active_and_presence = (
+            is_location_active and not is_absence)
         at_absence_too = (is_absence and presences_item.get_onoff(True))
-        is_darkness_or_always_configuration = (is_darkness or not darkness_item.get_onoff(True))
-        
+        is_darkness_or_always_configuration = (
+            is_darkness or not darkness_item.get_onoff(True))
+
         if ((is_location_active_and_presence or at_absence_too)
                 and is_darkness_or_always_configuration):
 
-            is_nightmode = is_night and lightbulb_item.is_scripting('nightmode_item')
+            is_nightmode = is_night and lightbulb_item.is_scripting(
+                'nightmode_item')
             if is_nightmode:
                 cls.command(lightbulb_item, 'NIGHT')
             else:
@@ -192,7 +194,7 @@ class LightUtils(object):
         nightmode = nightmode_item.get_string('RANDOM', True)
 
         if nightmode == 'RANDOM':
-            nightmode = random.choice(group_members.members_names)
+            nightmode = cls._select_random_nightmode(group_members)
 
         cls._handle_selected_lightbulb(nightmode, group_members, 'NIGHT')
 
@@ -209,6 +211,23 @@ class LightUtils(object):
             brightness = hsbcolor.getBrightness().intValue()
 
         return brightness
+
+    @staticmethod
+    def _select_random_nightmode(group_members):
+        cycles = {}
+
+        for group_member in group_members:
+            if group_member.is_scripting('cycles_item'):
+                cycles_item = group_member.from_scripting('cycles_item')
+                cycles[group_member.name] = cycles_item.get_int(0, True)
+            else:
+                cycles[group_member.name] = 0
+
+        minimum_cycles = min(cycles.values())
+        minimum_members = [
+            k for k, v in cycles.iteritems() if v == minimum_cycles]
+
+        return random.choice(minimum_members)
 
     @classmethod
     def _handle_selected_lightbulb(cls, lightbulb, group_members, on_command='ON'):
