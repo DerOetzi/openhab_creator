@@ -273,3 +273,12 @@ class HeatingItemsCreator(BaseItemsCreator):
             .scripting(scripting)\
             .channel(heating.points.channel('heatmode'))\
             .append_to(self)
+
+        if heating.points.has_valveposition:
+            Number(heating.item_ids.valveposition)\
+                .percentage()\
+                .label(_('Valve position'))\
+                .equipment(heating)\
+                .semantic(PointType.MEASUREMENT)\
+                .channel(heating.points.channel('valveposition'))\
+                .append_to(self)
