@@ -18,7 +18,7 @@ if TYPE_CHECKING:
     from openhab_creator.models.configuration.location import Location
 
 
-@SitemapCreatorPipeline(mainpage=4, configpage=5)
+@SitemapCreatorPipeline(mainpage=4, statuspage=6, configpage=5)
 class TemperatureSitemapCreator(BaseSitemapCreator):
     def __init__(self):
         self.toplevel_locations = {}
@@ -34,6 +34,9 @@ class TemperatureSitemapCreator(BaseSitemapCreator):
         heatings = dict((x.location, x)
                         for x in configuration.equipment.equipment('heating'))
 
+        windows = dict((x.location, x)
+                       for x in configuration.equipment.equipment('window'))
+
         if len(sensors) > 0:
             page = Page('temperatureIndoor')\
                 .label(_('Temperatures'))\
@@ -41,7 +44,7 @@ class TemperatureSitemapCreator(BaseSitemapCreator):
                 .append_to(sitemap)
 
             for sensor in sensors:
-                subpage = self.subpage(page, sensor, heatings)
+                subpage = self.subpage(page, sensor, heatings, windows)
 
                 if sensor.points.has('temperature'):
                     Text(f'temperature{sensor.item_ids.merged_sensor}')\
@@ -53,7 +56,7 @@ class TemperatureSitemapCreator(BaseSitemapCreator):
             self._add_grafana(configuration.dashboard, page,
                               self.toplevel_locations.keys(), _('Temperatures') + ' ')
 
-    def subpage(self, page: Page, sensor: Sensor, heatings: Dict) -> Page:
+    def subpage(self, page: Page, sensor: Sensor, heatings: Dict, windows: Dict) -> Page:
         location = sensor.location
         if location in self.locations:
             subpage = self.locations[location]
@@ -67,6 +70,7 @@ class TemperatureSitemapCreator(BaseSitemapCreator):
                 .valuecolor(*TemperatureSitemapCreator.valuecolor(f'temperature{location}'))
             self.locations[location] = subpage
             self.build_heating(subpage, location, heatings)
+            self.build_window(subpage, location, windows)
 
             subpage.append_to(frame)
 
@@ -96,6 +100,13 @@ class TemperatureSitemapCreator(BaseSitemapCreator):
                 .append_to(page)
 
     @staticmethod
+    def build_window(page: Page, location: Location,  windows: Dict) -> None:
+        if location in windows:
+            window = windows[location]
+            Text(window.item_ids.windowopen)\
+                .append_to(page)
+
+    @staticmethod
     def valuecolor(item: str) -> List[Tuple[str, Color]]:
         return [
             (f'{item}>=28', Color.RED),
@@ -107,7 +118,21 @@ class TemperatureSitemapCreator(BaseSitemapCreator):
         ]
 
     def build_statuspage(self, statuspage: Page, configuration: Configuration) -> None:
-        """No statuspage for temperatures"""
+        has_window, windows = configuration.equipment.has('window')
+
+        if has_window:
+            page = Page('windows')\
+                .append_to(statuspage)
+
+            for window in windows:
+                toplevel_location = window.location.toplevel
+                frame = page.frame(
+                    toplevel_location.identifier, toplevel_location.name)
+
+                Text(window.item_ids.windowopen)\
+                    .label(window.name)\
+                    .map(MapTransformation.WINDOWOPEN)\
+                    .append_to(frame)
 
     def build_configpage(self, configpage: Page, configuration: Configuration) -> None:
         has_heating, heatings = configuration.equipment.has('heating')

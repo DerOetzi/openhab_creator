@@ -31,6 +31,8 @@ def get_dataset(event):
             dataset[aisensor_item.name] = aisensor_value.toFullString()
         elif isinstance(aisensor_value, OnOffType):
             dataset[aisensor_item.name] = aisensor_value == ON
+        elif isinstance(aisensor_value, OpenClosedType):
+            dataset[aisensor_item.name] = aisensor_value == OPEN
         elif aisensor_value is None:
             dataset[aisensor_item.name] = None
         else:

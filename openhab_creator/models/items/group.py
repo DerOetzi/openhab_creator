@@ -13,6 +13,8 @@ class GroupType(CreatorEnum):
     NUMBER_MAX = ':Number:MAX'
     ONOFF = ':Switch:OR(ON,OFF)'
     OFFON = ':Switch:OR(OFF,ON)'
+    OPENCLOSED = ':Contact:OR(OPEN,CLOSED)'
+    CLOSEDOPEN = ':Contact:OR(CLOSED,OPEN)'
     LOCATION = 'Location'
 
 

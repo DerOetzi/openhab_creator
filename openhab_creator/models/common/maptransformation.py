@@ -43,6 +43,8 @@ class MapTransformation(CreatorEnum):
 
     ONLINE = "online", {'ON': _('Online'), 'OFF': _('Offline')}
 
+    WINDOWOPEN = "windowopen", {'OPEN': _('Opened'), 'CLOSED': _('Closed')}
+
     POLLENCOUNT_API = 'pollencountapi', PollenCountIndex.api_mappings()
 
     POLLENCOUNT = 'pollencount', PollenCountIndex.mappings()
