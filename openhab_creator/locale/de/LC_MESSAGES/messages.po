@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openHAB Creator\n"
-"POT-Creation-Date: 2022-09-22 22:21+0200\n"
-"PO-Revision-Date: 2022-09-22 22:22+0200\n"
+"POT-Creation-Date: 2022-09-24 00:12+0200\n"
+"PO-Revision-Date: 2022-09-24 00:14+0200\n"
 "Last-Translator: Johannes Ott <info@johannes-ott.net>\n"
 "Language-Team: Johannes Ott\n"
 "Language: de\n"
@@ -455,7 +455,7 @@ msgstr "Super"
 msgid "Gas station"
 msgstr "Tankstelle"
 
-#: openhab_creator/models/configuration/equipment/types/heating.py:114
+#: openhab_creator/models/configuration/equipment/types/heating.py:118
 msgid "Heating"
 msgstr "Heizung"
 
@@ -657,8 +657,8 @@ msgid "Washing machine and dryer are ready"
 msgstr "Waschmaschine und Trockner sind fertig"
 
 #: openhab_creator/models/configuration/equipment/types/window.py:49
-#: openhab_creator/output/items/creators/windowitemscreator.py:52
-#: openhab_creator/output/items/creators/windowitemscreator.py:74
+#: openhab_creator/output/items/creators/windowitemscreator.py:59
+#: openhab_creator/output/items/creators/windowitemscreator.py:81
 msgid "Window"
 msgstr "Fenster"
 
@@ -1278,17 +1278,29 @@ msgstr "Reinigung {name}"
 msgid "Cleaning countdown"
 msgstr "Reinigungscountdown"
 
-#: openhab_creator/output/items/creators/windowitemscreator.py:33
+#: openhab_creator/output/items/creators/windowitemscreator.py:40
 msgid "Windows"
 msgstr "Fenster"
 
-#: openhab_creator/output/items/creators/windowitemscreator.py:40
+#: openhab_creator/output/items/creators/windowitemscreator.py:47
 msgid "Window {blankname}"
 msgstr "Fenster {blankname}"
 
-#: openhab_creator/output/items/creators/windowitemscreator.py:67
+#: openhab_creator/output/items/creators/windowitemscreator.py:74
 msgid "Window {name}"
 msgstr "Fenster {name}"
+
+#: openhab_creator/output/items/creators/windowitemscreator.py:90
+msgid "Alarm window {name} was opened, while nobody at home."
+msgstr "Alarm Fenster {name} wurde geöffnet, während niemand zuhause ist."
+
+#: openhab_creator/output/items/creators/windowitemscreator.py:91
+msgid "Window {name} still open"
+msgstr "Fenster {name} immer noch offen"
+
+#: openhab_creator/output/items/creators/windowitemscreator.py:92
+msgid "Please close the window {name}."
+msgstr "Bitte Fenster {name} schließen."
 
 #: openhab_creator/output/sitemap/__init__.py:29
 #: openhab_creator/output/sitemap/creators/calendarsitemapcreator.py:60

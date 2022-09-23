@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Dict
+from typing import Dict, Optional
 
 from openhab_creator import _
 from openhab_creator.models.configuration.equipment import EquipmentType
@@ -20,19 +20,21 @@ class WindowItemIdentifiers(SensorItemIdentifiers):
     @property
     def sensor(self) -> str:
         return self._identifier(f'sensor{self.equipment.semantic}')
-    
+
     @property
-    def windowopen(self)-> str:
+    def windowopen(self) -> str:
         return self._identifier('windowOpen')
 
 
 @EquipmentType()
 class Window(Sensor):
     def __init__(self,
+                 remindertime: Optional[int] = -1,
                  **equipment_configuration: Dict):
         super().__init__(**equipment_configuration)
 
         self._item_ids: WindowItemIdentifiers = WindowItemIdentifiers(self)
+        self.remindertime: int = remindertime
 
     @property
     def item_ids(self) -> WindowItemIdentifiers:

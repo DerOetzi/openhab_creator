@@ -26,6 +26,10 @@ class HeatingItemIdentifiers(SensorItemIdentifiers):
         return self._identifier('heatcontrol')
 
     @property
+    def heatcontrol_save(self) -> str:
+        return self._identifier('heatcontrolSave')
+
+    @property
     def heatmode(self) -> str:
         return self._identifier('heatmode')
 

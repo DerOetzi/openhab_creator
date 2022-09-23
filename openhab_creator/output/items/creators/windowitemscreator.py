@@ -1,11 +1,12 @@
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Dict
 
-from openhab_creator import _
+from openhab_creator import _, logger
 from openhab_creator.models.common import MapTransformation
 from openhab_creator.models.items import (AISensorDataType, Contact, Group,
-                                          GroupType, PointType, PropertyType)
+                                          GroupType, PointType, PropertyType,
+                                          String)
 from openhab_creator.output.items import ItemsCreatorPipeline
 from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
 
@@ -20,11 +21,16 @@ class WindowItemsCreator(BaseItemsCreator):
     def build(self, configuration: Configuration) -> None:
         self.__build_general_groups()
 
+        heatings = dict((x.location, x)
+                        for x in configuration.equipment.equipment('heating'))
+
+        logger.info(heatings)
+
         for window in configuration.equipment.equipment('window'):
             window_item = self.__build_parent(window)
 
-            if not self.__build_subequipment(window, window_item):
-                self.__build_thing(window)
+            if not self.__build_subequipment(window, window_item, heatings):
+                self.__build_thing(window, heatings)
 
         self.write_file('window')
 
@@ -46,7 +52,7 @@ class WindowItemsCreator(BaseItemsCreator):
 
         return window_item
 
-    def __build_subequipment(self, parent_window: Window, parent_window_item: Group) -> bool:
+    def __build_subequipment(self, parent_window: Window, parent_window_item: Group, heatings: Dict) -> bool:
         if parent_window.has_subequipment:
             Group(parent_window.item_ids.windowopen)\
                 .typed(GroupType.OPENCLOSED)\
@@ -58,11 +64,11 @@ class WindowItemsCreator(BaseItemsCreator):
                 .append_to(self)
 
             for subwindow in parent_window.subequipment:
-                self.__build_thing(subwindow)
+                self.__build_thing(subwindow, heatings)
 
         return parent_window.has_subequipment
 
-    def __build_thing(self, window: Window) -> None:
+    def __build_thing(self, window: Window, heatings: Dict) -> None:
         if window.is_child:
             Group(window.item_ids.window)\
                 .label(_('Window {name}').format(name=window.name))\
@@ -80,8 +86,27 @@ class WindowItemsCreator(BaseItemsCreator):
             .semantic(PointType.OPENSTATE, PropertyType.OPENING)\
             .channel(window.points.channel('open'))\
             .sensor('window', window.influxdb_tags)\
+            .scripting({
+                'alarm_message': _('Alarm window {name} was opened, while nobody at home.').format(name=window.name),
+                'absence_message': _('Window {name} still open').format(name=window.name),
+                'reminder_message': _('Please close the window {name}.').format(name=window.name)
+            })\
             .aisensor(AISensorDataType.CATEGORICAL)\
             .append_to(self)
+
+        if window.remindertime > 0:
+            contact.scripting({'remindertime': str(window.remindertime)})
+
+        if window.location in heatings:
+            heating = heatings[window.location]
+            String(heating.item_ids.heatcontrol_save)\
+                .append_to(self)
+
+            contact.scripting(
+                {
+                    'heating_item': heating.item_ids.heating,
+                    'heating_control_save': heating.item_ids.heatcontrol_save
+                })
 
         if window.is_child:
             contact.groups(window.parent.item_ids.windowopen)
