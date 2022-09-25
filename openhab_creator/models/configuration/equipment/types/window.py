@@ -25,16 +25,20 @@ class WindowItemIdentifiers(SensorItemIdentifiers):
     def windowopen(self) -> str:
         return self._identifier('windowOpen')
 
+    @property
+    def remindertime(self) -> str:
+        return self._identifier('windowRemindertime')
+
 
 @EquipmentType()
 class Window(Sensor):
     def __init__(self,
-                 remindertime: Optional[int] = -1,
+                 remindertime: Optional[bool] = False,
                  **equipment_configuration: Dict):
         super().__init__(**equipment_configuration)
 
         self._item_ids: WindowItemIdentifiers = WindowItemIdentifiers(self)
-        self.remindertime: int = remindertime
+        self.remindertime: bool = remindertime
 
     @property
     def item_ids(self) -> WindowItemIdentifiers:

@@ -139,6 +139,11 @@ class TemperatureSitemapCreator(BaseSitemapCreator):
         has_warmwaterpump, warmwaterpumps = configuration.equipment.has(
             'warmwaterpump')
 
+        has_windows, windows = configuration.equipment.has('window')
+        windows_location = {}
+        if has_windows:
+            windows_location = dict((x.location, x) for x in windows)
+
         if has_heating or has_warmwaterpump:
             page = Page('heating')\
                 .label(_('Heatings'))\
@@ -202,3 +207,9 @@ class TemperatureSitemapCreator(BaseSitemapCreator):
 
                 Setpoint(heating.item_ids.comforttemperature, 20, 24, 0.5)\
                     .append_to(subpage)
+
+                if heating.location in windows_location:
+                    window = windows_location[heating.location]
+
+                    Setpoint(window.item_ids.remindertime, 0, 15)\
+                        .append_to(subpage)

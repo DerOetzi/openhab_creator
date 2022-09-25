@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Dict
 from openhab_creator import _, logger
 from openhab_creator.models.common import MapTransformation
 from openhab_creator.models.items import (AISensorDataType, Contact, Group,
-                                          GroupType, PointType, PropertyType,
+                                          GroupType, Number, NumberType, PointType, PropertyType,
                                           String)
 from openhab_creator.output.items import ItemsCreatorPipeline
 from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
@@ -27,9 +27,9 @@ class WindowItemsCreator(BaseItemsCreator):
         logger.info(heatings)
 
         for window in configuration.equipment.equipment('window'):
-            window_item = self.__build_parent(window)
+            self.__build_parent(window)
 
-            if not self.__build_subequipment(window, window_item, heatings):
+            if not self.__build_subequipment(window, heatings):
                 self.__build_thing(window, heatings)
 
         self.write_file('window')
@@ -52,7 +52,7 @@ class WindowItemsCreator(BaseItemsCreator):
 
         return window_item
 
-    def __build_subequipment(self, parent_window: Window, parent_window_item: Group, heatings: Dict) -> bool:
+    def __build_subequipment(self, parent_window: Window, heatings: Dict) -> bool:
         if parent_window.has_subequipment:
             Group(parent_window.item_ids.windowopen)\
                 .typed(GroupType.OPENCLOSED)\
@@ -87,15 +87,26 @@ class WindowItemsCreator(BaseItemsCreator):
             .channel(window.points.channel('open'))\
             .sensor('window', window.influxdb_tags)\
             .scripting({
-                'alarm_message': _('Alarm window {name} was opened, while nobody at home.').format(name=window.name),
-                'absence_message': _('Window {name} still open').format(name=window.name),
+                'alarm_message': _('Alert! Window {name} was opened, while nobody at home.').format(name=window.name),
+                'absence_message': _('Window {name} still open.').format(name=window.name),
                 'reminder_message': _('Please close the window {name}.').format(name=window.name)
             })\
             .aisensor(AISensorDataType.CATEGORICAL)\
             .append_to(self)
 
-        if window.remindertime > 0:
-            contact.scripting({'remindertime': str(window.remindertime)})
+        if window.remindertime:
+            Number(window.item_ids.remindertime)\
+                .typed(NumberType.TIME)\
+                .label(_('Period window reminder'))\
+                .format('%d m')\
+                .icon('clock')\
+                .equipment(window)\
+                .semantic(PointType.SETPOINT, PropertyType.DURATION)\
+                .config()\
+                .append_to(self)
+
+            contact.scripting(
+                {'remindertime_item': window.item_ids.remindertime})
 
         if window.location in heatings:
             heating = heatings[window.location]
