@@ -1,10 +1,12 @@
 # pylint: skip-file
-from core.log import logging, LOG_PREFIX
-from core.actions import Exec
-
+from configuration import SIGNAL, SIGNAL_ENDPOINT, SIGNAL_NUMBER
+from core.actions import HTTP, Exec
+from core.log import LOG_PREFIX, logging
 from java.time import Duration
 
-from configuration import PERSONS
+import json
+
+TIMEOUT_MS = 5000
 
 
 class SignalMessenger():
@@ -14,12 +16,22 @@ class SignalMessenger():
     @staticmethod
     def notification(person, message):
         SignalMessenger.log.info(u'Signal message to %s' % person)
-        command = u"/openhab/conf/scripts/signal_user.sh"
-        SignalMessenger.log.debug(
-            '%s %s %s', command, PERSONS[person], message)
-        result = Exec.executeCommandLine(
-            Duration.ofSeconds(10), command, PERSONS[person], message)
-        SignalMessenger.log.debug('Result %s', result)
+
+        send_message = {
+            'message': message,
+            'number': SIGNAL_NUMBER,
+            'recipients': [
+                SIGNAL[person]
+            ]
+        }
+
+        response = HTTP.sendHttpPostRequest('{}/v2/send'.format(SIGNAL_ENDPOINT),
+                                            'application/json',
+                                            json.dumps(send_message),
+                                            {},
+                                            TIMEOUT_MS)
+
+        SignalMessenger.log.debug(response)
 
     @staticmethod
     def broadcast(message):
