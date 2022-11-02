@@ -62,22 +62,20 @@ class WindowEvent(object):
             self.log.warning(window_item.scripting('alarm_message'))
             SignalMessenger.broadcast(window_item.scripting('alarm_message'))
 
-        heating = Item('heating').get_onoff()
-        if heating:
-            heating_item = window_item.from_scripting('heating_item')
+        heating_item = window_item.from_scripting('heating_item')
 
-            heating_control = heating_item.from_scripting('control_item')
-            save_item = window_item.from_scripting('heating_control_save')
-            save_item.post_update(heating_control.get_string('CLOSED'))
+        heating_control = heating_item.from_scripting('control_item')
+        save_item = window_item.from_scripting('heating_control_save')
+        save_item.post_update(heating_control.get_string('CLOSED'))
 
-            HeatingUtils.manual(heating_item, 'CLOSED',
-                                PseudoEvent(heating_control.name))
+        HeatingUtils.manual(heating_item, 'CLOSED',
+                            PseudoEvent(heating_control.name))
 
-            remindertime = self.get_remindertime(window_item)
+        remindertime = self.get_remindertime(window_item)
 
-            if remindertime > 0:
-                self.timers.activate(window_item.name, lambda window_item=window_item: self.send_reminder(
-                    window_item), DateUtils.now().plusMinutes(remindertime))
+        if remindertime > 0:
+            self.timers.activate(window_item.name, lambda window_item=window_item: self.send_reminder(
+                window_item), DateUtils.now().plusMinutes(remindertime))
 
     def send_reminder(self, window_item):
         if window_item.get_openclosed():
