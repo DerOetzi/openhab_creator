@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Dict, List, Optional
 
 from openhab_creator import _
+from openhab_creator.exception import ConfigurationException
 from openhab_creator.models.configuration.equipment import (
     Equipment, EquipmentItemIdentifiers, EquipmentPoints, EquipmentType)
 
@@ -113,6 +114,8 @@ class Lightbulb(Equipment):
     def __init__(self,
                  singlebulb: Optional[bool] = False,
                  nightmode: Optional[bool] = False,
+                 min_colortemp: Optional[int] = None,
+                 max_colortemp: Optional[int] = None,
                  points: Optional[Dict[str, str]] = None,
                  **equipment_configuration: Dict):
 
@@ -124,6 +127,18 @@ class Lightbulb(Equipment):
 
         self.singlebulb: bool = singlebulb
         self.nightmode: bool = nightmode
+
+        if (self.is_child or not self.has_subequipment) and self.points.has_colortemperature:
+            if not min_colortemp:
+                raise ConfigurationException(
+                    'Colortemperature lightbulb needs a minimum value', self.name)
+
+            if not max_colortemp:
+                raise ConfigurationException(
+                    'Colortemperature lightbulb needs a maximum value', self.name)
+
+        self._min_colortemp: Optional[int] = min_colortemp
+        self._max_colortemp: Optional[int] = max_colortemp
 
     @property
     def item_ids(self) -> LightbulbItemIdentifiers:
@@ -151,6 +166,30 @@ class Lightbulb(Equipment):
             categories.append('rgb')
 
         return categories
+
+    @property
+    def min_colortemp(self) -> Union[int | None]:
+        min_colortemp = self._min_colortemp
+        for subequipment in self.subequipment:
+            if not min_colortemp:
+                min_colortemp = 0
+
+            min_colortemp = max(
+                min_colortemp, subequipment.min_colortemp)
+
+        return min_colortemp
+
+    @property
+    def max_colortemp(self) -> Union[int | None]:
+        max_colortemp = self._max_colortemp
+        for subequipment in self.subequipment:
+            if not max_colortemp:
+                max_colortemp = 99999
+
+            max_colortemp = min(
+                max_colortemp, subequipment.max_colortemp)
+
+        return max_colortemp
 
     @property
     def is_timecontrolled(self) -> bool:

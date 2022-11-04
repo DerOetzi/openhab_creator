@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, List, Tuple
 
 from openhab_creator import _
 from openhab_creator.models.sitemap import (Page, Selection, Setpoint, Sitemap,
-                                            Switch, Text)
+                                            Slider, Switch, Text)
 from openhab_creator.output.sitemap import SitemapCreatorPipeline
 from openhab_creator.output.sitemap.basesitemapcreator import \
     BaseSitemapCreator
@@ -102,6 +102,8 @@ class LightbulbSitemapCreator(BaseSitemapCreator):
                 lightbulb))\
                 .append_to(lightpage)
 
+            self.build_colortemperature(lightbulb, lightpage)
+
             Switch(lightbulb.item_ids.hide, [('OFF', _('Display')), ('ON', _('Hide'))])\
                 .append_to(lightpage)
 
@@ -131,6 +133,24 @@ class LightbulbSitemapCreator(BaseSitemapCreator):
                         (subequipment.item_ids.lightbulb, subequipment.blankname))
 
                 Selection(lightbulb.item_ids.nightmode, mappings)\
+                    .append_to(lightpage)
+
+    def build_colortemperature(self, lightbulb: Lightbulb, lightpage: Page) -> None:
+        if lightbulb.points.has_colortemperature:
+            if lightbulb.singlebulb:
+                for subequipment in lightbulb.subequipment:
+                    if subequipment.points.has_colortemperature:
+                        Slider(subequipment.item_ids.colortemperature,
+                               subequipment.min_colortemp,
+                               subequipment.max_colortemp,
+                               100)\
+                            .label(_('Colortemperature {name}').format(name=subequipment.blankname))\
+                            .append_to(lightpage)
+            else:
+                Slider(lightbulb.item_ids.colortemperature,
+                       lightbulb.min_colortemp,
+                       lightbulb.max_colortemp,
+                       100)\
                     .append_to(lightpage)
 
     def _create_wallswitches_page(self,
