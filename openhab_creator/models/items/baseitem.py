@@ -118,6 +118,11 @@ class BaseItem():
         self._groups.extend(groups)
         return self
 
+    def remove_group(self, group: str) -> BaseItem:
+        if group in self._groups:
+            self._groups.remove(group)
+        return self
+
     def config(self) -> BaseItem:
         return self.groups('Config')
 
@@ -125,7 +130,11 @@ class BaseItem():
         return self.groups('Auto')
 
     def location(self, location: Location) -> BaseItem:
+        self.location_item(location)
         return self.groups(location.identifier)
+
+    def location_item(self, location: Location) -> BaseItem:
+        return self.scripting({'location_item': location.identifier})
 
     def equipment(self, equipment: Union[str, Equipment]) -> BaseItem:
         if isinstance(equipment, str):
@@ -155,6 +164,14 @@ class BaseItem():
             'measurement': measurement,
             'tags': series_tags
         }
+
+        return self
+
+    def remove_sensor(self) -> BaseItem:
+        self.remove_group('Sensor')
+        self.remove_group('SensorRestore')
+        self._metadata.pop('influxdb', None)
+        BaseItem.influxdb_series.pop(self._name, None)
 
         return self
 

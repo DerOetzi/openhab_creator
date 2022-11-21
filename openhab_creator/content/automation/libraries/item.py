@@ -177,7 +177,7 @@ class Item(object):
 
 
 class Group(object):
-    def __init__(self, item_or_item_name=None, event=None):
+    def __init__(self, item_or_item_name=None, event=None, only_direct_childs=True):
         self.item = None
         self.members = []
         self.members_names = []
@@ -186,7 +186,13 @@ class Group(object):
 
         if item_or_item_name is not None:
             self.item = Item(item_or_item_name, event)
-            for member in self.item.item.members:
+
+            if only_direct_childs:
+                group_members = self.item.item.members
+            else:
+                group_members = self.item.item.allMembers
+
+            for member in group_members:
                 self.members_names.append(member.name)
                 self.members.append(Item(member, event))
 

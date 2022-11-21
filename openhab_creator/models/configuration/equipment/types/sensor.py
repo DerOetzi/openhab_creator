@@ -262,3 +262,13 @@ class Sensor(Equipment):
     @property
     def sensor_is_subequipment(self) -> bool:
         return False
+
+    @property
+    def items_for_location(self) -> Dict[str, str]:
+        items = {}
+
+        for sensortype in SensorType:
+            if sensortype.point in self.categories:
+                items[f'{sensortype}_item'] = f'{sensortype}{self.location}'
+
+        return items

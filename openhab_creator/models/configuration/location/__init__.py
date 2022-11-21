@@ -24,6 +24,8 @@ class Location(BaseObject):
 
         self.is_timecontrolled: bool = False
 
+        self.items = {}
+
         self._init_equipment(
             configuration, [] if equipment is None else equipment)
 
@@ -37,6 +39,8 @@ class Location(BaseObject):
                                           location=self,
                                           **equipment_definition)
             self.is_timecontrolled = self.is_timecontrolled or equipment.is_timecontrolled
+
+            self.items = {**self.items, **equipment.items_for_location}
 
             self.equipment.append(equipment)
 

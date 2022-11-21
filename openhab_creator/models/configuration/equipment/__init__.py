@@ -241,6 +241,10 @@ class Equipment(BaseObject):
 
         return tags
 
+    @property
+    def items_for_location(self) -> Dict[str, str]:
+        return {}
+
 
 class EquipmentType():
     registry: Dict[str, Type['Equipment']] = {}

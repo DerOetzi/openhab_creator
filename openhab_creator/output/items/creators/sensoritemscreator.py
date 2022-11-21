@@ -145,29 +145,83 @@ class SensorItemsCreator(BaseItemsCreator):
             .label(sensortype.labels.item)\
             .format(sensortype.labels.format_str)\
             .icon(f'{sensortype}{area.lower()}')\
-            .groups(sensor.item_ids.merged_sensor)\
+            .groups(sensor.item_ids.merged_sensor, f'{sensortype}{location}')\
+            .location_item(location)\
+            .sensor(sensortype.point, sensor.influxdb_tags)\
             .semantic(PointType.MEASUREMENT, sensortype.typed.property)\
             .channel(sensor.points.channel(sensortype.point))\
-            .aisensor(AISensorDataType.NUMERICAL)
+            .aisensor(AISensorDataType.NUMERICAL)\
+            .append_to(self)
 
+        sensor_item = self.moisture_items(sensortype, sensor_item, sensor)
+
+        sensor_item = self.pressure_sealevel_items(
+            sensortype, sensor_item, sensor)
+
+        sensor_item = self.trend_items(sensortype, sensor_item, sensor)
+
+        if sensortype.labels.has_gui_factor:
+            String(f'gui{sensortype}{sensor.item_ids.sensor}')\
+                .label(sensortype.labels.item)\
+                .transform_js(f'gui{sensortype}')\
+                .icon(f'{sensortype}{area.lower()}')\
+                .groups(sensor.item_ids.merged_sensor, f'gui{sensortype}{location}')\
+                .semantic(PointType.MEASUREMENT, sensortype.typed.property)\
+                .channel(sensor.points.channel(sensortype.point),
+                         ProfileType.JS, f'togui{sensortype.labels.gui_factor}.js')\
+                .append_to(self)
+
+    def moisture_items(self, sensortype: SensorType, sensor_item: BaseItem, sensor: Sensor) -> BaseItem:
         if sensortype == SensorType.MOISTURE:
             sensor_item\
                 .scripting({
                     'reminder_item': sensor.item_ids.moisturelastreminder,
                     'watered_item': sensor.item_ids.moisturelastwatered
+                })
+
+            DateTime(sensor.item_ids.moisturelastreminder)\
+                .label(_('Last watering reminder'))\
+                .datetime()\
+                .config()\
+                .groups(sensor.item_ids.merged_sensor)\
+                .semantic(PointType.STATUS, PropertyType.TIMESTAMP)\
+                .scripting({
+                    'message': _('The plant {plant} needs to be watered!')
+                    .format(plant=sensor.blankname)
                 })\
-                .sensor(sensortype.point, sensor.influxdb_tags)\
-                .groups(f'{sensortype}{location}')
+                .append_to(self)
 
-            self.moisture_items(sensor)
+            DateTime(sensor.item_ids.moisturelastwatered)\
+                .label(_('Last watered'))\
+                .dateonly_weekday()\
+                .icon('wateringcan')\
+                .config()\
+                .groups(sensor.item_ids.merged_sensor)\
+                .semantic(PointType.STATUS, PropertyType.TIMESTAMP)\
+                .scripting({
+                    'message': _('The plant {plant} says thank you for watering!')
+                    .format(plant=sensor.blankname)
+                })\
+                .append_to(self)
 
-        elif sensortype == SensorType.PRESSURE and sensor.has_altitude:
+        return sensor_item
+
+    def pressure_sealevel_items(self,
+                                sensortype: SensorType,
+                                sensor_item: BaseItem,
+                                sensor: Sensor) -> BaseItem:
+        if sensortype == SensorType.PRESSURE and sensor.has_altitude:
+            location = sensor.location
+            area = location.area
+
             sensor_item\
                 .scripting({
                     'pressure_sealevel_item': sensor.item_ids.pressure_sealevel,
                     'altitude': sensor.altitude
                 })\
-                .groups('PressureSealevel')
+                .groups('PressureSealevel')\
+                .remove_group(f'{sensortype}{location}')\
+                .remove_sensor()
 
             Number(f'pressureSeaLevel{sensor.item_ids.merged_sensor}')\
                 .typed(sensortype.typed.number)\
@@ -178,11 +232,10 @@ class SensorItemsCreator(BaseItemsCreator):
                 .semantic(PointType.MEASUREMENT, sensortype.typed.property)\
                 .sensor(sensortype.point, sensor.influxdb_tags)\
                 .append_to(self)
-        else:
-            sensor_item\
-                .sensor(sensortype.point, sensor.influxdb_tags)\
-                .groups(f'{sensortype}{location}')
 
+        return sensor_item
+
+    def trend_items(self, sensortype: SensorType, sensor_item: BaseItem, sensor: Sensor) -> BaseItem:
         if sensor.location.area == 'Outdoor' or sensortype == SensorType.PRESSURE:
             String(f'trend{sensortype}{sensor.item_ids.merged_sensor}')\
                 .label(_('Trend {label}').format(label=sensortype.labels.item))\
@@ -214,41 +267,4 @@ class SensorItemsCreator(BaseItemsCreator):
                         'average_item': f'average7d{sensortype}{sensor.item_ids.merged_sensor}'
                     })
 
-        sensor_item.append_to(self)
-
-        if sensortype.labels.has_gui_factor:
-            String(f'gui{sensortype}{sensor.item_ids.sensor}')\
-                .label(sensortype.labels.item)\
-                .transform_js(f'gui{sensortype}')\
-                .icon(f'{sensortype}{area.lower()}')\
-                .groups(sensor.item_ids.merged_sensor, f'gui{sensortype}{location}')\
-                .semantic(PointType.MEASUREMENT, sensortype.typed.property)\
-                .channel(sensor.points.channel(sensortype.point),
-                         ProfileType.JS, f'togui{sensortype.labels.gui_factor}.js')\
-                .append_to(self)
-
-    def moisture_items(self, sensor: Sensor) -> None:
-        DateTime(sensor.item_ids.moisturelastreminder)\
-            .label(_('Last watering reminder'))\
-            .datetime()\
-            .config()\
-            .groups(sensor.item_ids.merged_sensor)\
-            .semantic(PointType.STATUS, PropertyType.TIMESTAMP)\
-            .scripting({
-                'message': _('The plant {plant} needs to be watered!')
-                .format(plant=sensor.blankname)
-            })\
-            .append_to(self)
-
-        DateTime(sensor.item_ids.moisturelastwatered)\
-            .label(_('Last watered'))\
-            .dateonly_weekday()\
-            .icon('wateringcan')\
-            .config()\
-            .groups(sensor.item_ids.merged_sensor)\
-            .semantic(PointType.STATUS, PropertyType.TIMESTAMP)\
-            .scripting({
-                'message': _('The plant {plant} says thank you for watering!')
-                .format(plant=sensor.blankname)
-            })\
-            .append_to(self)
+        return sensor_item

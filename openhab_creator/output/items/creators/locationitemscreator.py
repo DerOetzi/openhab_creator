@@ -41,6 +41,7 @@ class LocationItemsCreator(BaseItemsCreator):
             .label(floor.name)\
             .icon(floor.category)\
             .semantic(floor)\
+            .scripting(floor.items)\
             .append_to(self)
 
     def _create_room(self, room: Indoor) -> None:
@@ -49,6 +50,7 @@ class LocationItemsCreator(BaseItemsCreator):
             .icon(room.category)\
             .groups(room.parent.identifier)\
             .semantic(room)\
+            .scripting(room.items)\
             .append_to(self)
 
     def _create_building(self, building: Indoor) -> None:
@@ -56,6 +58,7 @@ class LocationItemsCreator(BaseItemsCreator):
             .label(building.name)\
             .icon(building.category)\
             .semantic(building)\
+            .scripting(building.items)\
             .append_to(self)
 
     def _create_outdoor(self, outdoor: Outdoor) -> None:
@@ -63,6 +66,7 @@ class LocationItemsCreator(BaseItemsCreator):
             .label(outdoor.name)\
             .icon(outdoor.category)\
             .semantic(outdoor)\
+            .scripting(outdoor.items)\
             .append_to(self)
 
     def _create_automation(self, location: Location) -> None:
