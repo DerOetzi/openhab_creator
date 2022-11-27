@@ -62,14 +62,15 @@ class WindowEvent(object):
             self.log.warning(window_item.scripting('alarm_message'))
             SignalMessenger.broadcast(window_item.scripting('alarm_message'))
 
-        heating_item = window_item.from_scripting('heating_item')
+        if window_item.is_scripting('heating_item'):
+            heating_item = window_item.from_scripting('heating_item')
 
-        heating_control = heating_item.from_scripting('control_item')
-        save_item = window_item.from_scripting('heating_control_save')
-        save_item.post_update(heating_control.get_string('CLOSED'))
+            heating_control = heating_item.from_scripting('control_item')
+            save_item = window_item.from_scripting('heating_control_save')
+            save_item.post_update(heating_control.get_string('CLOSED'))
 
-        HeatingUtils.manual(heating_item, 'CLOSED',
-                            PseudoEvent(heating_control.name))
+            HeatingUtils.manual(heating_item, 'CLOSED',
+                                PseudoEvent(heating_control.name))
 
         remindertime = self.get_remindertime(window_item)
 
@@ -99,25 +100,28 @@ class WindowEvent(object):
     def closed(self, window_item):
         self.timers.cancel(window_item.name)
 
-        heating = Item('heating').get_onoff()
-        if heating:
-            heating_item = window_item.from_scripting('heating_item')
-            auto_item = heating_item.from_scripting('auto_item')
+        if window_item.is_scripting('heating_item'):
+            heating = Item('heating').get_onoff()
+            if heating:
+                heating_item = window_item.from_scripting('heating_item')
+                auto_item = heating_item.from_scripting('auto_item')
 
-            reactivation_item = auto_item.from_scripting('reactivation_item')
-            reactivation_period = reactivation_item.get_int(0, True)
+                reactivation_item = auto_item.from_scripting(
+                    'reactivation_item')
+                reactivation_period = reactivation_item.get_int(0, True)
 
-            if reactivation_period > 0:
-                auto_item.send_command(ON)
-            else:
-                display_item = auto_item.from_scripting('display_item')
-                display_item.post_update(OFF)
+                if reactivation_period > 0:
+                    auto_item.send_command(ON)
+                else:
+                    display_item = auto_item.from_scripting('display_item')
+                    display_item.post_update(OFF)
 
-                auto_item.post_update(ON)
+                    auto_item.post_update(ON)
 
-                save_item = window_item.from_scripting('heating_control_save')
-                HeatingUtils.command(
-                    heating_item, save_item.get_string('CLOSED'))
+                    save_item = window_item.from_scripting(
+                        'heating_control_save')
+                    HeatingUtils.command(
+                        heating_item, save_item.get_string('CLOSED'))
 
     def abscence(self):
         for window_item in Group('windows'):

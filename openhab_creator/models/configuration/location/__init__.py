@@ -24,7 +24,7 @@ class Location(BaseObject):
 
         self.is_timecontrolled: bool = False
 
-        self.items = {}
+        self.items: Dict[str, List] = {}
 
         self._init_equipment(
             configuration, [] if equipment is None else equipment)
@@ -40,9 +40,17 @@ class Location(BaseObject):
                                           **equipment_definition)
             self.is_timecontrolled = self.is_timecontrolled or equipment.is_timecontrolled
 
-            self.items = {**self.items, **equipment.items_for_location}
+            self.collect_location_items(equipment)
 
             self.equipment.append(equipment)
+
+    def collect_location_items(self, equipment):
+        for item_key, item_name in equipment.items_for_location.items():
+            if item_key in self.items:
+                if item_name not in self.items[item_key]:
+                    self.items[item_key].append(item_name)
+            else:
+                self.items[item_key] = [item_name]
 
     @property
     @abstractmethod
@@ -74,6 +82,10 @@ class Location(BaseObject):
             tags = {**tags, **self.parent.location_tags}
 
         return tags
+
+    @property
+    def location_items(self) -> Dict[str, str]:
+        return dict((key, ','.join(items)) for key, items in self.items.items())
 
     @property
     def autoactive_id(self) -> str:
@@ -133,3 +145,14 @@ class LocationType():
     def __call__(self, location_cls: Type[Location]):
         LocationFactory.register(location_cls)
         return location_cls
+
+
+@LocationType()
+class Christmas(Location):
+    @property
+    def area(self) -> str:
+        return "Christmas"
+
+    @property
+    def typed(self) -> str:
+        return "Location"

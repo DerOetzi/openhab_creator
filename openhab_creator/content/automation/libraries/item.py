@@ -24,6 +24,10 @@ class Item(object):
         metadata = get_metadata(self.name, 'scripting')
         self.metadata = {} if metadata is None else metadata.configuration
 
+        self.location = None
+        if self.is_scripting('location_item'):
+            self.location = self.from_scripting('location_item')
+
     @classmethod
     def from_event(cls, event):
         return cls(event.itemName, event)

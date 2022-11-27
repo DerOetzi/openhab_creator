@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openHAB Creator\n"
-"POT-Creation-Date: 2022-11-04 19:24+0100\n"
-"PO-Revision-Date: 2022-11-04 19:41+0100\n"
+"POT-Creation-Date: 2022-11-22 12:34+0100\n"
+"PO-Revision-Date: 2022-11-22 12:35+0100\n"
 "Last-Translator: Johannes Ott <info@johannes-ott.net>\n"
 "Language-Team: Johannes Ott\n"
 "Language: de\n"
@@ -46,9 +46,9 @@ msgstr "Boost"
 #: output/sitemap/creators/lightbulbsitemapcreator.py:198
 #: output/sitemap/creators/lightbulbsitemapcreator.py:235
 #: output/sitemap/creators/scenesitemapcreator.py:105
-#: output/sitemap/creators/temperaturesitemapcreator.py:166
-#: output/sitemap/creators/temperaturesitemapcreator.py:169
-#: output/sitemap/creators/temperaturesitemapcreator.py:199
+#: output/sitemap/creators/temperaturesitemapcreator.py:167
+#: output/sitemap/creators/temperaturesitemapcreator.py:203
+#: output/sitemap/creators/temperaturesitemapcreator.py:206
 msgid "Off"
 msgstr "Aus"
 
@@ -56,21 +56,21 @@ msgstr "Aus"
 #: output/sitemap/creators/lightbulbsitemapcreator.py:117
 #: output/sitemap/creators/lightbulbsitemapcreator.py:208
 #: output/sitemap/creators/lightbulbsitemapcreator.py:235
-#: output/sitemap/creators/temperaturesitemapcreator.py:166
+#: output/sitemap/creators/temperaturesitemapcreator.py:203
 msgid "On"
 msgstr "An"
 
 #: models/common/maptransformation.py:21 models/common/maptransformation.py:25
 #: models/common/maptransformation.py:36
 #: output/sitemap/creators/scenesitemapcreator.py:58
-#: output/sitemap/creators/temperaturesitemapcreator.py:160
+#: output/sitemap/creators/temperaturesitemapcreator.py:196
 msgid "Inactive"
 msgstr "Inaktiv"
 
 #: models/common/maptransformation.py:21 models/common/maptransformation.py:28
 #: models/common/maptransformation.py:36
 #: output/sitemap/creators/scenesitemapcreator.py:59
-#: output/sitemap/creators/temperaturesitemapcreator.py:160
+#: output/sitemap/creators/temperaturesitemapcreator.py:196
 msgid "Active"
 msgstr "Aktiv"
 
@@ -527,8 +527,8 @@ msgid "Reminder"
 msgstr "Erinnerung"
 
 #: models/configuration/equipment/types/sensor.py:65
-#: output/sitemap/creators/temperaturesitemapcreator.py:42
-#: output/sitemap/creators/temperaturesitemapcreator.py:57
+#: output/sitemap/creators/temperaturesitemapcreator.py:44
+#: output/sitemap/creators/temperaturesitemapcreator.py:59
 #: output/sitemap/creators/weatherstationsitemapcreator.py:93
 #: output/sitemap/creators/weatherstationsitemapcreator.py:116
 msgid "Temperatures"
@@ -834,7 +834,7 @@ msgid "Warm water pump control items"
 msgstr "Warmwasserpumpe Items"
 
 #: output/items/creators/heatingitemscreator.py:73
-#: output/sitemap/creators/temperaturesitemapcreator.py:149
+#: output/sitemap/creators/temperaturesitemapcreator.py:134
 msgid "Heatings"
 msgstr "Heizungen"
 
@@ -1021,14 +1021,14 @@ msgstr "Zurücksetzen"
 msgid "Motiondetector {lightbulb}"
 msgstr "Bewegungsmelder {lightbulb}"
 
-#: output/items/creators/locationitemscreator.py:70
+#: output/items/creators/locationitemscreator.py:74
 #: output/sitemap/creators/lightbulbsitemapcreator.py:36
 #: output/sitemap/creators/lightbulbsitemapcreator.py:59
 #: output/sitemap/creators/lightbulbsitemapcreator.py:110
 #: output/sitemap/creators/scenesitemapcreator.py:40
-#: output/sitemap/creators/temperaturesitemapcreator.py:91
-#: output/sitemap/creators/temperaturesitemapcreator.py:169
-#: output/sitemap/creators/temperaturesitemapcreator.py:199
+#: output/sitemap/creators/temperaturesitemapcreator.py:93
+#: output/sitemap/creators/temperaturesitemapcreator.py:167
+#: output/sitemap/creators/temperaturesitemapcreator.py:206
 msgid "Automation"
 msgstr "Automatik"
 
@@ -1145,33 +1145,33 @@ msgstr "Szene"
 msgid "Guest stayed"
 msgstr "Gast zu Besuch"
 
-#: output/items/creators/sensoritemscreator.py:188
-#, python-brace-format
-msgid "Trend {label}"
-msgstr "Trend {label}"
-
-#: output/items/creators/sensoritemscreator.py:204
-#, python-brace-format
-msgid "7 days average {label}"
-msgstr "7-Tage Durchschnitt {label}"
-
-#: output/items/creators/sensoritemscreator.py:232
+#: output/items/creators/sensoritemscreator.py:183
 msgid "Last watering reminder"
 msgstr "Letzte Gießerinnerung"
 
-#: output/items/creators/sensoritemscreator.py:238
+#: output/items/creators/sensoritemscreator.py:189
 #, python-brace-format
 msgid "The plant {plant} needs to be watered!"
 msgstr "Die Pflanze {plant} braucht Wasser!"
 
-#: output/items/creators/sensoritemscreator.py:244
+#: output/items/creators/sensoritemscreator.py:195
 msgid "Last watered"
 msgstr "Gegossen am"
 
-#: output/items/creators/sensoritemscreator.py:251
+#: output/items/creators/sensoritemscreator.py:202
 #, python-brace-format
 msgid "The plant {plant} says thank you for watering!"
 msgstr "Die Pflanze {plant} sagt Danke, dass du mich gegossen hast!"
+
+#: output/items/creators/sensoritemscreator.py:241
+#, python-brace-format
+msgid "Trend {label}"
+msgstr "Trend {label}"
+
+#: output/items/creators/sensoritemscreator.py:257
+#, python-brace-format
+msgid "7 days average {label}"
+msgstr "7-Tage Durchschnitt {label}"
 
 #: output/items/creators/wallswitchitemscreator.py:22
 msgid "Wallswitch assignment items"
@@ -1387,12 +1387,12 @@ msgid "Unblock"
 msgstr "Entsperren"
 
 #: output/sitemap/creators/lightbulbsitemapcreator.py:107
-#: output/sitemap/creators/temperaturesitemapcreator.py:192
+#: output/sitemap/creators/temperaturesitemapcreator.py:160
 msgid "Display"
 msgstr "Anzeigen"
 
 #: output/sitemap/creators/lightbulbsitemapcreator.py:107
-#: output/sitemap/creators/temperaturesitemapcreator.py:192
+#: output/sitemap/creators/temperaturesitemapcreator.py:160
 msgid "Hide"
 msgstr "Ausblenden"
 
@@ -1502,10 +1502,9 @@ msgid "Trend"
 msgstr "Trend"
 
 #: output/sitemap/creators/weatherstationsitemapcreator.py:226
-#, fuzzy, python-brace-format
-#| msgid "Self-protection time (below 3 hours) - {name}"
+#, python-brace-format
 msgid "Self-protection time (below 3 hours) - {name}"
-msgstr "Eigenschutzzeiten (weniger als 3 Stunden)"
+msgstr "Eigenschutzzeiten (weniger als 3 Stunden) - {name}"
 
 #: output/sitemap/creators/weatherstationsitemapcreator.py:280
 msgid "Sun rise"
@@ -1522,6 +1521,11 @@ msgstr "Mondaufgang"
 #: output/sitemap/creators/weatherstationsitemapcreator.py:315
 msgid "Moon set"
 msgstr "Monduntergang"
+
+#: output/sitemap/creators/windowsitemapcreator.py:54
+#, python-brace-format
+msgid "{name} reminder time"
+msgstr "{name} Erinnerungszeit"
 
 #~ msgid "Window sensors"
 #~ msgstr "Fenstersensoren"

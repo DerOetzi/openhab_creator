@@ -55,7 +55,7 @@ class IndoorSensorsSitemapCreator(BaseSitemapCreator):
 
                 if sensortype.colors.has_indoor:
                     sensor_text.valuecolor(*sensortype.colors.indoor_colors(
-                        f'{sensortype}{sensor.item_ids.sensor}'))
+                        f'{sensortype}{sensor.item_ids.merged_sensor}'))
 
                 sensor_text.append_to(frame)
 

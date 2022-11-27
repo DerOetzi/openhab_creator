@@ -15,10 +15,12 @@ from openhab_creator.output.sitemap.basesitemapcreator import \
 if TYPE_CHECKING:
     from openhab_creator.models.configuration.equipment.types.sensor import \
         Sensor
+    from openhab_creator.models.configuration.equipment.types.window import \
+        Window
     from openhab_creator.models.configuration.location import Location
 
 
-@SitemapCreatorPipeline(mainpage=4, statuspage=6, configpage=5)
+@SitemapCreatorPipeline(mainpage=4, configpage=5)
 class TemperatureSitemapCreator(BaseSitemapCreator):
     def __init__(self):
         self.toplevel_locations = {}
@@ -118,31 +120,14 @@ class TemperatureSitemapCreator(BaseSitemapCreator):
         ]
 
     def build_statuspage(self, statuspage: Page, configuration: Configuration) -> None:
-        has_window, windows = configuration.equipment.has('window')
-
-        if has_window:
-            page = Page('windows')\
-                .append_to(statuspage)
-
-            for window in windows:
-                toplevel_location = window.location.toplevel
-                frame = page.frame(
-                    toplevel_location.identifier, toplevel_location.name)
-
-                Text(window.item_ids.windowopen)\
-                    .label(window.name)\
-                    .map(MapTransformation.WINDOWOPEN)\
-                    .append_to(frame)
+        """No statuspage for scene items"""
 
     def build_configpage(self, configpage: Page, configuration: Configuration) -> None:
         has_heating, heatings = configuration.equipment.has('heating')
         has_warmwaterpump, warmwaterpumps = configuration.equipment.has(
             'warmwaterpump')
 
-        has_windows, windows = configuration.equipment.has('window')
-        windows_location = {}
-        if has_windows:
-            windows_location = dict((x.location, x) for x in windows)
+        windows_location = self.get_windows(configuration)
 
         if has_heating or has_warmwaterpump:
             page = Page('heating')\
@@ -151,26 +136,9 @@ class TemperatureSitemapCreator(BaseSitemapCreator):
                 .valuecolor(('==OFF', Color.RED), ('==ON', Color.GREEN))\
                 .append_to(configpage)
 
-            if configuration.general.has_learninghouse('heating'):
-                Text('heating')\
-                    .valuecolor(('==OFF', Color.RED), ('==ON', Color.GREEN))\
-                    .append_to(page)
-            else:
-                Switch('heating', [
-                       ('OFF', _('Inactive')), ('ON', _('Active'))])\
-                    .labelcolor(('==OFF', Color.RED), ('==ON', Color.GREEN))\
-                    .append_to(page)
+            self.build_heating_main(configuration, page)
 
-            for pump in warmwaterpumps:
-                frame = page.frame(pump.identifier, pump.blankname)
-                Switch(pump.item_ids.onoff, [('OFF', _('Off')), ('ON', _('On'))])\
-                    .append_to(frame)
-
-                Switch(pump.item_ids.auto, [('OFF', _('Off')), ('ON', _('Automation'))])\
-                    .append_to(frame)
-
-                Setpoint(pump.item_ids.autoreactivation, 0, 240, 10)\
-                    .append_to(frame)
+            self.build_pumps(warmwaterpumps, page)
 
             for heating in heatings:
                 toplevel_location = heating.location.toplevel
@@ -208,8 +176,46 @@ class TemperatureSitemapCreator(BaseSitemapCreator):
                 Setpoint(heating.item_ids.comforttemperature, 20, 24, 0.5)\
                     .append_to(subpage)
 
-                if heating.location in windows_location:
-                    window = windows_location[heating.location]
+                self.build_window_remindertime(
+                    heating, windows_location, subpage)
 
-                    Setpoint(window.item_ids.remindertime, 0, 15)\
-                        .append_to(subpage)
+    def get_windows(self, configuration: Configuration) -> Dict[Location, Window]:
+        has_windows, windows = configuration.equipment.has('window')
+        windows_location = {}
+        if has_windows:
+            windows_location = dict((x.location, x) for x in windows)
+        return windows_location
+
+    def build_heating_main(self, configuration: Configuration, page: Page) -> None:
+        if configuration.general.has_learninghouse('heating'):
+            Text('heating')\
+                .valuecolor(('==OFF', Color.RED), ('==ON', Color.GREEN))\
+                .append_to(page)
+        else:
+            Switch('heating', [
+                ('OFF', _('Inactive')), ('ON', _('Active'))])\
+                .labelcolor(('==OFF', Color.RED), ('==ON', Color.GREEN))\
+                .append_to(page)
+
+    def build_pumps(self, warmwaterpumps, page: Page) -> None:
+        for pump in warmwaterpumps:
+            frame = page.frame(pump.identifier, pump.blankname)
+            Switch(pump.item_ids.onoff, [('OFF', _('Off')), ('ON', _('On'))])\
+                .append_to(frame)
+
+            Switch(pump.item_ids.auto, [('OFF', _('Off')), ('ON', _('Automation'))])\
+                .append_to(frame)
+
+            Setpoint(pump.item_ids.autoreactivation, 0, 240, 10)\
+                .append_to(frame)
+
+    def build_window_remindertime(self,
+                                  heating: Heating,
+                                  windows_location: Dict[Location, Window],
+                                  subpage: Page) -> None:
+        if heating.location in windows_location:
+            window = windows_location[heating.location]
+
+            if window.remindertime:
+                Setpoint(window.item_ids.remindertime, 0, 15)\
+                    .append_to(subpage)

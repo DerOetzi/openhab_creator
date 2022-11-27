@@ -207,6 +207,7 @@ class LocationRegistry():
 
     def read_configuration(self) -> None:
         self._init_floors(self.configuration.configdir)
+        self._init_christmas(self.configuration.configdir)
         self._init_buildings(self.configuration.configdir)
         self._init_outdoors(self.configuration.configdir)
 
@@ -227,6 +228,12 @@ class LocationRegistry():
             configdir, 'locations/indoor/buildings.json')
 
         self._init_locations('buildings', buildings)
+
+    def _init_christmas(self, configdir: str) -> None:
+        christmas = Configuration.read_json_from_file(
+            configdir, 'locations/christmas.json')
+
+        self._init_locations('christmas', christmas)
 
     def _init_outdoors(self, configdir: str) -> None:
         outdoors = Configuration.read_json_from_file(
@@ -253,6 +260,10 @@ class LocationRegistry():
     @property
     def buildings(self) -> List[Location]:
         return self.registry['buildings']
+
+    @property
+    def christmas(self) -> List[Location]:
+        return self.registry['christmas']
 
     @property
     def outdoors(self) -> List[Location]:

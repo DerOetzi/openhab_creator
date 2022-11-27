@@ -22,3 +22,5 @@ class IndoorType(LocationType):
 @IndoorType()
 class Corridor(Indoor):
     pass
+
+

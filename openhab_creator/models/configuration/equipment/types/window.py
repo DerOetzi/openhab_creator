@@ -58,3 +58,9 @@ class Window(Sensor):
     @property
     def sensor_is_subequipment(self) -> bool:
         return True
+
+    @property
+    def items_for_location(self) -> Dict[str, str]:
+        items = super().items_for_location
+        items['window_item'] = self.item_ids.window
+        return items
