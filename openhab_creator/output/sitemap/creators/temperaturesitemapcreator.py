@@ -170,6 +170,10 @@ class TemperatureSitemapCreator(BaseSitemapCreator):
                 Setpoint(heating.item_ids.autoreactivation, 0, 240, 10)\
                     .append_to(subpage)
 
+                Switch(heating.item_ids.autoabsence, [
+                    ('OFF', _('Off')), ('ON', _('On'))])\
+                    .append_to(subpage)
+
                 Setpoint(heating.item_ids.ecotemperature, 16, 20, 0.5)\
                     .append_to(subpage)
 

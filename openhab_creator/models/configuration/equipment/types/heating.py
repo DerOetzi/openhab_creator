@@ -46,6 +46,10 @@ class HeatingItemIdentifiers(SensorItemIdentifiers):
         return self._identifier('autoDisplayHeating')
 
     @property
+    def autoabsence(self) -> str:
+        return self._identifier('autoAbsenceHeating')
+
+    @property
     def autoreactivation(self) -> str:
         return self._identifier('autoReactivationHeating')
 

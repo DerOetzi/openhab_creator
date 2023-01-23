@@ -12,9 +12,14 @@ class HeatingUtils(object):
     log = logging.getLogger('{}.HeatingUtils'.format(LOG_PREFIX))
 
     @classmethod
-    def automation(cls, heating_item, is_active, is_heating):
+    def automation(cls, heating_item, is_location_active, is_heating, is_presences):
         if is_heating:
-            if is_active:
+            presences_item = heating_item.from_scripting('presences_item')
+
+            is_precenses_or_always_configuration = (
+                is_presences or presences_item.get_onoff(True))
+
+            if is_location_active and is_precenses_or_always_configuration:
                 cls.command(heating_item, 'COMFORT')
             else:
                 cls.command(heating_item, 'ECO')

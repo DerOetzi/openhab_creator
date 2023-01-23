@@ -52,6 +52,11 @@ class HeatingItemsCreator(BaseItemsCreator):
             .auto()\
             .append_to(self)
 
+        Group('AutoAbsenceHeating')\
+            .label(_('Absence scene controlled configuration items'))\
+            .auto()\
+            .append_to(self)
+
         Group('WarmWaterPumpControl')\
             .label(_('Warm water pump control items'))\
             .config()\
@@ -120,6 +125,7 @@ class HeatingItemsCreator(BaseItemsCreator):
             .scripting({
                 'control_item': heating.item_ids.heatcontrol,
                 'auto_item': heating.item_ids.auto,
+                'presences_item': heating.item_ids.autoabsence,
                 'comfort_item': heating.item_ids.comforttemperature,
                 'eco_item': heating.item_ids.ecotemperature
             })\
@@ -172,6 +178,14 @@ class HeatingItemsCreator(BaseItemsCreator):
             .icon('reactivation')\
             .equipment(heating)\
             .groups('AutoReactivationHeating')\
+            .semantic(PointType.SETPOINT)\
+            .append_to(self)
+
+        Switch(heating.item_ids.autoabsence)\
+            .label(_('Even in absence'))\
+            .icon('absence')\
+            .equipment(heating)\
+            .groups('AutoAbsenceHeating')\
             .semantic(PointType.SETPOINT)\
             .append_to(self)
 
