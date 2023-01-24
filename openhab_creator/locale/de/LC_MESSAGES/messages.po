@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openHAB Creator\n"
-"POT-Creation-Date: 2022-11-22 12:34+0100\n"
-"PO-Revision-Date: 2022-11-22 12:35+0100\n"
+"POT-Creation-Date: 2023-01-24 20:46+0100\n"
+"PO-Revision-Date: 2023-01-24 20:46+0100\n"
 "Last-Translator: Johannes Ott <info@johannes-ott.net>\n"
 "Language-Team: Johannes Ott\n"
 "Language: de\n"
@@ -45,10 +45,12 @@ msgstr "Boost"
 #: output/sitemap/creators/lightbulbsitemapcreator.py:117
 #: output/sitemap/creators/lightbulbsitemapcreator.py:198
 #: output/sitemap/creators/lightbulbsitemapcreator.py:235
-#: output/sitemap/creators/scenesitemapcreator.py:105
+#: output/sitemap/creators/scenesitemapcreator.py:110
 #: output/sitemap/creators/temperaturesitemapcreator.py:167
-#: output/sitemap/creators/temperaturesitemapcreator.py:203
-#: output/sitemap/creators/temperaturesitemapcreator.py:206
+#: output/sitemap/creators/temperaturesitemapcreator.py:174
+#: output/sitemap/creators/temperaturesitemapcreator.py:207
+#: output/sitemap/creators/temperaturesitemapcreator.py:210
+#: output/sitemap/creators/temperaturesitemapcreator.py:217
 msgid "Off"
 msgstr "Aus"
 
@@ -56,21 +58,25 @@ msgstr "Aus"
 #: output/sitemap/creators/lightbulbsitemapcreator.py:117
 #: output/sitemap/creators/lightbulbsitemapcreator.py:208
 #: output/sitemap/creators/lightbulbsitemapcreator.py:235
-#: output/sitemap/creators/temperaturesitemapcreator.py:203
+#: output/sitemap/creators/temperaturesitemapcreator.py:174
+#: output/sitemap/creators/temperaturesitemapcreator.py:207
+#: output/sitemap/creators/temperaturesitemapcreator.py:217
 msgid "On"
 msgstr "An"
 
 #: models/common/maptransformation.py:21 models/common/maptransformation.py:25
 #: models/common/maptransformation.py:36
-#: output/sitemap/creators/scenesitemapcreator.py:58
-#: output/sitemap/creators/temperaturesitemapcreator.py:196
+#: output/sitemap/creators/scenesitemapcreator.py:57
+#: output/sitemap/creators/scenesitemapcreator.py:63
+#: output/sitemap/creators/temperaturesitemapcreator.py:200
 msgid "Inactive"
 msgstr "Inaktiv"
 
 #: models/common/maptransformation.py:21 models/common/maptransformation.py:28
 #: models/common/maptransformation.py:36
-#: output/sitemap/creators/scenesitemapcreator.py:59
-#: output/sitemap/creators/temperaturesitemapcreator.py:196
+#: output/sitemap/creators/scenesitemapcreator.py:58
+#: output/sitemap/creators/scenesitemapcreator.py:64
+#: output/sitemap/creators/temperaturesitemapcreator.py:200
 msgid "Active"
 msgstr "Aktiv"
 
@@ -204,10 +210,6 @@ msgid "Evening"
 msgstr "Abends"
 
 #: models/common/scene.py:17
-msgid "Absence"
-msgstr "Abwesenheit"
-
-#: models/common/scene.py:18
 msgid "Party"
 msgstr "Party"
 
@@ -445,7 +447,7 @@ msgstr "Super"
 msgid "Gas station"
 msgstr "Tankstelle"
 
-#: models/configuration/equipment/types/heating.py:118
+#: models/configuration/equipment/types/heating.py:122
 msgid "Heating"
 msgstr "Heizung"
 
@@ -587,7 +589,7 @@ msgstr "Schalter"
 msgid "Button {count} ({name})"
 msgstr "Taste {count} ({name})"
 
-#: models/configuration/equipment/types/warmwaterpump.py:59
+#: models/configuration/equipment/types/warmwaterpump.py:63
 msgid "Pump"
 msgstr "Pumpe"
 
@@ -810,7 +812,7 @@ msgstr "Sensoren für die KI-Berechnung"
 
 #: output/items/creators/generalitemscreator.py:35
 #: output/items/creators/heatingitemscreator.py:46
-#: output/items/creators/heatingitemscreator.py:61
+#: output/items/creators/heatingitemscreator.py:66
 #: output/items/creators/lightbulbitemscreator.py:62
 msgid "Scene controlled configuration items"
 msgstr "Konfigurationsitems Szenensteuerung"
@@ -824,78 +826,90 @@ msgid "Heat control items"
 msgstr "Heizungssteuerung Items"
 
 #: output/items/creators/heatingitemscreator.py:51
-#: output/items/creators/heatingitemscreator.py:66
+#: output/items/creators/heatingitemscreator.py:71
 #: output/items/creators/lightbulbitemscreator.py:67
 msgid "Reactivation scene controlled configuration items"
 msgstr "Konfigurationsitems Reaktivierung Szenensteuerung"
 
 #: output/items/creators/heatingitemscreator.py:56
+#: output/items/creators/heatingitemscreator.py:76
+#: output/items/creators/lightbulbitemscreator.py:72
+msgid "Absence scene controlled configuration items"
+msgstr "Konfigurationsitems Szenensteuerung Abwesenheit"
+
+#: output/items/creators/heatingitemscreator.py:61
 msgid "Warm water pump control items"
 msgstr "Warmwasserpumpe Items"
 
-#: output/items/creators/heatingitemscreator.py:73
+#: output/items/creators/heatingitemscreator.py:83
 #: output/sitemap/creators/temperaturesitemapcreator.py:134
 msgid "Heatings"
 msgstr "Heizungen"
 
-#: output/items/creators/heatingitemscreator.py:81
+#: output/items/creators/heatingitemscreator.py:91
 #, python-brace-format
 msgid "Warm water pump {blankname}"
 msgstr "Warmwasserpumpe {blankname}"
 
-#: output/items/creators/heatingitemscreator.py:92
-#: output/items/creators/heatingitemscreator.py:148
+#: output/items/creators/heatingitemscreator.py:103
+#: output/items/creators/heatingitemscreator.py:169
 #: output/items/creators/lightbulbitemscreator.py:143
 msgid "Scene controlled"
 msgstr "Szenensteuerung"
 
-#: output/items/creators/heatingitemscreator.py:106
-#: output/items/creators/heatingitemscreator.py:170
+#: output/items/creators/heatingitemscreator.py:118
+#: output/items/creators/heatingitemscreator.py:191
 #: output/items/creators/lightbulbitemscreator.py:165
 msgid "Reactivate scene controlled"
 msgstr "Reaktivierung Szenensteuerung"
 
-#: output/items/creators/heatingitemscreator.py:116
+#: output/items/creators/heatingitemscreator.py:127
+#: output/items/creators/heatingitemscreator.py:200
+#: output/items/creators/lightbulbitemscreator.py:182
+msgid "Even in absence"
+msgstr "Auch bei Abwesenheit"
+
+#: output/items/creators/heatingitemscreator.py:136
 #, python-brace-format
 msgid "Heating {blankname}"
 msgstr "Heizung {blankname}"
 
-#: output/items/creators/heatingitemscreator.py:129
+#: output/items/creators/heatingitemscreator.py:150
 msgid "Heatcontrol"
 msgstr "Heizungssteuerung"
 
-#: output/items/creators/heatingitemscreator.py:140
+#: output/items/creators/heatingitemscreator.py:161
 msgid "Hide on temperature page"
 msgstr "Auf Temperaturseite ausblenden"
 
-#: output/items/creators/heatingitemscreator.py:163
+#: output/items/creators/heatingitemscreator.py:184
 #: output/items/creators/lightbulbitemscreator.py:158
 msgid "Display scene controlled"
 msgstr "Szenensteuerung anzeigen"
 
-#: output/items/creators/heatingitemscreator.py:179
+#: output/items/creators/heatingitemscreator.py:208
 msgid "ECO temperature"
 msgstr "Absenktemperatur"
 
-#: output/items/creators/heatingitemscreator.py:192
+#: output/items/creators/heatingitemscreator.py:221
 msgid "Comfort temperature"
 msgstr "Komforttemperatur"
 
-#: output/items/creators/heatingitemscreator.py:210
-#: output/items/creators/heatingitemscreator.py:252
+#: output/items/creators/heatingitemscreator.py:239
+#: output/items/creators/heatingitemscreator.py:281
 msgid "Target temperature"
 msgstr "Solltemperatur"
 
-#: output/items/creators/heatingitemscreator.py:234
+#: output/items/creators/heatingitemscreator.py:263
 #, python-brace-format
 msgid "Heating {name}"
 msgstr "Heizung {name}"
 
-#: output/items/creators/heatingitemscreator.py:270
+#: output/items/creators/heatingitemscreator.py:299
 msgid "Heat mode"
 msgstr "Heizmodus {name}"
 
-#: output/items/creators/heatingitemscreator.py:280
+#: output/items/creators/heatingitemscreator.py:309
 msgid "Valve position"
 msgstr "Ventilstellung"
 
@@ -924,10 +938,6 @@ msgstr "Lichtsteuerungitems"
 #: output/items/creators/lightbulbitemscreator.py:57
 msgid "Nightmode configuration items"
 msgstr "Konfigurationsitems Nachtmodus"
-
-#: output/items/creators/lightbulbitemscreator.py:72
-msgid "Absence scene controlled configuration items"
-msgstr "Konfigurationsitems Szenensteuerung Abwesenheit"
 
 #: output/items/creators/lightbulbitemscreator.py:77
 msgid "Darkness scene controlled configuration items"
@@ -961,10 +971,6 @@ msgstr "Auf Beleuchtungsseite ausblenden"
 #: output/items/creators/lightbulbitemscreator.py:174
 msgid "In the dark"
 msgstr "Bei Dunkelheit"
-
-#: output/items/creators/lightbulbitemscreator.py:182
-msgid "Even in absence"
-msgstr "Auch bei Abwesenheit"
 
 #: output/items/creators/lightbulbitemscreator.py:191
 msgid "Motiondetector period"
@@ -1021,14 +1027,14 @@ msgstr "Zurücksetzen"
 msgid "Motiondetector {lightbulb}"
 msgstr "Bewegungsmelder {lightbulb}"
 
-#: output/items/creators/locationitemscreator.py:74
+#: output/items/creators/locationitemscreator.py:85
 #: output/sitemap/creators/lightbulbsitemapcreator.py:36
 #: output/sitemap/creators/lightbulbsitemapcreator.py:59
 #: output/sitemap/creators/lightbulbsitemapcreator.py:110
 #: output/sitemap/creators/scenesitemapcreator.py:40
 #: output/sitemap/creators/temperaturesitemapcreator.py:93
 #: output/sitemap/creators/temperaturesitemapcreator.py:167
-#: output/sitemap/creators/temperaturesitemapcreator.py:206
+#: output/sitemap/creators/temperaturesitemapcreator.py:210
 msgid "Automation"
 msgstr "Automatik"
 
@@ -1087,51 +1093,55 @@ msgstr "Heimweg"
 msgid "Permanent presence"
 msgstr "Daueranwesenheit"
 
-#: output/items/creators/presenceitemscreator.py:50
+#: output/items/creators/presenceitemscreator.py:44
+msgid "Permanent absence"
+msgstr "Dauerabwesenheit"
+
+#: output/items/creators/presenceitemscreator.py:56
 msgid "Presences"
 msgstr "Anwesenheiten"
 
-#: output/items/creators/presenceitemscreator.py:57
+#: output/items/creators/presenceitemscreator.py:63
 msgid "Distances"
 msgstr "Entfernungen"
 
-#: output/items/creators/presenceitemscreator.py:99
+#: output/items/creators/presenceitemscreator.py:105
 #, python-brace-format
 msgid "Presence {person}"
 msgstr "Anwesenheit {person}"
 
-#: output/items/creators/presenceitemscreator.py:108
+#: output/items/creators/presenceitemscreator.py:114
 #, python-brace-format
 msgid "Smartphone {name}"
 msgstr "Smartphone  {name}"
 
-#: output/items/creators/presenceitemscreator.py:117
+#: output/items/creators/presenceitemscreator.py:123
 msgid "Geofence"
 msgstr "Geofence"
 
-#: output/items/creators/presenceitemscreator.py:127
+#: output/items/creators/presenceitemscreator.py:133
 msgid "Distance"
 msgstr "Entfernung"
 
-#: output/items/creators/presenceitemscreator.py:144
+#: output/items/creators/presenceitemscreator.py:150
 msgid "Accuracy"
 msgstr "Genauigkeit"
 
-#: output/items/creators/presenceitemscreator.py:155
+#: output/items/creators/presenceitemscreator.py:161
 msgid "Position"
 msgstr "Position"
 
-#: output/items/creators/presenceitemscreator.py:164
+#: output/items/creators/presenceitemscreator.py:170
 msgid "Last updated"
 msgstr "Zuletzt aktualisiert"
 
-#: output/items/creators/presenceitemscreator.py:205
+#: output/items/creators/presenceitemscreator.py:211
 msgid "Begin"
 msgstr "Beginn"
 
 #: output/items/creators/sceneitemscreator.py:23
-#: output/sitemap/creators/scenesitemapcreator.py:74
-#: output/sitemap/creators/scenesitemapcreator.py:83
+#: output/sitemap/creators/scenesitemapcreator.py:79
+#: output/sitemap/creators/scenesitemapcreator.py:88
 msgid "Time controlled"
 msgstr "Zeitsteuerung"
 
@@ -1141,7 +1151,7 @@ msgid "Scene"
 msgstr "Szene"
 
 #: output/items/creators/sceneitemscreator.py:36
-#: output/sitemap/creators/scenesitemapcreator.py:109
+#: output/sitemap/creators/scenesitemapcreator.py:114
 msgid "Guest stayed"
 msgstr "Gast zu Besuch"
 
@@ -1294,6 +1304,7 @@ msgid "Cleaning countdown"
 msgstr "Reinigungscountdown"
 
 #: output/items/creators/windowitemscreator.py:40
+#: output/sitemap/creators/windowsitemapcreator.py:44
 msgid "Windows"
 msgstr "Fenster"
 
@@ -1397,7 +1408,7 @@ msgid "Hide"
 msgstr "Ausblenden"
 
 #: output/sitemap/creators/lightbulbsitemapcreator.py:121
-#: output/sitemap/creators/scenesitemapcreator.py:106
+#: output/sitemap/creators/scenesitemapcreator.py:111
 msgid "Always"
 msgstr "Immer"
 
@@ -1470,28 +1481,28 @@ msgstr "Essenszenen"
 msgid "Special scenes"
 msgstr "Spezialszenen"
 
-#: output/sitemap/creators/scenesitemapcreator.py:64
+#: output/sitemap/creators/scenesitemapcreator.py:69
 msgid "No guest"
 msgstr "Kein Gast"
 
-#: output/sitemap/creators/scenesitemapcreator.py:65
+#: output/sitemap/creators/scenesitemapcreator.py:70
 msgid "Guest"
 msgstr "Gast"
 
-#: output/sitemap/creators/scenesitemapcreator.py:85
-#: output/sitemap/creators/scenesitemapcreator.py:107
+#: output/sitemap/creators/scenesitemapcreator.py:90
+#: output/sitemap/creators/scenesitemapcreator.py:112
 msgid "Working days"
 msgstr "Werktage"
 
-#: output/sitemap/creators/scenesitemapcreator.py:88
+#: output/sitemap/creators/scenesitemapcreator.py:93
 msgid "Weekend and holidays"
 msgstr "Wochenende und freie Tage"
 
-#: output/sitemap/creators/scenesitemapcreator.py:108
+#: output/sitemap/creators/scenesitemapcreator.py:113
 msgid "Weekend"
 msgstr "Wochenende"
 
-#: output/sitemap/creators/scenesitemapcreator.py:115
+#: output/sitemap/creators/scenesitemapcreator.py:120
 #, python-brace-format
 msgid "Homeoffice {person}"
 msgstr "Homeoffice {person}"
@@ -1522,10 +1533,13 @@ msgstr "Mondaufgang"
 msgid "Moon set"
 msgstr "Monduntergang"
 
-#: output/sitemap/creators/windowsitemapcreator.py:54
+#: output/sitemap/creators/windowsitemapcreator.py:55
 #, python-brace-format
 msgid "{name} reminder time"
 msgstr "{name} Erinnerungszeit"
+
+#~ msgid "Absence"
+#~ msgstr "Abwesenheit"
 
 #~ msgid "Window sensors"
 #~ msgstr "Fenstersensoren"

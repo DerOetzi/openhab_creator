@@ -62,11 +62,10 @@ class SpecialSceneItem(object):
 
 class SpecialScene(object):
     PARTY = SpecialSceneItem('Party')
-    ABSENCE = SpecialSceneItem('Absence')
 
     @classmethod
     def scenes(cls):
-        return [cls.ABSENCE, cls.PARTY]
+        return [cls.PARTY]
 
     @classmethod
     def from_string(cls, identifier):
@@ -85,6 +84,7 @@ class SceneItem(object):
     auto_scene_active = Item('autoSceneActive')
     wayhome = Item('wayhome')
     presences = Item('Presences')
+    overrideAbsence = Item('overrideAbsence')
     darkness = Item('darkness')
     heating = Item('heating')
     guest_stayed = Item('autoGuestStayed')
@@ -98,6 +98,7 @@ class SceneItem(object):
         cls.auto_scene_active.event = event
         cls.wayhome.event = event
         cls.presences.event = event
+        cls.overrideAbsence.event = event
         cls.darkness.event = event
         cls.heating.event = event
         cls.freeday.event = event
@@ -176,6 +177,7 @@ class SceneManager(object):
             if event.itemName == 'wayhome' and self.wayhome():
                 self.auto = True
                 SceneItem.auto_scene.post_update(ON)
+                SceneItem.overrideAbsence.post_update(OFF)
             elif event.itemName == 'autoSceneActive':
                 self.auto = False
                 SceneItem.auto_scene.post_update(OFF)
@@ -248,7 +250,7 @@ class SceneManager(object):
         return is_freeday
 
     def presences(self):
-        return SceneItem.presences.get_int(0) == 1
+        return SceneItem.presences.get_int(0) == 1 and not SceneItem.overrideAbsence.get_onoff(True)
 
     def activate_scene(self, event=None):
         SceneItem.update_event(event)

@@ -14,7 +14,6 @@ class Scene(CreatorEnum):
     DINNER = 'Dinner', _('Dinner'), 'food', (17, 19)
     EVENING = 'Evening', _('Evening'), 'normal', (18, 21)
 
-    ABSENCE = 'Absence', _('Absence'), 'special'
     PARTY = 'Party', _('Party'), 'special'
 
     def __init__(self, identifier: str, label: str,

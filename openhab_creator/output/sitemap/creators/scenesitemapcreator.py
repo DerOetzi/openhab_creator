@@ -49,8 +49,8 @@ class SceneSitemapCreator(BaseSitemapCreator):
         ])\
             .visibility(
                 ('Presences', '==', 0),
-                (Scene.sceneactive_id, '==', 'Absence'),
-                ('wayhome', '==', 'ON')
+                ('wayhome', '==', 'ON'),
+                ('overrideAbsence', '==', 'ON')
         )\
             .append_to(config_frame)
 
@@ -58,6 +58,14 @@ class SceneSitemapCreator(BaseSitemapCreator):
             ('OFF', _('Inactive')),
             ('ON', _('Active'))
         ])\
+            .visibility(('overrideAbsence', '!=', 'ON'))\
+            .append_to(config_frame)
+
+        Switch('overrideAbsence', [
+            ('OFF', _('Inactive')),
+            ('ON', _('Active'))
+        ])\
+            .visibility(('overridePresence', '!=', 'ON'))\
             .append_to(config_frame)
 
         Switch('autoGuestStayed', [
