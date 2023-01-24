@@ -255,8 +255,8 @@ class SceneManager(object):
         guest_stayed = SceneItem.guest_stayed.get_onoff(True)
         is_weekend = self.is_freeday()
         is_night = self.is_night()
-        is_absence = not self.presences() or SpecialScene.ABSENCE == self.actual_scene()
         is_presences = self.presences()
+        is_wayhome = self.wayhome()
         is_darkness = SceneItem.darkness.get_onoff()
         is_heating = SceneItem.heating.get_onoff()
         is_homeoffice_states = {}
@@ -270,7 +270,7 @@ class SceneManager(object):
             is_location_active = self.is_location_active(
                 assigned_item, guest_stayed, is_weekend, is_homeoffice_states, event)
             self._handle_location(
-                assigned_item, is_location_active, is_night, is_presences, is_darkness, is_heating, event)
+                assigned_item, is_location_active, is_night, is_presences, is_wayhome, is_darkness, is_heating, event)
 
     def is_location_active(self, assigned_item, guest_stayed, is_weekend, is_homeoffice_states, event=None):
         assigned = assigned_item.get_string('OFF', True, event)
@@ -283,7 +283,7 @@ class SceneManager(object):
 
     def _handle_location(self, assigned_item,
                          is_location_active, is_night,
-                         is_presences,
+                         is_presences, is_wayhome,
                          is_darkness, is_heating,
                          event=None):
         active_item = assigned_item.from_scripting('active_item', event)
@@ -299,20 +299,29 @@ class SceneManager(object):
             if not automodus:
                 continue
 
-            if auto_item.is_scripting('lightbulb_item'):
-                lightbulb_item = auto_item.from_scripting('lightbulb_item')
-                LightUtils.automation(
-                    lightbulb_item, is_location_active, is_night, is_presences, is_darkness)
-            elif auto_item.is_scripting('heating_item'):
-                heating_item = auto_item.from_scripting('heating_item')
-                HeatingUtils.automation(
-                    heating_item, is_location_active, is_heating, is_presences)
-            elif auto_item.is_scripting('pump_item'):
-                control_item = auto_item.from_scripting('control_item')
-                if is_location_active and is_presences:
-                    control_item.send_command(ON, control_item.get_value())
-                else:
-                    control_item.send_command(OFF, control_item.get_value())
+            self._handle_autoitem(auto_item, is_location_active, is_night,
+                                  is_presences, is_darkness, is_heating, is_wayhome)
+
+    def _handle_autoitem(self, auto_item, is_location_active, is_night, is_presences, is_darkness, is_heating, is_wayhome):
+        if auto_item.is_scripting('lightbulb_item'):
+            lightbulb_item = auto_item.from_scripting('lightbulb_item')
+            LightUtils.automation(
+                lightbulb_item, is_location_active, is_night, is_presences, is_darkness)
+        elif auto_item.is_scripting('heating_item'):
+            heating_item = auto_item.from_scripting('heating_item')
+            HeatingUtils.automation(
+                heating_item, is_location_active, is_heating, is_presences, is_wayhome)
+        elif auto_item.is_scripting('pump_item'):
+            control_item = auto_item.from_scripting('control_item')
+            presences_item = auto_item.from_scripting('presences_item')
+
+            is_precenses_or_always_configuration = (
+                is_presences or is_wayhome or presences_item.get_onoff(True))
+
+            if is_location_active and is_precenses_or_always_configuration:
+                control_item.send_command(ON, control_item.get_value())
+            else:
+                control_item.send_command(OFF, control_item.get_value())
 
     def clear_timer(self):
         self.timers.cancel_all()

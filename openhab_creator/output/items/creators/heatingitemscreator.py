@@ -72,6 +72,11 @@ class HeatingItemsCreator(BaseItemsCreator):
             .auto()\
             .append_to(self)
 
+        Group('AutoAbsenceWarmWaterPump')\
+            .label(_('Absence scene controlled configuration items'))\
+            .auto()\
+            .append_to(self)
+
     def __build_heating(self, configuration: Configuration) -> None:
         if not configuration.general.has_learninghouse('heating'):
             Switch('heating')\
@@ -89,6 +94,7 @@ class HeatingItemsCreator(BaseItemsCreator):
                 .semantic(pump)\
                 .scripting({
                     'control_item': pump.item_ids.onoff,
+                    'presences_item': pump.item_ids.autoabsence,
                     'auto_item': pump.item_ids.auto
                 })\
                 .append_to(self)
@@ -102,6 +108,7 @@ class HeatingItemsCreator(BaseItemsCreator):
                 .scripting({
                     'pump_item': pump.item_ids.warmwaterpump,
                     'control_item': pump.item_ids.onoff,
+                    'presences_item': pump.item_ids.autoabsence,
                     'reactivation_item': pump.item_ids.autoreactivation
                 })\
                 .append_to(self)
@@ -113,6 +120,14 @@ class HeatingItemsCreator(BaseItemsCreator):
                 .icon('reactivation')\
                 .equipment(pump)\
                 .groups('AutoReactivationWarmWaterPump')\
+                .semantic(PointType.SETPOINT)\
+                .append_to(self)
+
+            Switch(pump.item_ids.autoabsence)\
+                .label(_('Even in absence'))\
+                .icon('absence')\
+                .equipment(pump)\
+                .groups('AutoAbsenceWarmWaterPump')\
                 .semantic(PointType.SETPOINT)\
                 .append_to(self)
 

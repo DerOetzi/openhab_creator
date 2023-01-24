@@ -29,6 +29,10 @@ class WarmWaterPumpItemIdentifiers(PowerOutletItemIdentifiers):
     def autoreactivation(self) -> str:
         return self._identifier('autoReactivationWarmWaterPump')
 
+    @property
+    def autoabsence(self) -> str:
+        return self._identifier('autoAbsenceWarmWaterPump')
+
 
 @EquipmentType()
 class WarmWaterPump(PowerOutlet):

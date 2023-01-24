@@ -213,6 +213,10 @@ class TemperatureSitemapCreator(BaseSitemapCreator):
             Setpoint(pump.item_ids.autoreactivation, 0, 240, 10)\
                 .append_to(frame)
 
+            Switch(pump.item_ids.autoabsence, [
+                   ('OFF', _('Off')), ('ON', _('On'))])\
+                .append_to(frame)
+
     def build_window_remindertime(self,
                                   heating: Heating,
                                   windows_location: Dict[Location, Window],
