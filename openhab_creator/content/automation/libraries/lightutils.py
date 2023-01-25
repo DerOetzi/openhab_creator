@@ -124,26 +124,22 @@ class LightUtils(object):
                       lightbulb_item, brightness, onoff, color)
 
         if brightness_item:
-            actual = brightness_item.get_int(0)
-            cls.log.debug('%s: %d, %d', brightness_item, actual, brightness)
-            if actual != brightness:
-                if brightnessgroup_item:
-                    cls.log.debug('%s, %d', brightnessgroup_item, brightness)
-                    brightnessgroup_item.send_command(brightness)
-                else:
-                    cls.log.debug('%s, %d', brightness_item, brightness)
-                    brightness_item.send_command(brightness)
-                updated = True
+            updated = brightness_item.get_int(0) != brightness
+            cls.log.debug('%s: %d', brightness_item, brightness)
+
+            if brightnessgroup_item:
+                cls.log.debug('%s, %d', brightnessgroup_item, brightness)
+                brightnessgroup_item.send_command(brightness)
+            else:
+                cls.log.debug('%s, %d', brightness_item, brightness)
+                brightness_item.send_command(brightness)
+
         elif onoff and onoff_item:
-            actual = onoff_item.get_value()
-            if actual != onoff:
-                onoff_item.send_command(onoff)
-                updated = True
+            updated = onoff_item.get_value() != onoff
+            onoff_item.send_command(onoff)
         elif rgb_item:
-            actual = rgb_item.get_value(cls.BLACK)
-            if actual != color:
-                rgb_item.send_command(color)
-                updated = True
+            updated = rgb_item.get_value(cls.BLACK) != color
+            rgb_item.send_command(color)
 
         return updated
 
