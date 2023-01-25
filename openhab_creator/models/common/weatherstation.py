@@ -196,6 +196,7 @@ class DWDEvent(CreatorEnum):
     LEITERSEILSCHWINGUNGEN = 79, 'LEITERSEILSCHWINGUNGEN', 'Leiterseilschwingungen'
     STRENGER_FROST = 82, 'STRENGERFROST', 'Strenger Frost'
     GLATTEIS = 85, 'GLATTEIS', 'Glatteis', 82
+    GERINGE_GLAETTE = 86, 'GERINGEGLÄTTE', 'Geringe Glätte', 82
     TAUWETTER = 88, 'TAUWETTER', 'Tauwetter', 82
     STARKES_TAUWETTER = 89, 'STARKESTAUWETTER', 'Starkes Tauwetter', 82
     SCHWERES_GEWITTER = 93, 'SCHWERESGEWITTER', 'Schweres Gewitter', 90
