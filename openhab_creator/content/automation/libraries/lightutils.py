@@ -13,6 +13,7 @@ reload(personal.autoitemmanager)
 
 class LightUtils(object):
     BLACK = HSBType(DecimalType(0), PercentType(0), PercentType(0))
+    NIGHT = HSBType(DecimalType(60), PercentType(100), PercentType(10))
 
     log = logging.getLogger('{}.LightUtils'.format(LOG_PREFIX))
 
@@ -95,7 +96,7 @@ class LightUtils(object):
         if command in ['ALL', 'ON']:
             cls._execute(lightbulb_item, 100, ON, cls.color())
         elif command == 'NIGHT':
-            cls._execute(lightbulb_item, 10, None, cls.color(10))
+            cls._execute(lightbulb_item, 10, None, cls.NIGHT)
         elif command == 'OFF':
             updated = cls._execute(lightbulb_item, 0, OFF, cls.BLACK)
 
