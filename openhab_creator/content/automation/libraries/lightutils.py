@@ -13,7 +13,7 @@ reload(personal.autoitemmanager)
 
 class LightUtils(object):
     BLACK = HSBType(DecimalType(0), PercentType(0), PercentType(0))
-    NIGHT = HSBType(DecimalType(60), PercentType(100), PercentType(10))
+    NIGHT = HSBType(DecimalType(36), PercentType(100), PercentType(5))
 
     log = logging.getLogger('{}.LightUtils'.format(LOG_PREFIX))
 
@@ -84,10 +84,9 @@ class LightUtils(object):
                 if cls.get_brightness(group_member) > 0:
                     on_items.append(group_member)
 
-            if len(on_items) > 0:
-                cls._execute(lightbulb_item, 0, OFF, cls.BLACK)
-                for on_item in on_items:
-                    cls._increment_switchingcycles(on_item)
+            cls._execute(lightbulb_item, 0, OFF, cls.BLACK)
+            for on_item in on_items:
+                cls._increment_switchingcycles(on_item)
         else:
             cls._handle_group_command(lightbulb_item, command)
 
