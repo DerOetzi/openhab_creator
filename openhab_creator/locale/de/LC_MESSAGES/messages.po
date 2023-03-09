@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openHAB Creator\n"
-"POT-Creation-Date: 2023-01-24 20:46+0100\n"
-"PO-Revision-Date: 2023-01-24 20:46+0100\n"
+"POT-Creation-Date: 2023-03-02 14:26+0100\n"
+"PO-Revision-Date: 2023-03-02 14:26+0100\n"
 "Last-Translator: Johannes Ott <info@johannes-ott.net>\n"
 "Language-Team: Johannes Ott\n"
 "Language: de\n"
@@ -45,7 +45,7 @@ msgstr "Boost"
 #: output/sitemap/creators/lightbulbsitemapcreator.py:117
 #: output/sitemap/creators/lightbulbsitemapcreator.py:198
 #: output/sitemap/creators/lightbulbsitemapcreator.py:235
-#: output/sitemap/creators/scenesitemapcreator.py:110
+#: output/sitemap/creators/scenesitemapcreator.py:113
 #: output/sitemap/creators/temperaturesitemapcreator.py:167
 #: output/sitemap/creators/temperaturesitemapcreator.py:174
 #: output/sitemap/creators/temperaturesitemapcreator.py:207
@@ -66,16 +66,16 @@ msgstr "An"
 
 #: models/common/maptransformation.py:21 models/common/maptransformation.py:25
 #: models/common/maptransformation.py:36
-#: output/sitemap/creators/scenesitemapcreator.py:57
-#: output/sitemap/creators/scenesitemapcreator.py:63
+#: output/sitemap/creators/scenesitemapcreator.py:58
+#: output/sitemap/creators/scenesitemapcreator.py:65
 #: output/sitemap/creators/temperaturesitemapcreator.py:200
 msgid "Inactive"
 msgstr "Inaktiv"
 
 #: models/common/maptransformation.py:21 models/common/maptransformation.py:28
 #: models/common/maptransformation.py:36
-#: output/sitemap/creators/scenesitemapcreator.py:58
-#: output/sitemap/creators/scenesitemapcreator.py:64
+#: output/sitemap/creators/scenesitemapcreator.py:59
+#: output/sitemap/creators/scenesitemapcreator.py:66
 #: output/sitemap/creators/temperaturesitemapcreator.py:200
 msgid "Active"
 msgstr "Aktiv"
@@ -426,6 +426,10 @@ msgstr "Astro"
 #: models/configuration/equipment/types/callmonitor.py:64
 msgid "Call monitor"
 msgstr "Anrufüberwachung"
+
+#: models/configuration/equipment/types/car.py:44
+msgid "Car"
+msgstr "Auto"
 
 #: models/configuration/equipment/types/garbagecan.py:55
 msgid "Garbage can"
@@ -1027,7 +1031,7 @@ msgstr "Zurücksetzen"
 msgid "Motiondetector {lightbulb}"
 msgstr "Bewegungsmelder {lightbulb}"
 
-#: output/items/creators/locationitemscreator.py:85
+#: output/items/creators/locationitemscreator.py:96
 #: output/sitemap/creators/lightbulbsitemapcreator.py:36
 #: output/sitemap/creators/lightbulbsitemapcreator.py:59
 #: output/sitemap/creators/lightbulbsitemapcreator.py:110
@@ -1140,8 +1144,8 @@ msgid "Begin"
 msgstr "Beginn"
 
 #: output/items/creators/sceneitemscreator.py:23
-#: output/sitemap/creators/scenesitemapcreator.py:79
-#: output/sitemap/creators/scenesitemapcreator.py:88
+#: output/sitemap/creators/scenesitemapcreator.py:82
+#: output/sitemap/creators/scenesitemapcreator.py:91
 msgid "Time controlled"
 msgstr "Zeitsteuerung"
 
@@ -1151,7 +1155,7 @@ msgid "Scene"
 msgstr "Szene"
 
 #: output/items/creators/sceneitemscreator.py:36
-#: output/sitemap/creators/scenesitemapcreator.py:114
+#: output/sitemap/creators/scenesitemapcreator.py:117
 msgid "Guest stayed"
 msgstr "Gast zu Besuch"
 
@@ -1408,7 +1412,7 @@ msgid "Hide"
 msgstr "Ausblenden"
 
 #: output/sitemap/creators/lightbulbsitemapcreator.py:121
-#: output/sitemap/creators/scenesitemapcreator.py:111
+#: output/sitemap/creators/scenesitemapcreator.py:114
 msgid "Always"
 msgstr "Immer"
 
@@ -1481,28 +1485,28 @@ msgstr "Essenszenen"
 msgid "Special scenes"
 msgstr "Spezialszenen"
 
-#: output/sitemap/creators/scenesitemapcreator.py:69
+#: output/sitemap/creators/scenesitemapcreator.py:72
 msgid "No guest"
 msgstr "Kein Gast"
 
-#: output/sitemap/creators/scenesitemapcreator.py:70
+#: output/sitemap/creators/scenesitemapcreator.py:73
 msgid "Guest"
 msgstr "Gast"
 
-#: output/sitemap/creators/scenesitemapcreator.py:90
-#: output/sitemap/creators/scenesitemapcreator.py:112
+#: output/sitemap/creators/scenesitemapcreator.py:93
+#: output/sitemap/creators/scenesitemapcreator.py:115
 msgid "Working days"
 msgstr "Werktage"
 
-#: output/sitemap/creators/scenesitemapcreator.py:93
+#: output/sitemap/creators/scenesitemapcreator.py:96
 msgid "Weekend and holidays"
 msgstr "Wochenende und freie Tage"
 
-#: output/sitemap/creators/scenesitemapcreator.py:113
+#: output/sitemap/creators/scenesitemapcreator.py:116
 msgid "Weekend"
 msgstr "Wochenende"
 
-#: output/sitemap/creators/scenesitemapcreator.py:120
+#: output/sitemap/creators/scenesitemapcreator.py:123
 #, python-brace-format
 msgid "Homeoffice {person}"
 msgstr "Homeoffice {person}"

@@ -156,3 +156,22 @@ class Christmas(Location):
     @property
     def typed(self) -> str:
         return "Location"
+
+    @property
+    def semantic(self) -> str:
+        return "Location"
+
+
+@LocationType()
+class Cars(Location):
+    @property
+    def area(self) -> str:
+        return "Cars"
+
+    @property
+    def typed(self) -> str:
+        return "Location"
+
+    @property
+    def semantic(self) -> str:
+        return "Location"

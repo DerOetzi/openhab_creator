@@ -31,6 +31,9 @@ class LocationItemsCreator(BaseItemsCreator):
         for christmas in configuration.locations.christmas:
             self._create_christmas(christmas)
 
+        for cars in configuration.locations.cars:
+            self._create_cars(cars)
+
         for outdoor in configuration.locations.outdoors:
             self._create_outdoor(outdoor)
 
@@ -70,6 +73,14 @@ class LocationItemsCreator(BaseItemsCreator):
             .icon(christmas.category)\
             .semantic(christmas)\
             .scripting(christmas.location_items)\
+            .append_to(self)
+
+    def _create_cars(self, cars: Cars) -> None:
+        Group(cars.identifier)\
+            .label(cars.name)\
+            .icon(cars.category)\
+            .semantic(cars)\
+            .scripting(cars.location_items)\
             .append_to(self)
 
     def _create_outdoor(self, outdoor: Outdoor) -> None:
