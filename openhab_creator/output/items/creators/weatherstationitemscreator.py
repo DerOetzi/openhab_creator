@@ -72,11 +72,17 @@ class WeatherStationItemsCreator(BaseItemsCreator):
         Group('WeatherWarningTo')\
             .append_to(self)
 
+        warning_stations = False
+
         for station in configuration.equipment.equipment('weatherstation'):
             self._build_station(station)
 
             if station.points.has_warning_active:
                 self._build_warning(station)
+                warning_stations = True
+
+        if warning_stations:
+            self._build_warning_configuration()
 
         self.write_file('weather')
 
@@ -294,4 +300,33 @@ class WeatherStationItemsCreator(BaseItemsCreator):
             .semantic(PointType.ALARM)\
             .aisensor(AISensorDataType.CATEGORICAL)\
             .scripting(weatheritems)\
+            .append_to(self)
+
+    def _build_warning_configuration(self) -> None:
+        Switch('weatherwarningMinorActive')\
+            .label(_('Minor warnings'))\
+            .map(MapTransformation.ACTIVE)\
+            .icon('notifications')\
+            .config()\
+            .append_to(self)
+
+        Switch('weatherwarningModerateActive')\
+            .label(_('Moderate warnings'))\
+            .map(MapTransformation.ACTIVE)\
+            .icon('notifications')\
+            .config()\
+            .append_to(self)
+
+        Switch('weatherwarningSevereActive')\
+            .label(_('Severe warnings'))\
+            .map(MapTransformation.ACTIVE)\
+            .icon('notifications')\
+            .config()\
+            .append_to(self)
+
+        Switch('weatherwarningExtremeActive')\
+            .label(_('Extreme warnings'))\
+            .map(MapTransformation.ACTIVE)\
+            .icon('notifications')\
+            .config()\
             .append_to(self)

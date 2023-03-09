@@ -3,12 +3,14 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Callable, List, Tuple
 
 from openhab_creator import _
-from openhab_creator.models.sitemap import Page, Sitemap, Text
+from openhab_creator.models.configuration.equipment.types.weatherstation import \
+    WeatherStationType
+from openhab_creator.models.sitemap import (ActiveSwitch, Frame, Page, Sitemap,
+                                            Switch, Text)
 from openhab_creator.output.color import Color
 from openhab_creator.output.sitemap import SitemapCreatorPipeline
 from openhab_creator.output.sitemap.basesitemapcreator import \
     BaseSitemapCreator
-from openhab_creator.models.configuration.equipment.types.weatherstation import WeatherStationType
 
 if TYPE_CHECKING:
     from openhab_creator.models.configuration import Configuration
@@ -20,7 +22,7 @@ if TYPE_CHECKING:
     from openhab_creator.models.grafana import Dashboard
 
 
-@SitemapCreatorPipeline(mainpage=1)
+@SitemapCreatorPipeline(mainpage=1, configpage=10)
 class WeatherStationSitemapCreator(BaseSitemapCreator):
     @classmethod
     def has_needed_equipment(cls, configuration: Configuration) -> bool:
@@ -343,4 +345,23 @@ class WeatherStationSitemapCreator(BaseSitemapCreator):
         """No status page for weatherstation"""
 
     def build_configpage(self, configpage: Page, configuration: Configuration) -> None:
-        """No configpage for weatherstation"""
+        has_warnings = configuration.equipment.has('warning')
+
+        if has_warnings:
+            page = Page(None, _('Weather warnings'))\
+                .icon('notifications')\
+                .append_to(configpage)
+
+            frame = page.frame('notifications', _('Notifications'))
+
+            ActiveSwitch('weatherwarningMinorActive')\
+                .append_to(frame)
+
+            ActiveSwitch('weatherwarningModerateActive')\
+                .append_to(frame)
+
+            ActiveSwitch('weatherwarningSevereActive')\
+                .append_to(frame)
+
+            ActiveSwitch('weatherwarningExtremeActive')\
+                .append_to(frame)

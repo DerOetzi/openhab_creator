@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import List, Optional, Tuple
 
+from openhab_creator import _
 from openhab_creator.output.formatter import Formatter
 from openhab_creator.models.sitemap.baseelement import BaseElement
 
@@ -27,3 +28,28 @@ class Selection(Switch):
     @property
     def elementtype(self) -> str:
         return 'Selection'
+
+
+class ActiveSwitch(Switch):
+    def __init__(self,
+                 item: str,
+                 label: Optional[str] = ''):
+        super().__init__(item, [
+            ('OFF', _('Inactive')),
+            ('ON', _('Active'))
+        ], label)
+
+
+class AutomationSwitch(Switch):
+    def __init__(self,
+                 item: str,
+                 with_off: Optional[bool] = False,
+                 label: Optional[str] = ''):
+        mappings = []
+
+        if with_off:
+            mappings.append(('OFF', _('Off')))
+
+        mappings.append(('ON', _('Automation')))
+
+        super().__init__(item, mappings, label)

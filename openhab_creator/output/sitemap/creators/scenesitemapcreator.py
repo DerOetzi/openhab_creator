@@ -6,7 +6,8 @@ from openhab_creator import _
 from openhab_creator.models.common import MapTransformation, Scene
 from openhab_creator.models.configuration.equipment.types.personstate import \
     PersonStateType
-from openhab_creator.models.sitemap import (Page, Selection, Setpoint, Sitemap,
+from openhab_creator.models.sitemap import (ActiveSwitch, AutomationSwitch,
+                                            Page, Selection, Setpoint, Sitemap,
                                             Switch)
 from openhab_creator.output.sitemap import SitemapCreatorPipeline
 from openhab_creator.output.sitemap.basesitemapcreator import \
@@ -37,7 +38,7 @@ class SceneSitemapCreator(BaseSitemapCreator):
             .label(_('Special scenes'))\
             .append_to(page)
 
-        Switch('autoScene', [('ON', _('Automation'))])\
+        AutomationSwitch('autoScene')\
             .visibility(('autoScene', '!=', 'ON'))\
             .append_to(page)
 
@@ -54,17 +55,11 @@ class SceneSitemapCreator(BaseSitemapCreator):
         )\
             .append_to(config_frame)
 
-        Switch('overridePresence', [
-            ('OFF', _('Inactive')),
-            ('ON', _('Active'))
-        ])\
+        ActiveSwitch('overridePresence')\
             .visibility(('overrideAbsence', '!=', 'ON'))\
             .append_to(config_frame)
 
-        Switch('overrideAbsence', [
-            ('OFF', _('Inactive')),
-            ('ON', _('Active'))
-        ])\
+        ActiveSwitch('overrideAbsence')\
             .visibility(('overridePresence', '!=', 'ON'))\
             .append_to(config_frame)
 

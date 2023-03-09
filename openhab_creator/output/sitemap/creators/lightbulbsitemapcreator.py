@@ -3,8 +3,9 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, List, Tuple
 
 from openhab_creator import _
-from openhab_creator.models.sitemap import (Page, Selection, Setpoint, Sitemap,
-                                            Slider, Switch, Text)
+from openhab_creator.models.sitemap import (AutomationSwitch, Page, Selection,
+                                            Setpoint, Sitemap, Slider, Switch,
+                                            Text)
 from openhab_creator.output.sitemap import SitemapCreatorPipeline
 from openhab_creator.output.sitemap.basesitemapcreator import \
     BaseSitemapCreator
@@ -33,7 +34,7 @@ class LightbulbSitemapCreator(BaseSitemapCreator):
             .visibility((lightbulb.item_ids.hide, '!=', 'ON'))\
             .append_to(frame)
 
-        Switch(lightbulb.item_ids.auto, [('ON', _('Automation'))])\
+        AutomationSwitch(lightbulb.item_ids.auto)\
             .visibility((lightbulb.item_ids.autodisplay, '==', 'ON'))\
             .append_to(frame)
         return frame
@@ -56,7 +57,7 @@ class LightbulbSitemapCreator(BaseSitemapCreator):
             .visibility((lightbulb.item_ids.hide, '!=', 'ON'))\
             .append_to(frame)
 
-        Switch(lightbulb.item_ids.auto, [('ON', _('Automation'))])\
+        AutomationSwitch(lightbulb.item_ids.auto)\
             .visibility((lightbulb.item_ids.autodisplay, '==', 'ON'))\
             .append_to(frame)
 
@@ -107,7 +108,7 @@ class LightbulbSitemapCreator(BaseSitemapCreator):
             Switch(lightbulb.item_ids.hide, [('OFF', _('Display')), ('ON', _('Hide'))])\
                 .append_to(lightpage)
 
-            Switch(lightbulb.item_ids.auto, [('OFF', _('Off')), ('ON', _('Automation'))])\
+            AutomationSwitch(lightbulb.item_ids.auto, True)\
                 .append_to(lightpage)
 
             Setpoint(lightbulb.item_ids.autoreactivation, 0, 240, 10)\

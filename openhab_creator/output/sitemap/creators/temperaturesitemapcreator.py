@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Dict, List, Tuple
 from openhab_creator import _
 from openhab_creator.models.common import Heatcontrol, MapTransformation
 from openhab_creator.models.configuration import Configuration
-from openhab_creator.models.sitemap import (Page, Setpoint, Sitemap, Switch,
+from openhab_creator.models.sitemap import (AutomationSwitch, Page, Setpoint, Sitemap, Switch,
                                             Text)
 from openhab_creator.output.color import Color
 from openhab_creator.output.sitemap import SitemapCreatorPipeline
@@ -90,7 +90,7 @@ class TemperatureSitemapCreator(BaseSitemapCreator):
                 .visibility((heating.item_ids.hide, '!=', 'ON'))\
                 .append_to(page)
 
-            Switch(heating.item_ids.auto, [('ON', _('Automation'))])\
+            AutomationSwitch(heating.item_ids.auto)\
                 .visibility((heating.item_ids.autodisplay, '==', 'ON'))\
                 .append_to(page)
 
@@ -164,7 +164,7 @@ class TemperatureSitemapCreator(BaseSitemapCreator):
                     .valuecolor(*TemperatureSitemapCreator.valuecolor(heating.item_ids.heatsetpoint))\
                     .append_to(subpage)
 
-                Switch(heating.item_ids.auto, [('OFF', _('Off')), ('ON', _('Automation'))])\
+                AutomationSwitch(heating.item_ids.auto, True)\
                     .append_to(subpage)
 
                 Setpoint(heating.item_ids.autoreactivation, 0, 240, 10)\
@@ -207,7 +207,7 @@ class TemperatureSitemapCreator(BaseSitemapCreator):
             Switch(pump.item_ids.onoff, [('OFF', _('Off')), ('ON', _('On'))])\
                 .append_to(frame)
 
-            Switch(pump.item_ids.auto, [('OFF', _('Off')), ('ON', _('Automation'))])\
+            AutomationSwitch(pump.item_ids.auto, True)\
                 .append_to(frame)
 
             Setpoint(pump.item_ids.autoreactivation, 0, 240, 10)\

@@ -77,15 +77,20 @@ def weather_warning(event):
         event_mapped = Item.transform_map('dwdeventkeyword', event_str)
 
         severity_item = warning_item.from_scripting('severity')
+        severity_value = severity_item.get_string('')
         severity_str = Item.transform_map(
-            'dwdseverity', severity_item.get_string(''))
+            'dwdseverity', severity_value)
 
         event_mapped_item.set_label(u"{}".format(severity_str))
         event_mapped_item.send_command(event_mapped)
 
-        if event is not None and warning_item.get_onoff() and event_mapped != 10:
-            send_warning_message(event, warning_item,
-                                 event_mapped, severity_str)
+        if event is not None and warning_item.get_onoff():
+            warning_active_item = Item(
+                u'weatherwarning{}Active'.format(severity_value))
+
+            if warning_active_item.get_onoff():
+                send_warning_message(event, warning_item,
+                                     event_mapped, severity_str)
 
 
 @rule('GUI Weatherstation')
