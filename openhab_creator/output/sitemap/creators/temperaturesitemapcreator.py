@@ -17,6 +17,7 @@ if TYPE_CHECKING:
         Sensor
     from openhab_creator.models.configuration.equipment.types.window import \
         Window
+    from openhab_creator.models.configuration.equipment.types.heating import Heating
     from openhab_creator.models.configuration.location import Location
 
 

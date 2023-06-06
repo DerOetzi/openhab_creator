@@ -9,12 +9,12 @@ from openhab_creator.models.configuration.equipment.types.sensor import (
 from openhab_creator.models.items import (AISensorDataType, DateTime, Group,
                                           GroupType, Number, PointType,
                                           ProfileType, PropertyType, String)
+from openhab_creator.models.items.baseitem import BaseItem
 from openhab_creator.output.items import ItemsCreatorPipeline
 from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
 
 if TYPE_CHECKING:
     from openhab_creator.models.configuration import Configuration
-    from openhab_creator.models.configuration.location import Location
 
 
 @ItemsCreatorPipeline(9)

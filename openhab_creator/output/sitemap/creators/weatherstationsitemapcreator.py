@@ -5,8 +5,7 @@ from typing import TYPE_CHECKING, Callable, List, Tuple
 from openhab_creator import _
 from openhab_creator.models.configuration.equipment.types.weatherstation import \
     WeatherStationType
-from openhab_creator.models.sitemap import (ActiveSwitch, Frame, Page, Sitemap,
-                                            Switch, Text)
+from openhab_creator.models.sitemap import (ActiveSwitch, Page, Sitemap, Text)
 from openhab_creator.output.color import Color
 from openhab_creator.output.sitemap import SitemapCreatorPipeline
 from openhab_creator.output.sitemap.basesitemapcreator import \

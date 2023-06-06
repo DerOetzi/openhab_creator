@@ -10,7 +10,7 @@ from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
 
 if TYPE_CHECKING:
     from openhab_creator.models.configuration import Configuration
-    from openhab_creator.models.configuration.location import Location
+    from openhab_creator.models.configuration.location import Location, Cars, Christmas
     from openhab_creator.models.configuration.location.indoor import Indoor
     from openhab_creator.models.configuration.location.indoor.floors import \
         Floor
