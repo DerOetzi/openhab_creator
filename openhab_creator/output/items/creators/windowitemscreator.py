@@ -6,7 +6,7 @@ from openhab_creator import _, logger
 from openhab_creator.models.common import MapTransformation
 from openhab_creator.models.items import (AISensorDataType, Contact, Group,
                                           GroupType, Number, NumberType, PointType, PropertyType,
-                                          String)
+                                          String, Switch)
 from openhab_creator.output.items import ItemsCreatorPipeline
 from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
 
@@ -105,8 +105,18 @@ class WindowItemsCreator(BaseItemsCreator):
                 .config()\
                 .append_to(self)
 
-            contact.scripting(
-                {'remindertime_item': window.item_ids.remindertime})
+            Switch(window.item_ids.sendreminder)\
+                .label(_("Send reminder"))\
+                .equipment(window)\
+                .semantic(PointType.SETPOINT)\
+                .expire("2h", "ON")\
+                .config()\
+                .append_to(self)
+
+            contact.scripting({
+                'remindertime_item': window.item_ids.remindertime,
+                'sendreminder_item': window.item_ids.sendreminder
+            })
 
         if window.location in heatings:
             heating = heatings[window.location]

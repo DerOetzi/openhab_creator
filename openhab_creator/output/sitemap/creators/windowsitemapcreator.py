@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 
 from openhab_creator import _
 from openhab_creator.models.common import MapTransformation
-from openhab_creator.models.sitemap import Page, Sitemap, Text, Setpoint
+from openhab_creator.models.sitemap import Page, Sitemap, Text, Setpoint, Switch
 from openhab_creator.output.sitemap import SitemapCreatorPipeline
 from openhab_creator.output.sitemap.basesitemapcreator import \
     BaseSitemapCreator
@@ -47,10 +47,13 @@ class WindowSitemapCreator(BaseSitemapCreator):
 
         for window in windows:
             if window.remindertime:
-                toplevel_location = window.location.toplevel
+                location = window.location
                 frame = page.frame(
-                    toplevel_location.identifier, toplevel_location.name)
+                    location.identifier, location.name)
 
                 Setpoint(window.item_ids.remindertime, 0, 15)\
                     .label(_('{name} reminder time').format(name=window.name))\
+                    .append_to(frame)
+
+                Switch(window.item_ids.sendreminder, [('OFF', _('Inactive')), ('ON', _('Active'))])\
                     .append_to(frame)

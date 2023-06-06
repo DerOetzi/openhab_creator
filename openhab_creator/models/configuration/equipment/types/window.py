@@ -1,11 +1,13 @@
 from __future__ import annotations
 
-from typing import Dict, Optional
+from typing import Dict, Optional, List
 
 from openhab_creator import _
 from openhab_creator.models.configuration.equipment import EquipmentType
 from openhab_creator.models.configuration.equipment.types.sensor import (
-    Sensor, SensorItemIdentifiers, SensorPoints)
+    Sensor,
+    SensorItemIdentifiers,
+)
 
 
 class WindowItemIdentifiers(SensorItemIdentifiers):
@@ -15,26 +17,30 @@ class WindowItemIdentifiers(SensorItemIdentifiers):
 
     @property
     def window(self) -> str:
-        return self._identifier('window')
+        return self._identifier("window")
 
     @property
     def sensor(self) -> str:
-        return self._identifier(f'sensor{self.equipment.semantic}')
+        return self._identifier(f"sensor{self.equipment.semantic}")
 
     @property
     def windowopen(self) -> str:
-        return self._identifier('windowOpen')
+        return self._identifier("windowOpen")
 
     @property
     def remindertime(self) -> str:
-        return self._identifier('windowRemindertime')
+        return self._identifier("windowRemindertime")
+
+    @property
+    def sendreminder(self) -> str:
+        return self._identifier("windowSendReminder")
 
 
 @EquipmentType()
 class Window(Sensor):
-    def __init__(self,
-                 remindertime: Optional[bool] = False,
-                 **equipment_configuration: Dict):
+    def __init__(
+        self, remindertime: Optional[bool] = False, **equipment_configuration: Dict
+    ):
         super().__init__(**equipment_configuration)
 
         self._item_ids: WindowItemIdentifiers = WindowItemIdentifiers(self)
@@ -47,13 +53,13 @@ class Window(Sensor):
     @property
     def categories(self) -> List[str]:
         categories = super().categories
-        categories.append('window')
+        categories.append("window")
         return categories
 
     @property
     def name_with_type(self) -> str:
         typed = _("Window")
-        return f'{self.name} ({typed})'
+        return f"{self.name} ({typed})"
 
     @property
     def sensor_is_subequipment(self) -> bool:
@@ -62,5 +68,5 @@ class Window(Sensor):
     @property
     def items_for_location(self) -> Dict[str, str]:
         items = super().items_for_location
-        items['window_item'] = self.item_ids.window
+        items["window_item"] = self.item_ids.window
         return items

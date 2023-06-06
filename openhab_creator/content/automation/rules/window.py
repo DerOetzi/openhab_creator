@@ -80,8 +80,11 @@ class WindowEvent(object):
 
     def send_reminder(self, window_item):
         if window_item.get_openclosed():
-            SignalMessenger.broadcast(
-                window_item.scripting('reminder_message'))
+            self.log.info('Window still open %s', window_item.name)
+            sendreminder_item = window_item.from_scripting('sendreminder_item')
+            if sendreminder_item.get_onoff(True, ON):
+                SignalMessenger.broadcast(
+                    window_item.scripting('reminder_message'))
 
             remindertime = self.get_remindertime(window_item)
 
