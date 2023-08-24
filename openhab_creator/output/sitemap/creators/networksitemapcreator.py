@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, List
 
+from openhab_creator import _
 from openhab_creator.models.sitemap import Page, Text, Sitemap
 from openhab_creator.output.color import Color
 from openhab_creator.output.sitemap import SitemapCreatorPipeline
@@ -29,8 +30,11 @@ class NetworkSitemapCreator(BaseSitemapCreator):
         for lancontroller in configuration.equipment.equipment('lan', False):
             for networkdevice in lancontroller.macs.values():
                 if not networkdevice.has_person:
-                    location = networkdevice.location.toplevel
-                    frame = page.frame(location.identifier, location.name)
+                    if networkdevice.location:
+                        location = networkdevice.location.toplevel
+                        frame = page.frame(location.identifier, location.name)
+                    else:
+                        frame = page.frame('general', _('General'))
 
                     Text(networkdevice.item_ids.maconline)\
                         .label(networkdevice.name_with_type)\

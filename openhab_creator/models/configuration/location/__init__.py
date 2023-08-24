@@ -175,3 +175,18 @@ class Cars(Location):
     @property
     def semantic(self) -> str:
         return "Location"
+
+
+@LocationType()
+class EnergyManagement(Location):
+    @property
+    def area(self) -> str:
+        return "EnergyManagement"
+
+    @property
+    def typed(self) -> str:
+        return "Location"
+
+    @property
+    def semantic(self) -> str:
+        return "Location"

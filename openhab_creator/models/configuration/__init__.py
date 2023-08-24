@@ -207,10 +207,16 @@ class LocationRegistry():
 
     def read_configuration(self) -> None:
         self._init_floors(self.configuration.configdir)
-        self._init_christmas(self.configuration.configdir)
-        self._init_cars(self.configuration.configdir)
-        self._init_buildings(self.configuration.configdir)
-        self._init_outdoors(self.configuration.configdir)
+        self._init_locations_from_file(
+            'energymanagement', self.configuration.configdir, 'energymanagement.json')
+        self._init_locations_from_file(
+            'christmas', self.configuration.configdir, 'christmas.json')
+        self._init_locations_from_file(
+            'cars', self.configuration.configdir, 'cars.json')
+        self._init_locations_from_file(
+            'buildings', self.configuration.configdir, os.path.join('indoor', 'buildings.json'))
+        self._init_locations_from_file(
+            'outdoors', self.configuration.configdir, 'outdoors.json')
 
     def _init_floors(self, configdir: str) -> None:
         floors = Configuration.read_jsons_from_dir(
@@ -224,29 +230,10 @@ class LocationRegistry():
                 if room.is_timecontrolled:
                     self.timecontrolled[room.identifier] = room
 
-    def _init_buildings(self, configdir: str) -> None:
-        buildings = Configuration.read_json_from_file(
-            configdir, 'locations/indoor/buildings.json')
-
-        self._init_locations('buildings', buildings)
-
-    def _init_christmas(self, configdir: str) -> None:
-        christmas = Configuration.read_json_from_file(
-            configdir, 'locations/christmas.json')
-
-        self._init_locations('christmas', christmas)
-
-    def _init_cars(self, configdir: str) -> None:
-        cars = Configuration.read_json_from_file(
-            configdir, 'locations/cars.json')
-
-        self._init_locations('cars', cars)
-
-    def _init_outdoors(self, configdir: str) -> None:
-        outdoors = Configuration.read_json_from_file(
-            configdir, 'locations/outdoors.json')
-
-        self._init_locations('outdoors', outdoors)
+    def _init_locations_from_file(self, location_key: str, configdir: str, filename: str) -> None:
+        locations = Configuration.read_json_from_file(
+            configdir, os.path.join('locations', filename))
+        self._init_locations(location_key, locations)
 
     def _init_locations(self, location_key: str, locations: List[Dict]) -> None:
         self.registry[location_key] = []
@@ -271,6 +258,10 @@ class LocationRegistry():
     @property
     def christmas(self) -> List[Location]:
         return self.registry['christmas']
+
+    @property
+    def energymanagement(self) -> List[Location]:
+        return self.registry['energymanagement']
 
     @property
     def cars(self) -> List[Location]:
