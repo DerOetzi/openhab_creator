@@ -4,7 +4,7 @@ from abc import abstractmethod
 from typing import TYPE_CHECKING, Dict, List, Optional, Union
 
 from openhab_creator import CreatorEnum
-from openhab_creator.models.common import MapTransformation
+from openhab_creator.models.common.maptransformation import BaseMapTransformation
 from openhab_creator.models.configuration.baseobject import BaseObject
 from openhab_creator.models.configuration.equipment import Equipment
 from openhab_creator.output.formatter import Formatter
@@ -99,7 +99,7 @@ class BaseItem():
         self._label = label
         return self
 
-    def map(self, mapname: MapTransformation) -> BaseItem:
+    def map(self, mapname: BaseMapTransformation) -> BaseItem:
         return self.format(mapname.formatstr)
 
     def transform_js(self, js_file: str) -> BaseItem:

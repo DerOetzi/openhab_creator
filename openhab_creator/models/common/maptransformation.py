@@ -11,8 +11,17 @@ from openhab_creator.models.common.weatherstation import (DWDEvent,
 from openhab_creator.models.common.heatcontrol import Heatcontrol
 from openhab_creator.models.common.pollencountindex import PollenCountIndex
 
+class BaseMapTransformation(CreatorEnum):
+    def __init__(self, filename: str, mappings: Dict[str, str]):
+        self.filename: str = filename
+        self.mappings: Dict[str, str] = mappings
 
-class MapTransformation(CreatorEnum):
+    @ property
+    def formatstr(self) -> str:
+        return f'MAP({self.filename}.map):%s'
+
+
+class MapTransformation(BaseMapTransformation):
     ONOFF = 'onoff', {
         'OFF': _('Off'), 'ON': _('On')
     }
@@ -80,11 +89,3 @@ class MapTransformation(CreatorEnum):
         'OPEN': _('Opened'),
         'CLOSED': _('Closed')
     }
-
-    def __init__(self, filename: str, mappings: Dict[str, str]):
-        self.filename: str = filename
-        self.mappings: Dict[str, str] = mappings
-
-    @ property
-    def formatstr(self) -> str:
-        return f'MAP({self.filename}.map):%s'

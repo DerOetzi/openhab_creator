@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from openhab_creator import _
 from openhab_creator.models.common import MapTransformation
+from openhab_creator.models.common.maptransformation import BaseMapTransformation
+from openhab_creator.models.configuration.equipment.types.car import CarMapTransformations
 from openhab_creator.output.basecreator import BaseCreator
 
 
@@ -10,10 +12,11 @@ class MapTransformationCreator(BaseCreator):
         super().__init__('map', outputdir, 'transform')
 
     def build(self) -> None:
-        self.build_maps()
+        self.build_maps(MapTransformation)
+        self.build_maps(CarMapTransformations)
 
-    def build_maps(self) -> None:
-        for map_definition in MapTransformation:
+    def build_maps(self, map_enum: BaseMapTransformation) -> None:
+        for map_definition in map_enum:
             for key, value in map_definition.mappings.items():
                 self.append(f'{key}={value}')
 
