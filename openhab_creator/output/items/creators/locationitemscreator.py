@@ -10,7 +10,7 @@ from openhab_creator.output.items.baseitemscreator import BaseItemsCreator
 
 if TYPE_CHECKING:
     from openhab_creator.models.configuration import Configuration
-    from openhab_creator.models.configuration.location import Location, Cars, Christmas
+    from openhab_creator.models.configuration.location import Location, Cars, Christmas, EnergyManagement
     from openhab_creator.models.configuration.location.indoor import Indoor
     from openhab_creator.models.configuration.location.indoor.floors import \
         Floor
@@ -33,6 +33,9 @@ class LocationItemsCreator(BaseItemsCreator):
 
         for cars in configuration.locations.cars:
             self._create_cars(cars)
+
+        for energymanagement in configuration.locations.energymanagement:
+            self._create_energymanagement(energymanagement)
 
         for outdoor in configuration.locations.outdoors:
             self._create_outdoor(outdoor)
@@ -81,6 +84,14 @@ class LocationItemsCreator(BaseItemsCreator):
             .icon(cars.category)\
             .semantic(cars)\
             .scripting(cars.location_items)\
+            .append_to(self)
+
+    def _create_energymanagement(self, energymanagement: EnergyManagement) -> None:
+        Group(energymanagement.identifier)\
+            .label(energymanagement.name)\
+            .icon(energymanagement.category)\
+            .semantic(energymanagement)\
+            .scripting(energymanagement.location_items)\
             .append_to(self)
 
     def _create_outdoor(self, outdoor: Outdoor) -> None:

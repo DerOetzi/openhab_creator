@@ -147,11 +147,15 @@ class BaseItem():
     def sensor(self,
                measurement: str,
                series_tags: Dict[str, str],
-               restore_on_startup: Optional[bool] = False) -> BaseItem:
+               restore_on_startup: Optional[bool] = False,
+               add_item_label: Optional[bool] = False) -> BaseItem:
         if restore_on_startup:
             self.groups('SensorRestore')
         else:
             self.groups('Sensor')
+
+        if add_item_label:
+            series_tags['item_label'] = self._label
 
         self._metadata['influxdb'] = {
             'value': measurement,

@@ -12,6 +12,7 @@ class NumberType(CreatorEnum):
     AREAL_DENSITY = ':ArealDensity'
     DENSITY = ':Density'
     DIMENSIONLESS = ':Dimensionless'
+    ENERGY = ':Energy'
     LENGTH = ':Length'
     POWER = ':Power'
     PRESSURE = ':Pressure'
@@ -31,6 +32,11 @@ class Number(BaseItem):
 
     def temperature(self, digits: Optional[int] = 1) -> Number:
         self.typed(NumberType.TEMPERATURE)
+        self.format(f'%.{digits}f %unit%')
+        return self
+    
+    def consumption(self, digits: Optional[int] = 1) -> Number:
+        self.typed(NumberType.ENERGY)
         self.format(f'%.{digits}f %unit%')
         return self
 
