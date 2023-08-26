@@ -13,7 +13,7 @@ from openhab_creator.output.sitemap.basesitemapcreator import \
     BaseSitemapCreator
 
 
-@SitemapCreatorPipeline(mainpage=7)
+@SitemapCreatorPipeline(mainpage=80)
 class GasStationSitemapCreator(BaseSitemapCreator):
     @classmethod
     def has_needed_equipment(cls, configuration: Configuration) -> bool:

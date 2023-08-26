@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from openhab_creator.models.configuration import Configuration
 
 
-@SitemapCreatorPipeline(mainpage=0)
+@SitemapCreatorPipeline(mainpage=10)
 class CalendarSitemapCreator(BaseSitemapCreator):
     def build_mainpage(self, sitemap: Sitemap, configuration: Configuration) -> None:
         Text('todaySpecialDay')\

@@ -23,6 +23,17 @@ class SmartMeterItemIdentifiers(EquipmentItemIdentifiers):
     def consumed(self, tariff: int) -> str:
         return self._identifier(f'smartMeterConsumedT{tariff}')
 
+    @property
+    def delivered_total(self) -> str:
+        return self._identifier('smartMeterDeliveredTotal')
+
+    @property
+    def power_total(self) -> str:
+        return self._identifier('smartMeterPowerTotal')
+
+    def power(self, phase: int) -> str:
+        return self._identifier(f'smartMeterPowerP{phase}')
+
 
 class SmartMeterPoints(EquipmentPoints):
     @property
@@ -31,6 +42,33 @@ class SmartMeterPoints(EquipmentPoints):
 
     def has_consumed(self, tariff: int) -> bool:
         return self.has(f'consumed_t{tariff}')
+
+    @property
+    def has_consumed_tariff(self) -> bool:
+        for tariff in range(1, 3):
+            if self.has_consumed(tariff):
+                return True
+
+        return False
+
+    @property
+    def has_delivered_total(self) -> bool:
+        return self.has('delivered_total')
+
+    @property
+    def has_power_total(self) -> bool:
+        return self.has('power_total')
+
+    def has_power(self, phase: int) -> bool:
+        return self.has(f'power_p{phase}')
+
+    @property
+    def has_power_phase(self) -> bool:
+        for phase in range(1, 3):
+            if self.has_power(phase):
+                return True
+
+        return False
 
 
 @EquipmentType()

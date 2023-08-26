@@ -21,7 +21,7 @@ if TYPE_CHECKING:
     from openhab_creator.models.configuration.location import Location
 
 
-@SitemapCreatorPipeline(mainpage=4, configpage=5)
+@SitemapCreatorPipeline(mainpage=50, configpage=5)
 class TemperatureSitemapCreator(BaseSitemapCreator):
     def __init__(self):
         self.toplevel_locations = {}

@@ -15,7 +15,7 @@ if TYPE_CHECKING:
         Sensor
 
 
-@SitemapCreatorPipeline(mainpage=5)
+@SitemapCreatorPipeline(mainpage=60)
 class IndoorSensorsSitemapCreator(BaseSitemapCreator):
     def build_mainpage(self, sitemap: Sitemap, configuration: Configuration) -> None:
         for sensortype in SensorType:

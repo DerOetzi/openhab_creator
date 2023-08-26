@@ -16,7 +16,7 @@ if TYPE_CHECKING:
         PollenCount
 
 
-@SitemapCreatorPipeline(mainpage=6)
+@SitemapCreatorPipeline(mainpage=70)
 class PollenCountSitemapCreator(BaseSitemapCreator):
     @classmethod
     def has_needed_equipment(cls, configuration: Configuration) -> bool:

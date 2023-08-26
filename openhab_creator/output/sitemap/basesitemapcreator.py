@@ -6,12 +6,11 @@ from abc import abstractmethod
 from openhab_creator import _
 
 from openhab_creator.models.sitemap import Switch, Image
-from openhab_creator.models.grafana import Period
+from openhab_creator.models.grafana import Period, AggregateWindow
 
 if TYPE_CHECKING:
-    from openhab_creator.models.sitemap.baseelement import BaseElement
     from openhab_creator.models.configuration import Configuration
-    from openhab_creator.models.sitemap import Sitemap, Page, Frame
+    from openhab_creator.models.sitemap import Sitemap, Page
     from openhab_creator.models.grafana import Dashboard
 
 
@@ -37,10 +36,13 @@ class BaseSitemapCreator():
                      dashboard: Dashboard,
                      page: Page,
                      identifiers: List[str],
-                     prefix: Optional[str] = '') -> None:
+                     prefix: Optional[str] = '',
+                     aggregations: Optional[Dict[Period, AggregateWindow]] = None) -> None:
         grafana_urls = []
         for identifier in identifiers:
-            panel_urls = dashboard.panel_urls(f'{prefix}{identifier}')
+            panel_urls = dashboard.panel_urls(
+                f'{prefix}{identifier}'.strip(),
+                aggregations=aggregations)
             if panel_urls is not None:
                 grafana_urls.append(panel_urls)
 
@@ -60,21 +62,8 @@ class BaseSitemapCreator():
                 .append_to(frame)
 
             for panel_urls in grafana_urls:
-                Image(panel_urls[Period.DAY])\
-                    .visibility(
-                        ('guiPeriod', '==', Period.DAY),
-                        ('guiPeriod', '==', 'Uninitialized')
-                )\
-                    .append_to(frame)
-
-                Image(panel_urls[Period.WEEK])\
-                    .visibility(('guiPeriod', '==', Period.WEEK))\
-                    .append_to(frame)
-
-                Image(panel_urls[Period.MONTH])\
-                    .visibility(('guiPeriod', '==', Period.MONTH))\
-                    .append_to(frame)
-
-                Image(panel_urls[Period.YEAR])\
-                    .visibility(('guiPeriod', '==', Period.YEAR))\
-                    .append_to(frame)
+                for period in Period:
+                    if period in panel_urls:
+                        Image(panel_urls[period])\
+                            .visibility(('guiPeriod', '==', period))\
+                            .append_to(frame)

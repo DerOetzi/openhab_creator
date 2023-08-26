@@ -34,9 +34,14 @@ class Number(BaseItem):
         self.typed(NumberType.TEMPERATURE)
         self.format(f'%.{digits}f %unit%')
         return self
-    
-    def consumption(self, digits: Optional[int] = 1) -> Number:
+
+    def energy(self, digits: Optional[int] = 1) -> Number:
         self.typed(NumberType.ENERGY)
+        self.format(f'%.{digits}f %unit%')
+        return self
+
+    def power(self, digits: Optional[int] = 1) -> Number:
+        self.typed(NumberType.POWER)
         self.format(f'%.{digits}f %unit%')
         return self
 

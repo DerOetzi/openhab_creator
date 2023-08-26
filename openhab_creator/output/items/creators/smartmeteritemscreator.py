@@ -19,6 +19,8 @@ class SmartMeterItemsCreator(BaseItemsCreator):
         for smartmeter in configuration.equipment.equipment('smartmeter'):
             self.build_smartmeter(smartmeter)
             self.build_consumption(smartmeter)
+            self.build_delivered(smartmeter)
+            self.build_power(smartmeter)
 
         self.write_file('smartmeter')
 
@@ -33,7 +35,7 @@ class SmartMeterItemsCreator(BaseItemsCreator):
     def build_consumption(self, smartmeter: SmartMeter) -> None:
         if smartmeter.points.has_consumed_total:
             Number(smartmeter.item_ids.consumed_total)\
-                .consumption()\
+                .energy()\
                 .label(_('Consumed total'))\
                 .icon('energy')\
                 .equipment(smartmeter)\
@@ -43,10 +45,10 @@ class SmartMeterItemsCreator(BaseItemsCreator):
                 .channel(smartmeter.points.channel('consumed_total'))\
                 .append_to(self)
 
-        for tariff in [1, 2]:
+        for tariff in range(1, 3):
             if smartmeter.points.has_consumed(tariff):
                 Number(smartmeter.item_ids.consumed(tariff))\
-                    .consumption()\
+                    .energy()\
                     .label(_('Consumed tariff {tariff}').format(tariff=tariff))\
                     .icon('energy')\
                     .equipment(smartmeter)\
@@ -54,4 +56,43 @@ class SmartMeterItemsCreator(BaseItemsCreator):
                     .sensor('smartmeter_consumed', smartmeter.influxdb_tags, add_item_label=True)\
                     .aisensor(AISensorDataType.NUMERICAL)\
                     .channel(smartmeter.points.channel(f'consumed_t{tariff}'))\
+                    .append_to(self)
+
+    def build_delivered(self, smartmeter: SmartMeter) -> None:
+        if smartmeter.points.has_delivered_total:
+            Number(smartmeter.item_ids.delivered_total)\
+                .energy()\
+                .label(_('Delivered total'))\
+                .icon('energy')\
+                .equipment(smartmeter)\
+                .semantic(PointType.MEASUREMENT, PropertyType.ENERGY)\
+                .sensor('smartmeter_delivered', smartmeter.influxdb_tags, add_item_label=True)\
+                .aisensor(AISensorDataType.NUMERICAL)\
+                .channel(smartmeter.points.channel('delivered_total'))\
+                .append_to(self)
+
+    def build_power(self, smartmeter: SmartMeter) -> None:
+        if smartmeter.points.has_power_total:
+            Number(smartmeter.item_ids.power_total)\
+                .power()\
+                .label(_('Power total'))\
+                .icon('energy')\
+                .equipment(smartmeter)\
+                .semantic(PointType.MEASUREMENT, PropertyType.POWER)\
+                .sensor('smartmeter_power', smartmeter.influxdb_tags, add_item_label=True)\
+                .aisensor(AISensorDataType.NUMERICAL)\
+                .channel(smartmeter.points.channel('power_total'))\
+                .append_to(self)
+
+        for phase in range(1, 4):
+            if smartmeter.points.has_power(phase):
+                Number(smartmeter.item_ids.power(phase))\
+                    .power()\
+                    .label(_('Power phase {phase}').format(phase=phase))\
+                    .icon('energy')\
+                    .equipment(smartmeter)\
+                    .semantic(PointType.MEASUREMENT, PropertyType.POWER)\
+                    .sensor('smartmeter_power', smartmeter.influxdb_tags, add_item_label=True)\
+                    .aisensor(AISensorDataType.NUMERICAL)\
+                    .channel(smartmeter.points.channel(f'power_p{phase}'))\
                     .append_to(self)

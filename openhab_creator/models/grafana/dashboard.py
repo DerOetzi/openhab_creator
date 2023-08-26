@@ -15,16 +15,28 @@ class Retention(CreatorEnum):
     YEARLY = 'y'
 
 
-class Period(CreatorEnum):
-    DAY = '24h', _('Day'), Retention.MONTHLY
-    WEEK = '7d', _('Week'), Retention.MONTHLY
-    MONTH = '31d', _('Month'), Retention.MONTHLY
-    YEAR = '1y', _('Year'), Retention.YEARLY
+class AggregateWindow(CreatorEnum):
+    HOUR = '1h'
+    DAY = '1d'
+    WEEK = '1w'
+    MONTH = '1mo'
 
-    def __init__(self, period: str, label: str, retention: Retention):
+    def __init__(self, every: str) -> None:
+        self.every = every
+
+
+class Period(CreatorEnum):
+    DAY = '24h', _('Day'), Retention.MONTHLY, AggregateWindow.HOUR
+    WEEK = '7d', _('Week'), Retention.MONTHLY, AggregateWindow.HOUR
+    MONTH = '31d', _('Month'), Retention.MONTHLY, AggregateWindow.HOUR
+    YEAR = '1y', _('Year'), Retention.YEARLY, AggregateWindow.DAY
+    YEARS = '2y', _('2 years'), Retention.YEARLY, AggregateWindow.DAY
+
+    def __init__(self, period: str, label: str, retention: Retention, aggregation: AggregateWindow):
         self._period = period
         self.label: str = label
         self.retention: Retention = retention
+        self.aggregation: AggregateWindow = aggregation
 
 
 class Dashboard():
@@ -70,7 +82,10 @@ class Dashboard():
             logger.debug('%s: %s', panel['title'],
                          self.panels[panel['title']])
 
-    def panel_urls(self, identifier: str) -> Optional[Dict[str, str]]:
+    def panel_urls(self,
+                   identifier: str,
+                   aggregations: Optional[Dict[Period, AggregateWindow]] = None) \
+            -> Optional[Dict[str, str]]:
         urls = {}
 
         if identifier in self.panels:
@@ -81,6 +96,12 @@ class Dashboard():
                 url = f'{self.host}/render/d-solo/openhab3?'
                 url += f'from=now-{period}&to=now&'
                 url += f'var-rp={period.retention}&'
+
+                if aggregations and period in aggregations:
+                    url += f'var-agg={aggregations[period].every}&'
+                else:
+                    url += f'var-agg={period.aggregation.every}&'
+
                 url += f'panelId={panel_config["id"]}&'
                 url += f'width=700&height={panel_config["height"]}'
 

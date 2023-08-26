@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openHAB Creator\n"
-"POT-Creation-Date: 2023-08-24 22:34+0200\n"
-"PO-Revision-Date: 2023-08-24 22:38+0200\n"
+"POT-Creation-Date: 2023-08-26 20:32+0200\n"
+"PO-Revision-Date: 2023-08-26 20:33+0200\n"
 "Last-Translator: Johannes Ott <info@johannes-ott.net>\n"
 "Language-Team: Johannes Ott\n"
 "Language: de\n"
@@ -434,7 +434,7 @@ msgid "Weather warning"
 msgstr "Wetterwarnung"
 
 #: openhab_creator/models/configuration/equipment/types/astro.py:136
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:265
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:271
 msgid "Astro"
 msgstr "Astro"
 
@@ -567,19 +567,19 @@ msgstr "Temperatur"
 #: openhab_creator/models/configuration/equipment/types/sensor.py:65
 #: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:45
 #: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:60
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:94
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:117
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:95
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:118
 msgid "Temperatures"
 msgstr "Temperaturen"
 
 #: openhab_creator/models/configuration/equipment/types/sensor.py:74
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:183
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:203
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:189
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:209
 msgid "Humidity"
 msgstr "Luftfeuchtigkeit"
 
 #: openhab_creator/models/configuration/equipment/types/sensor.py:82
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:176
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:182
 msgid "Pressure"
 msgstr "Luftdruck"
 
@@ -608,7 +608,7 @@ msgstr "Gefühlte Temperaturen (Humidex)"
 msgid "Sensor"
 msgstr "Sensor"
 
-#: openhab_creator/models/configuration/equipment/types/smartmeter.py:68
+#: openhab_creator/models/configuration/equipment/types/smartmeter.py:106
 msgid "Smartmeter"
 msgstr "Smart Meter"
 
@@ -629,7 +629,7 @@ msgid "Pump"
 msgstr "Pumpe"
 
 #: openhab_creator/models/configuration/equipment/types/weatherstation.py:15
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:145
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:146
 msgid "Rain gauge"
 msgstr "Niederschlag"
 
@@ -646,12 +646,12 @@ msgid "Visibility"
 msgstr "Sichtweite"
 
 #: openhab_creator/models/configuration/equipment/types/weatherstation.py:35
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:213
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:219
 msgid "UV index"
 msgstr "UV-Index"
 
 #: openhab_creator/models/configuration/equipment/types/weatherstation.py:43
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:244
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:250
 msgid "Ozone"
 msgstr "Ozon"
 
@@ -690,21 +690,25 @@ msgstr "Waschmaschine und Trockner sind fertig"
 msgid "Window"
 msgstr "Fenster"
 
-#: openhab_creator/models/grafana/dashboard.py:19
+#: openhab_creator/models/grafana/dashboard.py:29
 msgid "Day"
 msgstr "Tag"
 
-#: openhab_creator/models/grafana/dashboard.py:20
+#: openhab_creator/models/grafana/dashboard.py:30
 msgid "Week"
 msgstr "Woche"
 
-#: openhab_creator/models/grafana/dashboard.py:21
+#: openhab_creator/models/grafana/dashboard.py:31
 msgid "Month"
 msgstr "Monat"
 
-#: openhab_creator/models/grafana/dashboard.py:22
+#: openhab_creator/models/grafana/dashboard.py:32
 msgid "Year"
 msgstr "Jahr"
+
+#: openhab_creator/models/grafana/dashboard.py:33
+msgid "2 years"
+msgstr "2 Jahre"
 
 #: openhab_creator/models/sitemap/page.py:65
 msgid "State and configuration"
@@ -1235,13 +1239,25 @@ msgstr "Trend {label}"
 msgid "7 days average {label}"
 msgstr "7-Tage Durchschnitt {label}"
 
-#: openhab_creator/output/items/creators/smartmeteritemscreator.py:38
+#: openhab_creator/output/items/creators/smartmeteritemscreator.py:39
 msgid "Consumed total"
 msgstr "Bezug gesamt"
 
-#: openhab_creator/output/items/creators/smartmeteritemscreator.py:51
+#: openhab_creator/output/items/creators/smartmeteritemscreator.py:52
 msgid "Consumed tariff {tariff}"
 msgstr "Bezug Tarif {tariff}"
+
+#: openhab_creator/output/items/creators/smartmeteritemscreator.py:65
+msgid "Delivered total"
+msgstr "Einspeisung gesamt"
+
+#: openhab_creator/output/items/creators/smartmeteritemscreator.py:78
+msgid "Power total"
+msgstr "Leistung gesamt"
+
+#: openhab_creator/output/items/creators/smartmeteritemscreator.py:91
+msgid "Power phase {phase}"
+msgstr "Leistung Phase {phase}"
 
 #: openhab_creator/output/items/creators/wallswitchitemscreator.py:22
 msgid "Wallswitch assignment items"
@@ -1406,7 +1422,7 @@ msgstr "Erinnerung senden"
 msgid "Configuration"
 msgstr "Konfiguration"
 
-#: openhab_creator/output/sitemap/basesitemapcreator.py:52
+#: openhab_creator/output/sitemap/basesitemapcreator.py:54
 msgid "Course"
 msgstr "Verlauf"
 
@@ -1428,6 +1444,22 @@ msgstr "Erledigt"
 #: openhab_creator/output/sitemap/creators/calendarsitemapcreator.py:52
 msgid "Next 10 upcoming birthdays"
 msgstr "Nächsten 10 Geburtstage"
+
+#: openhab_creator/output/sitemap/creators/energymanagementsitemapcreator.py:21
+msgid "Energy management"
+msgstr "Energiemanagement"
+
+#: openhab_creator/output/sitemap/creators/energymanagementsitemapcreator.py:31
+msgid "Smart meters"
+msgstr "Smart Meter"
+
+#: openhab_creator/output/sitemap/creators/energymanagementsitemapcreator.py:58
+msgid "Average per hour"
+msgstr "Durchschnitt pro Stunde"
+
+#: openhab_creator/output/sitemap/creators/energymanagementsitemapcreator.py:59
+msgid "Average per weekday"
+msgstr "Durchschnitt pro Wochentag"
 
 #: openhab_creator/output/sitemap/creators/gasstationsitemapcreator.py:23
 msgid "Fuel prices"
@@ -1569,36 +1601,36 @@ msgstr "Wochenende"
 msgid "Homeoffice {person}"
 msgstr "Homeoffice {person}"
 
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:170
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:197
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:176
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:203
 msgid "Trend"
 msgstr "Trend"
 
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:227
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:233
 msgid "Self-protection time (below 3 hours) - {name}"
 msgstr "Eigenschutzzeiten (weniger als 3 Stunden) - {name}"
 
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:281
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:287
 msgid "Sun rise"
 msgstr "Sonnenaufgang"
 
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:286
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:292
 msgid "Sun set"
 msgstr "Sonnenuntergang"
 
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:311
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:317
 msgid "Moon rise"
 msgstr "Mondaufgang"
 
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:316
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:322
 msgid "Moon set"
 msgstr "Monduntergang"
 
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:350
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:356
 msgid "Weather warnings"
 msgstr "Wetterwarnungen"
 
-#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:354
+#: openhab_creator/output/sitemap/creators/weatherstationsitemapcreator.py:360
 msgid "Notifications"
 msgstr "Benachrichtigungen"
 
