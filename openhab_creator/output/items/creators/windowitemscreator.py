@@ -24,7 +24,7 @@ class WindowItemsCreator(BaseItemsCreator):
         heatings = dict((x.location, x)
                         for x in configuration.equipment.equipment('heating'))
 
-        logger.info(heatings)
+        logger.debug(heatings)
 
         for window in configuration.equipment.equipment('window'):
             self.__build_parent(window)
