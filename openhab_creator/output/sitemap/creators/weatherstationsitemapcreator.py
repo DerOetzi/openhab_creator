@@ -5,7 +5,8 @@ from typing import TYPE_CHECKING, Callable, List, Tuple
 from openhab_creator import _
 from openhab_creator.models.configuration.equipment.types.weatherstation import \
     WeatherStationType
-from openhab_creator.models.sitemap import (ActiveSwitch, Page, Sitemap, Text)
+from openhab_creator.models.grafana import AggregateWindow, Period
+from openhab_creator.models.sitemap import ActiveSwitch, Page, Sitemap, Text
 from openhab_creator.output.color import Color
 from openhab_creator.output.sitemap import SitemapCreatorPipeline
 from openhab_creator.output.sitemap.basesitemapcreator import \
@@ -21,7 +22,7 @@ if TYPE_CHECKING:
     from openhab_creator.models.grafana import Dashboard
 
 
-@SitemapCreatorPipeline(mainpage=1, configpage=10)
+@SitemapCreatorPipeline(mainpage=30, configpage=10)
 class WeatherStationSitemapCreator(BaseSitemapCreator):
     @classmethod
     def has_needed_equipment(cls, configuration: Configuration) -> bool:
@@ -142,7 +143,12 @@ class WeatherStationSitemapCreator(BaseSitemapCreator):
         if len(locations) > 0:
             self._add_grafana(configuration.dashboard, page,
                               list(dict.fromkeys(locations)),
-                              _('Rain gauge') + ' ')
+                              _('Rain gauge') + ' ',
+                              {Period.DAY: AggregateWindow.HOUR,
+                               Period.WEEK: AggregateWindow.DAY,
+                               Period.MONTH: AggregateWindow.DAY,
+                               Period.YEAR: AggregateWindow.MONTH,
+                               Period.YEARS: AggregateWindow.MONTH})
 
     def _build_pressure(self, weatherstation_page: Page, configuration: Configuration) -> None:
         pressures = configuration.equipment.equipment('pressure')
