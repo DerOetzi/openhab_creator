@@ -170,3 +170,23 @@ class WashingMachineDryer(WashingMachine):
         scripting['washingmachine_dryer_message'] = _(
             'Washing machine and dryer are ready')
         return scripting
+
+
+@EquipmentType()
+class Dishwasher(WhiteGood):
+    @property
+    def categories(self) -> List[str]:
+        categories = super().categories
+        categories.append('dishwasher')
+        return categories
+
+    @property
+    def name_with_type(self) -> str:
+        typed = _("Dishwasher")
+        return f'{self.name} ({typed})'
+
+    @property
+    def scripting(self) -> Dict:
+        scripting = super().scripting
+        scripting['dishwasher_message'] = _('Dishwasher is ready')
+        return scripting

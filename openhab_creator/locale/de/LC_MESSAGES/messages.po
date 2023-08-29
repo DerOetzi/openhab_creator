@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openHAB Creator\n"
-"POT-Creation-Date: 2023-08-26 20:32+0200\n"
-"PO-Revision-Date: 2023-08-26 20:33+0200\n"
+"POT-Creation-Date: 2023-08-27 21:40+0200\n"
+"PO-Revision-Date: 2023-08-27 21:40+0200\n"
 "Last-Translator: Johannes Ott <info@johannes-ott.net>\n"
 "Language-Team: Johannes Ott\n"
 "Language: de\n"
@@ -1454,6 +1454,7 @@ msgid "Smart meters"
 msgstr "Smart Meter"
 
 #: openhab_creator/output/sitemap/creators/energymanagementsitemapcreator.py:58
+#: openhab_creator/output/sitemap/creators/whitegoodsitemapcreator.py:55
 msgid "Average per hour"
 msgstr "Durchschnitt pro Stunde"
 
@@ -1634,9 +1635,18 @@ msgstr "Wetterwarnungen"
 msgid "Notifications"
 msgstr "Benachrichtigungen"
 
+#: openhab_creator/output/sitemap/creators/whitegoodsitemapcreator.py:56
+msgid "{whitegood} power"
+msgstr "{whitegood} Leistung"
+
 #: openhab_creator/output/sitemap/creators/windowsitemapcreator.py:55
 msgid "{name} reminder time"
 msgstr "{name} Erinnerungszeit"
+
+#, fuzzy
+#~| msgid "Average per hour"
+#~ msgid "Average per houe"
+#~ msgstr "Durchschnitt pro Stunde"
 
 #~ msgid "Absence"
 #~ msgstr "Abwesenheit"

@@ -51,5 +51,9 @@ class WhiteGoodSitemapCreator(BaseSitemapCreator):
                 .visibility((whitegood.item_ids.start, '!=', 'NULL'))\
                 .append_to(page)
 
+            self._add_grafana(configuration.dashboard, page,
+                              ['', _('Average per hour')],
+                              _('{whitegood} power').format(whitegood=whitegood.blankname) + ' ')
+
     def build_configpage(self, configpage: Page, configuration: Configuration) -> None:
         """No configpage for white goods"""
