@@ -43,6 +43,8 @@ class WhiteGoodItemIdentifiers(PowerOutletItemIdentifiers):
             type_prefix = 'washingmachine'
         elif isinstance(self.equipment, Dryer):
             type_prefix = 'dryer'
+        elif isinstance(self.equipment, Dishwasher):
+            type_prefix = 'dishwasher'
 
         return super()._identifier(f'{type_prefix}{prefix}')
 

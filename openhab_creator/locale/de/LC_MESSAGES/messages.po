@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openHAB Creator\n"
-"POT-Creation-Date: 2023-08-27 21:40+0200\n"
-"PO-Revision-Date: 2023-08-27 21:40+0200\n"
+"POT-Creation-Date: 2023-08-30 21:31+0200\n"
+"PO-Revision-Date: 2023-08-30 21:31+0200\n"
 "Last-Translator: Johannes Ott <info@johannes-ott.net>\n"
 "Language-Team: Johannes Ott\n"
 "Language: de\n"
@@ -46,6 +46,7 @@ msgstr "Boost"
 #: openhab_creator/models/common/maptransformation.py:26
 #: openhab_creator/models/common/maptransformation.py:80
 #: openhab_creator/models/sitemap/switch.py:51
+#: openhab_creator/models/sitemap/switch.py:64
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:118
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:199
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:236
@@ -57,6 +58,7 @@ msgid "Off"
 msgstr "Aus"
 
 #: openhab_creator/models/common/maptransformation.py:26
+#: openhab_creator/models/sitemap/switch.py:64
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:118
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:209
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:236
@@ -551,8 +553,8 @@ msgstr "Roggen"
 msgid "Pollen count region"
 msgstr "Pollenflug Region"
 
-#: openhab_creator/models/configuration/equipment/types/poweroutlet.py:63
-#: openhab_creator/output/items/creators/poweroutletitemscreator.py:28
+#: openhab_creator/models/configuration/equipment/types/poweroutlet.py:71
+#: openhab_creator/output/items/creators/poweroutletitemscreator.py:36
 msgid "Power outlet"
 msgstr "Steckdose"
 
@@ -659,30 +661,38 @@ msgstr "Ozon"
 msgid "Weatherstation"
 msgstr "Wetterstation"
 
-#: openhab_creator/models/configuration/equipment/types/whitegood.py:77
+#: openhab_creator/models/configuration/equipment/types/whitegood.py:79
 msgid "WhiteGood"
 msgstr "Haushaltsgerät"
 
-#: openhab_creator/models/configuration/equipment/types/whitegood.py:123
+#: openhab_creator/models/configuration/equipment/types/whitegood.py:125
 msgid "Washingmachine"
 msgstr "Waschmaschine"
 
-#: openhab_creator/models/configuration/equipment/types/whitegood.py:129
+#: openhab_creator/models/configuration/equipment/types/whitegood.py:131
 msgid "Washing machine is ready"
 msgstr "Waschmaschine ist fertig"
 
-#: openhab_creator/models/configuration/equipment/types/whitegood.py:143
+#: openhab_creator/models/configuration/equipment/types/whitegood.py:145
 msgid "Dryer"
 msgstr "Trockner"
 
-#: openhab_creator/models/configuration/equipment/types/whitegood.py:149
-#: openhab_creator/models/configuration/equipment/types/whitegood.py:169
+#: openhab_creator/models/configuration/equipment/types/whitegood.py:151
+#: openhab_creator/models/configuration/equipment/types/whitegood.py:171
 msgid "Dryer is ready"
 msgstr "Trockner ist fertig"
 
-#: openhab_creator/models/configuration/equipment/types/whitegood.py:170
+#: openhab_creator/models/configuration/equipment/types/whitegood.py:172
 msgid "Washing machine and dryer are ready"
 msgstr "Waschmaschine und Trockner sind fertig"
+
+#: openhab_creator/models/configuration/equipment/types/whitegood.py:187
+msgid "Dishwasher"
+msgstr "Spülmaschine"
+
+#: openhab_creator/models/configuration/equipment/types/whitegood.py:193
+msgid "Dishwasher is ready"
+msgstr "Spülmaschine ist fertig"
 
 #: openhab_creator/models/configuration/equipment/types/window.py:61
 #: openhab_creator/output/items/creators/windowitemscreator.py:59
@@ -1079,7 +1089,7 @@ msgstr "Farbtemperatur"
 
 #: openhab_creator/output/items/creators/lightbulbitemscreator.py:266
 #: openhab_creator/output/items/creators/lightbulbitemscreator.py:328
-#: openhab_creator/output/items/creators/poweroutletitemscreator.py:37
+#: openhab_creator/output/items/creators/poweroutletitemscreator.py:71
 msgid "On/Off"
 msgstr "An/Aus"
 
@@ -1142,7 +1152,7 @@ msgstr "{pollentype} morgen"
 msgid "{pollentype} day after tomorrow"
 msgstr "{pollentype} übermorgen"
 
-#: openhab_creator/output/items/creators/poweroutletitemscreator.py:51
+#: openhab_creator/output/items/creators/poweroutletitemscreator.py:85
 msgid "Power"
 msgstr "Leistung"
 
@@ -1548,6 +1558,10 @@ msgstr "Alle"
 msgid "General"
 msgstr "Allgemein"
 
+#: openhab_creator/output/sitemap/creators/poweroutletsitemapcreator.py:21
+msgid "Poweroutlets"
+msgstr "Steckdosen"
+
 #: openhab_creator/output/sitemap/creators/prescencesitemapcreator.py:35
 #: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:48
 msgid "Away"
@@ -1670,9 +1684,6 @@ msgstr "{name} Erinnerungszeit"
 
 #~ msgid "Machine"
 #~ msgstr "Maschine"
-
-#~ msgid "Dishwasher"
-#~ msgstr "Spülmaschine"
 
 #~ msgid "Temperature sensor"
 #~ msgstr "Temperatursensor"

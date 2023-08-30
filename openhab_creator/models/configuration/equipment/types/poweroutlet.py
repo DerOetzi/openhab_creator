@@ -25,11 +25,19 @@ class PowerOutletItemIdentifiers(SensorItemIdentifiers):
     def power(self) -> str:
         return self._identifier('power')
 
+    def _identifier(self, prefix: str) -> str:
+        if self.equipment.is_child and self.equipment.parent.category == 'poweroutlet':
+            identifier = self.equipment.parent.identifier
+        else:
+            identifier = self.equipment.identifier
+
+        return f'{prefix}{identifier}'
+
 
 class PowerOutletPoints(SensorPoints):
     @property
     def has_onoff(self) -> bool:
-        return self.has('onoff')
+        return self.has('onoff', True)
 
     @property
     def has_power(self) -> bool:

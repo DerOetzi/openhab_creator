@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import List, Optional, Tuple
+from typing import Any, List, Optional, Tuple
 
 from openhab_creator import _
 from openhab_creator.output.formatter import Formatter
@@ -53,3 +53,13 @@ class AutomationSwitch(Switch):
         mappings.append(('ON', _('Automation')))
 
         super().__init__(item, mappings, label)
+
+
+class OnOffSwitch(Switch):
+    def __init__(self,
+                 item: str,
+                 label: Optional[str] = '') -> Any:
+
+        super().__init__(item,
+                         [('OFF', _('Off')), ('ON', _('On'))],
+                         label)

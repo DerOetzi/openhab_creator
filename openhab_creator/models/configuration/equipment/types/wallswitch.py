@@ -28,12 +28,12 @@ class WallSwitchItemIdentifiers(EquipmentItemIdentifiers):
     def button(self) -> str:
         return self._identifier('wallSwitchButton')
 
-    def buttonassignment(self, button_key: int, lightbulb: Optional[Lightbulb] = None) -> str:
+    def buttonassignment(self, button_key: int, equipment: Optional[Equipment] = None) -> str:
         buttonassignment = self._identifier(
             f'WallSwitchAssignment{button_key}')
 
-        if lightbulb is not None:
-            buttonassignment += f'_{lightbulb.identifier}'
+        if equipment is not None:
+            buttonassignment += f'_{equipment.identifier}'
 
         return buttonassignment
 

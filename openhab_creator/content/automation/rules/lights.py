@@ -5,6 +5,7 @@ from personal.lightutils import LightUtils
 from personal.item import Group, Item
 from personal.dateutils import DateUtils
 from core.osgi import get_service
+from core.jsr223.scope import OFF, ON
 from core.triggers import (ChannelEventTrigger, ItemCommandTrigger,
                            ItemStateChangeTrigger, StartupTrigger, when)
 from core.rules import rule
@@ -83,21 +84,39 @@ class WallSwitchEvent(object):
         if wallswitch.is_scripting(event_key):
             for assignment_item in Group(wallswitch.scripting(event_key)):
                 command = assignment_item.get_string()
-                if command is not None and command != 'NULL':
-                    self.log.debug('%s: %s', assignment_item.name, command)
-                    lightbulb_item = assignment_item.from_scripting(
-                        'lightbulb_item')
+                self.command(assignment_item, command)
 
-                    if command == 'UNBLOCK':
-                        MotionDetectorEvent.trigger_unblock(lightbulb_item)
-                    elif command == 'OFFUNBLOCK':
-                        MotionDetectorEvent.trigger_unblock(lightbulb_item)
-                        LightUtils.manual(lightbulb_item, 'OFF')
-                    elif command == 'TRIGGERMOTION':
-                        MotionDetectorEvent.trigger_motion(lightbulb_item)
-                    else:
-                        LightUtils.manual(lightbulb_item, command)
-                        MotionDetectorEvent().trigger_block(lightbulb_item)
+    def command(self, assignment_item, command):
+        if command is not None and command != 'NULL':
+            self.log.debug('%s: %s', assignment_item.name, command)
+            if assignment_item.is_scripting('lightbulb_item'):
+                self.lightbulb_command(assignment_item, command)
+            elif assignment_item.is_scripting('poweroutlet_item'):
+                self.poweroutlet_command(assignment_item, command)
+
+    def lightbulb_command(self, assignment_item, command):
+        lightbulb_item = assignment_item.from_scripting(
+            'lightbulb_item')
+
+        if command == 'UNBLOCK':
+            MotionDetectorEvent.trigger_unblock(lightbulb_item)
+        elif command == 'OFFUNBLOCK':
+            MotionDetectorEvent.trigger_unblock(lightbulb_item)
+            LightUtils.manual(lightbulb_item, 'OFF')
+        elif command == 'TRIGGERMOTION':
+            MotionDetectorEvent.trigger_motion(lightbulb_item)
+        else:
+            LightUtils.manual(lightbulb_item, command)
+            MotionDetectorEvent().trigger_block(lightbulb_item)
+
+    def poweroutlet_command(self, assignment_item, command):
+        poweroutlet_item = assignment_item.from_scripting(
+            'poweroutlet_item')
+
+        if command == 'OFF':
+            poweroutlet_item.send_command(OFF)
+        elif command == 'ON':
+            poweroutlet_item.send_command(ON)
 
 
 @rule('Motion detector event')
