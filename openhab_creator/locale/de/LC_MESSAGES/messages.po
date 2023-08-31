@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openHAB Creator\n"
-"POT-Creation-Date: 2023-08-30 21:31+0200\n"
-"PO-Revision-Date: 2023-08-30 21:31+0200\n"
+"POT-Creation-Date: 2023-08-31 10:45+0200\n"
+"PO-Revision-Date: 2023-08-31 10:46+0200\n"
 "Last-Translator: Johannes Ott <info@johannes-ott.net>\n"
 "Language-Team: Johannes Ott\n"
 "Language: de\n"
@@ -50,6 +50,7 @@ msgstr "Boost"
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:118
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:199
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:236
+#: openhab_creator/output/sitemap/creators/poweroutletsitemapcreator.py:117
 #: openhab_creator/output/sitemap/creators/scenesitemapcreator.py:108
 #: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:175
 #: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:208
@@ -62,6 +63,7 @@ msgstr "Aus"
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:118
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:209
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:236
+#: openhab_creator/output/sitemap/creators/poweroutletsitemapcreator.py:116
 #: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:175
 #: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:208
 #: openhab_creator/output/sitemap/creators/temperaturesitemapcreator.py:218
@@ -1447,7 +1449,7 @@ msgstr "Erinnerungen"
 #: openhab_creator/output/sitemap/creators/calendarsitemapcreator.py:38
 #: openhab_creator/output/sitemap/creators/calendarsitemapcreator.py:46
 #: openhab_creator/output/sitemap/creators/whitegoodsitemapcreator.py:25
-#: openhab_creator/output/sitemap/creators/whitegoodsitemapcreator.py:46
+#: openhab_creator/output/sitemap/creators/whitegoodsitemapcreator.py:50
 msgid "Done"
 msgstr "Erledigt"
 
@@ -1464,7 +1466,7 @@ msgid "Smart meters"
 msgstr "Smart Meter"
 
 #: openhab_creator/output/sitemap/creators/energymanagementsitemapcreator.py:58
-#: openhab_creator/output/sitemap/creators/whitegoodsitemapcreator.py:55
+#: openhab_creator/output/sitemap/creators/whitegoodsitemapcreator.py:59
 msgid "Average per hour"
 msgstr "Durchschnitt pro Stunde"
 
@@ -1535,6 +1537,7 @@ msgid "Wallswitch assignments {lightbulb}"
 msgstr "Schalterzuordnungen {lightbulb}"
 
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:168
+#: openhab_creator/output/sitemap/creators/poweroutletsitemapcreator.py:115
 msgid "No assignment"
 msgstr "Keine Zuordnung"
 
@@ -1547,6 +1550,7 @@ msgid "Trigger motion"
 msgstr "Bewegung auslösen"
 
 #: openhab_creator/output/sitemap/creators/lightbulbsitemapcreator.py:186
+#: openhab_creator/output/sitemap/creators/poweroutletsitemapcreator.py:107
 msgid "Assignment {wallswitch} to {lightbulb}"
 msgstr "Zuordnung {wallswitch} zu {lightbulb}"
 
@@ -1558,7 +1562,8 @@ msgstr "Alle"
 msgid "General"
 msgstr "Allgemein"
 
-#: openhab_creator/output/sitemap/creators/poweroutletsitemapcreator.py:21
+#: openhab_creator/output/sitemap/creators/poweroutletsitemapcreator.py:27
+#: openhab_creator/output/sitemap/creators/poweroutletsitemapcreator.py:59
 msgid "Poweroutlets"
 msgstr "Steckdosen"
 
@@ -1649,7 +1654,11 @@ msgstr "Wetterwarnungen"
 msgid "Notifications"
 msgstr "Benachrichtigungen"
 
-#: openhab_creator/output/sitemap/creators/whitegoodsitemapcreator.py:56
+#: openhab_creator/output/sitemap/creators/whitegoodsitemapcreator.py:30
+msgid "White goods"
+msgstr "Haushaltsgeräte"
+
+#: openhab_creator/output/sitemap/creators/whitegoodsitemapcreator.py:60
 msgid "{whitegood} power"
 msgstr "{whitegood} Leistung"
 

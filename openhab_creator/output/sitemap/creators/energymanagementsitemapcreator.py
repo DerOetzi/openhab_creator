@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 class EnergyManagementSitemapCreator(BaseSitemapCreator):
     def build_mainpage(self, sitemap: Sitemap, configuration: Configuration) -> None:
         page = Page(label=_('Energy management'))\
-            .icon('energy')\
+            .icon('energymanagement')\
             .append_to(sitemap.second_frame)
 
         self.build_smartmeters(page, configuration)
@@ -39,6 +39,7 @@ class EnergyManagementSitemapCreator(BaseSitemapCreator):
             frame: Frame,
             smartmeter: SmartMeter) -> None:
         page = Page(label=smartmeter.blankname)\
+            .icon('smartmeter')\
             .append_to(frame)
 
         if smartmeter.points.has_power_total:

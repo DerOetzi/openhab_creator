@@ -27,31 +27,35 @@ class WhiteGoodSitemapCreator(BaseSitemapCreator):
                     .append_to(sitemap)
 
     def build_statuspage(self, statuspage: Page, configuration: Configuration) -> None:
+        page = Page(label=_('White goods'))\
+            .icon('whitegood')\
+            .append_to(statuspage)
+
         for whitegood in configuration.equipment.equipment('whitegood'):
-            page = Page(whitegood.item_ids.state)\
+            device_page = Page(whitegood.item_ids.state)\
                 .label(whitegood.blankname)\
-                .append_to(statuspage)
+                .append_to(page)
 
             Text(whitegood.item_ids.state)\
-                .append_to(page)
+                .append_to(device_page)
 
             Text(whitegood.item_ids.power)\
-                .append_to(page)
+                .append_to(device_page)
 
             if whitegood.has_reminder:
                 Text(whitegood.item_ids.countdown)\
                     .visibility((whitegood.item_ids.done, '!=', 'OFF'))\
-                    .append_to(page)
+                    .append_to(device_page)
 
                 Switch(whitegood.item_ids.done, [('ON', _('Done'))])\
                     .visibility((whitegood.item_ids.done, '!=', 'ON'))\
-                    .append_to(page)
+                    .append_to(device_page)
 
             Text(whitegood.item_ids.start)\
                 .visibility((whitegood.item_ids.start, '!=', 'NULL'))\
-                .append_to(page)
+                .append_to(device_page)
 
-            self._add_grafana(configuration.dashboard, page,
+            self._add_grafana(configuration.dashboard, device_page,
                               ['', _('Average per hour')],
                               _('{whitegood} power').format(whitegood=whitegood.blankname) + ' ')
 

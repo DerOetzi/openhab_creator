@@ -37,7 +37,7 @@ class SmartMeterItemsCreator(BaseItemsCreator):
             Number(smartmeter.item_ids.consumed_total)\
                 .energy()\
                 .label(_('Consumed total'))\
-                .icon('energy')\
+                .icon('smartmeterconsumption')\
                 .equipment(smartmeter)\
                 .semantic(PointType.MEASUREMENT, PropertyType.ENERGY)\
                 .sensor('smartmeter_consumed', smartmeter.influxdb_tags, add_item_label=True)\
@@ -50,7 +50,7 @@ class SmartMeterItemsCreator(BaseItemsCreator):
                 Number(smartmeter.item_ids.consumed(tariff))\
                     .energy()\
                     .label(_('Consumed tariff {tariff}').format(tariff=tariff))\
-                    .icon('energy')\
+                    .icon('smartmeterconsumption')\
                     .equipment(smartmeter)\
                     .semantic(PointType.MEASUREMENT, PropertyType.ENERGY)\
                     .sensor('smartmeter_consumed', smartmeter.influxdb_tags, add_item_label=True)\
@@ -63,7 +63,7 @@ class SmartMeterItemsCreator(BaseItemsCreator):
             Number(smartmeter.item_ids.delivered_total)\
                 .energy()\
                 .label(_('Delivered total'))\
-                .icon('energy')\
+                .icon('smartmeterdelivery')\
                 .equipment(smartmeter)\
                 .semantic(PointType.MEASUREMENT, PropertyType.ENERGY)\
                 .sensor('smartmeter_delivered', smartmeter.influxdb_tags, add_item_label=True)\
@@ -76,7 +76,7 @@ class SmartMeterItemsCreator(BaseItemsCreator):
             Number(smartmeter.item_ids.power_total)\
                 .power()\
                 .label(_('Power total'))\
-                .icon('energy')\
+                .icon('power')\
                 .equipment(smartmeter)\
                 .semantic(PointType.MEASUREMENT, PropertyType.POWER)\
                 .sensor('smartmeter_power', smartmeter.influxdb_tags, add_item_label=True)\
@@ -89,7 +89,7 @@ class SmartMeterItemsCreator(BaseItemsCreator):
                 Number(smartmeter.item_ids.power(phase))\
                     .power()\
                     .label(_('Power phase {phase}').format(phase=phase))\
-                    .icon('energy')\
+                    .icon('power')\
                     .equipment(smartmeter)\
                     .semantic(PointType.MEASUREMENT, PropertyType.POWER)\
                     .sensor('smartmeter_power', smartmeter.influxdb_tags, add_item_label=True)\
