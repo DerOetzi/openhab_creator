@@ -18,7 +18,7 @@ if TYPE_CHECKING:
         WallSwitch
 
 
-@SitemapCreatorPipeline(mainpage=40, statuspage=5, configpage=10)
+@SitemapCreatorPipeline(mainpage=40, statuspage=50, configpage=10)
 class LightbulbSitemapCreator(BaseSitemapCreator):
     @classmethod
     def has_needed_equipment(cls, configuration: Configuration) -> bool:

@@ -14,7 +14,7 @@ if TYPE_CHECKING:
     from openhab_creator.models.grafana import Dashboard
 
 
-@SitemapCreatorPipeline(statuspage=6, configpage=20)
+@SitemapCreatorPipeline(statuspage=60, configpage=20)
 class WindowSitemapCreator(BaseSitemapCreator):
     @classmethod
     def has_needed_equipment(cls, configuration: Configuration) -> bool:

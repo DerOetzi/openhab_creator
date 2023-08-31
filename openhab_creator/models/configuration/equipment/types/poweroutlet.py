@@ -41,7 +41,7 @@ class PowerOutletPoints(SensorPoints):
 
     @property
     def has_power(self) -> bool:
-        return self.has('power')
+        return self.has('power', True)
 
 
 @EquipmentType()

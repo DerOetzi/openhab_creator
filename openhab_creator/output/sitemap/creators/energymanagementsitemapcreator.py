@@ -23,6 +23,7 @@ class EnergyManagementSitemapCreator(BaseSitemapCreator):
             .append_to(sitemap.second_frame)
 
         self.build_smartmeters(page, configuration)
+        self.build_consumers(page, configuration)
 
     def build_smartmeters(self, page: Page, configuration: Configuration) -> None:
         has_smartmeters, smartmeters = configuration.equipment.has(
@@ -96,6 +97,28 @@ class EnergyManagementSitemapCreator(BaseSitemapCreator):
         else:
             Text(smartmeter.item_ids.power_total)\
                 .append_to(page)
+
+    def build_consumers(self, page: Page, configuration: Configuration) -> None:
+        has_poweroutlets, poweroutlets = configuration.equipment.has(
+            'poweroutlet')
+        if has_poweroutlets:
+            frame = page.frame('consumer_frame', _('Consumers'))
+
+            for poweroutlet in poweroutlets:
+                if poweroutlet.points.has_power:
+                    subpage = Page(poweroutlet.item_ids.power)\
+                        .label(poweroutlet.blankname)\
+                        .icon('poweroutlet')\
+                        .append_to(frame)
+
+                    Text(poweroutlet.item_ids.power)\
+                        .icon('power')\
+                        .append_to(subpage)
+
+                    self._add_grafana(configuration.dashboard,
+                                      subpage, ['', _('Average per hour')],
+                                      _('{poweroutlet} power').format(
+                                          poweroutlet=poweroutlet.blankname) + ' ')
 
     def build_statuspage(self, statuspage: Page, configuration: Configuration) -> None:
         """No statuspage for energy management"""
