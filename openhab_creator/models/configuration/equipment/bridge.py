@@ -6,7 +6,6 @@ from openhab_creator.models.configuration.equipment import (
     Equipment, EquipmentItemIdentifiers)
 
 if TYPE_CHECKING:
-    from openhab_creator.models.configuration import Configuration
     from openhab_creator.models.configuration.equipment.thing import Thing
 
 
@@ -29,7 +28,7 @@ class Bridge(Equipment):
 
         self.things: List[Thing] = []
 
-        self.subbridge: Optional[Thing] = None
+        self.parent_bridge: Optional[Bridge] = None
 
     @property
     def item_ids(self) -> BridgeItemIdentifiers:
@@ -46,4 +45,4 @@ class Bridge(Equipment):
 
     @property
     def is_subbridge(self) -> bool:
-        return self.subbridge is not None
+        return self.parent_bridge is not None

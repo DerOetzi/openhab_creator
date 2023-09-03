@@ -57,7 +57,7 @@ class ThingsCreator(BaseCreator):
                 self._append_thing_channels(thing.channels)
 
             if thing.is_subbridge:
-                self._append_things(thing.combined_bridge)
+                self._append_things(thing.same_bridge)
 
             if thing.has_channels or thing.is_subbridge:
                 self.append('  }')

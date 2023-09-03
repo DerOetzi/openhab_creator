@@ -78,13 +78,13 @@ class Thing():
                  channels: Optional[Dict[str, Any]] = None,
                  bridge: Optional[str] = None,
                  mac: Optional[bool] = False,
-                 tobridge: Optional[str] = None):
+                 asbridge: Optional[str] = None):
 
         self.equipment_node: Equipment = equipment_node
 
         self.typed: str = thingtype
 
-        self._init_bridge(configuration, bridge, tobridge)
+        self._init_bridge(configuration, bridge, asbridge)
 
         self._init_nameprefix(nameprefix)
 
@@ -108,22 +108,23 @@ class Thing():
     def _init_bridge(self,
                      configuration: Optional[Configuration] = None,
                      bridge_key: Optional[str] = None,
-                     tobridge: Optional[str] = None) -> None:
+                     asbridge: Optional[str] = None) -> None:
 
         self.bridge: Optional[Bridge] = None
-        self.combined_bridge = None
+        self.same_bridge = None
 
         if not (configuration is None or bridge_key is None):
             self.bridge = configuration.equipment.bridge(bridge_key)
             self.bridge.add_thing(self)
 
-            if tobridge is not None:
-                self.combined_bridge = configuration.equipment.bridge(tobridge)
-                self.combined_bridge.subbridge = self
+            if asbridge is not None:
+                self.same_bridge = configuration.equipment.bridge(asbridge)
+                self.same_bridge.parent_bridge = self.bridge
+                self.same_bridge.thing = self
 
     @property
     def is_subbridge(self) -> bool:
-        return self.combined_bridge is not None
+        return self.same_bridge is not None
 
     def _init_nameprefix(self, nameprefix: str) -> None:
         if self.has_bridge and self.bridge.is_thing:
@@ -165,10 +166,15 @@ class Thing():
             self.typed
         ]
 
-        if self.has_bridge \
-                and self.bridge.is_thing \
-                and self.bridge.identifier != self.equipment_node.identifier:
-            prefixes.append(self.bridge.thing.uid)
+        if self.has_bridge:
+            if self.bridge.is_subbridge \
+                    and self.bridge.parent_bridge.is_thing:
+                prefixes.append(self.bridge.parent_bridge.thing.uid)
+
+            if self.bridge.is_thing \
+                    and self.bridge.identifier != self.equipment_node.identifier:
+
+                prefixes.append(self.bridge.thing.uid)
 
         prefixes.append(self.uid)
 
