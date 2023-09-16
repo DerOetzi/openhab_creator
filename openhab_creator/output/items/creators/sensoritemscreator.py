@@ -37,7 +37,7 @@ class SensorItemsCreator(BaseItemsCreator):
 
             if sensor.has_subequipment:
                 for subsensor in sensor.subequipment:
-                    if sensor.category != 'sensor':
+                    if sensor.category not in ('sensor', 'poweroutlet'):
                         self.build_sensor(subsensor)
 
                     self.build_sensortype_area(subsensor)
@@ -57,12 +57,15 @@ class SensorItemsCreator(BaseItemsCreator):
             .append_to(self)
 
         for sensortype in SensorType:
-            Group(f'{sensortype}All')\
+            group_item = Group(f'{sensortype}All')\
                 .typed(GroupType.NUMBER_AVG)\
                 .label(sensortype.labels.page)\
                 .format(sensortype.labels.format_str)\
                 .icon(f'{sensortype}')\
                 .append_to(self)
+
+            if sensortype.typed.unit:
+                group_item.unit(sensortype.typed.unit)
 
             if sensortype.labels.has_gui_factor:
                 Group(f'gui{sensortype}All')\
@@ -94,13 +97,16 @@ class SensorItemsCreator(BaseItemsCreator):
             if sensortype.point in sensor.categories:
                 if sensortype not in self.sensors[area]:
                     self.sensors[area][sensortype] = {}
-                    Group(f'{sensortype}{area}')\
+                    group_item = Group(f'{sensortype}{area}')\
                         .typed(GroupType.NUMBER_AVG)\
                         .label(sensortype.labels.item)\
                         .format(sensortype.labels.format_str)\
                         .icon(f'{sensortype}{area.lower()}')\
                         .groups(f'{sensortype}All')\
                         .append_to(self)
+
+                    if sensortype.typed.unit:
+                        group_item.unit(sensortype.typed.unit)
 
                     if sensortype.labels.has_gui_factor:
                         Group(f'gui{sensortype}{area}')\
@@ -119,7 +125,7 @@ class SensorItemsCreator(BaseItemsCreator):
 
         if location not in self.sensors[area][sensortype]:
             self.sensors[area][sensortype][location] = True
-            Group(f'{sensortype}{location}')\
+            group_item = Group(f'{sensortype}{location}')\
                 .typed(GroupType.NUMBER_AVG)\
                 .label(sensortype.labels.item)\
                 .format(sensortype.labels.format_str)\
@@ -128,6 +134,9 @@ class SensorItemsCreator(BaseItemsCreator):
                 .location(location)\
                 .semantic(PointType.MEASUREMENT, sensortype.typed.property)\
                 .append_to(self)
+
+            if sensortype.typed.unit:
+                group_item.unit(sensortype.typed.unit)
 
             if sensortype.labels.has_gui_factor:
                 Group(f'gui{sensortype}{location}')\
@@ -152,6 +161,9 @@ class SensorItemsCreator(BaseItemsCreator):
             .channel(sensor.points.channel(sensortype.point))\
             .aisensor(AISensorDataType.NUMERICAL)\
             .append_to(self)
+
+        if sensortype.typed.unit:
+            sensor_item.unit(sensortype.typed.unit)
 
         sensor_item = self.moisture_items(sensortype, sensor_item, sensor)
 

@@ -13,7 +13,8 @@ reload(personal.autoitemmanager)
 
 class LightUtils(object):
     BLACK = HSBType(DecimalType(0), PercentType(0), PercentType(0))
-    NIGHT = HSBType(DecimalType(36), PercentType(100), PercentType(5))
+    NIGHT = HSBType(DecimalType(31.179674982833603),
+                    PercentType(100), PercentType(10))
 
     log = logging.getLogger('{}.LightUtils'.format(LOG_PREFIX))
 

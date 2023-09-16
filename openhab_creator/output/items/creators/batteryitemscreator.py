@@ -59,6 +59,7 @@ class BatteryItemsCreator(BaseItemsCreator):
                         .sensor('batteries', equipment.influxdb_tags)\
                         .channel(equipment.points.channel('battery_level'))\
                         .semantic(PointType.MEASUREMENT, PropertyType.LEVEL)\
+                        .unit('%')\
                         .append_to(self)
 
                 if equipment.points.has_battery_low:

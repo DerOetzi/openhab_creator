@@ -60,10 +60,14 @@ class PropertyType(CreatorEnum):
 
 
 class ProfileType(CreatorEnum):
-    JS = 'transform:JS'
-    MAP = 'transform:MAP'
-    SCALE = 'transform:SCALE'
-    PHONEBOOK = 'transform:PHONEBOOK'
+    JS = 'transform:JS', 'toItemScript'
+    MAP = 'transform:MAP', 'function'
+    SCALE = 'transform:SCALE', 'function'
+    PHONEBOOK = 'transform:PHONEBOOK', 'function'
+
+    def __init__(self, profile: str, function: str) -> None:
+        self.profile: str = profile
+        self.function: str = function
 
 
 class AISensorDataType(CreatorEnum):
@@ -204,6 +208,10 @@ class BaseItem():
         self._metadata['scripting'] = {'properties': config}
         return self
 
+    def unit(self, unit: str) -> BaseItem:
+        self._metadata['unit'] = {'value': unit}
+        return self
+
     def semantic(self,
                  *semantic_tags: List[Union[str, BaseObject, PointType, PropertyType]]) -> BaseItem:
         for tag in semantic_tags:
@@ -227,12 +235,12 @@ class BaseItem():
         if not (profile_type is None or profile_properties is None):
             if isinstance(profile_properties, str):
                 self._metadata['channel']['properties'] = {
-                    'profile': profile_type,
-                    'function': profile_properties
+                    'profile': profile_type.profile,
+                    profile_type.function: profile_properties
                 }
             else:
                 self._metadata['channel']['properties'] = {
-                    'profile': profile_type,
+                    'profile': profile_type.profile,
                     **profile_properties
                 }
         return self

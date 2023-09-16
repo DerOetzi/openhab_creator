@@ -28,6 +28,7 @@ class Number(BaseItem):
     def percentage(self, digits: Optional[int] = 0) -> Number:
         self.typed(NumberType.DIMENSIONLESS)
         self.format(f'%.{digits}f %%')
+        self.unit('%')
         return self
 
     def temperature(self, digits: Optional[int] = 1) -> Number:

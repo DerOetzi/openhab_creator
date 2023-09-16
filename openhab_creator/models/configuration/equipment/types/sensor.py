@@ -26,6 +26,7 @@ class SensorLabel:
 class SensorTyped:
     property: PropertyType
     number: NumberType
+    unit: Optional[str] = None
 
 
 class SensorColors:
@@ -72,7 +73,7 @@ class SensorType(CreatorEnum):
 
     HUMIDITY = 'humidity',\
                SensorLabel(_('Humidity'), _('Humidity'), '%,.0f %%'),\
-               SensorTyped(PropertyType.HUMIDITY, NumberType.DIMENSIONLESS),\
+               SensorTyped(PropertyType.HUMIDITY, NumberType.DIMENSIONLESS, '%'),\
                SensorColors([
                    (60, Color.RED), (58, Color.ORANGE), (54, Color.YELLOW),
                    (42, Color.GREEN), (40, Color.ORANGE), (0, Color.RED)
@@ -85,7 +86,7 @@ class SensorType(CreatorEnum):
 
     CO2 = 'co2',\
         SensorLabel(_('CO2 concentration'), _('CO2 concentration'), '%,d ppm', 100),\
-        SensorTyped(PropertyType.CO2, NumberType.DIMENSIONLESS),\
+        SensorTyped(PropertyType.CO2, NumberType.DIMENSIONLESS, 'ppm'),\
         SensorColors([
             (2000, Color.RED), (1200, Color.ORANGE), (800, Color.YELLOW),
             (0, Color.GREEN)
@@ -93,15 +94,15 @@ class SensorType(CreatorEnum):
 
     MOISTURE = 'moisture',\
                SensorLabel(_('Soil moisture'), _('Soil moisture'), '%,.0f %%'),\
-               SensorTyped(PropertyType.HUMIDITY, NumberType.DIMENSIONLESS),\
+               SensorTyped(PropertyType.HUMIDITY, NumberType.DIMENSIONLESS, '%'),\
                SensorColors([
                    (85, Color.RED), (75, Color.ORANGE), (50, Color.GREEN),
                    (40, Color.YELLOW), (30, Color.ORANGE), (0, Color.RED)
                ])
 
     NOISE = 'noise',\
-            SensorLabel(_('Noise'),  _('Noise'), '%,d dB'),\
-            SensorTyped(PropertyType.NOISE, NumberType.DIMENSIONLESS),\
+            SensorLabel(_('Noise'),  _('Noise'), '%,.0f dB'),\
+            SensorTyped(PropertyType.NOISE, NumberType.DIMENSIONLESS, 'dB'),\
             SensorColors([])
 
     HUMIDEX = 'humidex',\
