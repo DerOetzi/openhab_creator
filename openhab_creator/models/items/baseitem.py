@@ -82,6 +82,7 @@ class ExpireType(CreatorEnum):
 
 class BaseItem():
     influxdb_series = {}
+    influxdb_measurements = {}
     aisensors = {}
     icons = {}
 
@@ -172,6 +173,8 @@ class BaseItem():
             'measurement': measurement,
             'tags': series_tags
         }
+
+        BaseItem.influxdb_measurements[measurement] = True
 
         return self
 

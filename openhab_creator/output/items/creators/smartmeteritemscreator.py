@@ -43,6 +43,7 @@ class SmartMeterItemsCreator(BaseItemsCreator):
                 .sensor('smartmeter_consumed', smartmeter.influxdb_tags, add_item_label=True)\
                 .aisensor(AISensorDataType.NUMERICAL)\
                 .channel(smartmeter.points.channel('consumed_total'))\
+                .unit('kWh')\
                 .append_to(self)
 
         for tariff in range(1, 3):
@@ -56,6 +57,7 @@ class SmartMeterItemsCreator(BaseItemsCreator):
                     .sensor('smartmeter_consumed', smartmeter.influxdb_tags, add_item_label=True)\
                     .aisensor(AISensorDataType.NUMERICAL)\
                     .channel(smartmeter.points.channel(f'consumed_t{tariff}'))\
+                    .unit('kWh')\
                     .append_to(self)
 
     def build_delivered(self, smartmeter: SmartMeter) -> None:
@@ -69,6 +71,7 @@ class SmartMeterItemsCreator(BaseItemsCreator):
                 .sensor('smartmeter_delivered', smartmeter.influxdb_tags, add_item_label=True)\
                 .aisensor(AISensorDataType.NUMERICAL)\
                 .channel(smartmeter.points.channel('delivered_total'))\
+                .unit('kWh')\
                 .append_to(self)
 
     def build_power(self, smartmeter: SmartMeter) -> None:
@@ -82,6 +85,7 @@ class SmartMeterItemsCreator(BaseItemsCreator):
                 .sensor('smartmeter_power', smartmeter.influxdb_tags, add_item_label=True)\
                 .aisensor(AISensorDataType.NUMERICAL)\
                 .channel(smartmeter.points.channel('power_total'))\
+                .unit('W')\
                 .append_to(self)
 
         for phase in range(1, 4):
@@ -95,4 +99,5 @@ class SmartMeterItemsCreator(BaseItemsCreator):
                     .sensor('smartmeter_power', smartmeter.influxdb_tags, add_item_label=True)\
                     .aisensor(AISensorDataType.NUMERICAL)\
                     .channel(smartmeter.points.channel(f'power_p{phase}'))\
+                    .unit('W')\
                     .append_to(self)

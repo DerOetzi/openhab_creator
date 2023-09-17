@@ -142,6 +142,7 @@ class PresenceItemsCreator(BaseItemsCreator):
                 'person': smartphone.person.name,
                 'geofence': smartphone.item_ids.geofence
             })\
+            .unit('km')\
             .append_to(self)
 
         if smartphone.points.has_accuracy:

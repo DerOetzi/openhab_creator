@@ -65,7 +65,7 @@ class SensorType(CreatorEnum):
     TEMPERATURE = 'temperature',\
                   SensorLabel(_('Temperatures'), _('Temperature'), '%.1f °C'),\
                   SensorTyped(PropertyType.TEMPERATURE,
-                              NumberType.TEMPERATURE),\
+                              NumberType.TEMPERATURE, '°C'),\
         SensorColors([
             (28, Color.RED), (24, Color.ORANGE), (20, Color.YELLOW),
             (16, Color.GREEN), (8, Color.BLUE), (0, Color.GREY)
@@ -107,7 +107,7 @@ class SensorType(CreatorEnum):
 
     HUMIDEX = 'humidex',\
         SensorLabel(_('Felt temperatures (Humidex)'), _('Felt temperature (Humidex)'), '%.1f °C'),\
-        SensorTyped(PropertyType.TEMPERATURE, NumberType.TEMPERATURE),\
+        SensorTyped(PropertyType.TEMPERATURE, NumberType.TEMPERATURE, '°C'),\
         SensorColors([])
 
     def __init__(self, point: str, labels: SensorLabel,

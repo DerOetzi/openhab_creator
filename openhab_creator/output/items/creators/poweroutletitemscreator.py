@@ -92,4 +92,5 @@ class PowerOutletItemsCreator(BaseItemsCreator):
                 .semantic(PointType.MEASUREMENT, PropertyType.POWER)\
                 .channel(poweroutlet.points.channel('power'))\
                 .scripting(poweroutlet.scripting)\
+                .unit('W')\
                 .append_to(self)

@@ -22,6 +22,8 @@ class DocumentationCreator(BaseCreator):
 
     def _build_influxdb_series(self) -> None:
         self._write_json(BaseItem.influxdb_series, 'influxdb_series')
+        self._write_json(list(BaseItem.influxdb_measurements.keys()),
+                         'influxdb_measurements')
 
     def _build_aisensors(self) -> None:
         self._write_json(BaseItem.aisensors, 'aisensors')

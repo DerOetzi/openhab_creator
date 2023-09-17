@@ -13,16 +13,16 @@ from openhab_creator.output.color import Color
 class WeatherStationType(CreatorEnum):
     RAIN_GAUGE = 'rain_gauge',\
         SensorLabel(_('Rain gauge'), _('Rain gauge'), '%.1f mm'),\
-        SensorTyped(PropertyType.RAIN, NumberType.LENGTH),\
+        SensorTyped(PropertyType.RAIN, NumberType.LENGTH, 'mm'),\
         SensorColors([])
 
     CLOUDINESS = 'cloudiness',\
         SensorLabel(_('Cloudiness'), _('Cloudiness'), '%d %unit%'),\
-        SensorTyped(None, NumberType.DIMENSIONLESS),\
+        SensorTyped(None, NumberType.DIMENSIONLESS, '%'),\
         SensorColors([])
 
     SNOW = 'snow',\
-        SensorLabel(_('Snow'), _('Snow'), '%.1f %uni%'),\
+        SensorLabel(_('Snow'), _('Snow'), '%.1f %unit%'),\
         SensorTyped(None, NumberType.LENGTH),\
         SensorColors([])
 
