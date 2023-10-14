@@ -139,7 +139,10 @@ class LightUtils(object):
             updated = onoff_item.get_value() != onoff
             onoff_item.send_command(onoff)
         elif rgb_item:
-            updated = rgb_item.get_value(cls.BLACK) != color
+            updated = rgb_item.get_value(
+                cls.BLACK).getBrightness() != color.getBrightness()
+            cls.log.debug('RGB: %s: %s, %s, %s', rgb_item, rgb_item.get_value(
+                cls.BLACK), color, updated)
             rgb_item.send_command(color)
 
         return updated
