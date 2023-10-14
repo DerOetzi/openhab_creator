@@ -380,16 +380,18 @@ class LightbulbItemsCreator(BaseItemsCreator):
             .append_to(self)
 
     def _build_thing_brightness(self, lightbulb: Lightbulb, scripting: Dict) -> Dict:
-        Dimmer(lightbulb.item_ids.brightness)\
+        dimmmer_item = Dimmer(lightbulb.item_ids.brightness)\
             .label(_('Brightness'))\
             .icon('light')\
             .equipment(lightbulb)\
-            .groups(lightbulb.parent.item_ids.brightness)\
             .semantic(PointType.CONTROL, PropertyType.LIGHT)\
             .channel(lightbulb.points.channel('brightness'))\
             .append_to(self)
 
         scripting['brightness_item'] = lightbulb.item_ids.brightness
+
+        if lightbulb.is_child:
+            dimmmer_item.groups(lightbulb.parent.item_ids.brightness)
 
         return scripting
 
