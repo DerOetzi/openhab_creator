@@ -47,9 +47,6 @@ def whitegood_state(event_or_itemname):
         status_item.post_update(WHITEGOOD_RUNNING)
     elif status == WHITEGOOD_OFF:
         status_item.post_update(WHITEGOOD_STANDBY)
-    elif status == WHITEGOOD_RUNNING:
-        whitegood_finished(power_item)
-        status_item.post_update(WHITEGOOD_READY)
 
 
 def whitegood_finished(power_item):
