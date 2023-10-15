@@ -28,12 +28,12 @@ class BatterySitemapCreator(BaseSitemapCreator):
             .valuecolor(*self._valuecolors_low)\
             .append_to(statuspage)
 
-        locations = []
+        locations = {}
 
         for battery in configuration.equipment.equipment('battery', False):
             location = battery.location.toplevel
-            locations.append(location.identifier)
             frame = page.frame(location.identifier, location.name)
+            locations[location] = frame
 
             if battery.points.has_battery_level:
                 level = Text(battery.item_ids.levelbattery, battery.name_with_type)\
@@ -49,9 +49,9 @@ class BatterySitemapCreator(BaseSitemapCreator):
                 level.visibility((battery.item_ids.lowbattery, '==', 'OFF'))
                 low.visibility((battery.item_ids.lowbattery, '!=', 'OFF'))
 
-        self._add_grafana(configuration.dashboard, page,
-                          list(dict.fromkeys(locations)),
-                          _('Batteries status') + ' ')
+        self._add_grafana_to_location_frames(configuration.dashboard, page,
+                                             locations,
+                                             _('Batteries status') + ' ')
 
     def build_configpage(self, configpage: Page, configuration: Configuration) -> None:
         """No configpage for batteries"""

@@ -34,6 +34,10 @@ class BaseElement():
         self._label = label
         return self.attribute('label', Formatter.label(self._label, self._format_str), '"', '"')
 
+    @property
+    def labelstr(self) -> str:
+        return self._label
+
     def map(self, mapname: MapTransformation) -> BaseElement:
         return self.format(mapname.formatstr)
 

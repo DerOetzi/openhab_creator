@@ -10,6 +10,8 @@ from openhab_creator.output.sitemap import SitemapCreatorPipeline
 from openhab_creator.output.sitemap.basesitemapcreator import \
     BaseSitemapCreator
 
+from openhab_creator.models.grafana import AggregateWindow, Period
+
 if TYPE_CHECKING:
     from openhab_creator.models.configuration import Configuration
     from openhab_creator.models.configuration.equipment.types.lightbulb import \
@@ -70,11 +72,14 @@ class LightbulbSitemapCreator(BaseSitemapCreator):
         page = Page('SwitchingCycles')\
             .append_to(statuspage)
 
+        locations = {}
+
         for lightbulb in configuration.equipment.equipment('lightbulb', False):
-            location = lightbulb.location.toplevel
+            location = lightbulb.location
 
             if lightbulb.is_thing and not lightbulb.has_subequipment:
                 frame = page.frame(location.identifier, location.name)
+                locations[location] = frame
 
                 subpage = Page(lightbulb.item_ids.switchingcycles)\
                     .label(lightbulb.name)\
@@ -85,6 +90,16 @@ class LightbulbSitemapCreator(BaseSitemapCreator):
 
                 Switch(lightbulb.item_ids.switchingcyclesreset, [('ON', 'Reset')])\
                     .append_to(subpage)
+
+        self._add_grafana_to_location_frames(configuration.dashboard,
+                                             page,
+                                             locations,
+                                             _('Switching cycles') + ' ',
+                                             {Period.DAY: AggregateWindow.HOUR,
+                                                 Period.WEEK: AggregateWindow.DAY,
+                                                 Period.MONTH: AggregateWindow.DAY,
+                                                 Period.YEAR: AggregateWindow.MONTH,
+                                                 Period.YEARS: AggregateWindow.MONTH})
 
     def build_configpage(self, configpage: Page, configuration: Configuration) -> None:
         page = Page(label=_('Lights'))\
