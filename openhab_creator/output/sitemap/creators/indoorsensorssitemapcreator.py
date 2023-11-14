@@ -37,7 +37,7 @@ class IndoorSensorsSitemapCreator(BaseSitemapCreator):
         prefix = 'gui' if sensortype.labels.has_gui_factor else ''
 
         page = Page(f'{prefix}{sensortype}Indoor')
-        locations = []
+        locations = {}
 
         if sensortype.colors.has_indoor:
             page.valuecolor(
@@ -46,9 +46,9 @@ class IndoorSensorsSitemapCreator(BaseSitemapCreator):
         for sensor in sensors:
             if sensor.points.has(sensortype.point):
                 location = sensor.location.toplevel
-                locations.append(location)
                 frame = page.frame(
                     location.identifier, location.name)
+                locations[location] = frame
 
                 sensor_text = Text(f'{prefix}{sensortype}{sensor.item_ids.merged_sensor}')\
                     .label(sensor.name)
@@ -62,9 +62,11 @@ class IndoorSensorsSitemapCreator(BaseSitemapCreator):
                 if sensortype.point == 'moisture':
                     self.build_moisture(frame, sensor)
 
-        self._add_grafana(configuration.dashboard, page,
-                          list(dict.fromkeys(locations)),
-                          f'{sensortype.labels.page} ')
+        self._add_grafana_to_location_frames(
+            configuration.dashboard,
+            page,
+            locations,
+            f'{sensortype.labels.page} ')
 
         return page
 

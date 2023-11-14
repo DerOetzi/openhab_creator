@@ -56,8 +56,11 @@ class TemperatureSitemapCreator(BaseSitemapCreator):
                                     .valuecolor(f'temperature{sensor.item_ids.merged_sensor}'))\
                         .append_to(subpage)
 
-            self._add_grafana(configuration.dashboard, page,
-                              self.toplevel_locations.keys(), _('Temperatures') + ' ')
+            self._add_grafana_to_location_frames(
+                configuration.dashboard,
+                page,
+                self.toplevel_locations,
+                _('Temperatures') + ' ')
 
     def subpage(self, page: Page, sensor: Sensor, heatings: Dict, windows: Dict) -> Page:
         location = sensor.location
@@ -65,9 +68,9 @@ class TemperatureSitemapCreator(BaseSitemapCreator):
             subpage = self.locations[location]
         else:
             toplevel_location = sensor.location.toplevel
-            self.toplevel_locations[toplevel_location.identifier] = toplevel_location
             frame = page.frame(
                 toplevel_location.identifier, toplevel_location.name)
+            self.toplevel_locations[toplevel_location] = frame
             subpage = Page(f'temperature{location}')\
                 .label(location.name)\
                 .valuecolor(*TemperatureSitemapCreator.valuecolor(f'temperature{location}'))
