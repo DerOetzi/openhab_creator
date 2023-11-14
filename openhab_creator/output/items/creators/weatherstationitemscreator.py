@@ -116,12 +116,15 @@ class WeatherStationItemsCreator(BaseItemsCreator):
                                    weathertype: WeatherStationType,
                                    station: WeatherStation) -> Number:
         if weathertype not in self.groups:
-            Group(f'{weathertype}WeatherStation')\
+            group_item = Group(f'{weathertype}WeatherStation')\
                 .typed(GroupType.NUMBER_AVG)\
                 .label(weathertype.labels.page)\
                 .format(weathertype.labels.format_str)\
                 .icon(f'{weathertype}')\
                 .append_to(self)
+            
+            if weathertype.typed.unit:
+                group_item.unit(weathertype.typed.unit)
 
             if weathertype.labels.has_gui_factor:
                 Group(f'gui{weathertype}WeatherStation')\
@@ -144,6 +147,9 @@ class WeatherStationItemsCreator(BaseItemsCreator):
             .sensor(weathertype.point, station.influxdb_tags)\
             .aisensor(AISensorDataType.NUMERICAL)\
             .append_to(self)
+        
+        if weathertype.typed.unit:
+            sensor_item.unit(weathertype.typed.unit)
 
         if weathertype.labels.has_gui_factor:
             Number(f'gui{weathertype}{station.identifier}')\
