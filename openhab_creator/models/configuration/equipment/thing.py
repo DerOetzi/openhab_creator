@@ -190,6 +190,21 @@ class Thing():
     @property
     def channels(self) -> List[Channel]:
         return self._channels.values()
+    
+    def channel(self, channel_key: str) -> Channel | None:
+        channel = None
+        if channel_key in self._channels:
+            channel = self._channels[channel_key]
+
+        return channel
+    
+    def channel_unit(self, channel_key: str, fallback:str) -> str:
+        unit = fallback
+        channel = self.channel(channel_key)
+        if channel is not None and 'unit' in channel.properties:
+            unit = channel.properties['unit']
+
+        return unit
 
     def has_point(self, point: str) -> bool:
         return point in self._channels

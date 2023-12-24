@@ -34,8 +34,9 @@ class SmartMeterItemsCreator(BaseItemsCreator):
 
     def build_consumption(self, smartmeter: SmartMeter) -> None:
         if smartmeter.points.has_consumed_total:
+
             Number(smartmeter.item_ids.consumed_total)\
-                .energy()\
+                .energy(3, 'kWh')\
                 .label(_('Consumed total'))\
                 .icon('smartmeterconsumption')\
                 .equipment(smartmeter)\
@@ -43,13 +44,13 @@ class SmartMeterItemsCreator(BaseItemsCreator):
                 .sensor('smartmeter_consumed', smartmeter.influxdb_tags, add_item_label=True)\
                 .aisensor(AISensorDataType.NUMERICAL)\
                 .channel(smartmeter.points.channel('consumed_total'))\
-                .unit('kWh')\
+                .unit(smartmeter.thing.channel_unit('consumed_total', 'kWh'))\
                 .append_to(self)
 
         for tariff in range(1, 3):
             if smartmeter.points.has_consumed(tariff):
                 Number(smartmeter.item_ids.consumed(tariff))\
-                    .energy()\
+                    .energy(3, 'kWh')\
                     .label(_('Consumed tariff {tariff}').format(tariff=tariff))\
                     .icon('smartmeterconsumption')\
                     .equipment(smartmeter)\
@@ -57,13 +58,13 @@ class SmartMeterItemsCreator(BaseItemsCreator):
                     .sensor('smartmeter_consumed', smartmeter.influxdb_tags, add_item_label=True)\
                     .aisensor(AISensorDataType.NUMERICAL)\
                     .channel(smartmeter.points.channel(f'consumed_t{tariff}'))\
-                    .unit('kWh')\
+                    .unit(smartmeter.thing.channel_unit(f'consumed_t{tariff}', 'kWh'))\
                     .append_to(self)
 
     def build_delivered(self, smartmeter: SmartMeter) -> None:
         if smartmeter.points.has_delivered_total:
             Number(smartmeter.item_ids.delivered_total)\
-                .energy()\
+                .energy(3, 'kWh')\
                 .label(_('Delivered total'))\
                 .icon('smartmeterdelivery')\
                 .equipment(smartmeter)\
@@ -71,7 +72,7 @@ class SmartMeterItemsCreator(BaseItemsCreator):
                 .sensor('smartmeter_delivered', smartmeter.influxdb_tags, add_item_label=True)\
                 .aisensor(AISensorDataType.NUMERICAL)\
                 .channel(smartmeter.points.channel('delivered_total'))\
-                .unit('kWh')\
+                .unit(smartmeter.thing.channel_unit('delivered_total', 'kWh'))\
                 .append_to(self)
 
     def build_power(self, smartmeter: SmartMeter) -> None:
