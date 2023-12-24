@@ -26,7 +26,8 @@ class DocumentationCreator(BaseCreator):
                          'influxdb_measurements')
 
     def _build_aisensors(self) -> None:
-        self._write_json(BaseItem.aisensors, 'aisensors')
+        aisensors = [{"name": name, "typed": typed} for name, typed in BaseItem.aisensors.items()]
+        self._write_json(aisensors, 'aisensors')
 
     def _save_grafana_dashboard(self, dashboard: Dashboard) -> None:
         if dashboard.success:
