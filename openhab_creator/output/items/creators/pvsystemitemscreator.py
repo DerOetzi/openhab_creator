@@ -17,9 +17,25 @@ if TYPE_CHECKING:
 class PVSystemItemsCreator(BaseItemsCreator):
     def build(self, configuration: Configuration) -> None:
         for pvsystem in configuration.equipment.equipment('pvsystem'):
+            Group(pvsystem.item_ids.powerflow)\
+                .append_to(self)
+
             self.build_pvsystem(pvsystem)
             self.build_inverter(pvsystem)
             self.build_pv_panels(pvsystem)
+            self.build_grid(pvsystem)
+            self.build_battery(pvsystem)
+
+            if pvsystem.points.has_power_house:
+                Number(pvsystem.item_ids.power_house)\
+                    .label(_('Power house'))\
+                    .power(0)\
+                    .unit('W')\
+                    .equipment(pvsystem.item_ids.pvsystem)\
+                    .icon('power')\
+                    .semantic(PointType.MEASUREMENT, PropertyType.POWER)\
+                    .channel(pvsystem.points.channel('power_house'))\
+                    .append_to(self)
 
         self.write_file('pvsystem')
 
@@ -69,6 +85,8 @@ class PVSystemItemsCreator(BaseItemsCreator):
                 .icon('energy')\
                 .semantic(PointType.MEASUREMENT, PropertyType.ENERGY)\
                 .channel(pvsystem.points.channel('energy_produced'))\
+                .sensor('pv_energy', pvsystem.influxdb_tags, add_item_label=True)\
+                .aisensor(AISensorDataType.NUMERICAL)\
                 .append_to(self)
             
         if pvsystem.points.has_power_inverter_consumption:
@@ -77,9 +95,12 @@ class PVSystemItemsCreator(BaseItemsCreator):
                 .power(0)\
                 .unit('W')\
                 .equipment(pvsystem.item_ids.inverter)\
+                .groups(pvsystem.item_ids.powerflow)\
                 .icon('power')\
                 .semantic(PointType.MEASUREMENT, PropertyType.POWER)\
                 .channel(pvsystem.points.channel('power_inverter_consumption'))\
+                .sensor('pv_power', pvsystem.influxdb_tags, add_item_label=True)\
+                .aisensor(AISensorDataType.NUMERICAL)\
                 .append_to(self)
             
         if pvsystem.points.has_power_inverter_production:
@@ -88,9 +109,24 @@ class PVSystemItemsCreator(BaseItemsCreator):
                 .power(0)\
                 .unit('W')\
                 .equipment(pvsystem.item_ids.inverter)\
+                .groups(pvsystem.item_ids.powerflow)\
                 .icon('power')\
                 .semantic(PointType.MEASUREMENT, PropertyType.POWER)\
                 .channel(pvsystem.points.channel('power_inverter_production'))\
+                .sensor('pv_power', pvsystem.influxdb_tags, add_item_label=True)\
+                .aisensor(AISensorDataType.NUMERICAL)\
+                .append_to(self)
+            
+        if pvsystem.points.has_power_inverter_factor:
+            Number(pvsystem.item_ids.power_inverter_factor)\
+                .label(_('Power factor inverter'))\
+                .percentage(2)\
+                .unit('%')\
+                .equipment(pvsystem.item_ids.inverter)\
+                .icon('power')\
+                .semantic(PointType.MEASUREMENT)\
+                .channel(pvsystem.points.channel('power_inverter_factor'))\
+                .aisensor(AISensorDataType.NUMERICAL)\
                 .append_to(self)
 
     def build_pv_panels(self, pvsystem: PVSystem) -> None:
@@ -100,9 +136,12 @@ class PVSystemItemsCreator(BaseItemsCreator):
                 .power(0)\
                 .unit('W')\
                 .equipment(pvsystem.item_ids.pv_panels)\
+                .groups(pvsystem.item_ids.powerflow)\
                 .icon('power')\
                 .semantic(PointType.MEASUREMENT, PropertyType.POWER)\
                 .channel(pvsystem.points.channel('power_pv'))\
+                .sensor('pv_energy', pvsystem.influxdb_tags, add_item_label=True)\
+                .aisensor(AISensorDataType.NUMERICAL)\
                 .append_to(self)
 
         if pvsystem.points.has_energy_pv_today:
@@ -114,5 +153,105 @@ class PVSystemItemsCreator(BaseItemsCreator):
                 .icon('energy')\
                 .semantic(PointType.MEASUREMENT, PropertyType.ENERGY)\
                 .channel(pvsystem.points.channel('energy_pv_today'))\
+                .sensor('pv_energy', pvsystem.influxdb_tags, add_item_label=True)\
+                .aisensor(AISensorDataType.NUMERICAL)\
+                .append_to(self)
+            
+    def build_grid(self, pvsystem: PVSystem) -> None:
+        if pvsystem.points.has_power_grid:
+            Number(pvsystem.item_ids.power_grid)\
+                .label(_('Power grid'))\
+                .power(0)\
+                .unit('W')\
+                .equipment(pvsystem.item_ids.pv_grid)\
+                .groups(pvsystem.item_ids.powerflow)\
+                .icon('power')\
+                .semantic(PointType.MEASUREMENT, PropertyType.POWER)\
+                .channel(pvsystem.points.channel('power_grid'))\
+                .sensor('pv_power', pvsystem.influxdb_tags, add_item_label=True)\
+                .aisensor(AISensorDataType.NUMERICAL)\
+                .append_to(self)
+            
+        if pvsystem.points.has_power_grid_consumption:
+            Number(pvsystem.item_ids.power_grid_consumption)\
+                .label(_('Consumption grid'))\
+                .power(0)\
+                .unit('W')\
+                .equipment(pvsystem.item_ids.pv_grid)\
+                .groups(pvsystem.item_ids.powerflow)\
+                .icon('power')\
+                .semantic(PointType.MEASUREMENT, PropertyType.POWER)\
+                .channel(pvsystem.points.channel('power_grid_consumption'))\
+                .sensor('pv_power', pvsystem.influxdb_tags, add_item_label=True)\
+                .aisensor(AISensorDataType.NUMERICAL)\
+                .append_to(self)
+            
+        if pvsystem.points.has_power_grid_delivery:
+            Number(pvsystem.item_ids.power_grid_delivery)\
+                .label(_('Delivery grid'))\
+                .power(0)\
+                .unit('W')\
+                .equipment(pvsystem.item_ids.pv_grid)\
+                .groups(pvsystem.item_ids.powerflow)\
+                .icon('power')\
+                .semantic(PointType.MEASUREMENT, PropertyType.POWER)\
+                .channel(pvsystem.points.channel('power_grid_delivery'))\
+                .sensor('pv_power', pvsystem.influxdb_tags, add_item_label=True)\
+                .aisensor(AISensorDataType.NUMERICAL)\
+                .append_to(self)
+            
+    def build_battery(self, pvsystem: PVSystem) -> None:
+
+        if pvsystem.points.has_power_battery:
+            Number(pvsystem.item_ids.power_battery)\
+                .label(_('Power battery'))\
+                .power(0)\
+                .unit('W')\
+                .equipment(pvsystem.item_ids.pv_battery)\
+                .groups(pvsystem.item_ids.powerflow)\
+                .icon('power')\
+                .semantic(PointType.MEASUREMENT, PropertyType.POWER)\
+                .channel(pvsystem.points.channel('power_battery'))\
+                .sensor('pv_power', pvsystem.influxdb_tags, add_item_label=True)\
+                .aisensor(AISensorDataType.NUMERICAL)\
+                .append_to(self)
+            
+        if pvsystem.points.has_power_battery_charge:
+            Number(pvsystem.item_ids.power_battery_charge)\
+                .label(_('Charge power battery'))\
+                .power(0)\
+                .unit('W')\
+                .equipment(pvsystem.item_ids.pv_battery)\
+                .groups(pvsystem.item_ids.powerflow)\
+                .icon('power')\
+                .semantic(PointType.MEASUREMENT, PropertyType.POWER)\
+                .channel(pvsystem.points.channel('power_battery_charge'))\
+                .sensor('pv_power', pvsystem.influxdb_tags, add_item_label=True)\
+                .aisensor(AISensorDataType.NUMERICAL)\
+                .append_to(self)
+            
+        if pvsystem.points.has_power_battery_discharge:
+            Number(pvsystem.item_ids.power_battery_discharge)\
+                .label(_('Discharge power battery'))\
+                .power(0)\
+                .unit('W')\
+                .equipment(pvsystem.item_ids.pv_battery)\
+                .groups(pvsystem.item_ids.powerflow)\
+                .icon('power')\
+                .semantic(PointType.MEASUREMENT, PropertyType.POWER)\
+                .channel(pvsystem.points.channel('power_battery_discharge'))\
+                .sensor('pv_power', pvsystem.influxdb_tags, add_item_label=True)\
+                .aisensor(AISensorDataType.NUMERICAL)\
+                .append_to(self)
+            
+        if pvsystem.points.has_battery_soc:
+            Number(pvsystem.item_ids.battery_soc)\
+                .percentage(0)\
+                .label(_('Battery SoC'))\
+                .equipment(pvsystem.item_ids.pv_battery)\
+                .icon('battery')\
+                .semantic(PointType.MEASUREMENT, PropertyType.LEVEL)\
+                .channel(pvsystem.points.channel('battery_soc'))\
+                .sensor('pv_battery', pvsystem.influxdb_tags, add_item_label=True)\
                 .append_to(self)
         

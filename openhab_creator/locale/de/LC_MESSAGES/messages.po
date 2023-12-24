@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openHAB Creator\n"
-"POT-Creation-Date: 2023-12-21 22:18+0100\n"
-"PO-Revision-Date: 2023-12-21 22:18+0100\n"
+"POT-Creation-Date: 2023-12-24 21:44+0100\n"
+"PO-Revision-Date: 2023-12-24 21:45+0100\n"
 "Last-Translator: Johannes Ott <info@johannes-ott.net>\n"
 "Language-Team: Johannes Ott\n"
 "Language: de\n"
@@ -541,7 +541,7 @@ msgstr "Pollenflug Region"
 msgid "Power outlet"
 msgstr "Steckdose"
 
-#: models/configuration/equipment/types/pvsystem.py:122
+#: models/configuration/equipment/types/pvsystem.py:190
 msgid "PV System"
 msgstr "Photovoltaikanlage"
 
@@ -759,7 +759,7 @@ msgid "Batteries status"
 msgstr "Batterienstatus"
 
 #: output/items/creators/batteryitemscreator.py:37
-#: output/items/creators/pvsystemitemscreator.py:57
+#: output/items/creators/pvsystemitemscreator.py:70
 msgid "Battery"
 msgstr "Batterie"
 
@@ -1217,37 +1217,73 @@ msgstr "Zuletzt aktualisiert"
 msgid "Begin"
 msgstr "Beginn"
 
-#: output/items/creators/pvsystemitemscreator.py:35
+#: output/items/creators/pvsystemitemscreator.py:28
+msgid "Power house"
+msgstr "Verbrauch Haus"
+
+#: output/items/creators/pvsystemitemscreator.py:48
 msgid "Inverter"
 msgstr "Wechselrichter"
 
-#: output/items/creators/pvsystemitemscreator.py:42
+#: output/items/creators/pvsystemitemscreator.py:55
 msgid "PV panels"
 msgstr "PV Module"
 
-#: output/items/creators/pvsystemitemscreator.py:49
+#: output/items/creators/pvsystemitemscreator.py:62
 msgid "Grid"
 msgstr "Netz"
 
-#: output/items/creators/pvsystemitemscreator.py:65
+#: output/items/creators/pvsystemitemscreator.py:78
 msgid "Produced energy inverter"
 msgstr "Produzierte Energie Wechselrichter"
 
-#: output/items/creators/pvsystemitemscreator.py:76
+#: output/items/creators/pvsystemitemscreator.py:89
 msgid "Consumption inverter"
 msgstr "Leistung Wechselrichter Verbrauch"
 
-#: output/items/creators/pvsystemitemscreator.py:87
+#: output/items/creators/pvsystemitemscreator.py:100
 msgid "Production inverter"
 msgstr "Leistung Wechselrichter Produktion"
 
-#: output/items/creators/pvsystemitemscreator.py:99
+#: output/items/creators/pvsystemitemscreator.py:111
+msgid "Power factor inverter"
+msgstr "Leistungsfaktor Wechselrichter"
+
+#: output/items/creators/pvsystemitemscreator.py:123
 msgid "Power PV"
 msgstr "PV Leistung"
 
-#: output/items/creators/pvsystemitemscreator.py:110
+#: output/items/creators/pvsystemitemscreator.py:134
 msgid "Energy PV today"
 msgstr "PV Energie heute"
+
+#: output/items/creators/pvsystemitemscreator.py:146
+msgid "Power grid"
+msgstr "Leistung Netz"
+
+#: output/items/creators/pvsystemitemscreator.py:157
+msgid "Consumption grid"
+msgstr "Bezug"
+
+#: output/items/creators/pvsystemitemscreator.py:168
+msgid "Delivery grid"
+msgstr "Einspeisung"
+
+#: output/items/creators/pvsystemitemscreator.py:181
+msgid "Power battery"
+msgstr "Leistung Batterie"
+
+#: output/items/creators/pvsystemitemscreator.py:192
+msgid "Charge power battery"
+msgstr "Ladeleistung Batterie"
+
+#: output/items/creators/pvsystemitemscreator.py:203
+msgid "Discharge power battery"
+msgstr "Entladeleistung Batterie"
+
+#: output/items/creators/pvsystemitemscreator.py:215
+msgid "Battery SoC"
+msgstr "Batteriestand"
 
 #: output/items/creators/sceneitemscreator.py:23
 #: output/sitemap/creators/scenesitemapcreator.py:77

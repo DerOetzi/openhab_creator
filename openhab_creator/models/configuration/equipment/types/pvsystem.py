@@ -17,6 +17,10 @@ class PVSystemItemIdentifiers(EquipmentItemIdentifiers):
         return self._identifier('pvsystem')
     
     @property
+    def powerflow(self) -> str:
+        return self._identifier('powerflow')
+    
+    @property
     def inverter(self) -> str:
         return self._identifier('inverter')
     
@@ -31,6 +35,10 @@ class PVSystemItemIdentifiers(EquipmentItemIdentifiers):
     @property
     def power_inverter_production(self) -> str:
         return self._identifier('powerInverterProduction')
+    
+    @property
+    def power_inverter_factor(self) -> str:
+        return self._identifier('powerInverterFactor')
 
     @property
     def pv_panels(self) -> str:
@@ -49,8 +57,40 @@ class PVSystemItemIdentifiers(EquipmentItemIdentifiers):
         return self._identifier('pvGrid')
     
     @property
+    def power_grid(self) -> str:
+        return self._identifier('powerGrid')
+    
+    @property
+    def power_grid_consumption(self) -> str:
+        return self._identifier('powerGridConsumption')
+    
+    @property
+    def power_grid_delivery(self) -> str:
+        return self._identifier('powerGridDelivery')
+    
+    @property
     def pv_battery(self) -> str:
         return self._identifier('pvBattery')
+    
+    @property
+    def power_battery(self) -> str:
+        return self._identifier('powerBattery')
+    
+    @property
+    def power_battery_charge(self) -> str:
+        return self._identifier('powerBatteryCharge')
+    
+    @property
+    def power_battery_discharge(self) -> str:
+        return self._identifier('powerBatteryDischarge')
+    
+    @property
+    def battery_soc(self) -> str:
+        return self._identifier('batterySoc')
+    
+    @property
+    def power_house(self) -> str:
+        return self._identifier('powerHouse')
 
 
 class PVSystemPoints(EquipmentPoints):
@@ -75,8 +115,40 @@ class PVSystemPoints(EquipmentPoints):
         return self.has('power_inverter_production')
     
     @property
+    def has_power_inverter_factor(self) -> bool:
+        return self.has('power_inverter_factor')
+    
+    @property
+    def has_power_grid(self) -> bool:
+        return self.has('power_grid')
+    
+    @property
+    def has_power_grid_consumption(self) -> bool:
+        return self.has('power_grid_consumption')
+    
+    @property
+    def has_power_grid_delivery(self) -> bool:
+        return self.has('power_grid_delivery')
+    
+    @property
+    def has_power_battery(self) -> bool:
+        return self.has('power_battery')
+    
+    @property
+    def has_power_battery_charge(self) -> bool:
+        return self.has('power_battery_charge')
+    
+    @property
+    def has_power_battery_discharge(self) -> bool:
+        return self.has('power_battery_discharge')
+
+    @property
     def has_battery_soc(self) -> bool:
         return self.has('battery_soc')
+    
+    @property
+    def has_power_house(self) -> bool:
+        return self.has('power_house')
 
 
 @EquipmentType()

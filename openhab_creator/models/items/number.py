@@ -39,9 +39,9 @@ class Number(BaseItem):
         self.format(f'%.{digits}f %unit%')
         return self
 
-    def energy(self, digits: Optional[int] = 1) -> Number:
+    def energy(self, digits: Optional[int] = 1, unit: Optional[str] = '%unit%') -> Number:
         self.typed(NumberType.ENERGY)
-        self.format(f'%.{digits}f %unit%')
+        self.format(f'%.{digits}f {unit}')
         return self
 
     def power(self, digits: Optional[int] = 1) -> Number:
