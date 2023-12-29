@@ -37,6 +37,14 @@ class PVSystemItemIdentifiers(EquipmentItemIdentifiers):
         return self._identifier('powerInverterProduction')
     
     @property
+    def power_inverter_pv_production(self) -> str:
+        return self._identifier('powerInverterPvProduction')
+    
+    @property
+    def power_inverter_battery_production(self) -> str:
+        return self._identifier('powerInverterBatteryProduction')
+    
+    @property
     def power_inverter_factor(self) -> str:
         return self._identifier('powerInverterFactor')
 
@@ -89,6 +97,14 @@ class PVSystemItemIdentifiers(EquipmentItemIdentifiers):
         return self._identifier('batterySoc')
     
     @property
+    def pv_wallbox(self) -> str:
+        return self._identifier('pvWallbox')
+    
+    @property
+    def power_wallbox(self) -> str:
+        return self._identifier('powerWallbox')
+    
+    @property
     def power_house(self) -> str:
         return self._identifier('powerHouse')
 
@@ -113,6 +129,14 @@ class PVSystemPoints(EquipmentPoints):
     @property
     def has_power_inverter_production(self) -> bool:
         return self.has('power_inverter_production')
+    
+    @property
+    def has_power_inverter_pv_production(self) -> bool:
+        return self.has('power_inverter_pv_production')
+    
+    @property
+    def has_power_inverter_battery_production(self) -> bool:
+        return self.has('power_inverter_battery_production')
     
     @property
     def has_power_inverter_factor(self) -> bool:
@@ -145,6 +169,10 @@ class PVSystemPoints(EquipmentPoints):
     @property
     def has_battery_soc(self) -> bool:
         return self.has('battery_soc')
+    
+    @property
+    def has_power_wallbox(self) -> bool:
+        return self.has('power_wallbox')
     
     @property
     def has_power_house(self) -> bool:
@@ -188,6 +216,10 @@ class PVSystem(Equipment):
     @property
     def has_battery(self) -> bool:
         return self.points.has_battery_soc
+    
+    @property
+    def has_wallbox(self) -> bool:
+        return self.points.has_power_wallbox
 
     @property
     def name_with_type(self) -> str:
