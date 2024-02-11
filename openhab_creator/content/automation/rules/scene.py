@@ -39,8 +39,8 @@ def change_scene(event):
 @rule('Scene person state changed')
 @when('Descendent of PersonState changed')
 def scene_personstate_changed(event):
-    self.change_scene(event)
-    self.start_scene_timer()
+    change_scene(event)
+    start_scene_timer()
 
 
 @rule('Activate scene')

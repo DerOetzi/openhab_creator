@@ -126,7 +126,7 @@ class WindowEvent(object):
                     HeatingUtils.command(
                         heating_item, save_item.get_string('CLOSED'))
 
-    def abscence(self):
+    def absence(self):
         for window_item in Group('windows'):
             if window_item.get_openclosed():
                 SignalMessenger.broadcast(

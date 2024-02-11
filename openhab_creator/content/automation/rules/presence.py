@@ -2,6 +2,7 @@
 from core.rules import rule
 from core.triggers import when
 from core.log import logging, LOG_PREFIX
+from org.openhab.core.automation.events import TimerEvent
 
 from personal.dateutils import DateUtils
 from personal.ephemerisutils import EphemerisUtils
@@ -92,7 +93,7 @@ def set_homeoffice(item):
 @when("Time cron 46 3 0 * * ?")
 @when('Member of PersonStateBegins changed')
 def personstate_by_calendar(event_or_itemname):
-    if event_or_itemname is None:
+    if event_or_itemname is None or isinstance(event_or_itemname, TimerEvent):
         for item in Group('PersonStateBegins'):
             personstate_by_calendar(item.name)
         return
