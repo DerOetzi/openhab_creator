@@ -26,15 +26,15 @@ class AggregateWindow(CreatorEnum):
 
 
 class Period(CreatorEnum):
-    DAY = '24h', _('Day'), Retention.MONTHLY, AggregateWindow.HOUR
-    WEEK = '7d', _('Week'), Retention.MONTHLY, AggregateWindow.HOUR
-    MONTH = '31d', _('Month'), Retention.MONTHLY, AggregateWindow.HOUR
-    YEAR = '1y', _('Year'), Retention.YEARLY, AggregateWindow.DAY
-    YEARS = '2y', _('2 years'), Retention.YEARLY, AggregateWindow.DAY
-
-    def __init__(self, period: str, label: str, retention: Retention, aggregation: AggregateWindow):
+    DAY = 'd', _('Today'), _('Yesterday'),Retention.MONTHLY, AggregateWindow.HOUR
+    WEEK = 'w', _('Week'), _('Last week'), Retention.MONTHLY, AggregateWindow.DAY
+    MONTH = 'M', _('Month'), _('Last month'), Retention.MONTHLY, AggregateWindow.DAY
+    YEAR = 'y', _('Year'), _('Last year'), Retention.YEARLY, AggregateWindow.MONTH
+    
+    def __init__(self, period: str, label: str, last_label:str, retention: Retention, aggregation: AggregateWindow):
         self._period = period
         self.label: str = label
+        self.last_label: str = last_label
         self.retention: Retention = retention
         self.aggregation: AggregateWindow = aggregation
 
@@ -93,21 +93,26 @@ class Dashboard():
 
             for period in Period:
 
-                url = f'{self.host}/render/d-solo/openhab3?'
-                url += f'from=now-{period}&to=now&'
-                url += f'var-rp={period.retention}&'
+                url = self.url_for_period(aggregations, panel_config, period, f'now/{period}')
+                url_last = self.url_for_period(aggregations, panel_config, period, f'now-1{period}/{period}')
 
-                if aggregations and period in aggregations:
-                    url += f'var-agg={aggregations[period].every}&'
-                else:
-                    url += f'var-agg={period.aggregation.every}&'
-
-                url += f'panelId={panel_config["id"]}&'
-                url += f'width=700&height={panel_config["height"]}'
-
-                urls[period] = url
+                urls[period] = (url, url_last)
         else:
             logger.warning('No panel %s on dashboard', identifier)
             urls = None
 
         return urls
+
+    def url_for_period(self, aggregations, panel_config, period, time: str):
+        url = f'{self.host}/render/d-solo/openhab3?'
+        url += f'from={time}&to={time}&'
+        url += f'var-rp={period.retention}&'
+
+        if aggregations and period in aggregations:
+            url += f'var-agg={aggregations[period].every}&'
+        else:
+            url += f'var-agg={period.aggregation.every}&'
+
+        url += f'panelId={panel_config["id"]}&'
+        url += f'width=700&height={panel_config["height"]}'
+        return url

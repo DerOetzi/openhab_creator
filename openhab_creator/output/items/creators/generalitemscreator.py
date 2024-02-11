@@ -40,7 +40,7 @@ class GeneralItemsCreator(BaseItemsCreator):
             .label(_('Period'))\
             .icon('period')\
             .config()\
-            .expire('10m', f'{Period.DAY}')\
+            .expire('10m', f'{Period.DAY}_actual')\
             .append_to(self)
 
         self.write_file('generals')

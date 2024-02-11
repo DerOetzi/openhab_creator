@@ -63,8 +63,7 @@ class EnergyManagementSitemapCreator(BaseSitemapCreator):
                           {Period.DAY: AggregateWindow.HOUR,
                            Period.WEEK: AggregateWindow.DAY,
                            Period.MONTH: AggregateWindow.DAY,
-                           Period.YEAR: AggregateWindow.MONTH,
-                           Period.YEARS: AggregateWindow.MONTH})
+                           Period.YEAR: AggregateWindow.MONTH})
 
     def _build_consumed_total(self, page: Page, smartmeter: SmartMeter) -> None:
         if smartmeter.points.has_consumed_tariff:

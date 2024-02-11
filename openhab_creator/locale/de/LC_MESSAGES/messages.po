@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: openHAB Creator\n"
-"POT-Creation-Date: 2023-12-29 21:52+0100\n"
-"PO-Revision-Date: 2023-12-29 21:53+0100\n"
+"POT-Creation-Date: 2024-02-11 22:13+0100\n"
+"PO-Revision-Date: 2024-02-11 22:14+0100\n"
 "Last-Translator: Johannes Ott <info@johannes-ott.net>\n"
 "Language-Team: Johannes Ott\n"
 "Language: de\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "Generated-By: pygettext.py 1.5\n"
-"X-Generator: Poedit 3.4\n"
+"X-Generator: Poedit 3.4.2\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-Basepath: ../../..\n"
 "X-Poedit-SearchPath-0: locale\n"
@@ -44,9 +44,9 @@ msgstr "Boost"
 
 #: models/common/maptransformation.py:26 models/common/maptransformation.py:80
 #: models/sitemap/switch.py:51 models/sitemap/switch.py:64
-#: output/sitemap/creators/lightbulbsitemapcreator.py:133
-#: output/sitemap/creators/lightbulbsitemapcreator.py:214
-#: output/sitemap/creators/lightbulbsitemapcreator.py:251
+#: output/sitemap/creators/lightbulbsitemapcreator.py:132
+#: output/sitemap/creators/lightbulbsitemapcreator.py:213
+#: output/sitemap/creators/lightbulbsitemapcreator.py:250
 #: output/sitemap/creators/poweroutletsitemapcreator.py:117
 #: output/sitemap/creators/scenesitemapcreator.py:108
 #: output/sitemap/creators/temperaturesitemapcreator.py:178
@@ -56,9 +56,9 @@ msgid "Off"
 msgstr "Aus"
 
 #: models/common/maptransformation.py:26 models/sitemap/switch.py:64
-#: output/sitemap/creators/lightbulbsitemapcreator.py:133
-#: output/sitemap/creators/lightbulbsitemapcreator.py:224
-#: output/sitemap/creators/lightbulbsitemapcreator.py:251
+#: output/sitemap/creators/lightbulbsitemapcreator.py:132
+#: output/sitemap/creators/lightbulbsitemapcreator.py:223
+#: output/sitemap/creators/lightbulbsitemapcreator.py:250
 #: output/sitemap/creators/poweroutletsitemapcreator.py:116
 #: output/sitemap/creators/temperaturesitemapcreator.py:178
 #: output/sitemap/creators/temperaturesitemapcreator.py:211
@@ -181,7 +181,7 @@ msgid "Not at home"
 msgstr "Nicht zu Hause"
 
 #: models/common/scene.py:9
-#: output/sitemap/creators/lightbulbsitemapcreator.py:227
+#: output/sitemap/creators/lightbulbsitemapcreator.py:226
 msgid "Night"
 msgstr "Nacht"
 
@@ -419,7 +419,7 @@ msgid "Weather warning"
 msgstr "Wetterwarnung"
 
 #: models/configuration/equipment/types/astro.py:136
-#: output/sitemap/creators/weatherstationsitemapcreator.py:271
+#: output/sitemap/creators/weatherstationsitemapcreator.py:270
 msgid "Astro"
 msgstr "Astro"
 
@@ -562,13 +562,13 @@ msgid "Temperature"
 msgstr "Temperatur"
 
 #: models/configuration/equipment/types/sensor.py:75
-#: output/sitemap/creators/weatherstationsitemapcreator.py:189
-#: output/sitemap/creators/weatherstationsitemapcreator.py:209
+#: output/sitemap/creators/weatherstationsitemapcreator.py:188
+#: output/sitemap/creators/weatherstationsitemapcreator.py:208
 msgid "Humidity"
 msgstr "Luftfeuchtigkeit"
 
 #: models/configuration/equipment/types/sensor.py:83
-#: output/sitemap/creators/weatherstationsitemapcreator.py:182
+#: output/sitemap/creators/weatherstationsitemapcreator.py:181
 msgid "Pressure"
 msgstr "Luftdruck"
 
@@ -636,12 +636,12 @@ msgid "Visibility"
 msgstr "Sichtweite"
 
 #: models/configuration/equipment/types/weatherstation.py:35
-#: output/sitemap/creators/weatherstationsitemapcreator.py:219
+#: output/sitemap/creators/weatherstationsitemapcreator.py:218
 msgid "UV index"
 msgstr "UV-Index"
 
 #: models/configuration/equipment/types/weatherstation.py:43
-#: output/sitemap/creators/weatherstationsitemapcreator.py:250
+#: output/sitemap/creators/weatherstationsitemapcreator.py:249
 msgid "Ozone"
 msgstr "Ozon"
 
@@ -689,24 +689,36 @@ msgid "Window"
 msgstr "Fenster"
 
 #: models/grafana/dashboard.py:29
-msgid "Day"
-msgstr "Tag"
+msgid "Today"
+msgstr "Heute"
+
+#: models/grafana/dashboard.py:29
+msgid "Yesterday"
+msgstr "Gestern"
 
 #: models/grafana/dashboard.py:30
 msgid "Week"
 msgstr "Woche"
 
+#: models/grafana/dashboard.py:30
+msgid "Last week"
+msgstr "Letzte Woche"
+
 #: models/grafana/dashboard.py:31
 msgid "Month"
 msgstr "Monat"
+
+#: models/grafana/dashboard.py:31
+msgid "Last month"
+msgstr "Letzter Monat"
 
 #: models/grafana/dashboard.py:32
 msgid "Year"
 msgstr "Jahr"
 
-#: models/grafana/dashboard.py:33
-msgid "2 years"
-msgstr "2 Jahre"
+#: models/grafana/dashboard.py:32
+msgid "Last year"
+msgstr "Letztes Jahr"
 
 #: models/sitemap/page.py:65
 msgid "State and configuration"
@@ -1569,7 +1581,7 @@ msgid "Smart meters"
 msgstr "Smart Meter"
 
 #: output/sitemap/creators/energymanagementsitemapcreator.py:60
-#: output/sitemap/creators/energymanagementsitemapcreator.py:119
+#: output/sitemap/creators/energymanagementsitemapcreator.py:118
 #: output/sitemap/creators/whitegoodsitemapcreator.py:59
 msgid "Average per hour"
 msgstr "Durchschnitt pro Stunde"
@@ -1578,11 +1590,11 @@ msgstr "Durchschnitt pro Stunde"
 msgid "Average per weekday"
 msgstr "Durchschnitt pro Wochentag"
 
-#: output/sitemap/creators/energymanagementsitemapcreator.py:105
+#: output/sitemap/creators/energymanagementsitemapcreator.py:104
 msgid "Consumers"
 msgstr "Verbraucher"
 
-#: output/sitemap/creators/energymanagementsitemapcreator.py:120
+#: output/sitemap/creators/energymanagementsitemapcreator.py:119
 #, python-brace-format
 msgid "{poweroutlet} power"
 msgstr "{poweroutlet} Leistung"
@@ -1608,69 +1620,69 @@ msgid "Correct"
 msgstr "Korrekt"
 
 #: output/sitemap/creators/lightbulbsitemapcreator.py:45
-#: output/sitemap/creators/lightbulbsitemapcreator.py:105
+#: output/sitemap/creators/lightbulbsitemapcreator.py:104
 msgid "Lights"
 msgstr "Beleuchtung"
 
 #: output/sitemap/creators/lightbulbsitemapcreator.py:66
-#: output/sitemap/creators/lightbulbsitemapcreator.py:184
-#: output/sitemap/creators/lightbulbsitemapcreator.py:242
+#: output/sitemap/creators/lightbulbsitemapcreator.py:183
+#: output/sitemap/creators/lightbulbsitemapcreator.py:241
 msgid "Unblock"
 msgstr "Entsperren"
 
-#: output/sitemap/creators/lightbulbsitemapcreator.py:123
+#: output/sitemap/creators/lightbulbsitemapcreator.py:122
 #: output/sitemap/creators/temperaturesitemapcreator.py:164
 msgid "Display"
 msgstr "Anzeigen"
 
-#: output/sitemap/creators/lightbulbsitemapcreator.py:123
+#: output/sitemap/creators/lightbulbsitemapcreator.py:122
 #: output/sitemap/creators/temperaturesitemapcreator.py:164
 msgid "Hide"
 msgstr "Ausblenden"
 
-#: output/sitemap/creators/lightbulbsitemapcreator.py:137
+#: output/sitemap/creators/lightbulbsitemapcreator.py:136
 #: output/sitemap/creators/scenesitemapcreator.py:109
 msgid "Always"
 msgstr "Immer"
 
-#: output/sitemap/creators/lightbulbsitemapcreator.py:137
+#: output/sitemap/creators/lightbulbsitemapcreator.py:136
 msgid "Only"
 msgstr "Nur"
 
-#: output/sitemap/creators/lightbulbsitemapcreator.py:146
+#: output/sitemap/creators/lightbulbsitemapcreator.py:145
 msgid "Random"
 msgstr "Zufall"
 
-#: output/sitemap/creators/lightbulbsitemapcreator.py:163
+#: output/sitemap/creators/lightbulbsitemapcreator.py:162
 #, python-brace-format
 msgid "Colortemperature {name}"
 msgstr "Farbtemperatur {name}"
 
-#: output/sitemap/creators/lightbulbsitemapcreator.py:177
+#: output/sitemap/creators/lightbulbsitemapcreator.py:176
 #, python-brace-format
 msgid "Wallswitch assignments {lightbulb}"
 msgstr "Schalterzuordnungen {lightbulb}"
 
-#: output/sitemap/creators/lightbulbsitemapcreator.py:183
+#: output/sitemap/creators/lightbulbsitemapcreator.py:182
 #: output/sitemap/creators/poweroutletsitemapcreator.py:115
 msgid "No assignment"
 msgstr "Keine Zuordnung"
 
-#: output/sitemap/creators/lightbulbsitemapcreator.py:185
+#: output/sitemap/creators/lightbulbsitemapcreator.py:184
 msgid "Off & unblock"
 msgstr "Aus & entsperren"
 
-#: output/sitemap/creators/lightbulbsitemapcreator.py:186
+#: output/sitemap/creators/lightbulbsitemapcreator.py:185
 msgid "Trigger motion"
 msgstr "Bewegung auslösen"
 
-#: output/sitemap/creators/lightbulbsitemapcreator.py:201
+#: output/sitemap/creators/lightbulbsitemapcreator.py:200
 #: output/sitemap/creators/poweroutletsitemapcreator.py:107
 #, python-brace-format
 msgid "Assignment {wallswitch} to {lightbulb}"
 msgstr "Zuordnung {wallswitch} zu {lightbulb}"
 
-#: output/sitemap/creators/lightbulbsitemapcreator.py:218
+#: output/sitemap/creators/lightbulbsitemapcreator.py:217
 msgid "All"
 msgstr "Alle"
 
@@ -1739,37 +1751,37 @@ msgstr "Wochenende"
 msgid "Homeoffice {person}"
 msgstr "Homeoffice {person}"
 
-#: output/sitemap/creators/weatherstationsitemapcreator.py:176
-#: output/sitemap/creators/weatherstationsitemapcreator.py:203
+#: output/sitemap/creators/weatherstationsitemapcreator.py:175
+#: output/sitemap/creators/weatherstationsitemapcreator.py:202
 msgid "Trend"
 msgstr "Trend"
 
-#: output/sitemap/creators/weatherstationsitemapcreator.py:233
+#: output/sitemap/creators/weatherstationsitemapcreator.py:232
 #, python-brace-format
 msgid "Self-protection time (below 3 hours) - {name}"
 msgstr "Eigenschutzzeiten (weniger als 3 Stunden) - {name}"
 
-#: output/sitemap/creators/weatherstationsitemapcreator.py:287
+#: output/sitemap/creators/weatherstationsitemapcreator.py:286
 msgid "Sun rise"
 msgstr "Sonnenaufgang"
 
-#: output/sitemap/creators/weatherstationsitemapcreator.py:292
+#: output/sitemap/creators/weatherstationsitemapcreator.py:291
 msgid "Sun set"
 msgstr "Sonnenuntergang"
 
-#: output/sitemap/creators/weatherstationsitemapcreator.py:317
+#: output/sitemap/creators/weatherstationsitemapcreator.py:316
 msgid "Moon rise"
 msgstr "Mondaufgang"
 
-#: output/sitemap/creators/weatherstationsitemapcreator.py:322
+#: output/sitemap/creators/weatherstationsitemapcreator.py:321
 msgid "Moon set"
 msgstr "Monduntergang"
 
-#: output/sitemap/creators/weatherstationsitemapcreator.py:356
+#: output/sitemap/creators/weatherstationsitemapcreator.py:355
 msgid "Weather warnings"
 msgstr "Wetterwarnungen"
 
-#: output/sitemap/creators/weatherstationsitemapcreator.py:360
+#: output/sitemap/creators/weatherstationsitemapcreator.py:359
 msgid "Notifications"
 msgstr "Benachrichtigungen"
 
@@ -1786,6 +1798,12 @@ msgstr "{whitegood} Leistung"
 #, python-brace-format
 msgid "{name} reminder time"
 msgstr "{name} Erinnerungszeit"
+
+#~ msgid "Day"
+#~ msgstr "Tag"
+
+#~ msgid "2 years"
+#~ msgstr "2 Jahre"
 
 #, fuzzy
 #~| msgid "Average per hour"

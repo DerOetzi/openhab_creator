@@ -5,7 +5,7 @@ from abc import abstractmethod
 
 from openhab_creator import _
 
-from openhab_creator.models.sitemap import Switch, Image
+from openhab_creator.models.sitemap import Image, Selection
 from openhab_creator.models.grafana import Period, AggregateWindow
 
 if TYPE_CHECKING:
@@ -52,9 +52,10 @@ class BaseSitemapCreator():
             mappings = []
 
             for period in Period:
-                mappings.append((f'"{period}"', period.label))
+                mappings.append((f'"{period}_actual"', period.label))
+                mappings.append((f'"{period}_last"', period.last_label))
 
-            Switch('guiPeriod', mappings)\
+            Selection('guiPeriod', mappings)\
                 .append_to(frame)
 
             self._graph_frame(grafana_urls, frame=frame)
@@ -84,9 +85,10 @@ class BaseSitemapCreator():
             mappings = []
 
             for period in Period:
-                mappings.append((f'"{period}"', period.label))
+                mappings.append((f'"{period}_actual"', period.label))
+                mappings.append((f'"{period}_last"', period.last_label))
 
-            Switch('guiPeriod', mappings)\
+            Selection('guiPeriod', mappings)\
                 .append_to(page)
 
     @staticmethod
@@ -95,6 +97,10 @@ class BaseSitemapCreator():
         for panel_urls in grafana_urls:
             for period in Period:
                 if period in panel_urls:
-                    Image(panel_urls[period])\
-                        .visibility(('guiPeriod', '==', period))\
+                    Image(panel_urls[period][0])\
+                        .visibility(('guiPeriod', '==', f'{period}_actual'))\
+                        .append_to(frame)
+                    
+                    Image(panel_urls[period][1])\
+                        .visibility(('guiPeriod', '==', f'{period}_last'))\
                         .append_to(frame)

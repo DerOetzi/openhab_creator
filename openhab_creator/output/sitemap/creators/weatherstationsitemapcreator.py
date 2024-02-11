@@ -147,8 +147,7 @@ class WeatherStationSitemapCreator(BaseSitemapCreator):
                               {Period.DAY: AggregateWindow.HOUR,
                                Period.WEEK: AggregateWindow.DAY,
                                Period.MONTH: AggregateWindow.DAY,
-                               Period.YEAR: AggregateWindow.MONTH,
-                               Period.YEARS: AggregateWindow.MONTH})
+                               Period.YEAR: AggregateWindow.MONTH})
 
     def _build_pressure(self, weatherstation_page: Page, configuration: Configuration) -> None:
         pressures = configuration.equipment.equipment('pressure')

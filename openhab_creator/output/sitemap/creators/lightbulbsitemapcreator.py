@@ -98,8 +98,7 @@ class LightbulbSitemapCreator(BaseSitemapCreator):
                                              {Period.DAY: AggregateWindow.HOUR,
                                                  Period.WEEK: AggregateWindow.DAY,
                                                  Period.MONTH: AggregateWindow.DAY,
-                                                 Period.YEAR: AggregateWindow.MONTH,
-                                                 Period.YEARS: AggregateWindow.MONTH})
+                                                 Period.YEAR: AggregateWindow.MONTH})
 
     def build_configpage(self, configpage: Page, configuration: Configuration) -> None:
         page = Page(label=_('Lights'))\
