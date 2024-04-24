@@ -18,9 +18,11 @@ class BridgeItemIdentifiers(EquipmentItemIdentifiers):
 class Bridge(Equipment):
     def __init__(self,
                  binding: str,
+                 existing_things: bool = False,
                  **equipment_configuration):
 
         self.binding: str = binding
+        self.existing_things: bool = existing_things
 
         super().__init__(**equipment_configuration)
 

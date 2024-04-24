@@ -82,8 +82,6 @@ class Thing():
 
         self.equipment_node: Equipment = equipment_node
 
-        self.typed: str = thingtype
-
         self._init_bridge(configuration, bridge, asbridge)
 
         self._init_nameprefix(nameprefix)
@@ -91,6 +89,8 @@ class Thing():
         self._init_binding()
 
         self._init_secrets(configuration, secrets_config or [])
+
+        self.typed: str = self.replace_secrets(thingtype)
 
         self.uid: str = equipment_node.identifier if thinguid is None else self.replace_secrets(
             thinguid)

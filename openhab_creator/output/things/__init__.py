@@ -18,7 +18,7 @@ class ThingsCreator(BaseCreator):
 
     def build(self, configuration: Configuration) -> None:
         for bridge_key, bridge_obj in configuration.equipment.bridges.items():
-            if bridge_obj.is_subbridge:
+            if bridge_obj.is_subbridge or bridge_obj.existing_things:
                 continue
 
             self._append_bridge(bridge_obj)
