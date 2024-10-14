@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union
 
 from openhab_creator import _
 from openhab_creator.exception import ConfigurationException
@@ -116,6 +116,7 @@ class Lightbulb(Equipment):
                  nightmode: Optional[bool] = False,
                  min_colortemp: Optional[int] = None,
                  max_colortemp: Optional[int] = None,
+                 check_state: Optional[bool] = False,
                  points: Optional[Dict[str, str]] = None,
                  **equipment_configuration: Dict):
 
@@ -127,6 +128,7 @@ class Lightbulb(Equipment):
 
         self.singlebulb: bool = singlebulb
         self.nightmode: bool = nightmode
+        self.check_state: bool = check_state
 
         if (self.is_child or not self.has_subequipment) and self.points.has_colortemperature:
             if not min_colortemp:

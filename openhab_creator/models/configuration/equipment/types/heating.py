@@ -83,6 +83,7 @@ class Heating(Sensor):
                  boost: Optional[bool] = False,
                  heatmode: Optional[Dict[str, str]] = None,
                  boost_temp: Optional[float] = 28.0,
+                 off_temp: Optional[float] = 0.0,
                  points: Optional[Dict[str, str]] = None,
                  **equipment_configuration: Dict):
 
@@ -94,6 +95,7 @@ class Heating(Sensor):
         self.boost: bool = boost
         self.heatmode: Dict[str, str] = heatmode or {}
         self.boost_temp: float = boost_temp
+        self.off_temp: float = off_temp
 
     @property
     def item_ids(self) -> HeatingItemIdentifiers:

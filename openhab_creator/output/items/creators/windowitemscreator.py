@@ -109,7 +109,6 @@ class WindowItemsCreator(BaseItemsCreator):
                 .label(_("Send reminder"))\
                 .equipment(window)\
                 .semantic(PointType.SETPOINT)\
-                .expire("2h", "ON")\
                 .config()\
                 .append_to(self)
 

@@ -246,7 +246,7 @@ class LightbulbItemsCreator(BaseItemsCreator):
                         .append_to(self)
 
                     parent_lightbulb_item.scripting({
-
+                        'check_state': parent_lightbulb.check_state,
                         'brightness_item': parent_lightbulb.item_ids.brightness,
                         'brightnessgroup_item': parent_lightbulb.item_ids.brightnessgroup
                     })
@@ -258,6 +258,11 @@ class LightbulbItemsCreator(BaseItemsCreator):
                     .icon('light')\
                     .equipment(parent_lightbulb)\
                     .semantic(PointType.CONTROL, PropertyType.COLORTEMPERATURE)\
+                    .scripting(
+                        {
+                            "check_state": parent_lightbulb.check_state
+                        }
+                    )\
                     .append_to(self)
 
             if parent_lightbulb.points.has_onoff:
@@ -266,6 +271,11 @@ class LightbulbItemsCreator(BaseItemsCreator):
                     .label(_('On/Off'))\
                     .equipment(parent_lightbulb)\
                     .semantic(PointType.SWITCH, PropertyType.LIGHT)\
+                    .scripting(
+                        {
+                            "check_state": parent_lightbulb.check_state
+                        }
+                    )\
                     .append_to(self)
 
             if parent_lightbulb.points.has_rgb:
@@ -299,6 +309,7 @@ class LightbulbItemsCreator(BaseItemsCreator):
 
         scripting = {
             'is_thing': True,
+            'check_state': lightbulb.check_state,
             'cycles_item': lightbulb.item_ids.switchingcycles
         }
 
@@ -329,6 +340,9 @@ class LightbulbItemsCreator(BaseItemsCreator):
                 .icon('light')\
                 .equipment(lightbulb)\
                 .semantic(PointType.CONTROL, PropertyType.LIGHT)\
+                .scripting({
+                    "check_state": lightbulb.check_state
+                })\
                 .channel(lightbulb.points.channel('onoff'))
 
             if lightbulb.is_child:
@@ -344,6 +358,9 @@ class LightbulbItemsCreator(BaseItemsCreator):
                 .icon('light')\
                 .equipment(lightbulb)\
                 .semantic(PointType.CONTROL)\
+                .scripting({
+                    "check_state": lightbulb.check_state
+                })\
                 .channel(lightbulb.points.channel('rgb'))
 
             if lightbulb.is_child:
@@ -386,6 +403,9 @@ class LightbulbItemsCreator(BaseItemsCreator):
             .equipment(lightbulb)\
             .semantic(PointType.CONTROL, PropertyType.LIGHT)\
             .channel(lightbulb.points.channel('brightness'))\
+            .scripting({
+                "check_state": lightbulb.check_state
+            })\
             .append_to(self)
 
         scripting['brightness_item'] = lightbulb.item_ids.brightness

@@ -48,7 +48,8 @@ class HeatingUtils(object):
     @classmethod
     def __handle_single_command(cls, heating_item, command):
         if command == 'CLOSED':
-            cls._execute(heating_item, 0.0, 'heatmode_off')
+            new_temperature = heating_item.scripting('off_temp').floatValue()
+            cls._execute(heating_item, new_temperature, 'heatmode_off')
         elif command == 'COMFORT':
             comfort_item = heating_item.from_scripting('comfort_item')
 

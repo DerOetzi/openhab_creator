@@ -274,7 +274,8 @@ class HeatingItemsCreator(BaseItemsCreator):
             'is_thing': True,
             'setpoint_item': heating.item_ids.heatsetpoint,
             'heatmode_item': heating.item_ids.heatmode,
-            'boost_temp': heating.boost_temp
+            'boost_temp': heating.boost_temp,
+            "off_temp": heating.off_temp
         })
 
         heatsetpoint = Number(heating.item_ids.heatsetpoint)\
@@ -284,7 +285,8 @@ class HeatingItemsCreator(BaseItemsCreator):
             .equipment(heating)\
             .semantic(PointType.SETPOINT, PropertyType.TEMPERATURE)\
             .scripting({
-                'boost_temp': heating.boost_temp
+                'boost_temp': heating.boost_temp,
+                "off_temp": heating.off_temp
             })\
             .channel(heating.points.channel('heatsetpoint'))\
             .append_to(self)

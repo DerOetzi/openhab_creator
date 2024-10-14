@@ -14,7 +14,6 @@ from core.log import LOG_PREFIX, logging
 import personal.lightutils
 reload(personal.lightutils)
 
-
 logger = logging.getLogger('{}.Lights'.format(LOG_PREFIX))
 
 rulemanager = get_service("org.openhab.core.automation.RuleManager")
@@ -106,6 +105,7 @@ class WallSwitchEvent(object):
         elif command == 'TRIGGERMOTION':
             MotionDetectorEvent.trigger_motion(lightbulb_item)
         else:
+            self.log.info('%s:%s', lightbulb_item.name,command)
             LightUtils.manual(lightbulb_item, command)
             MotionDetectorEvent().trigger_block(lightbulb_item)
 

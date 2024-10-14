@@ -115,37 +115,54 @@ class LightUtils(object):
     def _execute(cls, lightbulb_item, brightness, onoff, color):
         updated = False
 
+        check_state = lightbulb_item.scripting('check_state')
+
         brightness_item = lightbulb_item.from_scripting('brightness_item')
         brightnessgroup_item = lightbulb_item.from_scripting(
             'brightnessgroup_item')
         onoff_item = lightbulb_item.from_scripting('onoff_item')
         rgb_item = lightbulb_item.from_scripting('rgb_item')
 
-        cls.log.debug('_execute: %s, %d, %s, %s',
-                      lightbulb_item, brightness, onoff, color)
+        cls.log.debug('_execute: %s, %d, %s, %s, %s',
+                      lightbulb_item, brightness, onoff, color, check_state)
+
+        state_item = None
+        command = None
 
         if brightness_item:
             updated = brightness_item.get_int(0) != brightness
-            cls.log.debug('%s: %d', brightness_item, brightness)
-
             if brightnessgroup_item:
-                cls.log.debug('%s, %d', brightnessgroup_item, brightness)
-                brightnessgroup_item.send_command(brightness)
+                state_item = brightnessgroup_item
             else:
-                cls.log.debug('%s, %d', brightness_item, brightness)
-                brightness_item.send_command(brightness)
+                state_item = brightness_item
+
+            command = brightness
 
         elif onoff and onoff_item:
             updated = onoff_item.get_value() != onoff
-            onoff_item.send_command(onoff)
+            state_item = onoff_item
+            command = onoff
         elif rgb_item:
             updated = rgb_item.get_value(
                 cls.BLACK).getBrightness() != color.getBrightness()
             cls.log.debug('RGB: %s: %s, %s, %s', rgb_item, rgb_item.get_value(
                 cls.BLACK), color, updated)
-            rgb_item.send_command(color)
+            state_item = rgb_item
+            command = color
+            
+
+        cls.log.info('_execute: %s, %s, %s, %s', state_item, check_state, updated, command)
+
+        if state_item and command is not None:
+            cls._send_command_after_check(state_item, check_state, updated, command)
 
         return updated
+
+    @classmethod
+    def _send_command_after_check(cls, state_item, check_state, updated, command):
+        cls.log.debug('_send_command_after_check: %s, %s, %s, %s', state_item, check_state, updated, command)
+        if updated or not check_state:
+            state_item.send_command(command)
 
     @staticmethod
     def color(brightness=100):
