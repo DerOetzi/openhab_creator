@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import List, Tuple
 
-from openhab_creator import _
+from openhab_creator import _, logger
 from openhab_creator.models.configuration import Configuration
 from openhab_creator.models.configuration.equipment.types.gasstation import (
     FuelType, GasStation)
@@ -17,7 +17,8 @@ from openhab_creator.output.sitemap.basesitemapcreator import \
 class GasStationSitemapCreator(BaseSitemapCreator):
     @classmethod
     def has_needed_equipment(cls, configuration: Configuration) -> bool:
-        return configuration.equipment.has('gasstation')
+        logger.info('GasStationSitemapCreator.has_needed_equipment %s', configuration.equipment.has('gasstation'))
+        return configuration.equipment.has('gasstation')[0]
 
     def build_mainpage(self, sitemap: Sitemap, configuration: Configuration) -> None:
         page = Page(label=_('Fuel prices'))\

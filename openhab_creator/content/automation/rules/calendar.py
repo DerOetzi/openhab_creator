@@ -116,7 +116,7 @@ def birthday_notification(birthdays):
     item = Item('todaySpecialDay')
     message = item.scripting('birthday') if len(
         birthdays) == 1 else item.scripting('birthdays')
-    SignalMessenger.broadcast(message.format(", ".join(birthdays)))
+    #SignalMessenger.broadcast(message.format(", ".join(birthdays)))
 
 
 @rule('Garbage cans system start')

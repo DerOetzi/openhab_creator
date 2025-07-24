@@ -17,7 +17,7 @@ class PseudoEvent:
         self.itemName = itemName
 
 
-@rule('Window events')
+#@rule('Window events')
 class WindowEvent(object):
     def __init__(self):
         self.log = logging.getLogger('{}.WindowEvent'.format(LOG_PREFIX))
